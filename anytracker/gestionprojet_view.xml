@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    <record id="task_view_tree" model="ir.ui.view">
+        <field name="name">ticket.tree</field>
+        <field name="model">gestionprojet.ticket</field>
+        <field name="type">tree</field>
+        <field name="priority" eval="10"/>
+        <field name="arch" type="xml">
+            <tree string="Task treeview">
+                <field name="name"/>
+                <field name="state"/>
+                <field name="level"/>
+                <field name="duration"/>
+                <field name="infos"/>
+                <field name="projectroot"/>
+                <field name="children"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="task_view_form" model="ir.ui.view">
+        <field name="name">ticket.form</field>
+        <field name="model">gestionprojet.ticket</field>
+        <field name="type">form</field>
+        <field name="priority" eval="10"/>
+        <field name="arch" type="xml">
+            <form string="task form">
+                <field name="parent"/>
+                <field name="name"/>
+                <field name="state"/>
+                <field name="level"/>
+                <field name="duration"/>
+                <field name="infos"/>
+                <field name="projectroot"/>
+                <field name="children"/>
+            </form>
+        </field>
+    </record>
+
+    
+    
+    <record model="ir.actions.act_window" id="action_ticket_form">
+        <field name="name">gestionprojet.ticket</field>
+        <field name="res_model">gestionprojet.ticket</field>
+    </record>
+
+    <menuitem name="AnyTracker" id="ticket_menu"/>
+    <menuitem name="Ticket" parent="ticket_menu" id="ticket_menu_mainform" action="action_ticket_form"/>  
+  </data>
+</openerp>
+
+
