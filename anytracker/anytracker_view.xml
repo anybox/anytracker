@@ -3,7 +3,7 @@
     <data>
     <record id="task_view_tree" model="ir.ui.view">
         <field name="name">ticket.tree</field>
-        <field name="model">gestionprojet.ticket</field>
+        <field name="model">anytracker.ticket</field>
         <field name="type">tree</field>
         <field name="priority" eval="10"/>
         <field name="arch" type="xml">
@@ -21,7 +21,7 @@
 
     <record id="task_view_form" model="ir.ui.view">
         <field name="name">ticket.form</field>
-        <field name="model">gestionprojet.ticket</field>
+        <field name="model">anytracker.ticket</field>
         <field name="type">form</field>
         <field name="priority" eval="10"/>
         <field name="arch" type="xml">
@@ -41,8 +41,8 @@
     
     
     <record model="ir.actions.act_window" id="action_ticket_form">
-        <field name="name">gestionprojet.ticket</field>
-        <field name="res_model">gestionprojet.ticket</field>
+        <field name="name">anytracker.ticket</field>
+        <field name="res_model">anytracker.ticket</field>
     </record>
 
     <menuitem name="AnyTracker" id="ticket_menu"/>

@@ -1,13 +1,13 @@
 from osv import fields, osv
 
 class ticket(osv.osv):
-    _name = 'gestionprojet.ticket'
+    _name = 'anytracker.ticket'
     _description = "Tickets for project management" 
     _columns = {
     'name' : fields.char('task name', 255, required=True),
     'infos' : fields.text('task description', required=False),
-    'children' : fields.one2many('gestionprojet.ticket', 'parent','childre', required=False),
-    'parent' : fields.many2one('gestionprojet.ticket','parent', required=False),
+    'children' : fields.one2many('anytracker.ticket', 'parent','childre', required=False),
+    'parent' : fields.many2one('anytracker.ticket','parent', required=False),
     'projectroot' : fields.boolean('is the root node', required=False),
     'level' : fields.selection([
                                (1,'Green'),(5,'Orange'),(10,'red')
