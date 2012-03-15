@@ -40,13 +40,13 @@
 
     
     
-    <record model="ir.actions.act_window" id="action_ticket_form">
+    <record model="ir.actions.act_window" id="action_ticket_form_debug">
         <field name="name">anytracker.ticket</field>
         <field name="res_model">anytracker.ticket</field>
     </record>
 
     <menuitem name="AnyTracker" id="ticket_menu"/>
-    <menuitem name="Ticket" parent="ticket_menu" id="ticket_menu_mainform" action="action_ticket_form"/>  
+    <menuitem name="Ticket" parent="ticket_menu" id="ticket_menu_mainform" action="action_ticket_form_debug"/>  
   </data>
 </openerp>
 
