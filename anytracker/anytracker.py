@@ -6,7 +6,7 @@ class ticket(osv.osv):
     _columns = {
     'name' : fields.char('task name', 255, required=True),
     'infos' : fields.text('task description', required=False),
-    'children' : fields.one2many('anytracker.ticket', 'parent','childre', required=False),
+    'children' : fields.one2many('anytracker.ticket', 'parent','children', required=False),
     'parent' : fields.many2one('anytracker.ticket','parent', required=False),
     'projectroot' : fields.boolean('is the root node', required=False),
     'level' : fields.selection([
@@ -17,12 +17,21 @@ class ticket(osv.osv):
     'duration' :  fields.selection([
                     (0,'< half a day'),(None,'Will be computed'),
                 (1,'Half a day')],'duration')
-                    }
+     'assignedto' : fields.many2many('res.user', 'user_id', required=False),
+     'requester' : fields.many2one('res.users', 'Requester'),
+     'category' : fields.many2one('anytracker.ticket.category', 'Category'),
+     'value' : fields.many2one('anytracker.value', 'Value'),
+     'siblings' : fields.function(_siblings()),
+     'dates' : fields.many2many('wf.activity','some_id','dates')
+     }
     
     _defaults = {
         'state' : 'Analyse',
         'duration' : 0,
         }
+    def _siblings(self, cr, uid, ids, context =  None):
+        # res = self.parent.chidlen.pop(self)
+        return 'Siblings'
 
     def _autoroot(self, cr, uid, ids, context = None):
         """
