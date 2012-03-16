@@ -15,6 +15,7 @@
                 <field name="infos"/>
                 <field name="projectroot"/>
                 <field name="child_ids"/>
+                <field name="siblings"/>
             </tree>
         </field>
     </record>

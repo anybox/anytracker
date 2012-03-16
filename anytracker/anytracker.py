@@ -18,12 +18,13 @@ category()
 class ticket(osv.osv):
     _name = 'anytracker.ticket'
     _description = "Tickets for project management" 
-    def siblings( cr, uid, ids, context =  None):
+    def siblings(self, cr, uid, ids, field_name, args, context=None):
         # res = self.parent.chidlen.pop(self)
         #for nodes in si c'est le parent on prend les fils
         # on renvoit la liste des fils sans l'appelant
         #retourner un dict
-        return {'floatkey':892.23}
+        return dict((i, i**0.5) for i in ids)
+
     _columns = {
     'name' : fields.char('task name', 255, required=True),
     'infos' : fields.text('task description', required=False),
