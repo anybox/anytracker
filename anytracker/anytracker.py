@@ -1,40 +1,55 @@
 from osv import fields, osv
 
+class fake(osv.osv):
+    _name = 'wf.activity'
+
+fake()
+
+class value(osv.osv):
+    _name = 'anytracker.value'
+
+value()
+
+class category(osv.osv):
+    _name =  'anytracker.ticket.category'
+
+category()
+
 class ticket(osv.osv):
     _name = 'anytracker.ticket'
     _description = "Tickets for project management" 
+    def siblings( cr, uid, ids, context =  None):
+        # res = self.parent.chidlen.pop(self)
+        #for nodes in si c'est le parent on prend les fils
+        # on renvoit la liste des fils sans l'appelant
+        #retourner un dict
+        return {'floatkey':892.23}
     _columns = {
     'name' : fields.char('task name', 255, required=True),
     'infos' : fields.text('task description', required=False),
-    'children' : fields.one2many('anytracker.ticket', 'parent','children', required=False),
-    'parent' : fields.many2one('anytracker.ticket','parent', required=False),
+    'state' : fields.char('state', 30, required=False),
+    'siblings' : fields.function(siblings, type='float', method =True),
     'projectroot' : fields.boolean('is the root node', required=False),
     'complexity' : fields.selection([
                                (1,'Green'),(5,'Orange'),(10,'red')
                               ],'level')
                               ,
-    'state' : fields.char('state', 30, required=False),
     'duration' :  fields.selection([
                     (0,'< half a day'),(None,'Will be computed'),
                 (1,'Half a day')],'duration'),
-     'assignedto' : fields.many2many('res.user', 'user_id', required=False),
-     'requester' : fields.many2one('res.users', 'Requester'),
-     'category' : fields.many2one('anytracker.ticket.category', 'Category'),
-     'value' : fields.many2one('anytracker.value', 'Value'),
-     'siblings' : fields.function(_siblings()),
-     'dates' : fields.many2many('wf.activity','some_id','dates')
+    'child_ids' : fields.one2many('anytracker.ticket', 'parent_id','children', required=False),
+    'assignedto_ids' : fields.many2many('res.users', 'ticket_assignement_rel' ,'ticket_id','user_id', required=False),
+    'date_ids' : fields.many2many('wf.activity','ticket_date_rel', 'some_id','dates'),
+    'parent_id' : fields.many2one('anytracker.ticket','parent', required=False),
+    'value_id' : fields.many2one('anytracker.value', 'Value'),
+    'category_id' : fields.many2one('anytracker.ticket.category', 'Category'),
+    'requester_id' : fields.many2one('res.users', 'Requester'),
      }
     
     _defaults = {
         'state' : 'Analyse',
         'duration' : 0,
         }
-    def _siblings(self, cr, uid, ids, context =  None):
-        # res = self.parent.chidlen.pop(self)
-        #for nodes in si c'est le parent on prend les fils
-        # on renoir la liste des fils sans l'appelant
-        #retourner un dict
-        return 'Siblings'
 
     def _autoroot(self, cr, uid, ids, context = None):
         """
@@ -104,4 +119,6 @@ class ticket(osv.osv):
 #========================================================================
   
 ticket()
+
+    
 

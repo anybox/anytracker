@@ -10,11 +10,11 @@
             <tree string="Task treeview">
                 <field name="name"/>
                 <field name="state"/>
-                <field name="level"/>
+                <field name="complexity"/>
                 <field name="duration"/>
                 <field name="infos"/>
                 <field name="projectroot"/>
-                <field name="children"/>
+                <field name="child_ids"/>
             </tree>
         </field>
     </record>
@@ -26,14 +26,14 @@
         <field name="priority" eval="10"/>
         <field name="arch" type="xml">
             <form string="task form">
-                <field name="parent"/>
+                <field name="parent_id"/>
                 <field name="name"/>
                 <field name="state"/>
-                <field name="level"/>
+                <field name="complexity"/>
                 <field name="duration"/>
                 <field name="infos"/>
                 <field name="projectroot"/>
-                <field name="children"/>
+                <field name="child_ids"/>
             </form>
         </field>
     </record>
