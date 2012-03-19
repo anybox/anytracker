@@ -37,7 +37,7 @@ class ticket(osv.osv):
     'name' : fields.char('task name', 255, required=True),
     'infos' : fields.text('task description', required=False),
     'state' : fields.char('state', 30, required=False),
-    'siblings' : fields.function(siblings, type='one2many', obj='anytracker.ticket', method =True),
+    'siblings' : fields.function(siblings, type='one2many', obj='anytracker.ticket', string = 'Siblings', method =True ),
     'projectroot' : fields.boolean('is the root node', required=False),
     'complexity' : fields.selection([
                                (1,'Green'),(5,'Orange'),(10,'red')
