@@ -22,26 +22,22 @@ class ticket(osv.osv):
         #for nodes in si c'est le parent on prend les fils
         # on renvoit la liste des fils sans l'appelant
         #retourner un dict
-        import pdb; pdb.set_trace()
-        res = dict((i, i**0.5) for i in ids)
+        res = {}
         tickets =  self.browse(cr, uid, ids, context)
         for t in tickets:
-            res[t.id]  = -1.0
+            res[t.id]  = False
             if t.parent_id.id != False:
                 res[t.id]  = t.parent_id.id
                 bros = [ b.id for b in t.parent_id.child_ids ]
                 bros.remove(t.id)
-                r = 0 
-                for b in bros:
-                    r += b
-                res[t.id] = r
+                res[t.id] = bros
         return res
 
     _columns = {
     'name' : fields.char('task name', 255, required=True),
     'infos' : fields.text('task description', required=False),
     'state' : fields.char('state', 30, required=False),
-    'siblings' : fields.function(siblings, type='float', method =True),
+    'siblings' : fields.function(siblings, type='one2many', obj='anytracker.ticket', method =True),
     'projectroot' : fields.boolean('is the root node', required=False),
     'complexity' : fields.selection([
                                (1,'Green'),(5,'Orange'),(10,'red')
@@ -124,7 +120,7 @@ class ticket(osv.osv):
             return True
         else:
             return False
-    
+
 #=========================================================================
 #Devrait renvoyer Bool,roots afin de de pas appeler deux fois _roots
 #une fois pour la verif et une fois pour savoir quels sont les noeuds

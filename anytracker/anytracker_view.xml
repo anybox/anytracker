@@ -15,7 +15,6 @@
                 <field name="infos"/>
                 <field name="projectroot"/>
                 <field name="child_ids"/>
-                <field name="siblings"/>
             </tree>
         </field>
     </record>
@@ -33,6 +32,7 @@
                 <field name="complexity"/>
                 <field name="duration"/>
                 <field name="infos"/>
+                <field name="siblings"/>
                 <field name="projectroot"/>
                 <field name="child_ids"/>
             </form>
