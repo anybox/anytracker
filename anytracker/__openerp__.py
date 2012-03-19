@@ -8,7 +8,7 @@
         'description' : 'Ticket Module',
         'init_xml' : ['anytracker_view.xml'],
         'demo_xml' : ['anytracker_view.xml'],
-        'update_xml' : [],
+        'update_xml' : ['ticket_data.xml'],
         'active': False,
         'installable': True
 }
