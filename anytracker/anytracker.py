@@ -14,6 +14,15 @@ class category(osv.osv):
 
 category()
 
+class complexity(osv.osv):
+    _name = 'anytracker.ticket.complexity'
+    _columns = {
+        'name' : fields.char('Name', size=3, required=True),
+        'rating' : fields.float('Rating of time taking')
+        }
+
+complexity()
+
 class ticket(osv.osv):
     _name = 'anytracker.ticket'
     _description = "Tickets for project management" 
@@ -39,10 +48,6 @@ class ticket(osv.osv):
     'state' : fields.char('state', 30, required=False),
     'siblings' : fields.function(siblings, type='one2many', obj='anytracker.ticket', string = 'Siblings', method =True ),
     'projectroot' : fields.boolean('is the root node', required=False),
-    'complexity' : fields.selection([
-                               (1,'Green'),(5,'Orange'),(10,'red')
-                              ],'level')
-                              ,
     'duration' :  fields.selection([
                     (0,'< half a day'),(None,'Will be computed'),
                 (1,'Half a day')],'duration'),
@@ -53,7 +58,8 @@ class ticket(osv.osv):
     'value_id' : fields.many2one('anytracker.value', 'Value'),
     'category_id' : fields.many2one('anytracker.ticket.category', 'Category'),
     'requester_id' : fields.many2one('res.users', 'Requester'),
-     }
+    'complexity_id' : fields.many2one('anytracker.ticket.complexity','complexity')
+}
     
     _defaults = {
         'state' : 'Analyse',

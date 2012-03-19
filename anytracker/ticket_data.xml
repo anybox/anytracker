@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-->
+This data wil be provided for time requirement estimation, taking Fibonnacci's
+sequence. As we just wanted to store some integers we use the same value for
+id, name and rating. I did this since i tough is was more natural to things by 
+their values.
+<!-->
+
+<openerp>
+    <data noupdate="1">
+        <record id="1" model="anytracker.ticket.complexity">
+            <field name="name">1</field>
+            <field name="rating">1</field>
+        </record>
+
+        <record id="2" model="anytracker.ticket.complexity">
+            <field name="name">2</field>
+            <field name="rating">2</field>
+        </record>
+
+        <record id="3" model="anytracker.ticket.complexity">
+            <field name="name">3</field>
+            <field name="rating">3</field>
+        </record>
+
+        <record id="5" model="anytracker.ticket.complexity">
+            <field name="name">8</field>
+            <field name="rating">8</field>
+        </record>
+
+        <record id="13" model="anytracker.ticket.complexity">
+            <field name="name">21</field>
+            <field name="rating">21</field>
+        </record>
+
+        <record id="34" model="anytracker.ticket.complexity">
+            <field name="name">34</field>
+            <field name="rating">34</field>
+        </record>
+
+        <record id="55" model="anytracker.ticket.complexity">
+            <field name="name">55</field>
+            <field name="rating">55</field>
+        </record>
+
+        <record id="89" model="anytracker.ticket.complexity">
+            <field name="name">89</field>
+            <field name="rating">89</field>
+        </record>
+    </data>
+</openerp>
