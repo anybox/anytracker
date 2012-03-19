@@ -7,7 +7,6 @@ fake()
 
 class value(osv.osv):
     _name = 'anytracker.value'
-
 value()
 
 class category(osv.osv):
@@ -23,7 +22,20 @@ class ticket(osv.osv):
         #for nodes in si c'est le parent on prend les fils
         # on renvoit la liste des fils sans l'appelant
         #retourner un dict
-        return dict((i, i**0.5) for i in ids)
+        import pdb; pdb.set_trace()
+        res = dict((i, i**0.5) for i in ids)
+        tickets =  self.browse(cr, uid, ids, context)
+        for t in tickets:
+            res[t.id]  = -1.0
+            if t.parent_id.id != False:
+                res[t.id]  = t.parent_id.id
+                bros = [ b.id for b in t.parent_id.child_ids ]
+                bros.remove(t.id)
+                r = 0 
+                for b in bros:
+                    r += b
+                res[t.id] = r
+        return res
 
     _columns = {
     'name' : fields.char('task name', 255, required=True),
