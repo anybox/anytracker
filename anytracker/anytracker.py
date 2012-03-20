@@ -23,6 +23,24 @@ class complexity(osv.osv):
 
 complexity()
 
+class workflow(osv.osv):
+    _name = 'abstract_workflow'
+
+workflow()
+
+class workflow1(osv.osv):
+    _name = 'anytracker.ticket.workflow1'
+    _columns ={
+        'name' : fields.char('name',size = 64 ,required = True),
+        'state': fields.char('state',size =64 ,required = True)
+        }
+        
+
+
+workflow1()
+
+
+
 class ticket(osv.osv):
     _name = 'anytracker.ticket'
     _description = "Tickets for project management" 
@@ -58,7 +76,8 @@ class ticket(osv.osv):
     'value_id' : fields.many2one('anytracker.value', 'Value'),
     'category_id' : fields.many2one('anytracker.ticket.category', 'Category'),
     'requester_id' : fields.many2one('res.users', 'Requester'),
-    'complexity_id' : fields.many2one('anytracker.ticket.complexity','complexity')
+    'complexity_id' : fields.many2one('anytracker.ticket.complexity','complexity'),
+    'workflow_id' : fields.many2one('anytracker.ticket.workflow1','kanban_status',required=True),
 }
     
     _defaults = {
@@ -135,5 +154,5 @@ class ticket(osv.osv):
   
 ticket()
 
-    
+
 

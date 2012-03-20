@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-->
 This data wil be provided for time requirement estimation, taking Fibonnacci's
-sequence. As we just wanted to store some integers we use the same value for
-id, name and rating. I did this since i tough is was more natural to things by 
-their values.
+sequence. 
 <!-->
 
 <openerp>
-    <data noupdate="1">
+    <data>
         <record id="1" model="anytracker.ticket.complexity">
             <field name="name">1</field>
             <field name="rating">1</field>
@@ -46,6 +44,26 @@ their values.
         <record id="89" model="anytracker.ticket.complexity">
             <field name="name">89</field>
             <field name="rating">89</field>
+        </record>
+        <record id="56" model="anytracker.ticket.workflow1">
+            <field name="name">Analyse</field>
+            <field name="state">Analyse</field>
+        </record>
+        <record id="57" model="anytracker.ticket.workflow1">
+            <field name="name">dev</field>
+            <field name="state">dev</field>
+        </record>
+        <record id="58" model="anytracker.ticket.workflow1">
+            <field name="name">test</field>
+            <field name="state">test</field>
+        </record>
+        <record id="59" model="anytracker.ticket.workflow1">
+            <field name="name">doc</field>
+            <field name="state">doc</field>
+        </record>
+        <record id="60" model="anytracker.ticket.workflow1">
+            <field name="name">delivery</field>
+            <field name="state">delivery</field>
         </record>
     </data>
 </openerp>
