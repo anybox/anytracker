@@ -31,12 +31,12 @@
                 <field name="name"/>
                 <field name="state"/>
                 <field name="complexity_id" widget="selection"/>
+                <field name="workflow_id" widget="selection"/>
                 <field name="duration"/>
                 <field name="infos"/>
-                <field name="siblings"/>
                 <field name="projectroot"/>
                 <field name="child_ids"/>
-                <field name="workflow_id" widget="selection"/>
+                <field name="siblings"/>
             </form>
         </field>
     </record>

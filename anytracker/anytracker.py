@@ -18,7 +18,7 @@ class complexity(osv.osv):
     _name = 'anytracker.ticket.complexity'
     _columns = {
         'name' : fields.char('Name', size=3, required=True),
-        'rating' : fields.float('Rating of time taking')
+        'rating' : fields.float('Rating of time taking'),
         }
 
 complexity()
@@ -79,7 +79,7 @@ class ticket(osv.osv):
     'complexity_id' : fields.many2one('anytracker.ticket.complexity','complexity'),
     'workflow_id' : fields.many2one('anytracker.ticket.workflow1','kanban_status',required=True),
 }
-    
+    #complexity should be a many2many table, so a as to make is possibilble for various users (assignees) to rate different tickets.
     _defaults = {
         'state' : 'Analyse',
         'duration' : 0,
