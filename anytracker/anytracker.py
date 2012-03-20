@@ -46,7 +46,7 @@ class ticket(osv.osv):
     'name' : fields.char('task name', 255, required=True),
     'infos' : fields.text('task description', required=False),
     'state' : fields.char('state', 30, required=False),
-    'siblings' : fields.function(siblings, type='one2many', obj='anytracker.ticket', string = 'Siblings', method =True ),
+    'siblings' : fields.function(siblings, type='many2many', obj='anytracker.ticket', string = 'Siblings', method =True ),
     'projectroot' : fields.boolean('is the root node', required=False),
     'duration' :  fields.selection([
                     (0,'< half a day'),(None,'Will be computed'),
