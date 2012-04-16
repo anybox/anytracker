@@ -1,49 +1,41 @@
 from osv import fields, osv
 
-class fake(osv.osv):
-    _name = 'wf.activity'
-
-fake()
-
-class value(osv.osv):
-    _name = 'anytracker.value'
-value()
-
-class category(osv.osv):
-    _name =  'anytracker.ticket.category'
-
-category()
 
 class complexity(osv.osv):
     _name = 'anytracker.ticket.complexity'
     _columns = {
-        'name' : fields.char('Name', size=3, required=True),
-        'rating' : fields.float('Rating of time taking'),
+        'name': fields.char('Name', size=3, required=True),
+        'rating': fields.float('Rating of time taking'),
         }
 
 complexity()
 
-class workflow(osv.osv):
-    _name = 'abstract_workflow'
-
-workflow()
 
 class workflow1(osv.osv):
     _name = 'anytracker.ticket.workflow1'
     _columns ={
-        'name' : fields.char('name',size = 64 ,required = True),
+        'name': fields.char('name',size = 64 ,required = True),
         'state': fields.char('state',size =64 ,required = True)
         }
-        
-
 
 workflow1()
 
 
+class ticket_history(osv.osv):
+    _name = 'ticket.history'
+    _description = 'History of ticket'
+
+    _columns = {
+        'create_uid': fields.many2one('res.users', 'User', readonly=True),
+        'create_date': fields.datetime('Create Date', readonly=True),
+        'modification': fields.text('Modification', readonly=True),
+    }
+
 
 class ticket(osv.osv):
     _name = 'anytracker.ticket'
-    _description = "Tickets for project management" 
+    _description = "Tickets for project management"
+
     def siblings(self, cr, uid, ids, field_name, args, context=None):
         # res = self.parent.chidlen.pop(self)
         #for nodes in si c'est le parent on prend les fils
@@ -61,24 +53,22 @@ class ticket(osv.osv):
         return res
 
     _columns = {
-    'name' : fields.char('task name', 255, required=True),
-    'infos' : fields.text('task description', required=False),
-    'state' : fields.char('state', 30, required=False),
-    'siblings' : fields.function(siblings, type='many2many', obj='anytracker.ticket', string = 'Siblings', method =True ),
-    'projectroot' : fields.boolean('is the root node', required=False),
-    'duration' :  fields.selection([
-                    (0,'< half a day'),(None,'Will be computed'),
-                (1,'Half a day')],'duration'),
-    'child_ids' : fields.one2many('anytracker.ticket', 'parent_id','children', required=False),
-    'assignedto_ids' : fields.many2many('res.users', 'ticket_assignement_rel' ,'ticket_id','user_id', required=False),
-    'date_ids' : fields.many2many('wf.activity','ticket_date_rel', 'some_id','dates'),
-    'parent_id' : fields.many2one('anytracker.ticket','parent', required=False),
-    'value_id' : fields.many2one('anytracker.value', 'Value'),
-    'category_id' : fields.many2one('anytracker.ticket.category', 'Category'),
-    'requester_id' : fields.many2one('res.users', 'Requester'),
-    'complexity_id' : fields.many2one('anytracker.ticket.complexity','complexity'),
-    'workflow_id' : fields.many2one('anytracker.ticket.workflow1','kanban_status',required=True),
-}
+        'name' : fields.char('task name', 255, required=True),
+        'infos' : fields.text('task description', required=False),
+        'state' : fields.char('state', 30, required=False),
+        'siblings' : fields.function(siblings, type='many2many', obj='anytracker.ticket', string = 'Siblings', method =True ),
+        'projectroot' : fields.boolean('is the root node', required=False),
+        'duration' :  fields.selection([
+                        (0,'< half a day'),(None,'Will be computed'),
+                    (1,'Half a day')],'duration'),
+        'child_ids' : fields.one2many('anytracker.ticket', 'parent_id','children', required=False),
+        'assignedto_ids' : fields.many2many('res.users', 'ticket_assignement_rel' ,'ticket_id','user_id', required=False),
+        'parent_id' : fields.many2one('anytracker.ticket','parent', required=False),
+        'requester_id' : fields.many2one('res.users', 'Requester'),
+        'complexity_id' : fields.many2one('anytracker.ticket.complexity','complexity'),
+        'workflow_id' : fields.many2one('anytracker.ticket.workflow1','kanban_status',required=True),
+        'history_ids': fields.many2many('ticket.history', 'ticket_ticket_history_rel', 'ticket_id', 'history_id', 'History'),
+    }
     #complexity should be a many2many table, so a as to make is possibilble for various users (assignees) to rate different tickets.
     _defaults = {
         'state' : 'Analyse',
@@ -96,8 +86,8 @@ class ticket(osv.osv):
                 orphans[0].set_root()
                 return True
         else:
-             return False    
-       
+             return False
+
     def _check_roots_orphans(self, cr, uid, ids, context = None):
         roots = self._roots(cr, uid, ids, context)
         orphans =  self._orphans(cr, uid, ids, context)
@@ -109,7 +99,7 @@ class ticket(osv.osv):
     def _easy_check(self, cr, uid, context=None):
         return self._check_root_orphans(cr, uid, context=None
            ) or self._autoroot(cr, uid, context=None)
-    
+
 
     def link_to_parent(self, cr, uid,**kw):
         pass
@@ -135,7 +125,7 @@ class ticket(osv.osv):
             if not node.parents:
                 orphans.append(node)
         return orphans
-        
+
     def _set_root(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'root': True},context=context)
 
@@ -146,12 +136,20 @@ class ticket(osv.osv):
         else:
             return False
 
+    def create(self, cr, uid, values, context=None):
+        values['history_ids'] = [(0, 0, {'modification': repr(values)})]
+        return super(ticket, self).create(cr, uid, values, context=context)
+
+    def write(self, cr, uid, ids, values, context=None):
+        values['history_ids'] = [(0, 0, {'modification': repr(values)})]
+        return super(ticket, self).write(cr, uid, ids, values, context=context)
+
 #=========================================================================
 #Devrait renvoyer Bool,roots afin de de pas appeler deux fois _roots
 #une fois pour la verif et une fois pour savoir quels sont les noeuds
 #en cause
 #========================================================================
-  
+
 ticket()
 
 

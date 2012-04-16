@@ -1,98 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-    <record id="task_view_tree" model="ir.ui.view">
-        <field name="name">ticket.tree</field>
-        <field name="model">anytracker.ticket</field>
-        <field name="type">tree</field>
-        <field name="priority" eval="10"/>
-        <field name="arch" type="xml">
-            <tree string="Task treeview">
-                <field name="name"/>
-                <field name="state"/>
-                <field name="complexity_id" widget="selection"/>
-                <field name="duration"/>
-                <field name="infos"/>
-                <field name="projectroot"/>
-                <field name="child_ids"/>
-                <field name="workflow_id" widget="selection"/>
-            </tree>
-        </field>
-    </record>
+        <record id="task_view_tree" model="ir.ui.view">
+            <field name="name">ticket.tree</field>
+            <field name="model">anytracker.ticket</field>
+            <field name="type">tree</field>
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+                <tree string="Task treeview">
+                    <field name="name"/>
+                    <field name="state"/>
+                    <field name="complexity_id" widget="selection"/>
+                    <field name="duration"/>
+                    <field name="infos"/>
+                    <field name="projectroot"/>
+                    <field name="child_ids"/>
+                    <field name="workflow_id" widget="selection"/>
+                </tree>
+            </field>
+        </record>
 
-    <record id="task_view_form" model="ir.ui.view">
-        <field name="name">ticket.form</field>
-        <field name="model">anytracker.ticket</field>
-        <field name="type">form</field>
-        <field name="priority" eval="10"/>
-        <field name="arch" type="xml">
-            <form string="task form">
-                <field name="parent_id"/>
-                <field name="name"/>
-                <field name="state"/>
-                <field name="complexity_id" widget="selection"/>
-                <field name="workflow_id" widget="selection"/>
-                <field name="duration"/>
-                <field name="infos"/>
-                <field name="projectroot"/>
-                <field name="child_ids"/>
-                <field name="siblings"/>
-            </form>
-        </field>
-    </record>
+        <record id="task_view_form" model="ir.ui.view">
+            <field name="name">ticket.form</field>
+            <field name="model">anytracker.ticket</field>
+            <field name="type">form</field>
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+                <form string="task form">
+                    <field name="parent_id"/>
+                    <field name="name"/>
+                    <notebook colspan="4">
+                        <page string="General">
+                            <field name="state"/>
+                            <field name="complexity_id" widget="selection"/>
+                            <field name="workflow_id" widget="selection"/>
+                            <field name="duration"/>
+                            <field name="infos"/>
+                            <field name="projectroot"/>
+                            <field name="child_ids"/>
+                            <field name="siblings"/>
+                        </page>
+                        <page string="History">
+                            <field name="history_ids" nolabel="1" colspan="4" readonly="1">
+                                <tree string="History">
+                                    <field name="create_uid"/>
+                                    <field name="create_date"/>
+                                    <field name="modification"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
 
-    <!-- Ticket Kanban View  -->
-    <record model="ir.ui.view" id="anytracker_kanban_view_tickets">
-        <field name="name">Anytracker - tickets</field>
-        <field name="model">anytracker.ticket</field>
-        <field name="type">kanban</field>
-        <field name="arch" type="xml">
-            <kanban default_group_by="workflow_id">
-                <field name="state"/>
-                <field name="duration"/>
-                <field name="name"/>
-                <field name="siblings"/>
-                <field name="child_ids"/>
-                <templates>
-                    <t t-name="ticket_details">
-                        <ul class="oe_kanban_tooltip">
-                            <li><b>Name: </b> <field name="name"/>%%</li>
-                        </ul>
-                    </t>
-                    <t t-name="kanban-box">
-                        <div t-attf-class=" #{border || ''}">
-                            <div class="oe_kanban_box oe_kanban_color_border">
-                                <table class="oe_kanban_table oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
-                                <tr>
-                                    <td align="left" valign="middle" class="oe_kanban_title" tooltip="lead_details">
-                                        <field name="name"/>
-                                    </td>
-                                </tr>
-                                </table>
+        <!-- Ticket Kanban View  -->
+        <record model="ir.ui.view" id="anytracker_kanban_view_tickets">
+            <field name="name">Anytracker - tickets</field>
+            <field name="model">anytracker.ticket</field>
+            <field name="type">kanban</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="workflow_id">
+                    <field name="state"/>
+                    <field name="duration"/>
+                    <field name="name"/>
+                    <field name="siblings"/>
+                    <field name="child_ids"/>
+                    <templates>
+                        <t t-name="ticket_details">
+                            <ul class="oe_kanban_tooltip">
+                                <li><b>Name: </b> <field name="name"/>%%</li>
+                            </ul>
+                        </t>
+                        <t t-name="kanban-box">
+                            <div t-attf-class=" #{border || ''}">
+                                <div class="oe_kanban_box oe_kanban_color_border">
+                                    <table class="oe_kanban_table oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
+                                        <tr>
+                                            <td align="left" valign="middle" class="oe_kanban_title" tooltip="lead_details">
+                                                <field name="name"/>
+                                            </td>
+                                        </tr>
+                                    </table>
 
-                                <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger">
-                                    <div>
-                                        <field name="name"/>
+                                    <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger">
+                                        <div>
+                                            <field name="name"/>
+                                        </div>
+
                                     </div>
-
                                 </div>
                             </div>
-                        </div>
-                    </t>
-                </templates>
-            </kanban>
-        </field>
-    </record>
-    
-    
-    <record model="ir.actions.act_window" id="action_ticket_form_debug">
-        <field name="name">anytracker.ticket</field>
-        <field name="res_model">anytracker.ticket</field>
-        <field name="view_mode">kanban,form,tree</field>
-    </record>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
 
-    <menuitem name="AnyTracker" id="ticket_menu"/>
-    <menuitem name="Ticket" parent="ticket_menu" id="ticket_menu_mainform" action="action_ticket_form_debug"/>  
-</data>
+
+        <record model="ir.actions.act_window" id="action_ticket_form_debug">
+            <field name="name">anytracker.ticket</field>
+            <field name="res_model">anytracker.ticket</field>
+            <field name="view_mode">kanban,form,tree</field>
+        </record>
+
+        <menuitem name="AnyTracker" id="ticket_menu"/>
+        <menuitem name="Ticket" parent="ticket_menu" id="ticket_menu_mainform" action="action_ticket_form_debug"/>  
+    </data>
 </openerp>
 
