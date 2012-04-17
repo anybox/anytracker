@@ -6,9 +6,14 @@
         'category' : 'Generic Modules/Others',
         'depends' : ['base'],
         'description' : 'Ticket Module',
-        'init_xml' : ['anytracker_view.xml'],
-        'demo_xml' : ['anytracker_view.xml'],
-        'update_xml' : ['ticket_data.xml'],
+        'init_xml' : [
+                ],
+        'demo_xml' : [],
+        'update_xml' : [
+                'anytracker_view.xml',
+                'wizard/import_freemind_wizard.xml',
+                'ticket_data.xml'
+                ],
         'active': False,
         'installable': True
 }
