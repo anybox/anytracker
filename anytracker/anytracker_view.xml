@@ -114,6 +114,9 @@
             </tree>
         </field>
     </record>
+
+    <!-- ACTIONS -->
+
     <record id="ticket_action_select" model="ir.actions.act_window">
         <field name="name">Ticket</field>
         <field name="type">ir.actions.act_window</field>
@@ -131,8 +134,6 @@
         <field eval="'ir.actions.act_window,%d'%ticket_action_select" name="value"/>
     </record>
     
-    <!-- ACTIONS -->
-
     <record model="ir.actions.act_window" id="tickets_action_tree">
         <field name="name">anytracker.tickets.tree</field>
         <field name="res_model">anytracker.ticket</field>
