@@ -31,7 +31,7 @@
         </record>
 
         <menuitem id="menu_import_freemind_wizard"
-            parent="ticket_menu"
+            parent="mainmenu"
             sequence="20"
             action="action_import_freemind_view"/>
     </data>

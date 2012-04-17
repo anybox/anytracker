@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+
+        <!-- VIEWS -->
+
         <record id="task_view_tree" model="ir.ui.view">
             <field name="name">ticket.tree</field>
             <field name="model">anytracker.ticket</field>
@@ -97,15 +100,64 @@
             </field>
         </record>
 
+    <!-- hierarchical view for the tickets -->
+    <record id="tickets_view_hierarchy" model="ir.ui.view">
+        <field name="name">anytracker.tickets.hierarchy</field>
+        <field name="model">anytracker.tickets</field>
+        <field name="type">tree</field>
+        <field name="field_parent">child_ids</field>
+        <field name="arch" type="xml">
+            <tree string="Tickets hierarchy">
+                <field name="name"/>
+                <field name="state"/>
+                <field name="parent_id" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+    <record id="ticket_action_select" model="ir.actions.act_window">
+        <field name="name">Ticket</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">anytracker.ticket</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <!--field name="target">new</field-->
 
-        <record model="ir.actions.act_window" id="action_ticket_form_debug">
-            <field name="name">anytracker.ticket</field>
-            <field name="res_model">anytracker.ticket</field>
-            <field name="view_mode">kanban,form,tree</field>
-        </record>
+    </record>
 
-        <menuitem name="AnyTracker" id="ticket_menu"/>
-        <menuitem name="Ticket" parent="ticket_menu" id="ticket_menu_mainform" action="action_ticket_form_debug"/>  
+    <record id="tickets_ir_select" model="ir.values">
+        <field name="key2">tree_but_open</field>
+        <field name="model">anytracker.ticket</field>
+        <field name="name">Open Ticket</field>
+        <field eval="'ir.actions.act_window,%d'%ticket_action_select" name="value"/>
+    </record>
+    
+    <!-- ACTIONS -->
+
+    <record model="ir.actions.act_window" id="tickets_action_tree">
+        <field name="name">anytracker.tickets.tree</field>
+        <field name="res_model">anytracker.ticket</field>
+        <field name="view_type">tree</field>
+        <field name="view_id" ref="tickets_view_hierarchy"/>
+        <field name="domain">[('parent_id','=',False)]</field>
+    </record>
+    <record model="ir.actions.act_window" id="tickets_action_kanban">
+        <field name="name">anytracker.tickets.kanban</field>
+        <field name="res_model">anytracker.ticket</field>
+        <field name="view_mode">kanban,tree,form</field>
+    </record>
+
+    <!-- MENUITEMS -->
+    
+    <menuitem id="mainmenu"
+              name="AnyTracker" />
+    <menuitem id="tickets_menu"
+              name="Projects"
+              parent="mainmenu"
+              action="tickets_action_tree" />  
+    <menuitem id="tickets_menu_kanban"
+              name="Kanban"
+              parent="mainmenu"
+              action="tickets_action_kanban"/>  
     </data>
 </openerp>
 
