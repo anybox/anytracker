@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+"acc_anytracker_complexity","Complexity","model_anytracker_ticket_complexity","",1,1,1,1
+"acc_anytracker_workflow1","Workflow1","model_anytracker_ticket_workflow1","",1,1,1,1
+"acc_anytracker_history","History","model_ticket_history","",1,1,1,1
+"acc_anytracker_ticket","Ticket","model_anytracker_ticket","",1,1,1,1
