@@ -102,8 +102,8 @@
 
     <!-- hierarchical view for the tickets -->
     <record id="tickets_view_hierarchy" model="ir.ui.view">
-        <field name="name">anytracker.tickets.hierarchy</field>
-        <field name="model">anytracker.tickets</field>
+        <field name="name">anytracker.ticket.hierarchy</field>
+        <field name="model">anytracker.ticket</field>
         <field name="type">tree</field>
         <field name="field_parent">child_ids</field>
         <field name="arch" type="xml">
@@ -135,14 +135,14 @@
     </record>
     
     <record model="ir.actions.act_window" id="tickets_action_tree">
-        <field name="name">anytracker.tickets.tree</field>
+        <field name="name">anytracker.ticket.tree</field>
         <field name="res_model">anytracker.ticket</field>
         <field name="view_type">tree</field>
         <field name="view_id" ref="tickets_view_hierarchy"/>
         <field name="domain">[('parent_id','=',False)]</field>
     </record>
     <record model="ir.actions.act_window" id="tickets_action_kanban">
-        <field name="name">anytracker.tickets.kanban</field>
+        <field name="name">anytracker.ticket.kanban</field>
         <field name="res_model">anytracker.ticket</field>
         <field name="view_mode">kanban,tree,form</field>
     </record>
