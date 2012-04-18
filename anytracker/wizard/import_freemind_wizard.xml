@@ -1,21 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data>
+        ##############################################################################
+        #
+        #    anytracker module for OpenERP, Ticket module
+        #    Copyright (C) 2012 Anibox ([http://www.anybox.fr])
+        #                Colin GOUTTE [cgoute@anybox.fr]
+        #                Christophe COMBELLES [ccomb@anybox.fr]
+        #                Simon ANDRE [sandre@anybox.fr]
+        #                Jean Sebastien SUZANNE [jssuzanne@anybox.fr]
+        #
+        #    This file is a part of anytracker
+        #
+        #    anytracker is free software: you can redistribute it and/or modify
+        #    it under the terms of the GNU General Public License as published by
+        #    the Free Software Foundation, either version 3 of the License, or
+        #    (at your option) any later version.
+        #
+        #    anytracker is distributed in the hope that it will be useful,
+        #    but WITHOUT ANY WARRANTY; without even the implied warranty of
+        #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        #    GNU General Public License for more details.
+        #
+        #    You should have received a copy of the GNU General Public License
+        #    along with this program.  If not, see [http://www.gnu.org/licenses/].
+        #
+        ##############################################################################
+
         <record id="view_import_freemind_form" model="ir.ui.view">
             <field name="name">import freemind wizard form</field>
             <field name="model">import.freemind.wizard</field>
             <field name="type">form</field>
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
-            <form string="Import freemind data">
-                <field name="filename" select="1"/>
-                <separator string="" colspan="4" />
-                <group colspan="4" col="6">
-                    <label string ="" colspan="2"/>
-                    <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                    <button icon="terp-gtk-go-back-rtl" string="Import file" name="execute_import" type="object"/>
-                </group>
-            </form>
+                <form string="Import freemind data">
+                    <field name="filename" select="1"/>
+                    <separator string="" colspan="4" />
+                    <group colspan="4" col="6">
+                        <label string ="" colspan="2"/>
+                        <button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                        <button icon="terp-gtk-go-back-rtl" string="Import file" name="execute_import" type="object"/>
+                    </group>
+                </form>
             </field>
         </record>
 
@@ -34,5 +60,6 @@
             parent="mainmenu"
             sequence="20"
             action="action_import_freemind_view"/>
+
     </data>
 </openerp>

@@ -1,4 +1,30 @@
 # -*- coding: utf-8 -*-
+##############################################################################
+#
+#    anytracker module for OpenERP, Ticket module
+#    Copyright (C) 2012 Anibox (<http://www.anybox.fr>)
+#                Colin GOUTTE <cgoute@anybox.fr>
+#                Christophe COMBELLES <ccomb@anybox.fr>
+#                Simon ANDRE <sandre@anybox.fr>
+#                Jean Sebastien SUZANNE <jssuzanne@anybox.fr>
+#
+#    This file is a part of anytracker
+#
+#    anytracker is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    anytracker is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
+
 from osv import osv, fields
 from tools.translate import _
 from xml.sax import ContentHandler, make_parser, ErrorHandler
@@ -70,7 +96,7 @@ class freemind_content_handler(ContentHandler):
         # rich content
         if name in ['richcontent']:
             self.rich_content_buffer = ''
-        if name in ['html','head', 'body', 'p']:
+        if name in ['html', 'head', 'body', 'p']:
             self.rich_content_buffer += '<' + name + '>'
         # icon
         if name in ['icon']:
@@ -89,16 +115,15 @@ class freemind_content_handler(ContentHandler):
                                                         )[0]
             else:
                 complexity_id = False
-            any_tick_pool.write(self.cr, self.uid, 
+            any_tick_pool.write(self.cr, self.uid,
                         self.parent_ids[-1:][0]['osv_id'],
-                            {'complexity_id' : complexity_id})
+                            {'complexity_id': complexity_id})
 
     def characters(self, content):
         content = content.strip()
         if content != '':
             if self.rich_content_buffer != False:
                 self.rich_content_buffer += content
-
 
     def endElement(self, name):
         any_tick_pool = self.pool.get('anytracker.ticket')
@@ -108,14 +133,14 @@ class freemind_content_handler(ContentHandler):
             else:
                 self.parent_ids.pop()
         # rich content
-        if name in ['html','head', 'body', 'p']:
+        if name in ['html', 'head', 'body', 'p']:
             self.rich_content_buffer += '</' + name + '>'
         if name in ['richcontent']:
-            any_tick_pool.write(self.cr, self.uid, 
+            any_tick_pool.write(self.cr, self.uid,
                             self.parent_ids[-1:][0]['osv_id'],
                                 {
-                                    'infos' : self.rich_content_buffer
-                                }
+                                    'infos': self.rich_content_buffer,
+                                },
                             )
             self.rich_content_buffer = False
 
@@ -138,3 +163,4 @@ class freemind_error_handler(ErrorHandler):
         raise osv.except_osv(_('Warning !'),
                         exception)
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

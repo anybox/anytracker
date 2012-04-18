@@ -1,6 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        ##############################################################################
+        #
+        #    anytracker module for OpenERP, Ticket module
+        #    Copyright (C) 2012 Anibox ([http://www.anybox.fr])
+        #                Colin GOUTTE [cgoute@anybox.fr]
+        #                Christophe COMBELLES [ccomb@anybox.fr]
+        #                Simon ANDRE [sandre@anybox.fr]
+        #                Jean Sebastien SUZANNE [jssuzanne@anybox.fr]
+        #
+        #    This file is a part of anytracker
+        #
+        #    anytracker is free software: you can redistribute it and/or modify
+        #    it under the terms of the GNU General Public License as published by
+        #    the Free Software Foundation, either version 3 of the License, or
+        #    (at your option) any later version.
+        #
+        #    anytracker is distributed in the hope that it will be useful,
+        #    but WITHOUT ANY WARRANTY; without even the implied warranty of
+        #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        #    GNU General Public License for more details.
+        #
+        #    You should have received a copy of the GNU General Public License
+        #    along with this program.  If not, see [http://www.gnu.org/licenses/].
+        #
+        ##############################################################################
+
 
         <!-- VIEWS -->
 
@@ -100,30 +126,30 @@
             </field>
         </record>
 
-    <!-- hierarchical view for the tickets -->
-    <record id="tickets_view_hierarchy" model="ir.ui.view">
-        <field name="name">anytracker.ticket.hierarchy</field>
-        <field name="model">anytracker.ticket</field>
-        <field name="type">tree</field>
-        <field name="field_parent">child_ids</field>
-        <field name="arch" type="xml">
-            <tree string="Tickets hierarchy">
-                <field name="name"/>
-                <field name="state"/>
-                <field name="parent_id" invisible="1"/>
-            </tree>
-        </field>
-    </record>
+        <!-- hierarchical view for the tickets -->
+        <record id="tickets_view_hierarchy" model="ir.ui.view">
+            <field name="name">anytracker.ticket.hierarchy</field>
+            <field name="model">anytracker.ticket</field>
+            <field name="type">tree</field>
+            <field name="field_parent">child_ids</field>
+            <field name="arch" type="xml">
+                <tree string="Tickets hierarchy">
+                    <field name="name"/>
+                    <field name="state"/>
+                    <field name="parent_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
 
-    <!-- ACTIONS -->
+        <!-- ACTIONS -->
 
-    <record id="ticket_action_select" model="ir.actions.act_window">
-        <field name="name">Ticket</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">anytracker.ticket</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-        <!--field name="target">new</field-->
+        <record id="ticket_action_select" model="ir.actions.act_window">
+            <field name="name">Ticket</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">anytracker.ticket</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <!--field name="target">new</field-->
 
     </record>
 
@@ -133,7 +159,7 @@
         <field name="name">Open Ticket</field>
         <field eval="'ir.actions.act_window,%d'%ticket_action_select" name="value"/>
     </record>
-    
+
     <record model="ir.actions.act_window" id="tickets_action_tree">
         <field name="name">anytracker.ticket.tree</field>
         <field name="res_model">anytracker.ticket</field>
@@ -148,17 +174,17 @@
     </record>
 
     <!-- MENUITEMS -->
-    
+
     <menuitem id="mainmenu"
-              name="AnyTracker" />
+        name="AnyTracker" />
     <menuitem id="tickets_menu"
-              name="Projects"
-              parent="mainmenu"
-              action="tickets_action_tree" />  
+        name="Projects"
+        parent="mainmenu"
+        action="tickets_action_tree" />  
     <menuitem id="tickets_menu_kanban"
-              name="Kanban"
-              parent="mainmenu"
-              action="tickets_action_kanban"/>  
-    </data>
+        name="Kanban"
+        parent="mainmenu"
+        action="tickets_action_kanban"/>  
+</data>
 </openerp>
 
