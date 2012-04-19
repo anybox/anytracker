@@ -66,27 +66,21 @@ class ticket(osv.osv):
 
     _description = "Tickets for project management"
 
-    def siblings(self, cr, uid, ids, field_name, args, context=None):
-        # res = self.parent.chidlen.pop(self)
-        #for nodes in si c'est le parent on prend les fils
-        # on renvoit la liste des fils sans l'appelant
-        #retourner un dict
+    def _get_siblings(self, cr, uid, ids, field_name, args, context=None):
         res = {}
-        tickets = self.browse(cr, uid, ids, context)
-        for t in tickets:
-            res[t.id] = False
-            if t.parent_id.id != False:
-                res[t.id] = t.parent_id.id
-                bros = [b.id for b in t.parent_id.child_ids]
-                bros.remove(t.id)
-                res[t.id] = bros
+        for t in self.browse(cr, uid, ids, context):
+            domain = [
+                ('parent_id', '=', t.parent.id),  # the same parent
+                ('id', '!=', t.id),  # not me
+            ]
+            res[t.id] = self.search(cr, uid, domain, context=context)
         return res
 
     _columns = {
         'name': fields.char('task name', 255, required=True),
         'infos': fields.text('task description', required=False),
         'state': fields.char('state', 30, required=False),
-        'siblings': fields.function(siblings, type='many2many', obj='anytracker.ticket', string='Siblings', method=True),
+        'siblings': fields.function(_get_siblings, type='many2many', obj='anytracker.ticket', string='Siblings', method=True),
         'duration': fields.selection([(0, '< half a day'), (None, 'Will be computed'), (1, 'Half a day')], 'duration'),
         'child_ids': fields.one2many('anytracker.ticket', 'parent_id', 'children', required=False),
         'assignedto_ids': fields.many2many('res.users', 'ticket_assignement_rel', 'ticket_id', 'user_id', required=False),
