@@ -77,16 +77,16 @@ class ticket(osv.osv):
         return res
 
     _columns = {
-        'name': fields.char('task name', 255, required=True),
-        'infos': fields.text('task description', required=False),
+        'name': fields.char('Ticket name', 255, required=True),
+        'description': fields.text('Ticket description', required=False),
         'state': fields.char('state', 30, required=False),
-        'siblings': fields.function(_get_siblings, type='many2many', obj='anytracker.ticket', string='Siblings', method=True),
+        'siblings_ids': fields.function(_get_siblings, type='many2many', obj='anytracker.ticket', string='Siblings', method=True),
         'duration': fields.selection([(0, '< half a day'), (None, 'Will be computed'), (1, 'Half a day')], 'duration'),
-        'child_ids': fields.one2many('anytracker.ticket', 'parent_id', 'children', required=False),
+        'child_ids': fields.one2many('anytracker.ticket', 'parent_id', 'Children', required=False),
         'assignedto_ids': fields.many2many('res.users', 'ticket_assignement_rel', 'ticket_id', 'user_id', required=False),
-        'parent_id': fields.many2one('anytracker.ticket', 'parent', required=False),
+        'parent_id': fields.many2one('anytracker.ticket', 'Parent', required=False),
         'requester_id': fields.many2one('res.users', 'Requester'),
-        'complexity_id': fields.many2one('anytracker.ticket.complexity', 'complexity'),
+        'complexity_id': fields.many2one('anytracker.ticket.complexity', 'Complexity'),
         'workflow_id': fields.many2one('anytracker.ticket.workflow1', 'kanban_status', required=True),
         'history_ids': fields.many2many('anytracker.ticket.history', 'ticket_ticket_history_rel', 'ticket_id', 'history_id', 'History'),
     }
