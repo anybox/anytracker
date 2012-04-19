@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-->
-This data wil be provided for time requirement estimation, taking Fibonnacci's
-sequence. 
-<!-->
-
 <openerp>
     <data>
         ##############################################################################
@@ -32,64 +27,30 @@ sequence.
         #
         ##############################################################################
 
-        <record id="1" model="anytracker.ticket.complexity">
-            <field name="name">1</field>
-            <field name="rating">1</field>
-        </record>
-
-        <record id="2" model="anytracker.ticket.complexity">
-            <field name="name">2</field>
-            <field name="rating">2</field>
-        </record>
-
-        <record id="3" model="anytracker.ticket.complexity">
-            <field name="name">3</field>
-            <field name="rating">3</field>
-        </record>
-
-        <record id="5" model="anytracker.ticket.complexity">
-            <field name="name">8</field>
-            <field name="rating">8</field>
-        </record>
-
-        <record id="13" model="anytracker.ticket.complexity">
-            <field name="name">21</field>
-            <field name="rating">21</field>
-        </record>
-
-        <record id="34" model="anytracker.ticket.complexity">
-            <field name="name">34</field>
-            <field name="rating">34</field>
-        </record>
-
-        <record id="55" model="anytracker.ticket.complexity">
-            <field name="name">55</field>
-            <field name="rating">55</field>
-        </record>
-
-        <record id="89" model="anytracker.ticket.complexity">
-            <field name="name">89</field>
-            <field name="rating">89</field>
-        </record>
-        <record id="56" model="anytracker.ticket.workflow1">
+        <record id="anytracker_ticket_workflow1_analyse" model="anytracker.ticket.workflow1">
             <field name="name">Analyse</field>
             <field name="state">Analyse</field>
         </record>
-        <record id="57" model="anytracker.ticket.workflow1">
+
+        <record id="anytracker_ticket_workflow1_dev" model="anytracker.ticket.workflow1">
             <field name="name">dev</field>
             <field name="state">dev</field>
         </record>
-        <record id="58" model="anytracker.ticket.workflow1">
+
+        <record id="anytracker_ticket_workflow1_test" model="anytracker.ticket.workflow1">
             <field name="name">test</field>
             <field name="state">test</field>
         </record>
-        <record id="59" model="anytracker.ticket.workflow1">
+
+        <record id="anytracker_ticket_workflow1_doc" model="anytracker.ticket.workflow1">
             <field name="name">doc</field>
             <field name="state">doc</field>
         </record>
-        <record id="60" model="anytracker.ticket.workflow1">
+
+        <record id="anytracker_ticket_workflow1_delivery" model="anytracker.ticket.workflow1">
             <field name="name">delivery</field>
             <field name="state">delivery</field>
         </record>
+
     </data>
 </openerp>

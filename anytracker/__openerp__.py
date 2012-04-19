@@ -40,9 +40,12 @@
             'security/ir.model.access.csv',
             'anytracker_view.xml',
             'wizard/import_freemind_wizard.xml',
-            'ticket_data.xml'
+            #data
+            'data/complexity.xml',
+            'data/workflow1.xml',
         ],
         'active': False,
         'installable': True
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

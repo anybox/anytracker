@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        ##############################################################################
+        #
+        #    anytracker module for OpenERP, Ticket module
+        #    Copyright (C) 2012 Anibox ([http://www.anybox.fr])
+        #                Colin GOUTTE [cgoute@anybox.fr]
+        #                Christophe COMBELLES [ccomb@anybox.fr]
+        #                Simon ANDRE [sandre@anybox.fr]
+        #                Jean Sebastien SUZANNE [jssuzanne@anybox.fr]
+        #
+        #    This file is a part of anytracker
+        #
+        #    anytracker is free software: you can redistribute it and/or modify
+        #    it under the terms of the GNU General Public License as published by
+        #    the Free Software Foundation, either version 3 of the License, or
+        #    (at your option) any later version.
+        #
+        #    anytracker is distributed in the hope that it will be useful,
+        #    but WITHOUT ANY WARRANTY; without even the implied warranty of
+        #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        #    GNU General Public License for more details.
+        #
+        #    You should have received a copy of the GNU General Public License
+        #    along with this program.  If not, see [http://www.gnu.org/licenses/].
+        #
+        ##############################################################################
+
+        <record id="anytracker_ticket_complexity_1" model="anytracker.ticket.complexity">
+            <field name="name">1</field>
+            <field name="rating">1</field>
+        </record>
+
+        <record id="anytracker_ticket_complexity_2" model="anytracker.ticket.complexity">
+            <field name="name">2</field>
+            <field name="rating">2</field>
+        </record>
+
+        <record id="anytracker_ticket_complexity_3" model="anytracker.ticket.complexity">
+            <field name="name">3</field>
+            <field name="rating">3</field>
+        </record>
+
+        <record id="anytracker_ticket_complexity_5" model="anytracker.ticket.complexity">
+            <field name="name">8</field>
+            <field name="rating">8</field>
+        </record>
+
+        <record id="anytracker_ticket_complexity_13" model="anytracker.ticket.complexity">
+            <field name="name">21</field>
+            <field name="rating">21</field>
+        </record>
+
+        <record id="anytracker_ticket_complexity_34" model="anytracker.ticket.complexity">
+            <field name="name">34</field>
+            <field name="rating">34</field>
+        </record>
+
+        <record id="anytracker_ticket_complexity_55" model="anytracker.ticket.complexity">
+            <field name="name">55</field>
+            <field name="rating">55</field>
+        </record>
+
+        <record id="anytracker_ticket_complexity_89" model="anytracker.ticket.complexity">
+            <field name="name">89</field>
+            <field name="rating">89</field>
+        </record>
+
+    </data>
+</openerp>
