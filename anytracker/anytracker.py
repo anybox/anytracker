@@ -70,7 +70,7 @@ class ticket(osv.osv):
         res = {}
         for t in self.browse(cr, uid, ids, context):
             domain = [
-                ('parent_id', '=', t.parent.id),  # the same parent
+                ('parent_id', '=', t.parent_id.id),  # the same parent
                 ('id', '!=', t.id),  # not me
             ]
             res[t.id] = self.search(cr, uid, domain, context=context)
@@ -88,7 +88,7 @@ class ticket(osv.osv):
         'requester_id': fields.many2one('res.users', 'Requester'),
         'complexity_id': fields.many2one('anytracker.ticket.complexity', 'complexity'),
         'workflow_id': fields.many2one('anytracker.ticket.workflow1', 'kanban_status', required=True),
-        'history_ids': fields.many2many('ticket.history', 'ticket_ticket_history_rel', 'ticket_id', 'history_id', 'History'),
+        'history_ids': fields.many2many('anytracker.ticket.history', 'ticket_ticket_history_rel', 'ticket_id', 'history_id', 'History'),
     }
 
     #complexity should be a many2many table, so a as to make is possibilble for various users (assignees) to rate different tickets.
@@ -136,6 +136,8 @@ class ticket(osv.osv):
             return vals
 
         def _many2one(fieldname, obj, val):
+            if not val:
+                return ""
             obj = self.pool.get(obj)
             nameget = obj.name_get(cr, uid, [val], context=context)[0][1]
             return _('Modify field %s with new valeur %s\n') % (fieldname, nameget)
