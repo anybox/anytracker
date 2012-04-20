@@ -26,6 +26,7 @@
 
 from osv import fields, osv
 from tools.translate import _
+import time
 
 
 class complexity(osv.osv):
@@ -44,7 +45,12 @@ class workflow1(osv.osv):
 
     _columns = {
         'name': fields.char('name', size=64, required=True),
-        'state': fields.char('state', size=64, required=True)
+        'state': fields.char('state', size=64, required=True),
+        'default': fields.boolean('Default'),
+    }
+
+    _defaults = {
+         'default': lambda *a: False,
     }
 
 
@@ -89,16 +95,26 @@ class ticket(osv.osv):
         'complexity_id': fields.many2one('anytracker.ticket.complexity', 'Complexity'),
         'workflow_id': fields.many2one('anytracker.ticket.workflow1', 'kanban_status', required=True),
         'history_ids': fields.many2many('anytracker.ticket.history', 'ticket_ticket_history_rel', 'ticket_id', 'history_id', 'History'),
+        'id_mindmap': fields.char('ID MindMap', size=64),
+        'created_mindmap': fields.datetime('Created MindMap'),
+        'modified_mindmap': fields.datetime('Modified MindMap'),
+        'modified_openerp': fields.datetime('Modified OpenERP'),
     }
 
     #complexity should be a many2many table, so a as to make is possibilble for various users (assignees) to rate different tickets.
     _defaults = {
         'state': 'Analyse',
         'duration': 0,
-        }
+    }
+
+    _sql_constraints = [
+        ('id_and_create_mindmap_uniq', 'unique (id_mindmap, create_mindmap)', 'The id_mindmap and create_mindmap of the Ticket must be unique !'),
+    ]
 
     def _add_history(self, cr, uid, values, context=None):
         vals = ""
+        if context.get('import_mindmap', False):
+            vals += _("Update from Import MindMap\n")
         def _all2many(name, obj, val):
             if not val:
                 return ""
@@ -168,10 +184,31 @@ class ticket(osv.osv):
         return values
 
     def create(self, cr, uid, values, context=None):
+        if values.get('id_mindmap'):
+            # Create by import
+            values['modified_openerp'] = values.get('modified_mindmap')
+        else:
+            #TODO generate id_mindmap
+            #TODO generate time
+            pass
         values = self._add_history(cr, uid, values, context=context)
         return super(ticket, self).create(cr, uid, values, context=context)
 
     def write(self, cr, uid, ids, values, context=None):
+        def _be_updated():
+            for i in ('name', 'description', 'complexity_id', 'workflow_id', 'parent_id'):
+                if values.get(i):
+                    return True
+            return False
+        if values.get('modified_mindmap'):
+            for i in self.read(cr, uid, ids, ['name', 'modified_openerp'], context=context):
+                if values['modified_mindmap'] < i['modified_openerp']:
+                    raise osv.except_osv(_('Error'), _('You can t update the ticket %s') % i['name'])
+        elif context.get('import_mindmap', False):
+            # description and complexity
+            pass
+        elif _be_updated():
+            values['modified_openerp'] = time.strftime('%Y-%m-%d %H:%M:%S')
         values = self._add_history(cr, uid, values, context=context)
         return super(ticket, self).write(cr, uid, ids, values, context=context)
 

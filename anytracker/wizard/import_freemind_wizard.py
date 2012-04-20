@@ -28,6 +28,7 @@
 from osv import osv, fields
 from tools.translate import _
 from xml.sax import ContentHandler, make_parser, ErrorHandler
+from datetime import datetime
 
 
 class import_freemind_wizard(osv.osv_memory):
@@ -36,12 +37,12 @@ class import_freemind_wizard(osv.osv_memory):
     _description = 'Import freemind .mm file for generate anytracker tree'
 
     _columns = {
-            'filename': fields.char(_('Filename'), size=128, required=True),
-                }
+        'filename': fields.char(_('Filename'), size=128, required=True),
+    }
 
-    def execute_import(self, cr, uid, ids, context={}):
+    def execute_import(self, cr, uid, ids, context=None):
         '''Launch import of nn file from freemind'''
-        for wiz_brw in self.browse(cr, uid, ids):
+        for wiz_brw in self.browse(cr, uid, ids, context=context):
             path = wiz_brw.filename
             parser = make_parser()
             handler = freemind_content_handler(cr, uid, self.pool)
@@ -65,11 +66,14 @@ class freemind_content_handler(ContentHandler):
         self.parent_ids = []
         self.project_root = True
         self.rich_content_buffer = False
+        self.context = self.pool.get('res.users').context_get(cr, uid, uid)
+        self.context['import_mindmap'] = True
 
     def startElement(self, name, attrs):
         names = attrs.getNames()
         any_tick_pool = self.pool.get('anytracker.ticket')
         any_complex_pool = self.pool.get('anytracker.ticket.complexity')
+        any_workflow1_pool = self.pool.get('anytracker.ticket.workflow1')
         if name in ['node']:
             text_name = ''
             if 'TEXT' in names:
@@ -80,18 +84,34 @@ class freemind_content_handler(ContentHandler):
                 self.parent_id = False
             else:
                 self.parent_id = self.parent_ids[-1:][0]['osv_id']
-            osv_id = any_tick_pool.create(self.cr, self.uid, {
-                                'name': text_name,
-                                'infos': '',
-                                'projectroot': self.project_root,
-                                'workflow_id': 1,
-                                'parent_id': self.parent_id
-                                }
-                                )
-            if 'ID' in names:
-                self.parent_ids.append({'id': attrs.getValue('ID'), 'osv_id': osv_id})
+
+            modified_mindmap = datetime.fromtimestamp(int(attrs.getValue('MODIFIED'))/1000.0)
+            modified_mindmap = datetime.strftime(modified_mindmap, '%Y-%m-%d %H:%M:%S')
+            created_mindmap = datetime.fromtimestamp(int(attrs.getValue('CREATED'))/1000.0)
+            created_mindmap = datetime.strftime(created_mindmap, '%Y-%m-%d %H:%M:%S')
+            id_mindmap = attrs.getValue('ID')
+            vals = {
+                'name': text_name,
+                'parent_id': self.parent_id,
+                'id_mindmap': id_mindmap,
+                'modified_mindmap': modified_mindmap,
+                'created_mindmap': created_mindmap,
+                'modified_openerp': modified_mindmap,
+            }
+            osv_id = any_tick_pool.search(self.cr, self.uid,
+                    [('id_mindmap', '=', id_mindmap), ('created_mindmap', '=', created_mindmap)],
+                    context=self.context)
+            if not osv_id:
+                workflow_id = any_workflow1_pool.search(self.cr, self.uid,
+                    [('default', '=', True)], context=self.context)
+                if workflow_id:
+                    vals['workflow_id'] = workflow_id[0]
+                osv_id = any_tick_pool.create(self.cr, self.uid, vals, context=self.context)
             else:
-                self.parent_ids.append({'id': False, 'osv_id': osv_id})
+                # unique constrainte sql
+                any_tick_pool.write(self.cr, self.uid, osv_id, vals, context=self.context)
+                osv_id = osv_id[0]
+            self.parent_ids.append({'id': id_mindmap, 'osv_id': osv_id})
             self.project_root = False
         # rich content
         if name in ['richcontent']:
@@ -103,21 +123,17 @@ class freemind_content_handler(ContentHandler):
             icon = attrs.getValue('BUILTIN')
             if icon == 'flag-green':
                 complexity_id = any_complex_pool.search(self.cr, self.uid,
-                                                        [('rating', '=', 8)]
-                                                        )[0]
+                    [('rating', '=', 8)], context=self.context)[0]
             elif icon == 'flag-orange':
                 complexity_id = any_complex_pool.search(self.cr, self.uid,
-                                                        [('rating', '=', 34)]
-                                                        )[0]
+                    [('rating', '=', 34)], context=self.context)[0]
             elif icon == 'flag-red':
                 complexity_id = any_complex_pool.search(self.cr, self.uid,
-                                                        [('rating', '=', 89)]
-                                                        )[0]
+                    [('rating', '=', 89)], context=self.context)[0]
             else:
                 complexity_id = False
-            any_tick_pool.write(self.cr, self.uid,
-                        self.parent_ids[-1:][0]['osv_id'],
-                            {'complexity_id': complexity_id})
+            any_tick_pool.write(self.cr, self.uid, self.parent_ids[-1:][0]['osv_id'],
+                {'complexity_id': complexity_id}, context=self.context)
 
     def characters(self, content):
         content = content.strip()
@@ -136,12 +152,8 @@ class freemind_content_handler(ContentHandler):
         if name in ['html', 'head', 'body', 'p']:
             self.rich_content_buffer += '</' + name + '>'
         if name in ['richcontent']:
-            any_tick_pool.write(self.cr, self.uid,
-                            self.parent_ids[-1:][0]['osv_id'],
-                                {
-                                    'infos': self.rich_content_buffer,
-                                },
-                            )
+            any_tick_pool.write(self.cr, self.uid, self.parent_ids[-1:][0]['osv_id'],
+                {'description': self.rich_content_buffer}, context=self.context)
             self.rich_content_buffer = False
 
 

@@ -30,6 +30,7 @@
         <record id="anytracker_ticket_workflow1_analyse" model="anytracker.ticket.workflow1">
             <field name="name">Analyse</field>
             <field name="state">Analyse</field>
+            <field name="default" eval="True"/>
         </record>
 
         <record id="anytracker_ticket_workflow1_dev" model="anytracker.ticket.workflow1">
