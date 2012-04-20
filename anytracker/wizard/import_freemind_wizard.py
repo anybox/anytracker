@@ -27,35 +27,32 @@
 
 from osv import osv, fields
 from tools.translate import _
-from xml.sax import ContentHandler, make_parser, ErrorHandler
+from xml import sax
 from datetime import datetime
+from cStringIO import StringIO
+from base64 import b64decode
 
 
 class import_freemind_wizard(osv.osv_memory):
     _name = 'import.freemind.wizard'
-
     _description = 'Import freemind .mm file for generate anytracker tree'
-
     _columns = {
-        'filename': fields.char(_('Filename'), size=128, required=True),
+        'mindmap_content': fields.binary(_('File'), required=True),
     }
 
     def execute_import(self, cr, uid, ids, context=None):
         '''Launch import of nn file from freemind'''
-        for wiz_brw in self.browse(cr, uid, ids, context=context):
-            path = wiz_brw.filename
-            parser = make_parser()
-            handler = freemind_content_handler(cr, uid, self.pool)
-            handlerError = freemind_error_handler()
-            parser.setContentHandler(handler)
-            parser.setErrorHandler(handlerError)
-            parser.parse(path)
+        for wizard in self.browse(cr, uid, ids, context=context):
+            content_handler = FreemindContentHandler(cr, uid, self.pool)
+            error_handler = FreemindErrorHandler()
+            sax.parse(StringIO(b64decode(wizard.mindmap_content)),
+                      content_handler, error_handler)
         return {'type': 'ir.actions.act_window_close'}
 
 import_freemind_wizard()
 
 
-class freemind_content_handler(ContentHandler):
+class FreemindContentHandler(sax.ContentHandler):
     '''Handling event of sax xml parser'''
 
     def __init__(self, cr, uid, pool):
@@ -156,7 +153,7 @@ class freemind_content_handler(ContentHandler):
 
     def endDocument(self):
         ticket_obj = self.pool.get('anytracker.ticket')
-        first_ticket_ids = self.updated_ticket_ids[0]
+        first_ticket_ids = self.updated_ticket_ids[:0]
         domain = [
             ('id', 'child_of', first_ticket_ids),  # children of main ticket
             ('id', 'not in', self.updated_ticket_ids),  # ticket not updated
@@ -164,22 +161,22 @@ class freemind_content_handler(ContentHandler):
         deleted_ticket_ids = ticket_obj.search(self.cr, self.uid, domain, context=self.context)
         ticket_obj.unlink(self.cr, self.uid, deleted_ticket_ids, context=self.context)
 
-class freemind_error_handler(ErrorHandler):
+class FreemindErrorHandler(sax.ErrorHandler):
     '''Handling error event of sax xml parser'''
 
     def error(self, exception):
         "Handle a recoverable error."
         raise osv.except_osv(_('Error !'),
-                        exception)
+                        exception.args[0])
 
     def fatalError(self, exception):
         "Handle a non-recoverable error."
         raise osv.except_osv(_('Error !'),
-                        exception)
+                        exception.args[0])
 
     def warning(self, exception):
         "Handle a warning."
         raise osv.except_osv(_('Warning !'),
-                        exception)
+                        exception.args[0])
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
