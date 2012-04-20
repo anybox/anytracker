@@ -64,7 +64,7 @@ class freemind_content_handler(ContentHandler):
         self.uid = uid
         self.pool = pool
         self.parent_ids = []
-        self.project_root = True
+        self.updated_ticket_ids = []
         self.rich_content_buffer = False
         self.context = self.pool.get('res.users').context_get(cr, uid, uid)
         self.context['import_mindmap'] = True
@@ -112,7 +112,7 @@ class freemind_content_handler(ContentHandler):
                 any_tick_pool.write(self.cr, self.uid, osv_id, vals, context=self.context)
                 osv_id = osv_id[0]
             self.parent_ids.append({'id': id_mindmap, 'osv_id': osv_id})
-            self.project_root = False
+            self.updated_ticket_ids.append(osv_id)
         # rich content
         if name in ['richcontent']:
             self.rich_content_buffer = ''
@@ -144,9 +144,7 @@ class freemind_content_handler(ContentHandler):
     def endElement(self, name):
         any_tick_pool = self.pool.get('anytracker.ticket')
         if name in ['node']:
-            if len(self.parent_ids) == 0:
-                self.project_root = True
-            else:
+            if len(self.parent_ids) != 0:
                 self.parent_ids.pop()
         # rich content
         if name in ['html', 'head', 'body', 'p']:
@@ -156,6 +154,15 @@ class freemind_content_handler(ContentHandler):
                 {'description': self.rich_content_buffer}, context=self.context)
             self.rich_content_buffer = False
 
+    def endDocument(self):
+        ticket_obj = self.pool.get('anytracker.ticket')
+        first_ticket_ids = self.updated_ticket_ids[0]
+        domain = [
+            ('id', 'child_of', first_ticket_ids),  # children of main ticket
+            ('id', 'not in', self.updated_ticket_ids),  # ticket not updated
+        ]
+        deleted_ticket_ids = ticket_obj.search(self.cr, self.uid, domain, context=self.context)
+        ticket_obj.unlink(self.cr, self.uid, deleted_ticket_ids, context=self.context)
 
 class freemind_error_handler(ErrorHandler):
     '''Handling error event of sax xml parser'''
