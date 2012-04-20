@@ -108,7 +108,7 @@ class ticket(osv.osv):
     }
 
     _sql_constraints = [
-        ('id_and_create_mindmap_uniq', 'unique (id_mindmap, create_mindmap)', 'The id_mindmap and create_mindmap of the Ticket must be unique !'),
+        ('id_and_created_mindmap_uniq', 'unique (id_mindmap, created_mindmap)', 'The id_mindmap and created_mindmap of the Ticket must be unique !'),
     ]
 
     def _add_history(self, cr, uid, values, context=None):
