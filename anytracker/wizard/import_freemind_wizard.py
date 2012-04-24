@@ -37,13 +37,15 @@ class import_freemind_wizard(osv.osv_memory):
     _name = 'import.freemind.wizard'
     _description = 'Import freemind .mm file for generate anytracker tree'
     _columns = {
+        'ticket_id': fields.many2one('anytracker.ticket', 'Ticket', domain="[('parent_id', '=', False)]"),
         'mindmap_content': fields.binary(_('File'), required=True),
     }
 
     def execute_import(self, cr, uid, ids, context=None):
         '''Launch import of nn file from freemind'''
         for wizard in self.browse(cr, uid, ids, context=context):
-            content_handler = FreemindContentHandler(cr, uid, self.pool)
+            ticket_id = wizard.ticket_id and wizard.ticket_id.id or False
+            content_handler = FreemindContentHandler(cr, uid, self.pool, ticket_id)
             error_handler = FreemindErrorHandler()
             sax.parse(StringIO(b64decode(wizard.mindmap_content)),
                       content_handler, error_handler)
@@ -55,11 +57,12 @@ import_freemind_wizard()
 class FreemindContentHandler(sax.ContentHandler):
     '''Handling event of sax xml parser'''
 
-    def __init__(self, cr, uid, pool):
+    def __init__(self, cr, uid, pool, ticket_id):
         '''get element for access to openobject pool and db cursor'''
         self.cr = cr
         self.uid = uid
         self.pool = pool
+        self.ticket_id = ticket_id
         self.parent_ids = []
         self.updated_ticket_ids = []
         self.rich_content_buffer = False
@@ -95,17 +98,23 @@ class FreemindContentHandler(sax.ContentHandler):
                 'created_mindmap': created_mindmap,
                 'modified_openerp': modified_mindmap,
             }
-            osv_id = any_tick_pool.search(self.cr, self.uid,
-                    [('id_mindmap', '=', id_mindmap), ('created_mindmap', '=', created_mindmap)],
+            domain = [
+                ('id_mindmap', '=', id_mindmap),
+                ('created_mindmap', '=', created_mindmap),
+            ]
+            if self.parent_id:
+                domain.append(('parent_id', '=', self.parent_id))
+            elif self.ticket_id:
+                domain.append(('id', '=', self.ticket_id))
+            osv_id = any_tick_pool.search(self.cr, self.uid, domain,
                     context=self.context)
-            if not osv_id:
+            if (not osv_id) or (not self.parent_id and not self.ticket_id):
                 workflow_id = any_workflow1_pool.search(self.cr, self.uid,
                     [('default', '=', True)], context=self.context)
                 if workflow_id:
                     vals['workflow_id'] = workflow_id[0]
                 osv_id = any_tick_pool.create(self.cr, self.uid, vals, context=self.context)
             else:
-                # unique constrainte sql
                 any_tick_pool.write(self.cr, self.uid, osv_id, vals, context=self.context)
                 osv_id = osv_id[0]
             self.parent_ids.append({'id': id_mindmap, 'osv_id': osv_id})
@@ -153,9 +162,12 @@ class FreemindContentHandler(sax.ContentHandler):
 
     def endDocument(self):
         ticket_obj = self.pool.get('anytracker.ticket')
-        first_ticket_ids = self.updated_ticket_ids[:0]
+        first_ticket_id = self.updated_ticket_ids[0]
+        if self.ticket_id:
+            if self.ticket_id != first_ticket_id:
+                raise osv.except_osv(_('Error'), _('You try to update the wrong main ticket'))
         domain = [
-            ('id', 'child_of', first_ticket_ids),  # children of main ticket
+            ('id', 'child_of', first_ticket_id),  # children of main ticket
             ('id', 'not in', self.updated_ticket_ids),  # ticket not updated
         ]
         deleted_ticket_ids = ticket_obj.search(self.cr, self.uid, domain, context=self.context)

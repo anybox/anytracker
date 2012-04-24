@@ -107,10 +107,6 @@ class ticket(osv.osv):
         'duration': 0,
     }
 
-    _sql_constraints = [
-        ('id_and_created_mindmap_uniq', 'unique (id_mindmap, created_mindmap)', 'The id_mindmap and created_mindmap of the Ticket must be unique !'),
-    ]
-
     def _add_history(self, cr, uid, values, context=None):
         vals = ""
         if context.get('import_mindmap', False):
