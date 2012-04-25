@@ -1,7 +1,7 @@
 ##############################################################################
 #
 #    anytracker module for OpenERP, Ticket module
-#    Copyright (C) 2012 Anibox (<http://www.anybox.fr>)
+#    Copyright (C) 2012 Anybox (<http://www.anybox.fr>)
 #                Colin GOUTTE <cgoute@anybox.fr>
 #                Christophe COMBELLES <ccomb@anybox.fr>
 #                Simon ANDRE <sandre@anybox.fr>
@@ -27,7 +27,7 @@
 {
         'name' : 'anytracker',
         'version' : '0.1',
-        'author' : 'cgoutte',
+        'author' : 'Anybox',
         'website' : 'http://anybox.fr',
         'category' : 'Generic Modules/Others',
         'depends' : [
