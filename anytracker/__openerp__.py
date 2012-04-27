@@ -33,7 +33,7 @@
         'depends' : [
             'base',
         ],
-        'description' : 'Ticket Module',
+        'description' : 'Hierarchical task manager',
         'init_xml' : [],
         'demo_xml' : [],
         'update_xml' : [
