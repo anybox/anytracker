@@ -170,15 +170,18 @@
 
         <!-- MENUITEMS -->
 
-        <menuitem id="mainmenu"
+        <menuitem id="mainmenuanytracker"
             name="AnyTracker" />
-        <menuitem id="tickets_menu"
+        <menuitem id="projets_menu"
             name="Projects"
-            parent="mainmenu"
+            parent="mainmenuanytracker"/>
+        <menuitem id="tickets_menu"
+            name="Tree view"
+            parent="projets_menu"
             action="tickets_action_tree" />  
         <menuitem id="tickets_menu_kanban"
-            name="Kanban"
-            parent="mainmenu"
+            name="Kanban view"
+            parent="projets_menu"
             action="tickets_action_kanban"/>  
 
     </data>

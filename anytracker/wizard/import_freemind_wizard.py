@@ -39,13 +39,24 @@ class import_freemind_wizard(osv.osv_memory):
     _columns = {
         'ticket_id': fields.many2one('anytracker.ticket', 'Ticket', domain="[('parent_id', '=', False)]"),
         'mindmap_content': fields.binary(_('File'), required=True),
+        'green_complexity': fields.many2one('anytracker.ticket.complexity', 'green complexity'),
+        'orange_complexity': fields.many2one('anytracker.ticket.complexity', 'orange complexity'),
+        'red_complexity': fields.many2one('anytracker.ticket.complexity', 'red complexity'),
     }
 
     def execute_import(self, cr, uid, ids, context=None):
         '''Launch import of nn file from freemind'''
+        any_tick_complexity_pool = self.pool.get('anytracker.ticket.complexity')
         for wizard in self.browse(cr, uid, ids, context=context):
+            complexity_dict = {'green_complexity_id': wizard.green_complexity.id or \
+                                any_tick_complexity_pool.search(cr, uid, [('rating', '=', 3)])[0],
+                               'orange_complexity_id': wizard.orange_complexity.id or \
+                                any_tick_complexity_pool.search(cr, uid, [('rating', '=', 21   )])[0],
+                               'red_complexity_id': wizard.red_complexity.id or \
+                                any_tick_complexity_pool.search(cr, uid, [('rating', '=', 3)])[0],
+                               }
             ticket_id = wizard.ticket_id and wizard.ticket_id.id or False
-            content_handler = FreemindContentHandler(cr, uid, self.pool, ticket_id)
+            content_handler = FreemindContentHandler(cr, uid, self.pool, ticket_id, complexity_dict)
             error_handler = FreemindErrorHandler()
             sax.parse(StringIO(b64decode(wizard.mindmap_content)),
                       content_handler, error_handler)
@@ -57,7 +68,7 @@ import_freemind_wizard()
 class FreemindContentHandler(sax.ContentHandler):
     '''Handling event of sax xml parser'''
 
-    def __init__(self, cr, uid, pool, ticket_id):
+    def __init__(self, cr, uid, pool, ticket_id, complexity_dict):
         '''get element for access to openobject pool and db cursor'''
         self.cr = cr
         self.uid = uid
@@ -65,6 +76,7 @@ class FreemindContentHandler(sax.ContentHandler):
         self.ticket_id = ticket_id
         self.parent_ids = []
         self.updated_ticket_ids = []
+        self.complexity_dict = complexity_dict
         self.rich_content_buffer = False
         self.context = self.pool.get('res.users').context_get(cr, uid, uid)
         self.context['import_mindmap'] = True
@@ -72,7 +84,6 @@ class FreemindContentHandler(sax.ContentHandler):
     def startElement(self, name, attrs):
         names = attrs.getNames()
         any_tick_pool = self.pool.get('anytracker.ticket')
-        any_complex_pool = self.pool.get('anytracker.ticket.complexity')
         any_workflow1_pool = self.pool.get('anytracker.ticket.workflow1')
         if name in ['node']:
             text_name = ''
@@ -128,14 +139,11 @@ class FreemindContentHandler(sax.ContentHandler):
         if name in ['icon']:
             icon = attrs.getValue('BUILTIN')
             if icon == 'flag-green':
-                complexity_id = any_complex_pool.search(self.cr, self.uid,
-                    [('rating', '=', 8)], context=self.context)[0]
+                complexity_id = self.complexity_dict['green_complexity_id']
             elif icon == 'flag-orange':
-                complexity_id = any_complex_pool.search(self.cr, self.uid,
-                    [('rating', '=', 34)], context=self.context)[0]
+                complexity_id = self.complexity_dict['orange_complexity_id']
             elif icon == 'flag-red':
-                complexity_id = any_complex_pool.search(self.cr, self.uid,
-                    [('rating', '=', 89)], context=self.context)[0]
+                complexity_id = self.complexity_dict['red_complexity_id']
             else:
                 complexity_id = False
             any_tick_pool.write(self.cr, self.uid, self.parent_ids[-1:][0]['osv_id'],

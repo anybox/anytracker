@@ -34,10 +34,14 @@
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
                 <form string="Import freemind data">
-                    <field name="ticket_id"/>
-                    <newline/>
-                    <field name="mindmap_content" select="1"/>
+                    <field name="mindmap_content" select="1" string="File mindmap to upload" />
                     <separator string="" colspan="4" />
+                    <field name="ticket_id" string="Parent ticket"/>
+                    <separator string="" colspan="4" />
+                    <field name="green_complexity" string="complexity level for green flag"/>
+                    <field name="orange_complexity" string="complexity level for orange flag"/>
+                    <field name="red_complexity" string="complexity level for red flag"/>
+                	<separator string="" colspan="4" />
                     <group colspan="4" col="6">
                         <label string ="" colspan="2"/>
                         <button icon="gtk-cancel" special="cancel" string="Cancel"/>
@@ -59,7 +63,7 @@
         </record>
 
         <menuitem id="menu_import_freemind_wizard"
-            parent="mainmenu"
+            parent="mainmenuanytracker"
             sequence="40"
             action="action_import_freemind_view"/>
 
