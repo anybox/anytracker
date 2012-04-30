@@ -42,7 +42,6 @@
                     <field name="complexity_id" widget="selection"/>
                     <field name="duration"/>
                     <field name="description"/>
-                    <field name="child_ids"/>
                     <field name="workflow_id" widget="selection"/>
                 </tree>
             </field>
@@ -132,42 +131,40 @@
                 <tree string="Tickets hierarchy">
                     <field name="name"/>
                     <field name="state"/>
-                    <field name="parent_id" invisible="1"/>
                 </tree>
             </field>
         </record>
 
         <!-- ACTIONS -->
 
-        <record id="ticket_action_select" model="ir.actions.act_window">
-            <field name="name">Ticket</field>
-            <field name="type">ir.actions.act_window</field>
+
+        <record model="ir.actions.act_window" id="tickets_action_list">
+            <field name="name">anytracker.ticket.list</field>
             <field name="res_model">anytracker.ticket</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-
-        <record id="tickets_ir_select" model="ir.values">
-            <field name="key2">tree_but_open</field>
-            <field name="model">anytracker.ticket</field>
-            <field name="name">Open Ticket</field>
-            <field eval="'ir.actions.act_window,%d'%ticket_action_select" name="value"/>
+            <field name="view_id" ref="anytracker.ticket_view_tree"/>
         </record>
 
         <record model="ir.actions.act_window" id="tickets_action_tree">
             <field name="name">anytracker.ticket.tree</field>
             <field name="res_model">anytracker.ticket</field>
             <field name="view_type">tree</field>
-            <field name="view_id" ref="tickets_view_hierarchy"/>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="anytracker.tickets_view_hierarchy"/>
             <field name="domain">[('parent_id','=',False)]</field>
         </record>
 
         <record model="ir.actions.act_window" id="tickets_action_kanban">
             <field name="name">anytracker.ticket.kanban</field>
             <field name="res_model">anytracker.ticket</field>
-            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_mode">kanban,form</field>
+            <field name="view_id" ref="anytracker.tickets_view_hierarchy"/>
         </record>
 
+		<!-- IR VALUE -->
+		
+
+        
         <!-- MENUITEMS -->
 
         <menuitem id="mainmenuanytracker"
@@ -175,10 +172,14 @@
         <menuitem id="projets_menu"
             name="Projects"
             parent="mainmenuanytracker"/>
-        <menuitem id="tickets_menu"
+        <menuitem id="tickets_menu_list"
+            name="List view"
+            parent="projets_menu"
+            action="tickets_action_list" />  
+        <menuitem id="tickets_menu_tree"
             name="Tree view"
             parent="projets_menu"
-            action="tickets_action_tree" />  
+            action="tickets_action_tree" />
         <menuitem id="tickets_menu_kanban"
             name="Kanban view"
             parent="projets_menu"
