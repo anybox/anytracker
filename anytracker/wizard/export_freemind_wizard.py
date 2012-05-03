@@ -2,7 +2,7 @@ from osv import osv, fields
 from tools.translate import _
 from datetime import datetime
 
-
+#TODO complexity icon, mindmapfile to binary?, richtext content generation
 class export_freemind_wizard(osv.osv_memory):
     _name = 'export.freemind.wizard'
     _description = 'export freemind .mm file for generate by anytracker tree'

@@ -133,8 +133,8 @@ class FreemindContentHandler(sax.ContentHandler):
         # rich content
         if name in ['richcontent']:
             self.rich_content_buffer = ''
-        if name in ['html', 'head', 'body', 'p']:
-            self.rich_content_buffer += '<' + name + '>'
+        #if name in ['html', 'head', 'body', 'p']:
+            #self.rich_content_buffer += '<' + name + '>'
         # icon
         if name in ['icon']:
             icon = attrs.getValue('BUILTIN')
@@ -161,8 +161,8 @@ class FreemindContentHandler(sax.ContentHandler):
             if len(self.parent_ids) != 0:
                 self.parent_ids.pop()
         # rich content
-        if name in ['html', 'head', 'body', 'p']:
-            self.rich_content_buffer += '</' + name + '>'
+        #if name in ['html', 'head', 'body', 'p']:
+        #    self.rich_content_buffer += '</' + name + '>'
         if name in ['richcontent']:
             any_tick_pool.write(self.cr, self.uid, self.parent_ids[-1:][0]['osv_id'],
                 {'description': self.rich_content_buffer}, context=self.context)
