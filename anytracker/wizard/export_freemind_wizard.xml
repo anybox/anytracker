@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        ##############################################################################
+        #
+        #    anytracker module for OpenERP, Ticket module
+        #    Copyright (C) 2012 Anybox ([http://www.anybox.fr])
+        #                Colin GOUTTE [cgoute@anybox.fr]
+        #                Christophe COMBELLES [ccomb@anybox.fr]
+        #                Simon ANDRE [sandre@anybox.fr]
+        #                Jean Sebastien SUZANNE [jssuzanne@anybox.fr]
+        #
+        #    This file is a part of anytracker
+        #
+        #    anytracker is free software: you can redistribute it and/or modify
+        #    it under the terms of the GNU General Public License as published by
+        #    the Free Software Foundation, either version 3 of the License, or
+        #    (at your option) any later version.
+        #
+        #    anytracker is distributed in the hope that it will be useful,
+        #    but WITHOUT ANY WARRANTY; without even the implied warranty of
+        #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        #    GNU General Public License for more details.
+        #
+        #    You should have received a copy of the GNU General Public License
+        #    along with this program.  If not, see [http://www.gnu.org/licenses/].
+        #
+        ##############################################################################
+
+        <record id="view_export_freemind_form" model="ir.ui.view">
+            <field name="name">export freemind wizard form</field>
+            <field name="model">export.freemind.wizard</field>
+            <field name="type">form</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <form string="export freemind data">
+                    <field name="mindmap_file" select="1" string="File mindmap to write" />
+                    <separator string="" colspan="4" />
+                    <field name="ticket_id" string="Parent ticket"/>
+                    <separator string="" colspan="4" />
+                    <field name="green_complexity" string="complexity level for green flag"/>
+                    <field name="orange_complexity" string="complexity level for orange flag"/>
+                    <field name="red_complexity" string="complexity level for red flag"/>
+                	<separator string="" colspan="4" />
+                    <group colspan="4" col="6">
+                        <label string ="" colspan="2"/>
+                        <button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                        <button icon="terp-gtk-go-back-rtl" string="export file" name="execute_export" type="object"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_export_freemind_view">
+            <field name="name">export freemind data</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">export.freemind.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="menu_export_freemind_wizard"
+            parent="mainmenuanytracker"
+            sequence="40"
+            action="action_export_freemind_view"/>
+
+    </data>
+</openerp>

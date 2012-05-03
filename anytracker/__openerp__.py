@@ -40,6 +40,7 @@
             'security/ir.model.access.csv',
             'anytracker_view.xml',
             'wizard/import_freemind_wizard.xml',
+            'wizard/export_freemind_wizard.xml',
             #data
             'data/complexity.xml',
             'data/workflow1.xml',

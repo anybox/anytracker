@@ -179,6 +179,21 @@ class ticket(osv.osv):
         values['history_ids'] = [(0, 0, {'modification': vals})]
         return values
 
+    def makeTreeData(self, cr, uid, ids, context=None):
+        DATA_TO_RETRIEVE = ['description', 'modified_mindmap', 'child_ids', 'complexity_id', 'id_mindmap', 'modified_openerp', 'created_mindmap', 'id', 'name']
+        def makeRecursTree(ticket_branch):
+            ticket_ids = self.search(cr, uid, [('parent_id','=', ticket_branch['id'])])
+            for ticket_id in ticket_ids:
+                if not ticket_branch.has_key('child'):
+                    ticket_branch['child'] = []
+                ticket_branch['child'].append(self.read(cr, uid, ticket_id, DATA_TO_RETRIEVE, context))
+                makeRecursTree(ticket_branch['child'][len(ticket_branch['child'])-1])
+        ticket_tree = []
+        for ticket_tree_data in self.read(cr, uid, ids, DATA_TO_RETRIEVE, context):
+            ticket_tree.append(ticket_tree_data)
+            ticket_tree_data = makeRecursTree(ticket_tree_data)
+        return ticket_tree
+
     def create(self, cr, uid, values, context=None):
         if values.get('id_mindmap'):
             # Create by import

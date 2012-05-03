@@ -25,5 +25,6 @@
 ##############################################################################
 
 import import_freemind_wizard
+import export_freemind_wizard
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
