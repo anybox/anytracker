@@ -104,13 +104,13 @@
                                     <table class="oe_kanban_table oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
                                         <tr>
                                             <td align="left" valign="middle" class="oe_kanban_title" tooltip="lead_details">
-                                                <field name="name"/>
+                                                <a type="edit"><field name="name"/></a> 
                                             </td>
                                         </tr>
                                     </table>
                                     <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger">
                                         <div>
-                                            <field name="name"/>
+                                            <field name="description"/>
                                         </div>
                                     </div>
                                 </div>
