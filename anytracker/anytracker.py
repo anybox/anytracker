@@ -180,6 +180,7 @@ class ticket(osv.osv):
         return values
 
     def makeTreeData(self, cr, uid, ids, context=None):
+        '''Return all ticket of a tree so ordered'''
         DATA_TO_RETRIEVE = ['description', 'modified_mindmap', 'child_ids', 'complexity_id', 'id_mindmap', 'modified_openerp', 'created_mindmap', 'id', 'name']
         def makeRecursTree(ticket_branch):
             ticket_ids = self.search(cr, uid, [('parent_id','=', ticket_branch['id'])])
