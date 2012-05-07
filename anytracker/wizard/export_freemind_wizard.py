@@ -69,42 +69,21 @@ def gMF(date):
 
 from xml.sax.saxutils import XMLGenerator
 
-class Syntax:
-    com = "--"                          # comment start or end
-    cro = "&#"                          # character reference open
-    refc = ";"                          # reference close
-    dso = "["                           # declaration subset open
-    dsc = "]"                           # declaration subset close
-    ero = "&"                           # entity reference open
-    lit = '"'                           # literal start or end
-    lit_quoted = '&quot;'               # quoted literal
-    lita = "'"                          # literal start or end (alternative)
-    mdo = "<!"                          # markup declaration open
-    mdc = ">"                           # markup declaration close
-    msc = "]]"                          # marked section close
-    pio = "<?"                          # processing instruciton open
-    stago = "<"                         # start tag open
-    etago = "</"                        # end tag open
-    tagc = ">"                          # tag close
-    vi = "="                            # value indicator
-
-
 class FreemindWriterHandler(XMLGenerator):
     '''For generate .mm file'''
     def __init__(self, cr, uid, pool, fp):
         self.pool = pool
-        self.__syntax = Syntax
         self.padding = 0
         XMLGenerator.__init__(self, fp, 'UTF-8')
         #super(FreemindWriterHandler, self).__init__(fp)
 
     def startDocument(self):
-        startElement = self.__syntax.stago + 'map version="0.9.0"' + self.__syntax.tagc + '\n\
+        startElement = '<' + 'map version="0.9.0"' + '>' + '\n\
 <!-- To view this file, download free mind mapping software FreeMind from http://freemind.sourceforge.net -->\n' 
         self._out.write(startElement)
     
     def endDocument(self):
-        stopElement = self.__syntax.etago + 'map' + self.__syntax.tagc + '\n'
+        stopElement = '</' + 'map' + '>' + '\n'
         self._out.write(stopElement)
     
     def startElement(self, tag, attrs={}):
