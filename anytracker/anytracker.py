@@ -43,7 +43,6 @@ class anytracker_ticket_history(osv.osv):
 class ticket(osv.osv):
 
     _name = 'anytracker.ticket'
-
     _description = "Tickets for project management"
 
     def _get_siblings(self, cr, uid, ids, field_name, args, context=None):
@@ -57,8 +56,8 @@ class ticket(osv.osv):
         return res
 
     _columns = {
-        'name': fields.char('Ticket name', 255, required=True),
-        'description': fields.text('Ticket description', required=False),
+        'name': fields.char('Name', 255, required=True),
+        'description': fields.text('Description', required=False),
         'state': fields.char('state', 30, required=False),
         'siblings_ids': fields.function(_get_siblings, type='many2many', obj='anytracker.ticket', string='Siblings', method=True),
         'duration': fields.selection([(0, '< half a day'), (None, 'Will be computed'), (1, 'Half a day')], 'duration'),
