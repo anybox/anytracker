@@ -29,7 +29,7 @@
         'version' : '0.1',
         'author' : 'Anybox',
         'website' : 'http://anybox.fr',
-        'category' : 'Generic Modules/Others',
+        'category' : 'Project Management',
         'depends' : [
             'base',
         ],
@@ -44,6 +44,7 @@
             #data
             'data/complexity.xml',
             'data/workflow1.xml',
+            'complexity/view.xml',
         ],
         'active': False,
         'installable': True

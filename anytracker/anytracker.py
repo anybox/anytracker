@@ -3,15 +3,6 @@ from tools.translate import _
 import time
 
 
-class complexity(osv.osv):
-
-    _name = 'anytracker.ticket.complexity'
-
-    _columns = {
-        'name': fields.char('Name', size=3, required=True),
-        'rating': fields.float('Rating of time taking'),
-    }
-
 
 class workflow1(osv.osv):
 
@@ -65,7 +56,6 @@ class ticket(osv.osv):
         'assignedto_ids': fields.many2many('res.users', 'ticket_assignement_rel', 'ticket_id', 'user_id', required=False),
         'parent_id': fields.many2one('anytracker.ticket', 'Parent', required=False),
         'requester_id': fields.many2one('res.users', 'Requester'),
-        'complexity_id': fields.many2one('anytracker.ticket.complexity', 'Complexity'),
         'workflow_id': fields.many2one('anytracker.ticket.workflow1', 'kanban_status', required=True),
         'history_ids': fields.many2many('anytracker.ticket.history', 'ticket_ticket_history_rel', 'ticket_id', 'history_id', 'History'),
         'id_mindmap': fields.char('ID MindMap', size=64),
@@ -74,7 +64,6 @@ class ticket(osv.osv):
         'modified_openerp': fields.datetime('Modified OpenERP'),
     }
 
-    #complexity should be a many2many table, so a as to make is possibilble for various users (assignees) to rate different tickets.
     _defaults = {
         'state': 'Analyse',
         'duration': 0,
@@ -134,8 +123,6 @@ class ticket(osv.osv):
                 continue
             elif k == 'parent_id':
                 vals += _many2one(k, 'anytracker.ticket', v)
-            elif k == 'complexity_id':
-                vals += _many2one(k, 'anytracker.ticket.complexity', v)
             elif k == 'requester_id':
                 vals += _many2one(k, 'res.users', v)
             elif k == 'assignedto_ids':
@@ -154,7 +141,7 @@ class ticket(osv.osv):
 
     def makeTreeData(self, cr, uid, ids, context=None):
         '''Return all ticket of a tree so ordered'''
-        DATA_TO_RETRIEVE = ['description', 'modified_mindmap', 'child_ids', 'complexity_id', 'id_mindmap', 'modified_openerp', 'created_mindmap', 'id', 'name']
+        DATA_TO_RETRIEVE = ['description', 'modified_mindmap', 'child_ids', 'rating_ids', 'id_mindmap', 'modified_openerp', 'created_mindmap', 'id', 'name']
         def makeRecursTree(ticket_branch):
             ticket_ids = self.search(cr, uid, [('parent_id','=', ticket_branch['id'])])
             for ticket_id in ticket_ids:
@@ -181,7 +168,7 @@ class ticket(osv.osv):
 
     def write(self, cr, uid, ids, values, context=None):
         def _be_updated():
-            for i in ('name', 'description', 'complexity_id', 'workflow_id', 'parent_id'):
+            for i in ('name', 'description', 'rating_ids', 'workflow_id', 'parent_id'):
                 if values.get(i):
                     return True
             return False
@@ -191,7 +178,7 @@ class ticket(osv.osv):
                     raise osv.except_osv(_('Error'), _('You can t update the ticket %s') % i['name'])
         elif context.get('import_mindmap', False):
             # description and complexity
-            pass
+            pass #TODO
         elif _be_updated():
             values['modified_openerp'] = time.strftime('%Y-%m-%d %H:%M:%S')
         values = self._add_history(cr, uid, values, context=context)

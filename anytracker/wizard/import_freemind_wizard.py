@@ -13,21 +13,21 @@ class import_freemind_wizard(osv.osv_memory):
     _columns = {
         'ticket_id': fields.many2one('anytracker.ticket', 'Ticket', domain="[('parent_id', '=', False)]"),
         'mindmap_content': fields.binary(_('File'), required=True),
-        'green_complexity': fields.many2one('anytracker.ticket.complexity', 'green complexity'),
-        'orange_complexity': fields.many2one('anytracker.ticket.complexity', 'orange complexity'),
-        'red_complexity': fields.many2one('anytracker.ticket.complexity', 'red complexity'),
+        'green_complexity': fields.many2one('anytracker.complexity', 'green complexity'),
+        'orange_complexity': fields.many2one('anytracker.complexity', 'orange complexity'),
+        'red_complexity': fields.many2one('anytracker.complexity', 'red complexity'),
     }
 
     def execute_import(self, cr, uid, ids, context=None):
         '''Launch import of nn file from freemind'''
-        any_tick_complexity_pool = self.pool.get('anytracker.ticket.complexity')
+        any_tick_complexity_pool = self.pool.get('anytracker.complexity')
         for wizard in self.browse(cr, uid, ids, context=context):
             complexity_dict = {'green_complexity_id': wizard.green_complexity.id or \
-                                any_tick_complexity_pool.search(cr, uid, [('rating', '=', 3)])[0],
+                                any_tick_complexity_pool.search(cr, uid, [('value', '=', 3)])[0],
                                'orange_complexity_id': wizard.orange_complexity.id or \
-                                any_tick_complexity_pool.search(cr, uid, [('rating', '=', 21   )])[0],
+                                any_tick_complexity_pool.search(cr, uid, [('value', '=', 21   )])[0],
                                'red_complexity_id': wizard.red_complexity.id or \
-                                any_tick_complexity_pool.search(cr, uid, [('rating', '=', 3)])[0],
+                                any_tick_complexity_pool.search(cr, uid, [('value', '=', 3)])[0],
                                }
             ticket_id = wizard.ticket_id and wizard.ticket_id.id or False
             content_handler = FreemindContentHandler(cr, uid, self.pool, ticket_id, complexity_dict)
