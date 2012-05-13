@@ -70,6 +70,7 @@ class ticket(osv.osv):
     }
 
     def _add_history(self, cr, uid, values, context=None):
+        if not context: context = {}
         vals = ""
         if context.get('import_mindmap', False):
             vals += _("Update from Import MindMap\n")
@@ -167,6 +168,7 @@ class ticket(osv.osv):
         return super(ticket, self).create(cr, uid, values, context=context)
 
     def write(self, cr, uid, ids, values, context=None):
+        if not context: context = {}
         def _be_updated():
             for i in ('name', 'description', 'rating_ids', 'workflow_id', 'parent_id'):
                 if values.get(i):
