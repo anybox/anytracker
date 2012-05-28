@@ -37,18 +37,29 @@ class ticket(osv.osv):
     _description = "Tickets for project management"
 
     def _get_siblings(self, cr, uid, ids, field_name, args, context=None):
+        """ get tickets at the same hierachical level
+        """
         res = {}
-        for t in self.browse(cr, uid, ids, context):
+        for ticket in self.browse(cr, uid, ids, context):
             domain = [
-                ('parent_id', '=', t.parent_id.id),  # the same parent
-                ('id', '!=', t.id),  # not me
+                ('parent_id', '=', ticket.parent_id.id),  # the same parent
+                ('id', '!=', ticket.id),  # not me
             ]
-            res[t.id] = self.search(cr, uid, domain, context=context)
+            res[ticket.id] = self.search(cr, uid, domain, context=context)
+        return res
+
+    def _shorten_description(self, cr, uid, ids, field_name, args, context=None):
+        """shortened description for the kanban
+        """
+        res = {}
+        for ticket in self.browse(cr, uid, ids, context):
+            res[ticket.id] = ticket.description and ticket.description[:250] + '...' or False
         return res
 
     _columns = {
         'name': fields.char('Name', 255, required=True),
         'description': fields.text('Description', required=False),
+        'shortened_description': fields.function(_shorten_description, type='text', obj='anytracker.ticket', string='Description'),
         'state': fields.char('state', 30, required=False),
         'siblings_ids': fields.function(_get_siblings, type='many2many', obj='anytracker.ticket', string='Siblings', method=True),
         'duration': fields.selection([(0, '< half a day'), (None, 'Will be computed'), (1, 'Half a day')], 'duration'),
