@@ -96,6 +96,7 @@
                                     </table>
                                     <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger at_kanban_box_content">
                                         <div>
+                                            <div><field name="breadcrumb"/></div>
                                             <field name="shortened_description"/>
                                         </div>
                                     </div>
