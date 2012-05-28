@@ -13,7 +13,7 @@
                     <field name="name"/>
                     <field name="state"/>
                     <field name="duration"/>
-                    <field name="description"/>
+                    <field name="shortened_description"/>
                     <field name="workflow_id" widget="selection"/>
                 </tree>
             </field>
