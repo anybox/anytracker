@@ -29,7 +29,7 @@
 </record>
 
 <record model="ir.actions.act_window" id="act_open_stage_view">
-    <field name="name">Ticket stages</field>
+    <field name="name">Stages</field>
     <field name="type">ir.actions.act_window</field>
     <field name="res_model">anytracker.stage</field>
     <field name="view_type">form</field>

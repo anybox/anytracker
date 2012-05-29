@@ -30,7 +30,7 @@
 </record>
 
 <record model="ir.actions.act_window" id="act_open_complexity_view">
-    <field name="name">Complexity</field>
+    <field name="name">Complexities</field>
     <field name="type">ir.actions.act_window</field>
     <field name="res_model">anytracker.complexity</field>
     <field name="view_type">form</field>
