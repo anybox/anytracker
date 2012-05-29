@@ -38,9 +38,9 @@
         'demo_xml' : [],
         'update_xml' : [
             'security/ir.model.access.csv',
-            'anytracker_view.xml',
-            'wizard/import_freemind_wizard.xml',
-            'wizard/export_freemind_wizard.xml',
+            'view.xml',
+            'mindmap/wizard/import_freemind_wizard.xml',
+            'mindmap/wizard/export_freemind_wizard.xml',
             #data
             'stage/data.xml',
             'stage/view.xml',
