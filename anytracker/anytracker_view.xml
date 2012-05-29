@@ -14,7 +14,7 @@
                     <field name="state"/>
                     <field name="duration"/>
                     <field name="shortened_description"/>
-                    <field name="workflow_id" widget="selection"/>
+                    <field name="stage_id" widget="selection"/>
                 </tree>
             </field>
         </record>
@@ -32,7 +32,7 @@
                     <notebook colspan="4">
                         <page string="General">
                             <field name="state"/>
-                            <field name="workflow_id" widget="selection"/>
+                            <field name="stage_id" widget="selection"/>
                             <field name="duration"/>
                             <field name="description"/>
                         </page>
@@ -72,7 +72,7 @@
             <field name="model">anytracker.ticket</field>
             <field name="type">kanban</field>
             <field name="arch" type="xml">
-                <kanban default_group_by="workflow_id">
+                <kanban default_group_by="stage_id">
                     <field name="state"/>
                     <field name="duration"/>
                     <field name="name"/>

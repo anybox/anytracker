@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <record id="anytracker_ticket_workflow1_analyse" model="anytracker.ticket.workflow1">
+        <record id="anytracker_ticket_stage_analyse" model="anytracker.ticket.stage">
             <field name="name">Analyse</field>
             <field name="state">Analyse</field>
             <field name="default" eval="True"/>
         </record>
 
-        <record id="anytracker_ticket_workflow1_dev" model="anytracker.ticket.workflow1">
+        <record id="anytracker_ticket_stage_dev" model="anytracker.ticket.stage">
             <field name="name">dev</field>
             <field name="state">dev</field>
         </record>
 
-        <record id="anytracker_ticket_workflow1_test" model="anytracker.ticket.workflow1">
+        <record id="anytracker_ticket_stage_test" model="anytracker.ticket.stage">
             <field name="name">test</field>
             <field name="state">test</field>
         </record>
 
-        <record id="anytracker_ticket_workflow1_doc" model="anytracker.ticket.workflow1">
+        <record id="anytracker_ticket_stage_doc" model="anytracker.ticket.stage">
             <field name="name">doc</field>
             <field name="state">doc</field>
         </record>
 
-        <record id="anytracker_ticket_workflow1_delivery" model="anytracker.ticket.workflow1">
+        <record id="anytracker_ticket_stage_delivery" model="anytracker.ticket.stage">
             <field name="name">delivery</field>
             <field name="state">delivery</field>
         </record>

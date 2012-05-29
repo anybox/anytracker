@@ -58,7 +58,7 @@ class FreemindContentHandler(sax.ContentHandler):
     def startElement(self, name, attrs):
         names = attrs.getNames()
         any_tick_pool = self.pool.get('anytracker.ticket')
-        any_workflow1_pool = self.pool.get('anytracker.ticket.workflow1')
+        stage_pool = self.pool.get('anytracker.ticket.stage')
         if name in ['node']:
             text_name = ''
             if 'TEXT' in names:
@@ -94,10 +94,10 @@ class FreemindContentHandler(sax.ContentHandler):
             osv_id = any_tick_pool.search(self.cr, self.uid, domain,
                     context=self.context)
             if (not osv_id) or (not self.parent_id and not self.ticket_id):
-                workflow_id = any_workflow1_pool.search(self.cr, self.uid,
+                stage_id = stage_pool.search(self.cr, self.uid,
                     [('default', '=', True)], context=self.context)
-                if workflow_id:
-                    vals['workflow_id'] = workflow_id[0]
+                if stage_id:
+                    vals['stage_id'] = stage_id[0]
                 osv_id = any_tick_pool.create(self.cr, self.uid, vals, context=self.context)
             else:
                 any_tick_pool.write(self.cr, self.uid, osv_id, vals, context=self.context)

@@ -4,10 +4,9 @@ from tools.translate import _
 import time
 
 
+class ticket_stage(osv.osv):
 
-class workflow1(osv.osv):
-
-    _name = 'anytracker.ticket.workflow1'
+    _name = 'anytracker.ticket.stage'
 
     _columns = {
         'name': fields.char('name', size=64, required=True),
@@ -20,7 +19,7 @@ class workflow1(osv.osv):
     }
 
 
-class anytracker_ticket_history(osv.osv):
+class ticket_history(osv.osv):
 
     _name = 'anytracker.ticket.history'
     _description = 'History of ticket'
@@ -70,6 +69,15 @@ class ticket(osv.osv):
             res[ticket.id] = u' → '.join(breadcrumb)
         return res
 
+    def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
+        """return stage names for the group_by_full directive
+        """
+        # XXX improve the filter to handle categories
+        stage_osv = self.pool.get('anytracker.ticket.stage')
+        stage_ids = stage_osv.search(cr, uid, [])
+        stage_names = stage_osv.name_get(cr, access_rights_uid, stage_ids, context=context)
+        return stage_names
+
     _columns = {
         'name': fields.char('Name', 255, required=True),
         'description': fields.text('Description', required=False),
@@ -82,7 +90,7 @@ class ticket(osv.osv):
         'assignedto_ids': fields.many2many('res.users', 'ticket_assignement_rel', 'ticket_id', 'user_id', required=False),
         'parent_id': fields.many2one('anytracker.ticket', 'Parent', required=False),
         'requester_id': fields.many2one('res.users', 'Requester'),
-        'workflow_id': fields.many2one('anytracker.ticket.workflow1', 'kanban_status', required=True),
+        'stage_id': fields.many2one('anytracker.ticket.stage', 'kanban_status', required=True),
         'history_ids': fields.many2many('anytracker.ticket.history', 'ticket_ticket_history_rel', 'ticket_id', 'history_id', 'History'),
         'id_mindmap': fields.char('ID MindMap', size=64),
         'created_mindmap': fields.datetime('Created MindMap'),
@@ -93,6 +101,9 @@ class ticket(osv.osv):
     _defaults = {
         'state': 'Analyse',
         'duration': 0,
+    }
+    _group_by_full = {
+        'stage_id': _read_group_stage_ids
     }
 
     def _add_history(self, cr, uid, values, context=None):
@@ -144,8 +155,8 @@ class ticket(osv.osv):
             return _('Modify field %s with new valeur %s\n') % (fieldname, nameget)
 
         for k, v in values.items():
-            if k == 'workflow_id':
-                vals += _many2one(k, 'anytracker.ticket.workflow1', v)
+            if k == 'stage_id':
+                vals += _many2one(k, 'anytracker.ticket.stage', v)
             elif k == 'history_ids':
                 continue
             elif k == 'parent_id':
@@ -196,7 +207,7 @@ class ticket(osv.osv):
     def write(self, cr, uid, ids, values, context=None):
         if not context: context = {}
         def _be_updated():
-            for i in ('name', 'description', 'rating_ids', 'workflow_id', 'parent_id'):
+            for i in ('name', 'description', 'rating_ids', 'stage_id', 'parent_id'):
                 if values.get(i):
                     return True
             return False
