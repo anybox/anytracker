@@ -31,6 +31,7 @@
                     <notebook colspan="4">
                         <page string="General">
                             <field name="stage_id" widget="selection"/>
+                            <field name="color"/>
                             <field name="duration"/>
                             <field name="description"/>
                         </page>
@@ -72,6 +73,7 @@
             <field name="arch" type="xml">
                 <kanban default_group_by="stage_id">
                     <field name="duration"/>
+                    <field name="color"/>
                     <field name="name"/>
                     <field name="siblings_ids"/>
                     <field name="child_ids"/>
@@ -82,7 +84,7 @@
                             </ul>
                         </t>
                         <t t-name="kanban-box">
-                            <div t-attf-class=" #{border || ''}">
+                            <div t-attf-class="#{kanban_color(record.color.raw_value)} #{border || ''}">
                                 <div class="oe_kanban_box oe_kanban_color_border">
                                     <table class="oe_kanban_table oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
                                         <tr>

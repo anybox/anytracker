@@ -15,6 +15,7 @@ class complexity(osv.osv):
         'name': fields.char('Name', size=16, required=True),
         'value': fields.float('Value', required=True),
         'category': fields.char('Category', size=32),
+        'color': fields.integer('Color'),
     }
 
 
@@ -62,6 +63,15 @@ class ticket(osv.osv):
             'time': time.strftime('%Y-%m-%d %H:%M:%S')})
         return True
 
+    def _get_color(self, cr, uid, ids, field_name, args, context=None):
+        """get the color from my rating
+        """
+        if not context: context = {}
+        tickets = {}
+        for ticket in self.browse(cr, uid, ids, context):
+            complexity = ticket.my_rating
+            tickets[ticket.id] = getattr(complexity, 'color', False)
+        return tickets
 
     _columns = { 
         'rating_ids': fields.one2many('anytracker.rating', 'ticket_id', 'Ratings'),
@@ -69,4 +79,5 @@ class ticket(osv.osv):
         'my_rating': fields.function(_get_my_rating, fnct_inv=_set_my_rating,
                                      type='many2one', relation='anytracker.complexity',
                                      string="My Rating"),
+        'color': fields.function(_get_color, type='integer', relation='anytracker.complexity', string='Color'),
      }

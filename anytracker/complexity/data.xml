@@ -41,5 +41,26 @@
             <field name="value">89</field>
         </record>
 
+        <!-- Anytracker red/orange/green complexities -->
+        <record id="anytracker_complexity_red" model="anytracker.complexity">
+            <field name="name">red</field>
+            <field name="value">3</field>
+            <field name="category">anytracker</field>
+            <field name="color">2</field>
+        </record>
+
+        <record id="anytracker_complexity_orange" model="anytracker.complexity">
+            <field name="name">orange</field>
+            <field name="value">2</field>
+            <field name="category">anytracker</field>
+            <field name="color">3</field>
+        </record>
+
+        <record id="anytracker_complexity_green" model="anytracker.complexity">
+            <field name="name">green</field>
+            <field name="value">1</field>
+            <field name="category">anytracker</field>
+            <field name="color">4</field>
+        </record>
     </data>
 </openerp>
