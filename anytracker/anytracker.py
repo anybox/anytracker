@@ -127,7 +127,7 @@ class ticket(osv.osv):
 
         for k, v in values.items():
             if k == 'stage_id':
-                vals += _many2one(k, 'anytracker.ticket.stage', v)
+                vals += _many2one(k, 'anytracker.stage', v)
             elif k == 'history_ids':
                 continue
             elif k == 'parent_id':

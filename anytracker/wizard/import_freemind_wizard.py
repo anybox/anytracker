@@ -58,7 +58,7 @@ class FreemindContentHandler(sax.ContentHandler):
     def startElement(self, name, attrs):
         names = attrs.getNames()
         any_tick_pool = self.pool.get('anytracker.ticket')
-        stage_pool = self.pool.get('anytracker.ticket.stage')
+        stage_pool = self.pool.get('anytracker.stage')
         if name in ['node']:
             text_name = ''
             if 'TEXT' in names:

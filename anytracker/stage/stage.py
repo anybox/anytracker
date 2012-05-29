@@ -3,9 +3,9 @@ from osv import fields, osv
 from tools.translate import _
 
 
-class ticket_stage(osv.osv):
+class stage(osv.osv):
 
-    _name = 'anytracker.ticket.stage'
+    _name = 'anytracker.stage'
 
     _columns = {
         'name': fields.char('name', size=64, required=True),
@@ -26,13 +26,13 @@ class ticket(osv.osv):
         """return stage names for the group_by_full directive
         """
         # XXX improve the filter to handle categories
-        stage_osv = self.pool.get('anytracker.ticket.stage')
+        stage_osv = self.pool.get('anytracker.stage')
         stage_ids = stage_osv.search(cr, uid, [])
         stage_names = stage_osv.name_get(cr, access_rights_uid, stage_ids, context=context)
         return stage_names
 
     _columns = {
-        'stage_id': fields.many2one('anytracker.ticket.stage', _('Stage'), required=True),
+        'stage_id': fields.many2one('anytracker.stage', _('Stage'), required=True),
     }
 
     _group_by_full = {
