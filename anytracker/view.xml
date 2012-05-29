@@ -146,6 +146,7 @@
             <field name="res_model">anytracker.ticket</field>
             <field name="view_mode">kanban,form</field>
             <field name="view_id" ref="anytracker.tickets_view_hierarchy"/>
+            <field name="domain">[('child_ids','=',False)]</field>
         </record>
 
 		<!-- IR VALUE -->
