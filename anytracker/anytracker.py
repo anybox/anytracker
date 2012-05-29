@@ -46,7 +46,6 @@ class ticket(osv.osv):
         'description': fields.text('Description', required=False),
         'shortened_description': fields.function(_shorten_description, type='text', obj='anytracker.ticket', string='Description'),
         'breadcrumb': fields.function(_breadcrumb, type='text', obj='anytracker.ticket', string='Description'),
-        'state': fields.char('state', 30, required=False),
         'siblings_ids': fields.function(_get_siblings, type='many2many', obj='anytracker.ticket', string='Siblings', method=True),
         'duration': fields.selection([(0, '< half a day'), (None, 'Will be computed'), (1, 'Half a day')], 'duration'),
         'child_ids': fields.one2many('anytracker.ticket', 'parent_id', 'Children', required=False),
@@ -60,7 +59,6 @@ class ticket(osv.osv):
     }
 
     _defaults = {
-        'state': 'Analyse',
         'duration': 0,
     }
 

@@ -24,6 +24,8 @@
     <field name="arch" type="xml">
     <form string="Ticket stage">
         <field name="name" select="1"/>
+        <field name="state"/>
+        <field name="default"/>
     </form>
     </field>
 </record>
