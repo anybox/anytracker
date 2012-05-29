@@ -43,7 +43,8 @@
             'wizard/export_freemind_wizard.xml',
             #data
             'data/complexity.xml',
-            'data/stages.xml',
+            'stage/data.xml',
+            'stage/view.xml',
             'complexity/view.xml',
         ],
         'active': False,
