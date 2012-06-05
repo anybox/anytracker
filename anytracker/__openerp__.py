@@ -44,10 +44,10 @@
             #data
             'stage/data.xml',
             'stage/view.xml',
-            'complexity/data.xml',
-            'complexity/view.xml',
             'method/data.xml',
             'method/view.xml',
+            'complexity/data.xml',
+            'complexity/view.xml',
         ],
         'active': False,
         'installable': True
