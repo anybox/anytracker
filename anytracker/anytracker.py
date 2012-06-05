@@ -38,7 +38,7 @@ class ticket(osv.osv):
             while current_ticket.parent_id:
                 breadcrumb.insert(0, current_ticket.parent_id.name)
                 current_ticket = current_ticket.parent_id
-            res[ticket.id] = u' → '.join(breadcrumb)
+            res[ticket.id] = u' / '.join(breadcrumb)
         return res
 
     _columns = {
