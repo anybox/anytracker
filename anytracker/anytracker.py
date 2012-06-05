@@ -50,7 +50,7 @@ class ticket(osv.osv):
         'duration': fields.selection([(0, '< half a day'), (None, 'Will be computed'), (1, 'Half a day')], 'duration'),
         'child_ids': fields.one2many('anytracker.ticket', 'parent_id', 'Children', required=False),
         'assignedto_ids': fields.many2many('res.users', 'ticket_assignement_rel', 'ticket_id', 'user_id', required=False),
-        'parent_id': fields.many2one('anytracker.ticket', 'Parent', required=False),
+        'parent_id': fields.many2one('anytracker.ticket', 'Parent', required=False, ondelete='cascade'),
         'requester_id': fields.many2one('res.users', 'Requester'),
         'id_mindmap': fields.char('ID MindMap', size=64),
         'created_mindmap': fields.datetime('Created MindMap'),

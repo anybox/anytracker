@@ -26,7 +26,7 @@ class rating(osv.osv):
     _order = 'time desc'
     _columns = {
         'complexity_id': fields.many2one('anytracker.complexity', 'Complexity', required=True),
-        'ticket_id': fields.many2one('anytracker.ticket', 'Ticket', required=True),
+        'ticket_id': fields.many2one('anytracker.ticket', 'Ticket', required=True, ondelete="cascade"),
         'user_id': fields.many2one('res.users', 'User', required=True),
         'time': fields.datetime('Date', required=True),
     }
@@ -75,8 +75,6 @@ class ticket(osv.osv):
 
     _columns = { 
         'rating_ids': fields.one2many('anytracker.rating', 'ticket_id', 'Ratings'),
-        #'my_rating': fields.many2one('anytracker.complexity', "My rating"),
-        #'my_rating': fields.selection(_get_complexities, "My rating"),
         'my_rating': fields.function(_get_my_rating,
                                      fnct_inv=_set_my_rating,
                                      type='many2one',
