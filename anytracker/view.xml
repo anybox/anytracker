@@ -13,7 +13,8 @@
                     <field name="name"/>
                     <field name="duration"/>
                     <field name="shortened_description"/>
-                    <field name="stage_id" widget="selection"/>
+                    <field name="stage_id"/>
+                    <field name="method_id"/>
                 </tree>
             </field>
         </record>
@@ -26,7 +27,8 @@
             <field name="arch" type="xml">
                 <form string="ticket form">
                     <field name="name"/>
-                    <field name="my_rating" widget="selection" />
+                    <field name="my_rating" options='{"quick_create": false}' />
+                    <field name="method_id" widget="selection"/>
                     <field name="parent_id"/>
                     <notebook colspan="4">
                         <page string="General">
@@ -124,6 +126,12 @@
         <!-- ACTIONS -->
 
 
+        <record model="ir.actions.act_window" id="tickets_action_form">
+            <field name="name">anytracker.ticket.form</field>
+            <field name="res_model">anytracker.ticket</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="anytracker.ticket_view_form"/>
+        </record>
         <record model="ir.actions.act_window" id="tickets_action_list">
             <field name="name">anytracker.ticket.list</field>
             <field name="res_model">anytracker.ticket</field>

@@ -6,16 +6,16 @@ import time
 class complexity(osv.osv):
     """Definition of the different complexity levels, in different contexts.
     Example:
-        - with a scrum category, values can be the fibonacci series
-        - with a anytracker category, values are green, orange, red
+        - with a scrum method, values can be the fibonacci series
+        - with a anytracker method, values are green, orange, red
         - ...
     """
     _name = 'anytracker.complexity'
     _columns = {
         'name': fields.char('Name', size=16, required=True),
         'value': fields.float('Value', required=True),
-        'category': fields.char('Category', size=32),
         'color': fields.integer('Color'),
+        'method_id': fields.many2one('anytracker.method', 'Method', help='Projet method'),
     }
 
 
@@ -76,8 +76,12 @@ class ticket(osv.osv):
     _columns = { 
         'rating_ids': fields.one2many('anytracker.rating', 'ticket_id', 'Ratings'),
         #'my_rating': fields.many2one('anytracker.complexity', "My rating"),
-        'my_rating': fields.function(_get_my_rating, fnct_inv=_set_my_rating,
-                                     type='many2one', relation='anytracker.complexity',
+        #'my_rating': fields.selection(_get_complexities, "My rating"),
+        'my_rating': fields.function(_get_my_rating,
+                                     fnct_inv=_set_my_rating,
+                                     type='many2one',
+                                     domain="[('method_id','=',method_id)]",
+                                     relation='anytracker.complexity',
                                      string="My Rating"),
         'color': fields.function(_get_color, type='integer', relation='anytracker.complexity', string='Color'),
      }

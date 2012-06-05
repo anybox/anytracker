@@ -1,66 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        <!-- fibonacci SCRUM complexities -->
+        <record id="anytracker_complexity_0" model="anytracker.complexity">
+            <field name="name">0</field>
+            <field name="value">0</field>
+            <field name="method_id" ref="anytracker_method_scrum"/>
+        </record>
         <record id="anytracker_complexity_1" model="anytracker.complexity">
             <field name="name">1</field>
             <field name="value">1</field>
+            <field name="method_id" ref="anytracker_method_scrum"/>
         </record>
 
         <record id="anytracker_complexity_2" model="anytracker.complexity">
             <field name="name">2</field>
             <field name="value">2</field>
+            <field name="method_id" ref="anytracker_method_scrum"/>
         </record>
 
         <record id="anytracker_complexity_3" model="anytracker.complexity">
             <field name="name">3</field>
             <field name="value">3</field>
+            <field name="method_id" ref="anytracker_method_scrum"/>
         </record>
 
         <record id="anytracker_complexity_5" model="anytracker.complexity">
+            <field name="name">5</field>
+            <field name="value">5</field>
+            <field name="method_id" ref="anytracker_method_scrum"/>
+        </record>
+
+        <record id="anytracker_complexity_8" model="anytracker.complexity">
             <field name="name">8</field>
             <field name="value">8</field>
+            <field name="method_id" ref="anytracker_method_scrum"/>
         </record>
 
         <record id="anytracker_complexity_13" model="anytracker.complexity">
+            <field name="name">13</field>
+            <field name="value">13</field>
+            <field name="method_id" ref="anytracker_method_scrum"/>
+        </record>
+
+        <record id="anytracker_complexity_21" model="anytracker.complexity">
             <field name="name">21</field>
             <field name="value">21</field>
-        </record>
-
-        <record id="anytracker_complexity_34" model="anytracker.complexity">
-            <field name="name">34</field>
-            <field name="value">34</field>
-        </record>
-
-        <record id="anytracker_complexity_55" model="anytracker.complexity">
-            <field name="name">55</field>
-            <field name="value">55</field>
-        </record>
-
-        <record id="anytracker_complexity_89" model="anytracker.complexity">
-            <field name="name">89</field>
-            <field name="value">89</field>
+            <field name="method_id" ref="anytracker_method_scrum"/>
         </record>
 
         <!-- Anytracker red/orange/green complexities -->
         <record id="anytracker_complexity_red" model="anytracker.complexity">
             <field name="name">red</field>
             <field name="value">3</field>
-            <field name="category">anytracker</field>
             <field name="color">2</field>
+            <field name="method_id" ref="anytracker_method_fixedprice"/>
         </record>
 
         <record id="anytracker_complexity_orange" model="anytracker.complexity">
             <field name="name">orange</field>
             <field name="value">2</field>
-            <field name="category">anytracker</field>
             <field name="color">3</field>
+            <field name="method_id" ref="anytracker_method_fixedprice"/>
         </record>
 
         <record id="anytracker_complexity_green" model="anytracker.complexity">
             <field name="name">green</field>
             <field name="value">1</field>
-            <field name="category">anytracker</field>
             <field name="color">4</field>
+            <field name="method_id" ref="anytracker_method_fixedprice"/>
         </record>
     </data>
 </openerp>

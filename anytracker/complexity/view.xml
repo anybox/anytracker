@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
+<record id="view_complexity_search" model="ir.ui.view">
+    <field name="name">anytracker.complexity.search</field>
+    <field name="model">anytracker.complexity</field>
+    <field name="type">search</field>
+    <field name="priority" eval="8"/>
+    <field name="arch" type="xml">
+    <search string="Complexities">
+        <field name="method_id" select="True" widget="selection"/>
+    </search>
+    </field>
+</record>
 <record id="view_complexity_tree" model="ir.ui.view">
     <field name="name">anytracker.complexity.tree</field>
     <field name="model">anytracker.complexity</field>
@@ -10,8 +21,8 @@
     <tree string="Complexities">
         <field name="name"/>
         <field name="value"/>
-        <field name="category"/>
         <field name="color"/>
+        <field name="method_id"/>
     </tree>
     </field>
 </record>
@@ -25,8 +36,8 @@
     <form string="Complexity">
         <field name="name" select="1"/>
         <field name="value" select="1"/>
-        <field name="category" select="1"/>
         <field name="color" />
+        <field name="method_id" widget="selection"/>
     </form>
     </field>
 </record>

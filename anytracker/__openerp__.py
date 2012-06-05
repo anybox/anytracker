@@ -46,6 +46,8 @@
             'stage/view.xml',
             'complexity/data.xml',
             'complexity/view.xml',
+            'method/data.xml',
+            'method/view.xml',
         ],
         'active': False,
         'installable': True

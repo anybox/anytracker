@@ -1,6 +1,7 @@
 import anytracker
 import history
 import stage
+import method
 import complexity
 import mindmap
 
