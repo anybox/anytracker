@@ -15,6 +15,7 @@
                     <field name="shortened_description"/>
                     <field name="stage_id"/>
                     <field name="method_id"/>
+                    <field name="my_rating"/>
                 </tree>
             </field>
         </record>

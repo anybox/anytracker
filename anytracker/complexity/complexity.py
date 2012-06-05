@@ -50,7 +50,7 @@ class ticket(osv.osv):
                             context=context)
             if rating_ids:
                 rating = ar_pool.browse(cr, uid, rating_ids[0])
-                tickets[ticket_id] = (rating.complexity_id.id, rating.id)
+                tickets[ticket_id] = (rating.complexity_id.id, rating.complexity_id.name)
         return tickets
 
     def _set_my_rating(self, cr, uid, id, name, value, fnct_inv_arg, context):

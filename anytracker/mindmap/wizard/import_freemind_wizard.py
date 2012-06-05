@@ -5,6 +5,7 @@ from xml import sax
 from datetime import datetime
 from cStringIO import StringIO
 from base64 import b64decode
+import time
 
 
 class import_freemind_wizard(osv.osv_memory):
@@ -13,21 +14,17 @@ class import_freemind_wizard(osv.osv_memory):
     _columns = {
         'ticket_id': fields.many2one('anytracker.ticket', 'Ticket', domain="[('parent_id', '=', False)]"),
         'mindmap_content': fields.binary(_('File'), required=True),
-        'green_complexity': fields.many2one('anytracker.complexity', 'green complexity'),
-        'orange_complexity': fields.many2one('anytracker.complexity', 'orange complexity'),
-        'red_complexity': fields.many2one('anytracker.complexity', 'red complexity'),
+        'green_complexity': fields.many2one('anytracker.complexity', 'green complexity', required=True),
+        'orange_complexity': fields.many2one('anytracker.complexity', 'orange complexity', required=True),
+        'red_complexity': fields.many2one('anytracker.complexity', 'red complexity', required=True),
     }
 
     def execute_import(self, cr, uid, ids, context=None):
         '''Launch import of nn file from freemind'''
-        any_tick_complexity_pool = self.pool.get('anytracker.complexity')
         for wizard in self.browse(cr, uid, ids, context=context):
-            complexity_dict = {'green_complexity_id': wizard.green_complexity.id or \
-                                any_tick_complexity_pool.search(cr, uid, [('value', '=', 3)])[0],
-                               'orange_complexity_id': wizard.orange_complexity.id or \
-                                any_tick_complexity_pool.search(cr, uid, [('value', '=', 21   )])[0],
-                               'red_complexity_id': wizard.red_complexity.id or \
-                                any_tick_complexity_pool.search(cr, uid, [('value', '=', 3)])[0],
+            complexity_dict = {'green_complexity_id': wizard.green_complexity.id or False,
+                               'orange_complexity_id': wizard.orange_complexity.id or False,
+                               'red_complexity_id': wizard.red_complexity.id or False,
                                }
             ticket_id = wizard.ticket_id and wizard.ticket_id.id or False
             content_handler = FreemindContentHandler(cr, uid, self.pool, ticket_id, complexity_dict)
@@ -120,8 +117,15 @@ class FreemindContentHandler(sax.ContentHandler):
                 complexity_id = self.complexity_dict['red_complexity_id']
             else:
                 complexity_id = False
-            any_tick_pool.write(self.cr, self.uid, self.parent_ids[-1:][0]['osv_id'],
-                {'complexity_id': complexity_id}, context=self.context)
+            if complexity_id:
+                self.pool.get('anytracker.rating').create(
+                    self.cr, self.uid,
+                    {'ticket_id': self.parent_ids[-1:][0]['osv_id'],
+                     'complexity_id': complexity_id,
+                     'user_id': self.uid,
+                     'time': time.strftime('%Y-%m-%d %H:%M:%S'),
+                    },
+                    context=self.context)
 
     def characters(self, content):
         content = content.strip()
