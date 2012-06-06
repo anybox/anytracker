@@ -164,7 +164,9 @@
         <!-- MENUITEMS -->
 
         <menuitem id="anytracker"
-            name="AnyTracker" />
+            name="AnyTracker"
+            web_icon="images/iconbw.png"
+            web_icon_hover="images/icon.png" />
         <menuitem id="projects"
             name="Projects"
             parent="anytracker"/>
