@@ -4,27 +4,32 @@
         <record id="anytracker_stage_analyse" model="anytracker.stage">
             <field name="name">Analyse</field>
             <field name="state">Analyse</field>
+            <field name="method_id" ref="anytracker_method_fixedprice"/>
             <field name="default" eval="True"/>
         </record>
 
         <record id="anytracker_stage_dev" model="anytracker.stage">
             <field name="name">dev</field>
             <field name="state">dev</field>
+            <field name="method_id" ref="anytracker_method_fixedprice"/>
         </record>
 
         <record id="anytracker_stage_test" model="anytracker.stage">
             <field name="name">test</field>
             <field name="state">test</field>
+            <field name="method_id" ref="anytracker_method_fixedprice"/>
         </record>
 
         <record id="anytracker_stage_doc" model="anytracker.stage">
             <field name="name">doc</field>
             <field name="state">doc</field>
+            <field name="method_id" ref="anytracker_method_fixedprice"/>
         </record>
 
         <record id="anytracker_stage_delivery" model="anytracker.stage">
             <field name="name">delivery</field>
             <field name="state">delivery</field>
+            <field name="method_id" ref="anytracker_method_fixedprice"/>
         </record>
 
     </data>

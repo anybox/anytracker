@@ -25,7 +25,7 @@ class rating(osv.osv):
     _name = 'anytracker.rating'
     _order = 'time desc'
     _columns = {
-        'complexity_id': fields.many2one('anytracker.complexity', 'Complexity', required=True),
+        'complexity_id': fields.many2one('anytracker.complexity', 'Complexity'),
         'ticket_id': fields.many2one('anytracker.ticket', 'Ticket', required=True, ondelete="cascade"),
         'user_id': fields.many2one('res.users', 'User', required=True),
         'time': fields.datetime('Date', required=True),
@@ -48,9 +48,14 @@ class ticket(osv.osv):
                             [('user_id', '=', uid),
                              ('ticket_id', '=', ticket_id)],
                             context=context)
-            if rating_ids:
-                rating = ar_pool.browse(cr, uid, rating_ids[0])
-                tickets[ticket_id] = (rating.complexity_id.id, rating.complexity_id.name)
+            if not rating_ids:
+                continue
+            rating = ar_pool.browse(cr, uid, rating_ids[0])
+            if rating.complexity_id:
+                my_rating = (rating.complexity_id.id, rating.complexity_id.name)
+            else:
+                my_rating = False
+            tickets[ticket_id] = my_rating
         return tickets
 
     def _set_my_rating(self, cr, uid, id, name, value, fnct_inv_arg, context):
@@ -61,7 +66,6 @@ class ticket(osv.osv):
             'ticket_id': id,
             'user_id': uid,
             'time': time.strftime('%Y-%m-%d %H:%M:%S')})
-        return True
 
     def _get_color(self, cr, uid, ids, field_name, args, context=None):
         """get the color from my rating

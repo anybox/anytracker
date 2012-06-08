@@ -11,6 +11,7 @@ class stage(osv.osv):
         'name': fields.char('name', size=64, required=True),
         'state': fields.char('state', size=64, required=True),
         'default': fields.boolean(_('Initial stage?')),
+        'method_id': fields.many2one('anytracker.method', _('Project method')),
     }
 
     _defaults = {
@@ -32,7 +33,7 @@ class ticket(osv.osv):
         return stage_names
 
     _columns = {
-        'stage_id': fields.many2one('anytracker.stage', _('Stage'), required=True),
+        'stage_id': fields.many2one('anytracker.stage', _('Stage')),
     }
 
     _group_by_full = {
