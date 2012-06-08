@@ -2,15 +2,31 @@
 <openerp>
     <data>
         <!-- VIEWS -->
+<record id="view_ticket_search" model="ir.ui.view">
+    <field name="name">Search tickets</field>
+    <field name="model">anytracker.ticket</field>
+    <field name="type">search</field>
+    <field name="priority" eval="8"/>
+    <field name="arch" type="xml">
+    <search string="Search tickets">
+        <field name="name" select="True"/>
+        <field name="description"/>
+        <field name="method_id"/>
+        <field name="my_rating"/>
+        <field name="project_id" widget="selection"/>
+    </search>
+    </field>
+</record>
 
         <record id="ticket_view_tree" model="ir.ui.view">
-            <field name="name">ticket.tree</field>
+            <field name="name">Tickets</field>
             <field name="model">anytracker.ticket</field>
             <field name="type">tree</field>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <tree string="Ticket treeview">
                     <field name="name"/>
+                    <field name="project_id"/>
                     <field name="duration"/>
                     <field name="shortened_description"/>
                     <field name="stage_id"/>
@@ -30,6 +46,7 @@
                     <field name="name"/>
                     <field name="my_rating" options='{"quick_create": false}' />
                     <field name="method_id" widget="selection"/>
+                    <field name="project_id"/>
                     <field name="parent_id"/>
                     <notebook colspan="4">
                         <page string="General">
@@ -128,20 +145,20 @@
 
 
         <record model="ir.actions.act_window" id="tickets_action_form">
-            <field name="name">anytracker.ticket.form</field>
+            <field name="name">Anytracker - Ticket</field>
             <field name="res_model">anytracker.ticket</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="anytracker.ticket_view_form"/>
         </record>
         <record model="ir.actions.act_window" id="tickets_action_list">
-            <field name="name">anytracker.ticket.list</field>
+            <field name="name">Anytracker - Tickets</field>
             <field name="res_model">anytracker.ticket</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="anytracker.ticket_view_tree"/>
         </record>
 
         <record model="ir.actions.act_window" id="tickets_action_tree">
-            <field name="name">anytracker.ticket.tree</field>
+            <field name="name">Anytracker - Projects</field>
             <field name="res_model">anytracker.ticket</field>
             <field name="view_type">tree</field>
             <field name="view_mode">tree,form</field>
@@ -150,7 +167,7 @@
         </record>
 
         <record model="ir.actions.act_window" id="tickets_action_kanban">
-            <field name="name">anytracker.ticket.kanban</field>
+            <field name="name">Anytracker - Tickets kanban</field>
             <field name="res_model">anytracker.ticket</field>
             <field name="view_mode">kanban,form</field>
             <field name="view_id" ref="anytracker.tickets_view_hierarchy"/>
