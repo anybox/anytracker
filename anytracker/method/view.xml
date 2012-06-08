@@ -2,27 +2,27 @@
 <openerp>
 <data>
 <record id="view_method_tree" model="ir.ui.view">
-    <field name="name">anytracker.method.tree</field>
+    <field name="name">Project methods</field>
     <field name="model">anytracker.method</field>
     <field name="type">tree</field>
     <field name="priority" eval="8"/>
     <field name="arch" type="xml">
     <tree string="Methods">
-        <field name="code"/>
         <field name="name"/>
+        <field name="code" string="Code"/>
     </tree>
     </field>
 </record>
 
 <record id="view_method_form" model="ir.ui.view">
-    <field name="name">anytracker.method.form</field>
+    <field name="name">Project method</field>
     <field name="model">anytracker.method</field>
     <field name="type">form</field>
     <field name="priority" eval="8"/>
     <field name="arch" type="xml">
     <form string="Method">
         <field name="name" select="1"/>
-        <field name="code"/>
+        <field name="code" string="Code"/>
     </form>
     </field>
 </record>

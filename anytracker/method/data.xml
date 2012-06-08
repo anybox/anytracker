@@ -7,7 +7,7 @@
         </record>
         <record id="anytracker_method_gtd" model="anytracker.method">
             <field name="code">gtd</field>
-            <field name="name">Getting things done</field>
+            <field name="name">Getting Things Done</field>
         </record>
         <record id="anytracker_method_maintenance" model="anytracker.method">
             <field name="code">tma</field>
