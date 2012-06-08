@@ -27,7 +27,6 @@
                 <tree string="Ticket treeview">
                     <field name="name"/>
                     <field name="project_id"/>
-                    <field name="duration"/>
                     <field name="shortened_description"/>
                     <field name="stage_id"/>
                     <field name="method_id"/>
