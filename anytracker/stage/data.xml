@@ -1,47 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <record id="anytracker_stage_new" model="anytracker.stage">
+        <!-- Implementation project -->
+        <record id="stage_implementation_new" model="anytracker.stage">
             <field name="name">New</field>
             <field name="state">new</field>
-            <field name="method_id" ref="anytracker_method_fixedprice"/>
-            <field name="default" eval="True"/>
+            <field name="method_id" ref="method_implementation"/>
+            <field name="sequence">10</field>
         </record>
-        <record id="anytracker_stage_analysis" model="anytracker.stage">
+        <record id="stage_implementation_analysis" model="anytracker.stage">
             <field name="name">Analysis</field>
             <field name="state">analysis</field>
-            <field name="method_id" ref="anytracker_method_fixedprice"/>
-            <field name="default" eval="True"/>
+            <field name="method_id" ref="method_implementation"/>
+            <field name="sequence">20</field>
         </record>
-        <record id="anytracker_stage_todo" model="anytracker.stage">
+        <record id="stage_implementation_todo" model="anytracker.stage">
             <field name="name">To do</field>
             <field name="state">todo</field>
-            <field name="method_id" ref="anytracker_method_fixedprice"/>
+            <field name="method_id" ref="method_implementation"/>
+            <field name="sequence">30</field>
         </record>
-        <record id="anytracker_stage_started" model="anytracker.stage">
+        <record id="stage_implementation_started" model="anytracker.stage">
             <field name="name">Started</field>
             <field name="state">started</field>
-            <field name="method_id" ref="anytracker_method_fixedprice"/>
+            <field name="method_id" ref="method_implementation"/>
+            <field name="sequence">40</field>
         </record>
-        <record id="anytracker_stage_finished" model="anytracker.stage">
+        <record id="stage_implementation_finished" model="anytracker.stage">
             <field name="name">Finished</field>
             <field name="state">finished</field>
-            <field name="method_id" ref="anytracker_method_fixedprice"/>
+            <field name="method_id" ref="method_implementation"/>
+            <field name="sequence">50</field>
         </record>
-        <record id="anytracker_stage_checked" model="anytracker.stage">
+        <record id="stage_implementation_checked" model="anytracker.stage">
             <field name="name">Checked</field>
             <field name="state">checked</field>
-            <field name="method_id" ref="anytracker_method_fixedprice"/>
+            <field name="method_id" ref="method_implementation"/>
+            <field name="sequence">60</field>
         </record>
-        <record id="anytracker_stage_delivered1" model="anytracker.stage">
+        <record id="stage_implementation_delivered" model="anytracker.stage">
             <field name="name">Delivered in Acceptance</field>
-            <field name="state">delivered1</field>
-            <field name="method_id" ref="anytracker_method_fixedprice"/>
+            <field name="state">delivered</field>
+            <field name="method_id" ref="method_implementation"/>
+            <field name="sequence">70</field>
         </record>
-        <record id="anytracker_stage_delivered2" model="anytracker.stage">
-            <field name="name">Delivered in Production</field>
-            <field name="state">delivered2</field>
-            <field name="method_id" ref="anytracker_method_fixedprice"/>
+        <record id="stage_implementation_deployed" model="anytracker.stage">
+            <field name="name">Deployed in Production</field>
+            <field name="state">deployed</field>
+            <field name="method_id" ref="method_implementation"/>
+            <field name="sequence">80</field>
         </record>
+
+        <!-- Maintenance -->
+        <record id="stage_maintenance_new" model="anytracker.stage">
+            <field name="name">New</field>
+            <field name="state">new</field>
+            <field name="method_id" ref="method_maintenance"/>
+            <field name="sequence">10</field>
+        </record>
+        <record id="stage_maintenance_ack" model="anytracker.stage">
+            <field name="name">Acknowledged</field>
+            <field name="state">ack</field>
+            <field name="method_id" ref="method_maintenance"/>
+            <field name="sequence">20</field>
+        </record>
+        <record id="stage_maintenance_analysis" model="anytracker.stage">
+            <field name="name">Analysis</field>
+            <field name="state">analysis</field>
+            <field name="method_id" ref="method_maintenance"/>
+            <field name="sequence">30</field>
+        </record>
+        <record id="stage_maintenance_todo" model="anytracker.stage">
+            <field name="name">To do</field>
+            <field name="state">todo</field>
+            <field name="method_id" ref="method_maintenance"/>
+            <field name="sequence">40</field>
+        </record>
+        <record id="stage_maintenance_finished" model="anytracker.stage">
+            <field name="name">Finished</field>
+            <field name="state">finished</field>
+            <field name="method_id" ref="method_maintenance"/>
+            <field name="sequence">50</field>
+        </record>
+        <record id="stage_maintenance_checked" model="anytracker.stage">
+            <field name="name">Checked</field>
+            <field name="state">checked</field>
+            <field name="method_id" ref="method_maintenance"/>
+            <field name="sequence">60</field>
+        </record>
+        <record id="stage_maintenance_delivered" model="anytracker.stage">
+            <field name="name">Delivered</field>
+            <field name="state">delivered</field>
+            <field name="method_id" ref="method_maintenance"/>
+            <field name="sequence">70</field>
+        </record>
+        <record id="stage_maintenance_deployed" model="anytracker.stage">
+            <field name="name">Deployed</field>
+            <field name="state">deployed</field>
+            <field name="method_id" ref="method_maintenance"/>
+            <field name="sequence">80</field>
+        </record>
+
     </data>
 </openerp>

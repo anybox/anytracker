@@ -4,18 +4,16 @@ from tools.translate import _
 
 
 class stage(osv.osv):
-
+    """Stage of a ticket.
+    Correspond to kanban columns
+    """
     _name = 'anytracker.stage'
 
     _columns = {
         'name': fields.char('name', size=64, required=True),
         'state': fields.char('state', size=64, required=True),
-        'default': fields.boolean(_('Initial stage?')),
         'method_id': fields.many2one('anytracker.method', _('Project method')),
-    }
-
-    _defaults = {
-         'default': lambda *a: False,
+        'sequence': fields.integer('Sequence', help='Sequence'),
     }
 
 
@@ -28,7 +26,15 @@ class ticket(osv.osv):
         """
         # XXX improve the filter to handle categories
         stage_osv = self.pool.get('anytracker.stage')
-        stage_ids = stage_osv.search(cr, uid, [])
+        project_id = context.get('own_values', None)
+        if not project_id:
+            return []
+        project_id = project_id['self']
+        ticket_osv = self.pool.get('anytracker.ticket')
+        method = ticket_osv.browse(cr, uid, project_id, context).method_id
+        if not method:
+            return []
+        stage_ids = stage_osv.search(cr, uid, [('method_id','=',method.id)], context=context)
         stage_names = stage_osv.name_get(cr, access_rights_uid, stage_ids, context=context)
         return stage_names
 

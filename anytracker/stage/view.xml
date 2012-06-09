@@ -13,7 +13,7 @@
         <field name="name"/>
         <field name="state"/>
         <field name="method_id"/>
-        <field name="default"/>
+        <field name="sequence"/>
     </tree>
     </field>
 </record>
@@ -28,7 +28,7 @@
         <field name="name" select="1"/>
         <field name="state"/>
         <field name="method_id"/>
-        <field name="default"/>
+        <field name="sequence"/>
     </form>
     </field>
 </record>

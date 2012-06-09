@@ -1,19 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <record id="anytracker_method_fixedprice" model="anytracker.method">
-            <field name="code">fixed</field>
-            <field name="name">Fixed price</field>
+        <record id="method_implementation" model="anytracker.method">
+            <field name="code">implementation</field>
+            <field name="name">Implementation</field>
         </record>
-        <record id="anytracker_method_gtd" model="anytracker.method">
-            <field name="code">gtd</field>
-            <field name="name">Getting Things Done</field>
-        </record>
-        <record id="anytracker_method_maintenance" model="anytracker.method">
-            <field name="code">tma</field>
+        <record id="method_maintenance" model="anytracker.method">
+            <field name="code">maintenance</field>
             <field name="name">Maintenance</field>
         </record>
-        <record id="anytracker_method_scrum" model="anytracker.method">
+        <record id="method_scrum" model="anytracker.method">
             <field name="code">scrum</field>
             <field name="name">Scrum</field>
         </record>

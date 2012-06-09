@@ -9,11 +9,11 @@
     <field name="priority" eval="8"/>
     <field name="arch" type="xml">
     <search string="Search tickets">
+        <field name="project_id" widget="selection"/>
         <field name="name" select="True"/>
         <field name="description"/>
         <field name="method_id"/>
         <field name="my_rating"/>
-        <field name="project_id" widget="selection"/>
     </search>
     </field>
 </record>
