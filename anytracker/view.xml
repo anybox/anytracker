@@ -85,7 +85,7 @@
         </record>
 
         <!-- Ticket Kanban View  -->
-        <record model="ir.ui.view" id="anytracker_kanban_view_tickets">
+        <record model="ir.ui.view" id="tickets_view_kanban">
             <field name="name">Anytracker - tickets</field>
             <field name="model">anytracker.ticket</field>
             <field name="type">kanban</field>
@@ -169,8 +169,8 @@
             <field name="name">Anytracker - Tickets kanban</field>
             <field name="res_model">anytracker.ticket</field>
             <field name="view_mode">kanban,form</field>
-            <field name="view_id" ref="anytracker.tickets_view_hierarchy"/>
-            <field name="domain">[('child_ids','=',False)]</field>
+            <field name="view_id" ref="anytracker.tickets_view_kanban"/>
+            <field name="domain">[('child_ids','=',False),('stage_id','!=',False)]</field>
         </record>
 
 		<!-- IR VALUE -->
