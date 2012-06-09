@@ -1,36 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <record id="anytracker_stage_analyse" model="anytracker.stage">
-            <field name="name">Analyse</field>
-            <field name="state">Analyse</field>
+        <record id="anytracker_stage_new" model="anytracker.stage">
+            <field name="name">New</field>
+            <field name="state">new</field>
             <field name="method_id" ref="anytracker_method_fixedprice"/>
             <field name="default" eval="True"/>
         </record>
-
-        <record id="anytracker_stage_dev" model="anytracker.stage">
-            <field name="name">dev</field>
-            <field name="state">dev</field>
+        <record id="anytracker_stage_analysis" model="anytracker.stage">
+            <field name="name">Analysis</field>
+            <field name="state">analysis</field>
+            <field name="method_id" ref="anytracker_method_fixedprice"/>
+            <field name="default" eval="True"/>
+        </record>
+        <record id="anytracker_stage_todo" model="anytracker.stage">
+            <field name="name">To do</field>
+            <field name="state">todo</field>
             <field name="method_id" ref="anytracker_method_fixedprice"/>
         </record>
-
-        <record id="anytracker_stage_test" model="anytracker.stage">
-            <field name="name">test</field>
-            <field name="state">test</field>
+        <record id="anytracker_stage_started" model="anytracker.stage">
+            <field name="name">Started</field>
+            <field name="state">started</field>
             <field name="method_id" ref="anytracker_method_fixedprice"/>
         </record>
-
-        <record id="anytracker_stage_doc" model="anytracker.stage">
-            <field name="name">doc</field>
-            <field name="state">doc</field>
+        <record id="anytracker_stage_finished" model="anytracker.stage">
+            <field name="name">Finished</field>
+            <field name="state">finished</field>
             <field name="method_id" ref="anytracker_method_fixedprice"/>
         </record>
-
-        <record id="anytracker_stage_delivery" model="anytracker.stage">
-            <field name="name">delivery</field>
-            <field name="state">delivery</field>
+        <record id="anytracker_stage_checked" model="anytracker.stage">
+            <field name="name">Checked</field>
+            <field name="state">checked</field>
             <field name="method_id" ref="anytracker_method_fixedprice"/>
         </record>
-
+        <record id="anytracker_stage_delivered1" model="anytracker.stage">
+            <field name="name">Delivered in Acceptance</field>
+            <field name="state">delivered1</field>
+            <field name="method_id" ref="anytracker_method_fixedprice"/>
+        </record>
+        <record id="anytracker_stage_delivered2" model="anytracker.stage">
+            <field name="name">Delivered in Production</field>
+            <field name="state">delivered2</field>
+            <field name="method_id" ref="anytracker_method_fixedprice"/>
+        </record>
     </data>
 </openerp>

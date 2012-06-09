@@ -42,10 +42,10 @@
             'mindmap/wizard/import_freemind_wizard.xml',
             'mindmap/wizard/export_freemind_wizard.xml',
             #data
-            'stage/data.xml',
-            'stage/view.xml',
             'method/data.xml',
             'method/view.xml',
+            'stage/data.xml',
+            'stage/view.xml',
             'complexity/data.xml',
             'complexity/view.xml',
         ],
