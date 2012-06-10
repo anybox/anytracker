@@ -91,10 +91,6 @@ class FreemindContentHandler(sax.ContentHandler):
             osv_id = any_tick_pool.search(self.cr, self.uid, domain,
                     context=self.context)
             if (not osv_id) or (not self.parent_id and not self.ticket_id):
-                stage_id = stage_pool.search(self.cr, self.uid,
-                    [('default', '=', True)], context=self.context)
-                if stage_id:
-                    vals['stage_id'] = stage_id[0]
                 osv_id = any_tick_pool.create(self.cr, self.uid, vals, context=self.context)
             else:
                 any_tick_pool.write(self.cr, self.uid, osv_id, vals, context=self.context)

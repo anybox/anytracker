@@ -39,7 +39,9 @@ class ticket(osv.osv):
         return stage_names
 
     _columns = {
-        'stage_id': fields.many2one('anytracker.stage', _('Stage')),
+        'stage_id': fields.many2one('anytracker.stage',
+                                    ('Stage'),
+                                    domain="[('method_id','=',method_id)]")
     }
 
     _group_by_full = {

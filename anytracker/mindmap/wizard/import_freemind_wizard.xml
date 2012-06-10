@@ -37,7 +37,7 @@
         </record>
 
         <menuitem id="menu_import_freemind_wizard"
-            parent="anytracker"
+            parent="tickets"
             sequence="40"
             action="action_import_freemind_view"/>
 

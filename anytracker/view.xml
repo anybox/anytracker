@@ -49,7 +49,7 @@
                     <field name="parent_id"/>
                     <notebook colspan="4">
                         <page string="General">
-                            <field name="stage_id" widget="selection"/>
+                            <field name="stage_id"/>
                             <field name="color"/>
                             <field name="duration"/>
                             <field name="description"/>
@@ -165,20 +165,7 @@
             <field name="domain">[('parent_id','=',False)]</field>
         </record>
 
-        <record model="ir.actions.act_window" id="tickets_action_kanban">
-            <field name="name">Anytracker - Tickets kanban</field>
-            <field name="res_model">anytracker.ticket</field>
-            <field name="view_mode">kanban,form</field>
-            <field name="view_id" ref="anytracker.tickets_view_kanban"/>
-            <field name="domain">[('child_ids','=',False),('stage_id','!=',False)]</field>
-        </record>
-
-		<!-- IR VALUE -->
-		
-
-        
         <!-- MENUITEMS -->
-
         <menuitem id="anytracker"
             name="AnyTracker"
             sequence="-1"
@@ -186,23 +173,26 @@
             web_icon_hover="images/icon.png" />
         <menuitem id="projects"
             name="Projects"
-            parent="anytracker"/>
+            sequence="10"
+            parent="anytracker"/>  
+        <menuitem id="tickets"
+            name="Tickets"
+            sequence="20"
+            parent="anytracker"/>  
+        <menuitem id="tickets_menu_tree"
+            name="Tickets hierarchy"
+            parent="tickets"
+            sequence="10"
+            action="tickets_action_tree" />
+        <menuitem id="tickets_menu_list"
+            name="All tickets"
+            parent="tickets"
+            sequence="20"
+            action="tickets_action_list" />  
         <menuitem id="configuration"
             name="Configuration"
             sequence="200"
             parent="anytracker"/>
-        <menuitem id="tickets_menu_list"
-            name="List view"
-            parent="projects"
-            action="tickets_action_list" />  
-        <menuitem id="tickets_menu_tree"
-            name="Tree view"
-            parent="projects"
-            action="tickets_action_tree" />
-        <menuitem id="tickets_menu_kanban"
-            name="Kanban view"
-            parent="projects"
-            action="tickets_action_kanban"/>  
 
     </data>
 </openerp>

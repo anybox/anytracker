@@ -3,7 +3,7 @@ from osv import fields, osv
 from tools.translate import _
 import time
 
-class ticket(osv.osv):
+class Ticket(osv.osv):
 
     _name = 'anytracker.ticket'
     _description = "Tickets for project management"
@@ -50,26 +50,96 @@ class ticket(osv.osv):
             res[i] = u' / '.join([b.name for b in breadcrumb])
         return res
 
+    def _create_menu(self, cr, uid, project, context=None):
+        """Create a menu for a project
+        """
+        xml_pool = self.pool.get('ir.model.data')
+        action_id = self.pool.get('ir.actions.act_window').create(cr, uid,
+            {'name': project.name,
+             'res_model': 'anytracker.ticket',
+             'view_mode': 'kanban,tree,page,form',
+             'view_id': xml_pool.get_object_reference(cr, uid, 'anytracker', 'tickets_view_kanban')[1],
+             # warning: the domain below is also used to find the action at delete time
+             'domain': "[('project_id','=',%s),('child_ids','=',False),('stage_id','!=',False)]" % project.id,
+            })
+        self.pool.get('ir.ui.menu').create(cr, uid,
+            {'name': project.name,
+             'parent_id': xml_pool.get_object_reference(cr, uid, 'anytracker', 'projects')[1],
+             'action': 'ir.actions.act_window,'+str(action_id),
+            })
+
+    def _delete_menu(self, cr, uid, project, context=None):
+        """delete the menu for a project
+        """
+        # delete the action
+        act_pool = self.pool.get('ir.actions.act_window')
+        action_id = act_pool.search(cr, uid,
+            [('res_model','=','anytracker.ticket'),
+            # warning: the domain below is defined in the _create_menu method
+             ('domain','=',"[('project_id','=',%s),('child_ids','=',False),('stage_id','!=',False)]" % project.id)])
+        act_pool.unlink(cr, uid, action_id)
+        # delete the menu
+        menu_pool = self.pool.get('ir.ui.menu')
+        menu_id = menu_pool.search(cr, uid,
+            [('name','=',project.name),
+             ('action','=','ir.actions.act_window,'+str(action_id))])
+        menu_pool.unlink(cr, uid, menu_id)
+
+    def _set_project(self, cr, uid, values, context=None):
+        """store the root ticket (the project) in the ticket
+        Should be more efficient than looking up the project everytime
+        """
+        parent_id = values.get('parent_id')
+        breadcrumb = self._breadcrumb(cr, uid, [parent_id], context)[parent_id]
+        project = breadcrumb[0]
+        values['project_id'] = project.id
+
     def write(self, cr, uid, ids, values, context=None):
         """write the project_id when writing the parent
         """
         if type(ids) is not list: ids = [ids]
         assert(len(ids)==1)
         ticket_id = ids[0]
-        if 'parent_id' in values:
-            breadcrumb = self._breadcrumb(cr, uid, ids, context)[ticket_id]
-            values['project_id'] = breadcrumb[0].id
-        return super(ticket, self).write(cr, uid, ids, values, context)
+
+        # set the project of the ticket
+        if values.get('parent_id'):
+            self._set_project(cr, uid, values, context)
+
+        res = super(Ticket, self).write(cr, uid, ids, values, context=context)
+
+        # create a menu for the project
+        if 'parent_id' in values and values['parent_id']==False:
+            project = self.browse(cr, uid, ticket_id, context)
+            self._create_menu(cr, uid, project, context)
+        if 'parent_id' in values and values['parent_id']:
+            project = self.browse(cr, uid, ticket_id, context)
+            self._delete_menu(cr, uid, project, context)
+
+        return res
 
     def create(self, cr, uid, values, context=None):
         """write the project_id when writing the parent
         """
-        parent_id = values.get('parent_id')
-        if parent_id:
-            breadcrumb = self._breadcrumb(cr, uid, [parent_id], context)[parent_id]
-            if breadcrumb[0]:
-                values['project_id'] = breadcrumb[0].id
-        return super(ticket, self).create(cr, uid, values, context)
+        # set the project of the ticket
+        if values.get('parent_id'):
+            self._set_project(cr, uid, values, context)
+        ticket_id = super(Ticket, self).create(cr, uid, values, context=context)
+
+        # create a menu for the project
+        if not values.get('parent_id'):
+            project = self.browse(cr, uid, ticket_id, context)
+            self._create_menu(cr, uid, project, context)
+
+        return ticket_id
+
+    def unlink(self, cr, uid, ids, context=None):
+        """delete the menu corresponding to the project
+        """
+        for ticket in self.browse(cr, uid, ids, context):
+            if not ticket.parent_id:
+                self._delete_menu(cr, uid, ticket, context)
+
+        return super(Ticket, self).unlink(cr, uid, ids, context=context)
 
     _columns = {
         'name': fields.char('Name', 255, required=True),
