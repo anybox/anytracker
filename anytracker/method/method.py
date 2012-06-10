@@ -11,15 +11,21 @@ class method(osv.osv):
         'name': fields.char('Name', size=64, help='Name of the project management method'),
         }
 
-class ticket(osv.osv):
+class Ticket(osv.osv):
     """add method selection on tickets
     """
     _inherit = 'anytracker.ticket'
 
     _columns = {
         'method_id': fields.many2one('anytracker.method', 'Method', help='Project method'),
+        'project_method_id': fields.related('project_id', 'method_id',
+            readonly=True,
+            type='many2one',
+            relation='anytracker.method',
+            string='Method of the project',
+            help='Project method'),
         }
-
+    
     def _get_default_method(self, cr, uid, context):
         code = context.get('method', 'gtd')
         method_ids = self.pool.get('anytracker.method').search(cr, uid, [('code','=',code)])

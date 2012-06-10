@@ -86,27 +86,32 @@ class Ticket(osv.osv):
              ('action','=','ir.actions.act_window,'+str(action_id))])
         menu_pool.unlink(cr, uid, menu_id)
 
-    def _set_project(self, cr, uid, values, context=None):
+    def _set_project(self, cr, uid, ticket_id, context=None):
         """store the root ticket (the project) in the ticket
         Should be more efficient than looking up the project everytime
         """
-        parent_id = values.get('parent_id')
-        breadcrumb = self._breadcrumb(cr, uid, [parent_id], context)[parent_id]
-        project = breadcrumb[0]
-        values['project_id'] = project.id
+        ticket = self.browse(cr, uid, ticket_id, context)
+        parent_id = ticket.parent_id and ticket.parent_id.id
+        if parent_id:
+            breadcrumb = self._breadcrumb(cr, uid, [parent_id], context)[parent_id]
+            project_id = breadcrumb[0].id
+        else:
+            # if no parent, we are the project
+            project_id = ticket_id
+        super(Ticket, self).write(cr, uid, ticket_id, {'project_id': project_id}, context)
 
     def write(self, cr, uid, ids, values, context=None):
         """write the project_id when writing the parent
         """
-        if type(ids) is not list: ids = [ids]
+        if not hasattr(ids, '__iter__'): ids = [ids]
         assert(len(ids)==1)
         ticket_id = ids[0]
 
-        # set the project of the ticket
-        if values.get('parent_id'):
-            self._set_project(cr, uid, values, context)
-
         res = super(Ticket, self).write(cr, uid, ids, values, context=context)
+
+        # set the project of the ticket
+        self._set_project(cr, uid, ticket_id, context)
+
 
         # create a menu for the project
         if 'parent_id' in values and values['parent_id']==False:
@@ -121,10 +126,9 @@ class Ticket(osv.osv):
     def create(self, cr, uid, values, context=None):
         """write the project_id when writing the parent
         """
-        # set the project of the ticket
-        if values.get('parent_id'):
-            self._set_project(cr, uid, values, context)
         ticket_id = super(Ticket, self).create(cr, uid, values, context=context)
+        # set the project of the ticket
+        self._set_project(cr, uid, ticket_id, context)
 
         # create a menu for the project
         if not values.get('parent_id'):

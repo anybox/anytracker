@@ -82,7 +82,7 @@ class ticket(osv.osv):
         'my_rating': fields.function(_get_my_rating,
                                      fnct_inv=_set_my_rating,
                                      type='many2one',
-                                     domain="[('method_id','=',method_id)]",
+                                     domain="[('method_id','=',project_method_id)]",
                                      relation='anytracker.complexity',
                                      string="My Rating"),
         'color': fields.function(_get_color, type='integer', relation='anytracker.complexity', string='Color'),

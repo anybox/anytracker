@@ -13,7 +13,6 @@
     <field name="project_id" widget="selection"/>
     <field name="name" select="True"/>
     <field name="description"/>
-    <field name="method_id"/>
     <field name="id" invisible="1"/>
     <field name="my_rating"/>
   </search>
@@ -31,7 +30,6 @@
       <field name="project_id"/>
       <field name="shortened_description"/>
       <field name="stage_id"/>
-      <field name="method_id"/>
       <field name="my_rating"/>
     </tree>
   </field>
@@ -46,12 +44,23 @@
     <form string="ticket form">
       <field name="name"/>
       <field name="my_rating" options='{"quick_create": false}' />
-      <field name="method_id" widget="selection"/>
+      <field name="project_method_id" attrs="{'invisible': [('parent_id','=',False)]}"/>
+      <field name="method_id" widget="selection"
+             attrs="{'invisible' : [('parent_id','!=',False)]}"/>
       <field name="project_id"/>
       <field name="parent_id"/>
+
       <notebook colspan="4">
         <page string="General">
+      <group col="4" colspan="2">
           <field name="stage_id"/>
+          <button name="stage_previous" string=""
+              type="object"
+              icon="gtk-go-back" />
+          <button name="stage_next" string=""
+              type="object"
+              icon="gtk-go-forward" />
+      </group>
           <field name="color"/>
           <field name="duration"/>
           <field name="description"/>
