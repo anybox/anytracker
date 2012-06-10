@@ -9,6 +9,7 @@
     <field name="priority" eval="8"/>
     <field name="arch" type="xml">
     <search string="Search tickets">
+        <filter string="Projects" domain="[('parent_id','=',False)]" icon="terp-camera_test" help="Show only projects"/>
         <field name="project_id" widget="selection"/>
         <field name="name" select="True"/>
         <field name="description"/>
@@ -147,21 +148,20 @@
             <field name="name">Anytracker - Ticket</field>
             <field name="res_model">anytracker.ticket</field>
             <field name="view_type">form</field>
-            <field name="view_id" ref="anytracker.ticket_view_form"/>
+            <field name="view_id" ref="ticket_view_form"/>
         </record>
         <record model="ir.actions.act_window" id="tickets_action_list">
             <field name="name">Anytracker - Tickets</field>
             <field name="res_model">anytracker.ticket</field>
             <field name="view_type">form</field>
-            <field name="view_id" ref="anytracker.ticket_view_tree"/>
+            <field name="view_id" ref="ticket_view_tree"/>
         </record>
 
         <record model="ir.actions.act_window" id="tickets_action_tree">
             <field name="name">Anytracker - Projects</field>
             <field name="res_model">anytracker.ticket</field>
             <field name="view_type">tree</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="anytracker.tickets_view_hierarchy"/>
+            <field name="view_id" ref="tickets_view_hierarchy"/>
             <field name="domain">[('parent_id','=',False)]</field>
         </record>
 
