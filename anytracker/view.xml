@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-    <data>
-        <!-- VIEWS -->
+<openerp><data>
+
+<!-- VIEWS -->
 <record id="view_ticket_search" model="ir.ui.view">
     <field name="name">Search tickets</field>
     <field name="model">anytracker.ticket</field>
@@ -19,181 +19,178 @@
     </field>
 </record>
 
-        <record id="ticket_view_tree" model="ir.ui.view">
-            <field name="name">Tickets</field>
-            <field name="model">anytracker.ticket</field>
-            <field name="type">tree</field>
-            <field name="priority" eval="10"/>
-            <field name="arch" type="xml">
-                <tree string="Ticket treeview">
-                    <field name="name"/>
-                    <field name="project_id"/>
-                    <field name="shortened_description"/>
+<record id="ticket_view_tree" model="ir.ui.view">
+    <field name="name">Tickets</field>
+    <field name="model">anytracker.ticket</field>
+    <field name="type">tree</field>
+    <field name="priority" eval="10"/>
+    <field name="arch" type="xml">
+        <tree string="Ticket treeview">
+            <field name="name"/>
+            <field name="project_id"/>
+            <field name="shortened_description"/>
+            <field name="stage_id"/>
+            <field name="method_id"/>
+            <field name="my_rating"/>
+        </tree>
+    </field>
+</record>
+
+<record id="ticket_view_form" model="ir.ui.view">
+    <field name="name">ticket.form</field>
+    <field name="model">anytracker.ticket</field>
+    <field name="type">form</field>
+    <field name="priority" eval="10"/>
+    <field name="arch" type="xml">
+        <form string="ticket form">
+            <field name="name"/>
+            <field name="my_rating" options='{"quick_create": false}' />
+            <field name="method_id" widget="selection"/>
+            <field name="project_id"/>
+            <field name="parent_id"/>
+            <notebook colspan="4">
+                <page string="General">
                     <field name="stage_id"/>
-                    <field name="method_id"/>
-                    <field name="my_rating"/>
-                </tree>
-            </field>
-        </record>
-
-        <record id="ticket_view_form" model="ir.ui.view">
-            <field name="name">ticket.form</field>
-            <field name="model">anytracker.ticket</field>
-            <field name="type">form</field>
-            <field name="priority" eval="10"/>
-            <field name="arch" type="xml">
-                <form string="ticket form">
-                    <field name="name"/>
-                    <field name="my_rating" options='{"quick_create": false}' />
-                    <field name="method_id" widget="selection"/>
-                    <field name="project_id"/>
-                    <field name="parent_id"/>
-                    <notebook colspan="4">
-                        <page string="General">
-                            <field name="stage_id"/>
-                            <field name="color"/>
-                            <field name="duration"/>
-                            <field name="description"/>
-                        </page>
-                        <page string="Siblings">
-                            <field name="siblings_ids"/>
-                        </page>
-                        <page string="Children">
-                            <field name="child_ids"/>
-                        </page>
-                        <page string="Ratings">
-                            <label>Here are all the ratings made for this ticket:</label>
-                            <field name="rating_ids" nolabel="1" colspan="4">
-                                <tree string="Ratings">
-                                    <field name="user_id"/>
-                                    <field name="time"/>
-                                    <field name="complexity_id"/>
-                                </tree>
-                            </field>
-                        </page>
-                        <page string="History">
-                            <field name="history_ids" nolabel="1" colspan="4" readonly="1">
-                                <tree string="History">
-                                    <field name="create_uid"/>
-                                    <field name="create_date"/>
-                                    <field name="modification"/>
-                                </tree>
-                            </field>
-                        </page>
-                    </notebook>
-                </form>
-            </field>
-        </record>
-
-        <!-- Ticket Kanban View  -->
-        <record model="ir.ui.view" id="tickets_view_kanban">
-            <field name="name">Anytracker - tickets</field>
-            <field name="model">anytracker.ticket</field>
-            <field name="type">kanban</field>
-            <field name="arch" type="xml">
-                <kanban default_group_by="stage_id">
-                    <field name="duration"/>
                     <field name="color"/>
-                    <field name="name"/>
+                    <field name="duration"/>
+                    <field name="description"/>
+                </page>
+                <page string="Siblings">
                     <field name="siblings_ids"/>
+                </page>
+                <page string="Children">
                     <field name="child_ids"/>
-                    <templates>
-                        <t t-name="ticket_details">
-                            <ul class="oe_kanban_tooltip">
-                                <li><b>Name: </b> <field name="name"/>%%</li>
-                            </ul>
-                        </t>
-                        <t t-name="kanban-box">
-                            <div t-attf-class="#{kanban_color(record.color.raw_value)} #{border || ''}">
-                                <div class="oe_kanban_box oe_kanban_color_border">
-                                    <table class="oe_kanban_table oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
-                                        <tr>
-                                            <td align="left" valign="middle" class="oe_kanban_title" tooltip="lead_details">
-                                                <a type="edit"><field name="name"/></a> 
-                                            </td>
-                                        </tr>
-                                    </table>
-                                    <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger at_kanban_box_content">
-                                        <div>
-                                            <div><field name="breadcrumb"/></div>
-                                            <field name="shortened_description"/>
-                                        </div>
-                                    </div>
+                </page>
+                <page string="Ratings">
+                    <label>Here are all the ratings made for this ticket:</label>
+                    <field name="rating_ids" nolabel="1" colspan="4">
+                        <tree string="Ratings">
+                            <field name="user_id"/>
+                            <field name="time"/>
+                            <field name="complexity_id"/>
+                        </tree>
+                    </field>
+                </page>
+                <page string="History">
+                    <field name="history_ids" nolabel="1" colspan="4" readonly="1">
+                        <tree string="History">
+                            <field name="create_uid"/>
+                            <field name="create_date"/>
+                            <field name="modification"/>
+                        </tree>
+                    </field>
+                </page>
+            </notebook>
+        </form>
+    </field>
+</record>
+
+<!-- Ticket Kanban View  -->
+<record model="ir.ui.view" id="tickets_view_kanban">
+    <field name="name">Anytracker - tickets</field>
+    <field name="model">anytracker.ticket</field>
+    <field name="type">kanban</field>
+    <field name="arch" type="xml">
+        <kanban default_group_by="stage_id">
+            <field name="duration"/>
+            <field name="color"/>
+            <field name="name"/>
+            <field name="siblings_ids"/>
+            <field name="child_ids"/>
+            <templates>
+                <t t-name="ticket_details">
+                    <ul class="oe_kanban_tooltip">
+                        <li><b>Name: </b> <field name="name"/>%%</li>
+                    </ul>
+                </t>
+                <t t-name="kanban-box">
+                    <div t-attf-class="#{kanban_color(record.color.raw_value)} #{border || ''}">
+                        <div class="oe_kanban_box oe_kanban_color_border">
+                            <table class="oe_kanban_table oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
+                                <tr>
+                                    <td align="left" valign="middle" class="oe_kanban_title" tooltip="lead_details">
+                                        <a type="edit"><field name="name"/></a> 
+                                    </td>
+                                </tr>
+                            </table>
+                            <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger at_kanban_box_content">
+                                <div>
+                                    <div><field name="breadcrumb"/></div>
+                                    <field name="shortened_description"/>
                                 </div>
                             </div>
-                        </t>
-                    </templates>
-                </kanban>
-            </field>
-        </record>
+                        </div>
+                    </div>
+                </t>
+            </templates>
+        </kanban>
+    </field>
+</record>
 
-        <!-- hierarchical view for the tickets -->
-        <record id="tickets_view_hierarchy" model="ir.ui.view">
-            <field name="name">anytracker.ticket.hierarchy</field>
-            <field name="model">anytracker.ticket</field>
-            <field name="type">tree</field>
-            <field name="field_parent">child_ids</field>
-            <field name="arch" type="xml">
-                <tree string="Tickets hierarchy">
-                    <field name="name"/>
-                    <field name="stage_id"/>
-                </tree>
-            </field>
-        </record>
+<!-- hierarchical view for the tickets -->
+<record id="tickets_view_hierarchy" model="ir.ui.view">
+    <field name="name">anytracker.ticket.hierarchy</field>
+    <field name="model">anytracker.ticket</field>
+    <field name="type">tree</field>
+    <field name="field_parent">child_ids</field>
+    <field name="arch" type="xml">
+        <tree string="Tickets hierarchy">
+            <field name="name"/>
+            <field name="stage_id"/>
+        </tree>
+    </field>
+</record>
 
-        <!-- ACTIONS -->
+<!-- ACTIONS -->
+<record model="ir.actions.act_window" id="tickets_action_form">
+    <field name="name">Anytracker - Ticket</field>
+    <field name="res_model">anytracker.ticket</field>
+    <field name="view_type">form</field>
+    <field name="view_id" ref="ticket_view_form"/>
+</record>
+<record model="ir.actions.act_window" id="tickets_action_list">
+    <field name="name">Anytracker - Tickets</field>
+    <field name="res_model">anytracker.ticket</field>
+    <field name="view_type">form</field>
+    <field name="view_id" ref="ticket_view_tree"/>
+</record>
 
+<record model="ir.actions.act_window" id="tickets_action_tree">
+    <field name="name">Anytracker - Projects</field>
+    <field name="res_model">anytracker.ticket</field>
+    <field name="view_type">tree</field>
+    <field name="view_id" ref="tickets_view_hierarchy"/>
+    <field name="domain">[('parent_id','=',False)]</field>
+</record>
 
-        <record model="ir.actions.act_window" id="tickets_action_form">
-            <field name="name">Anytracker - Ticket</field>
-            <field name="res_model">anytracker.ticket</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="ticket_view_form"/>
-        </record>
-        <record model="ir.actions.act_window" id="tickets_action_list">
-            <field name="name">Anytracker - Tickets</field>
-            <field name="res_model">anytracker.ticket</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="ticket_view_tree"/>
-        </record>
+<!-- MENUITEMS -->
+<menuitem id="anytracker"
+    name="AnyTracker"
+    sequence="-1"
+    web_icon="images/iconbw.png"
+    web_icon_hover="images/icon.png" />
+<menuitem id="projects"
+    name="Projects"
+    sequence="10"
+    parent="anytracker"/>  
+<menuitem id="tickets"
+    name="Tickets"
+    sequence="20"
+    parent="anytracker"/>  
+<menuitem id="tickets_menu_tree"
+    name="Tickets hierarchy"
+    parent="tickets"
+    sequence="10"
+    action="tickets_action_tree" />
+<menuitem id="tickets_menu_list"
+    name="All tickets"
+    parent="tickets"
+    sequence="20"
+    action="tickets_action_list" />  
+<menuitem id="configuration"
+    name="Configuration"
+    sequence="200"
+    parent="anytracker"/>
 
-        <record model="ir.actions.act_window" id="tickets_action_tree">
-            <field name="name">Anytracker - Projects</field>
-            <field name="res_model">anytracker.ticket</field>
-            <field name="view_type">tree</field>
-            <field name="view_id" ref="tickets_view_hierarchy"/>
-            <field name="domain">[('parent_id','=',False)]</field>
-        </record>
-
-        <!-- MENUITEMS -->
-        <menuitem id="anytracker"
-            name="AnyTracker"
-            sequence="-1"
-            web_icon="images/iconbw.png"
-            web_icon_hover="images/icon.png" />
-        <menuitem id="projects"
-            name="Projects"
-            sequence="10"
-            parent="anytracker"/>  
-        <menuitem id="tickets"
-            name="Tickets"
-            sequence="20"
-            parent="anytracker"/>  
-        <menuitem id="tickets_menu_tree"
-            name="Tickets hierarchy"
-            parent="tickets"
-            sequence="10"
-            action="tickets_action_tree" />
-        <menuitem id="tickets_menu_list"
-            name="All tickets"
-            parent="tickets"
-            sequence="20"
-            action="tickets_action_list" />  
-        <menuitem id="configuration"
-            name="Configuration"
-            sequence="200"
-            parent="anytracker"/>
-
-    </data>
-</openerp>
+</data> </openerp>
 
