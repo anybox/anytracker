@@ -14,6 +14,7 @@
     <field name="name" select="True"/>
     <field name="description"/>
     <field name="method_id"/>
+    <field name="id" invisible="1"/>
     <field name="my_rating"/>
   </search>
   </field>
@@ -128,7 +129,7 @@
 </record>
 
 <!-- hierarchical view for the tickets -->
-<record id="tickets_view_hierarchy" model="ir.ui.view">
+<record id="tickets_hierarchy" model="ir.ui.view">
   <field name="name">anytracker.ticket.hierarchy</field>
   <field name="model">anytracker.ticket</field>
   <field name="type">tree</field>
@@ -139,6 +140,23 @@
       <field name="stage_id"/>
     </tree>
   </field>
+</record>
+
+<!-- allow to click in the hierarchical view -->
+<!-- Still impossible to open directly in the form view ?! -->
+<record id="action_hierarchy_line_select" model="ir.actions.act_window">
+    <field name="name">Tickets</field>
+    <field name="res_model">anytracker.ticket</field>
+    <field name="view_type">form</field>
+    <field name="view_mode">tree</field>
+    <field name="view_id" ref="ticket_view_form"/>
+    <field name="domain">[('id','=',active_id)]</field>
+</record>
+<record id="ir_value_hierarchy_line_select" model="ir.values">
+    <field name="key2">tree_but_open</field>
+    <field name="model">anytracker.ticket</field>
+    <field name="name">Open ticket</field>
+    <field eval="'ir.actions.act_window,%d'%action_hierarchy_line_select" name="value"/>
 </record>
 
 <!-- ACTIONS -->
@@ -159,7 +177,7 @@
   <field name="name">Anytracker - Projects</field>
   <field name="res_model">anytracker.ticket</field>
   <field name="view_type">tree</field>
-  <field name="view_id" ref="tickets_view_hierarchy"/>
+  <field name="view_id" ref="tickets_hierarchy"/>
   <field name="domain">[('parent_id','=',False)]</field>
 </record>
 
