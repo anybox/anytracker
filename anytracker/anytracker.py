@@ -59,6 +59,7 @@ class Ticket(osv.osv):
              'res_model': 'anytracker.ticket',
              'view_mode': 'kanban,tree,page,form',
              'view_id': xml_pool.get_object_reference(cr, uid, 'anytracker', 'tickets_view_kanban')[1],
+             'context': {'search_default_project_id': project.id},
              # warning: the domain below is also used to find the action at delete time
              'domain': "[('project_id','=',%s),('child_ids','=',False),('stage_id','!=',False)]" % project.id,
             })
