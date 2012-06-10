@@ -143,13 +143,13 @@
 </record>
 
 <!-- allow to click in the hierarchical view -->
-<!-- Still impossible to open directly in the form view ?! -->
+<!-- Still impossible to open directly in the form view :'( -->
 <record id="action_hierarchy_line_select" model="ir.actions.act_window">
     <field name="name">Tickets</field>
     <field name="res_model">anytracker.ticket</field>
     <field name="view_type">form</field>
-    <field name="view_mode">tree</field>
-    <field name="view_id" ref="ticket_view_form"/>
+    <field name="view_mode">tree,form</field>
+    <field name="view_id" ref="ticket_view_tree"/>
     <field name="domain">[('id','=',active_id)]</field>
 </record>
 <record id="ir_value_hierarchy_line_select" model="ir.values">
