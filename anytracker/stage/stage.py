@@ -14,6 +14,7 @@ class stage(osv.osv):
         'state': fields.char('state', size=64, required=True),
         'method_id': fields.many2one('anytracker.method', _('Project method')),
         'sequence': fields.integer('Sequence', help='Sequence'),
+        'force_rating': fields.boolean('Force rating', help='Forbid entering this stage without a rating on the ticket'),
     }
 
 
@@ -42,10 +43,15 @@ class Ticket(osv.osv):
         """set the stage of a ticket.
         For a node, it should set all children as well
         """
+        print "************* set_stage"
         for ticket in self.browse(cr, uid, ids, context):
             method = ticket.project_id.method_id
-            if method.code == 'implementation' and not ticket.stage_id and not ticket.my_rating:
-                raise osv.except_osv(_('Warning !'),_('You cannot change the stage without rating'))
+            # TODO: replace with a configurable wf?
+            if stage_id:
+                stage = self.pool.get('anytracker.stage').browse(cr, uid, stage_id, context)
+                if method.code == 'implementation' and not ticket.my_rating and stage.force_rating:
+                    raise osv.except_osv(_('Warning !'),_('You must rate the ticket to enter the "%s" stage' % stage.name))
+            # set all children as well
             self._set_stage(cr, uid, [i.id for i in ticket.child_ids], stage_id, context)
             self.write(cr, uid, ticket.id, {'stage_id': stage_id}, context)
 

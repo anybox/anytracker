@@ -18,6 +18,7 @@
             <field name="name">To do</field>
             <field name="state">todo</field>
             <field name="method_id" ref="method_implementation"/>
+            <field name="force_rating" eval="True"/>
             <field name="sequence">30</field>
         </record>
         <record id="stage_implementation_started" model="anytracker.stage">

@@ -14,6 +14,7 @@
         <field name="state"/>
         <field name="method_id"/>
         <field name="sequence"/>
+        <field name="force_rating"/>
     </tree>
     </field>
 </record>
@@ -28,6 +29,7 @@
         <field name="name" select="1"/>
         <field name="state"/>
         <field name="method_id"/>
+        <field name="force_rating"/>
         <field name="sequence"/>
     </form>
     </field>
