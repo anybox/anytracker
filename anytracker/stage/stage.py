@@ -43,6 +43,8 @@ class Ticket(osv.osv):
         For a node, it should set all children as well
         """
         for ticket in self.browse(cr, uid, ids, context):
+            if not ticket.stage_id and not ticket.my_rating:
+                raise osv.except_osv(_('Warning !'),_('You cannot change the stage without rating'))
             self._set_stage(cr, uid, [i.id for i in ticket.child_ids], stage_id, context)
             self.write(cr, uid, ticket.id, {'stage_id': stage_id}, context)
 
@@ -51,10 +53,10 @@ class Ticket(osv.osv):
         """
         stage_pool = self.pool.get('anytracker.stage')
         for ticket in self.browse(cr, uid, ids, context):
-            stage_id = ticket.stage_id.id
             method = ticket.project_id.method_id
             if not method:
                 raise osv.except_osv(_('Warning !'),_('No method defined in the project.'))
+            stage_id = ticket.stage_id.id
             stage_ids = stage_pool.search(cr, uid, [('method_id','=',method.id)])
             if stage_id == stage_ids[0]: # first stage
                 next_stage = False
@@ -69,10 +71,10 @@ class Ticket(osv.osv):
         """
         stage_pool = self.pool.get('anytracker.stage')
         for ticket in self.browse(cr, uid, ids, context):
-            stage_id = ticket.stage_id.id
             method = ticket.project_id.method_id
             if not method:
                 raise osv.except_osv(_('Warning !'),_('No method defined in the project.'))
+            stage_id = ticket.stage_id.id
             stage_ids = stage_pool.search(cr, uid, [('method_id','=',method.id)])
             if stage_id == stage_ids[-1]: # last stage
                 raise osv.except_osv(_('Warning !'),_("You're already in the last stage"))
