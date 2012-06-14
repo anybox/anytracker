@@ -43,7 +43,8 @@ class Ticket(osv.osv):
         For a node, it should set all children as well
         """
         for ticket in self.browse(cr, uid, ids, context):
-            if not ticket.stage_id and not ticket.my_rating:
+            method = ticket.project_id.method_id
+            if method.code == 'implementation' and not ticket.stage_id and not ticket.my_rating:
                 raise osv.except_osv(_('Warning !'),_('You cannot change the stage without rating'))
             self._set_stage(cr, uid, [i.id for i in ticket.child_ids], stage_id, context)
             self.write(cr, uid, ticket.id, {'stage_id': stage_id}, context)
