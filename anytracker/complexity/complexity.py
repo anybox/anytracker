@@ -13,6 +13,7 @@ class complexity(osv.osv):
     _name = 'anytracker.complexity'
     _columns = {
         'name': fields.char('Name', size=16, required=True),
+        'description': fields.text('Description', help='Description of this complexity'),
         'value': fields.float('Value', required=True),
         'color': fields.integer('Color'),
         'method_id': fields.many2one('anytracker.method', 'Method', help='Projet method'),
