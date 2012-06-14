@@ -156,9 +156,9 @@ class Ticket(osv.osv):
             string='Description'),
         'breadcrumb': fields.function(
             _formatted_breadcrumb, 
-            type='text', 
+            type='char', 
             obj='anytracker.ticket', 
-            string='Description'),
+            string='Location'),
         'siblings_ids': fields.function(
             _get_siblings, 
             type='many2many', 
