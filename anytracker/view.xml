@@ -73,6 +73,9 @@
           </group>
         </page>
 
+        <page string="Participants">
+          <field name="participant_ids"/>
+        </page>
         <page string="Ratings">
           <label>Here are all the ratings made for this ticket:</label>
           <field name="rating_ids" nolabel="1" colspan="4">

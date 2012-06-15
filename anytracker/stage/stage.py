@@ -55,6 +55,7 @@ class Ticket(osv.osv):
                     raise osv.except_osv(_('Warning !'),_('You cannot enter this stage with a ticket rated "%s"' % ticket.my_rating.name))
             # set all children as well
             self._set_stage(cr, uid, [i.id for i in ticket.child_ids], stage_id, context)
+            self.write(cr, uid, ids, {'participant_ids': [(6,0,[uid])]}, context)
             super(Ticket, self).write(cr, uid, ticket.id, {'stage_id': stage_id}, context)
 
     def stage_previous(self, cr, uid, ids, context=None):
@@ -96,7 +97,7 @@ class Ticket(osv.osv):
     def write(self, cr, uid, ids, values, context=None):
         """set children stages when writing stage_id
         """
-        stage_id = values.pop('stage_id')
+        stage_id = values.pop('stage_id', None)
         if stage_id:
             if not hasattr(ids, '__iter__'): ids = [ids]
             self._set_stage(cr, uid, ids, stage_id, context)

@@ -173,7 +173,7 @@ class Ticket(osv.osv):
             'parent_id', 
             'Children', 
             required=False),
-        'assignedto_ids': fields.many2many(
+        'participant_ids': fields.many2many(
             'res.users', 
             'ticket_assignement_rel', 
             'ticket_id', 
