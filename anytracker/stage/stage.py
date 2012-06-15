@@ -55,7 +55,7 @@ class Ticket(osv.osv):
                     raise osv.except_osv(_('Warning !'),_('You cannot enter this stage with a ticket rated "%s"' % ticket.my_rating.name))
             # set all children as well
             self._set_stage(cr, uid, [i.id for i in ticket.child_ids], stage_id, context)
-            self.write(cr, uid, ticket.id, {'stage_id': stage_id}, context)
+            super(Ticket, self).write(cr, uid, ticket.id, {'stage_id': stage_id}, context)
 
     def stage_previous(self, cr, uid, ids, context=None):
         """move the ticket to the previous stage
@@ -96,13 +96,11 @@ class Ticket(osv.osv):
     def write(self, cr, uid, ids, values, context=None):
         """set children stages when writing stage_id
         """
-        res = super(Ticket, self).write(cr, uid, ids, values, context=context)
-        stage_id = values.get('stage_id')
+        stage_id = values.pop('stage_id')
         if stage_id:
             if not hasattr(ids, '__iter__'): ids = [ids]
-            for ticket in self.browse(cr, uid, ids, context):
-                self._set_stage(cr, uid, [i.id for i in ticket.child_ids], stage_id, context)
-        return res
+            self._set_stage(cr, uid, ids, stage_id, context)
+        return super(Ticket, self).write(cr, uid, ids, values, context=context)
 
     _columns = {
         'stage_id': fields.many2one('anytracker.stage',
