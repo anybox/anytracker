@@ -31,6 +31,7 @@
         <field name="method_id"/>
         <field name="force_rating"/>
         <field name="sequence"/>
+        <field name="forbidden_complexity_ids"/>
     </form>
     </field>
 </record>

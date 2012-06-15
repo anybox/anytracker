@@ -15,6 +15,7 @@ class stage(osv.osv):
         'method_id': fields.many2one('anytracker.method', _('Project method')),
         'sequence': fields.integer('Sequence', help='Sequence'),
         'force_rating': fields.boolean('Force rating', help='Forbid entering this stage without a rating on the ticket'),
+        'forbidden_complexity_ids': fields.many2many('anytracker.complexity', 'anytracker_stage_forbidden_complexities', 'stage_id', 'complexity_id', 'Forbidden complexities', help='complexities forbidden for this stage'),
     }
 
 
@@ -43,7 +44,6 @@ class Ticket(osv.osv):
         """set the stage of a ticket.
         For a node, it should set all children as well
         """
-        print "************* set_stage"
         for ticket in self.browse(cr, uid, ids, context):
             method = ticket.project_id.method_id
             # TODO: replace with a configurable wf?
@@ -51,6 +51,8 @@ class Ticket(osv.osv):
                 stage = self.pool.get('anytracker.stage').browse(cr, uid, stage_id, context)
                 if method.code == 'implementation' and not ticket.my_rating and stage.force_rating:
                     raise osv.except_osv(_('Warning !'),_('You must rate the ticket to enter the "%s" stage' % stage.name))
+                if method.code == 'implementation' and ticket.my_rating.id in [i.id for i in stage.forbidden_complexity_ids]:
+                    raise osv.except_osv(_('Warning !'),_('You cannot enter this stage with a ticket rated "%s"' % ticket.my_rating.name))
             # set all children as well
             self._set_stage(cr, uid, [i.id for i in ticket.child_ids], stage_id, context)
             self.write(cr, uid, ticket.id, {'stage_id': stage_id}, context)
