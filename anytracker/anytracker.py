@@ -50,10 +50,23 @@ class Ticket(osv.osv):
             res[i] = u' / '.join([b.name for b in breadcrumb])
         return res
 
+    def _get_admin_id(self, cr, uid, context=None):
+        xml_pool = self.pool.get('ir.model.data')
+        res_users = self.pool.get('res.users')
+        admin_group_id = xml_pool.get_object_reference(cr, uid, 'base', 'group_erp_manager')[1]
+        domain = [
+            ('groups_id', "in", [admin_group_id]),
+        ]
+        admin_ids = res_users.search(cr, uid, domain, context=context)
+        if admin_ids:
+            return admin_ids[0]
+        raise osv.except_osv(_('Error'), _('No user with ERP Manager group found'))
+
     def _create_menu(self, cr, uid, project, context=None):
         """Create a menu for a project
         """
         xml_pool = self.pool.get('ir.model.data')
+        uid = self._get_admin_id(cr, uid, context=context)
         action_id = self.pool.get('ir.actions.act_window').create(cr, uid,
             {'name': project.name,
              'res_model': 'anytracker.ticket',
@@ -74,6 +87,7 @@ class Ticket(osv.osv):
         """
         # delete the action
         act_pool = self.pool.get('ir.actions.act_window')
+        uid = self._get_admin_id(cr, uid, context=context)
         action_id = act_pool.search(cr, uid,
             [('res_model','=','anytracker.ticket'),
             # warning: the domain below is defined in the _create_menu method
@@ -155,46 +169,46 @@ class Ticket(osv.osv):
             obj='anytracker.ticket',
             string='Description'),
         'breadcrumb': fields.function(
-            _formatted_breadcrumb, 
-            type='text', 
-            obj='anytracker.ticket', 
+            _formatted_breadcrumb,
+            type='text',
+            obj='anytracker.ticket',
             string='Description'),
         'siblings_ids': fields.function(
-            _get_siblings, 
-            type='many2many', 
-            obj='anytracker.ticket', 
-            string='Siblings', 
+            _get_siblings,
+            type='many2many',
+            obj='anytracker.ticket',
+            string='Siblings',
             method=True),
         'duration': fields.selection(
-            [(0, '< half a day'), (None, 'Will be computed'), (1, 'Half a day')], 
+            [(0, '< half a day'), (None, 'Will be computed'), (1, 'Half a day')],
             'duration'),
         'child_ids': fields.one2many(
-            'anytracker.ticket', 
-            'parent_id', 
-            'Children', 
+            'anytracker.ticket',
+            'parent_id',
+            'Children',
             required=False),
         'assignedto_ids': fields.many2many(
-            'res.users', 
-            'ticket_assignement_rel', 
-            'ticket_id', 
-            'user_id', 
+            'res.users',
+            'ticket_assignement_rel',
+            'ticket_id',
+            'user_id',
             required=False),
         'parent_id': fields.many2one(
-            'anytracker.ticket', 
-            'Parent', 
-            required=False, 
+            'anytracker.ticket',
+            'Parent',
+            required=False,
             ondelete='cascade'), #TODO ondelete doesnt seem to work
         'project_id': fields.many2one(
-            'anytracker.ticket', 
+            'anytracker.ticket',
             'Project',
-            ondelete='cascade',                
+            ondelete='cascade',
             domain=[('parent_id','=',False)],
             readonly=True),
         'requester_id': fields.many2one(
-            'res.users', 
+            'res.users',
             'Requester'),
         'id_mindmap': fields.char(
-            'ID MindMap', 
+            'ID MindMap',
             size=64),
         'created_mindmap': fields.datetime('Created MindMap'),
         'modified_mindmap': fields.datetime('Modified MindMap'),
