@@ -4,3 +4,4 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 "acc_anytracker_stage","Stages","model_anytracker_stage","",1,1,1,1
 "acc_anytracker_history","History","model_anytracker_history","",1,1,1,1
 "acc_anytracker_ticket","Ticket","model_anytracker_ticket","",1,1,1,1
+"acc_anytracker_method","Method","model_anytracker_method","",1,1,1,1
