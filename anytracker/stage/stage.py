@@ -14,6 +14,8 @@ class stage(osv.osv):
         'state': fields.char('state', size=64, required=True),
         'method_id': fields.many2one('anytracker.method', _('Project method')),
         'sequence': fields.integer('Sequence', help='Sequence'),
+        'force_rating': fields.boolean('Force rating', help='Forbid entering this stage without a rating on the ticket'),
+        'forbidden_complexity_ids': fields.many2many('anytracker.complexity', 'anytracker_stage_forbidden_complexities', 'stage_id', 'complexity_id', 'Forbidden complexities', help='complexities forbidden for this stage'),
     }
 
 
@@ -43,18 +45,28 @@ class Ticket(osv.osv):
         For a node, it should set all children as well
         """
         for ticket in self.browse(cr, uid, ids, context):
+            method = ticket.project_id.method_id
+            # TODO: replace with a configurable wf?
+            if stage_id:
+                stage = self.pool.get('anytracker.stage').browse(cr, uid, stage_id, context)
+                if method.code == 'implementation' and not ticket.my_rating and stage.force_rating:
+                    raise osv.except_osv(_('Warning !'),_('You must rate the ticket to enter the "%s" stage' % stage.name))
+                if method.code == 'implementation' and ticket.my_rating.id in [i.id for i in stage.forbidden_complexity_ids]:
+                    raise osv.except_osv(_('Warning !'),_('You cannot enter this stage with a ticket rated "%s"' % ticket.my_rating.name))
+            # set all children as well
             self._set_stage(cr, uid, [i.id for i in ticket.child_ids], stage_id, context)
-            self.write(cr, uid, ticket.id, {'stage_id': stage_id}, context)
+            self.write(cr, uid, ids, {'participant_ids': [(6,0,[uid])]}, context)
+            super(Ticket, self).write(cr, uid, ticket.id, {'stage_id': stage_id}, context)
 
     def stage_previous(self, cr, uid, ids, context=None):
         """move the ticket to the previous stage
         """
         stage_pool = self.pool.get('anytracker.stage')
         for ticket in self.browse(cr, uid, ids, context):
-            stage_id = ticket.stage_id.id
             method = ticket.project_id.method_id
             if not method:
                 raise osv.except_osv(_('Warning !'),_('No method defined in the project.'))
+            stage_id = ticket.stage_id.id
             stage_ids = stage_pool.search(cr, uid, [('method_id','=',method.id)])
             if stage_id == stage_ids[0]: # first stage
                 next_stage = False
@@ -69,10 +81,10 @@ class Ticket(osv.osv):
         """
         stage_pool = self.pool.get('anytracker.stage')
         for ticket in self.browse(cr, uid, ids, context):
-            stage_id = ticket.stage_id.id
             method = ticket.project_id.method_id
             if not method:
                 raise osv.except_osv(_('Warning !'),_('No method defined in the project.'))
+            stage_id = ticket.stage_id.id
             stage_ids = stage_pool.search(cr, uid, [('method_id','=',method.id)])
             if stage_id == stage_ids[-1]: # last stage
                 raise osv.except_osv(_('Warning !'),_("You're already in the last stage"))
@@ -85,13 +97,11 @@ class Ticket(osv.osv):
     def write(self, cr, uid, ids, values, context=None):
         """set children stages when writing stage_id
         """
-        res = super(Ticket, self).write(cr, uid, ids, values, context=context)
-        stage_id = values.get('stage_id')
+        stage_id = values.pop('stage_id', None)
         if stage_id:
             if not hasattr(ids, '__iter__'): ids = [ids]
-            for ticket in self.browse(cr, uid, ids, context):
-                self._set_stage(cr, uid, [i.id for i in ticket.child_ids], stage_id, context)
-        return res
+            self._set_stage(cr, uid, ids, stage_id, context)
+        return super(Ticket, self).write(cr, uid, ids, values, context=context)
 
     _columns = {
         'stage_id': fields.many2one('anytracker.stage',

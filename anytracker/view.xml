@@ -42,34 +42,39 @@
   <field name="priority" eval="10"/>
   <field name="arch" type="xml">
     <form string="ticket form">
-      <field name="name"/>
-      <field name="my_rating" options='{"quick_create": false}' />
-      <field name="project_method_id" attrs="{'invisible': [('parent_id','=',False)]}"/>
-      <field name="method_id" widget="selection"
-             attrs="{'invisible' : [('parent_id','!=',False)]}"/>
-      <field name="project_id"/>
-      <field name="parent_id"/>
-
-      <notebook colspan="4">
-        <page string="General">
-      <group col="4" colspan="2">
+      <group col="2" colspan="2">
+        <field name="name" select="True"/>
+        <field name="description"/>
+      </group>
+      <group col="2" colspan="2">
+        <group col="4" colspan="2">
+          <field name="project_id"/>
+          <field name="project_method_id" attrs="{'invisible': [('parent_id','=',False)]}"/>
+          <field name="method_id" widget="selection"
+                 attrs="{'invisible' : [('parent_id','!=',False)]}"/>
+        </group>
+        <field name="my_rating" options='{"quick_create": false}' />
+        <group col="4" colspan="2">
           <field name="stage_id"/>
           <button name="stage_previous" string=""
-              type="object"
-              icon="gtk-go-back" />
+                  type="object" icon="gtk-go-back" />
           <button name="stage_next" string=""
-              type="object"
-              icon="gtk-go-forward" />
+            type="object" icon="gtk-go-forward" />
+        </group>
       </group>
-          <field name="color"/>
-          <field name="duration"/>
-          <field name="description"/>
+
+      <notebook colspan="4">
+
+        <page string="Navigation">
+          <group col="2" colspan="2">
+            <field name="breadcrumb"/>
+            <field name="parent_id"/>
+            <field name="child_ids" />
+          </group>
         </page>
-        <page string="Siblings">
-          <field name="siblings_ids"/>
-        </page>
-        <page string="Children">
-          <field name="child_ids"/>
+
+        <page string="Participants">
+          <field name="participant_ids"/>
         </page>
         <page string="Ratings">
           <label>Here are all the ratings made for this ticket:</label>
@@ -81,6 +86,7 @@
             </tree>
           </field>
         </page>
+
         <page string="History">
           <field name="history_ids" nolabel="1" colspan="4" readonly="1">
             <tree string="History">
@@ -102,7 +108,6 @@
   <field name="type">kanban</field>
   <field name="arch" type="xml">
     <kanban default_group_by="stage_id">
-      <field name="duration"/>
       <field name="color"/>
       <field name="name"/>
       <field name="siblings_ids"/>
@@ -200,15 +205,15 @@
   name="Projects"
   sequence="10"
   parent="anytracker"/>  
+<menuitem id="tickets_menu_tree"
+  name="Tickets hierarchy"
+  parent="projects"
+  sequence="0"
+  action="tickets_action_tree" />
 <menuitem id="tickets"
   name="Tickets"
   sequence="20"
   parent="anytracker"/>  
-<menuitem id="tickets_menu_tree"
-  name="Tickets hierarchy"
-  parent="tickets"
-  sequence="10"
-  action="tickets_action_tree" />
 <menuitem id="tickets_menu_list"
   name="All tickets"
   parent="tickets"

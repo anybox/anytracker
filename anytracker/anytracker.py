@@ -169,10 +169,10 @@ class Ticket(osv.osv):
             obj='anytracker.ticket',
             string='Description'),
         'breadcrumb': fields.function(
-            _formatted_breadcrumb,
-            type='text',
-            obj='anytracker.ticket',
-            string='Description'),
+            _formatted_breadcrumb, 
+            type='char', 
+            obj='anytracker.ticket', 
+            string='Location'),
         'siblings_ids': fields.function(
             _get_siblings,
             type='many2many',
@@ -187,11 +187,11 @@ class Ticket(osv.osv):
             'parent_id',
             'Children',
             required=False),
-        'assignedto_ids': fields.many2many(
-            'res.users',
-            'ticket_assignement_rel',
-            'ticket_id',
-            'user_id',
+        'participant_ids': fields.many2many(
+            'res.users', 
+            'ticket_assignement_rel', 
+            'ticket_id', 
+            'user_id', 
             required=False),
         'parent_id': fields.many2one(
             'anytracker.ticket',

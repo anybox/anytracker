@@ -8,7 +8,7 @@
     <field name="priority" eval="8"/>
     <field name="arch" type="xml">
     <search string="Complexities">
-        <field name="method_id" select="True" widget="selection"/>
+        <field name="method_id" widget="selection"/>
     </search>
     </field>
 </record>
@@ -34,10 +34,17 @@
     <field name="priority" eval="8"/>
     <field name="arch" type="xml">
     <form string="Complexity">
-        <field name="name" select="1"/>
-        <field name="value" select="1"/>
-        <field name="color" />
-        <field name="method_id" widget="selection"/>
+      <group col="2" colspan="2">
+        <group col="2" colspan="2">
+          <field name="name" select="1"/>
+          <field name="description"/>
+        </group>
+        <group col="2" colspan="2">
+          <field name="value"/>
+          <field name="color" />
+          <field name="method_id" widget="selection"/>
+        </group>
+      </group>
     </form>
     </field>
 </record>
