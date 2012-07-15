@@ -10,6 +10,8 @@
   <field name="arch" type="xml">
   <search string="Search tickets">
     <filter string="Projects" domain="[('parent_id','=',False)]" icon="terp-camera_test" help="Show only projects"/>
+    <filter string="Nodes" domain="[('child_ids','!=',False)]" icon="terp-camera_test" help="Show only tickets which have sub-tickets"/>
+    <filter string="Leafs" domain="[('child_ids','=',False)]" icon="terp-camera_test" help="Show only leaf tickets"/>
     <field name="project_id" widget="selection"/>
     <field name="name" select="True"/>
     <field name="description"/>
