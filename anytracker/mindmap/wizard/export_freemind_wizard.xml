@@ -7,7 +7,7 @@
             <field name="type">form</field>
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
-                <form string="export freemind data">
+                <form string="export freemind map">
                     <field name="mindmap_file" select="1" string="File mindmap to write" />
                     <separator string="" colspan="4" />
                     <field name="ticket_id" string="Parent ticket"/>
@@ -26,7 +26,7 @@
         </record>
 
         <record model="ir.actions.act_window" id="action_export_freemind_view">
-            <field name="name">export freemind data</field>
+            <field name="name">export freemind map</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">export.freemind.wizard</field>
             <field name="view_type">form</field>
