@@ -52,7 +52,7 @@ class Ticket(osv.osv):
                 if method.code == 'implementation' and not ticket.my_rating and stage.force_rating and not ticket.child_ids:
                     raise osv.except_osv(_('Warning !'),_('You must rate the ticket "%s" to enter the "%s" stage' % (ticket.name, stage.name)))
                 if method.code == 'implementation' and ticket.my_rating.id in [i.id for i in stage.forbidden_complexity_ids]:
-                    raise osv.except_osv(_('Warning !'),_('You cannot enter this stage with a ticket rated "%s"' % ticket.my_rating.name))
+                    raise osv.except_osv(_('Warning !'),_('The ticket "%s" is rated "%s" so it cannot enter this stage' % (ticket.name, ticket.my_rating.name)))
             # set all children as well
             self._set_stage(cr, uid, [i.id for i in ticket.child_ids], stage_id, context)
             self.write(cr, uid, ids, {'participant_ids': [(6,0,[uid])]}, context)
