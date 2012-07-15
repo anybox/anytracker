@@ -49,8 +49,8 @@ class Ticket(osv.osv):
             # TODO: replace with a configurable wf?
             if stage_id:
                 stage = self.pool.get('anytracker.stage').browse(cr, uid, stage_id, context)
-                if method.code == 'implementation' and not ticket.my_rating and stage.force_rating:
-                    raise osv.except_osv(_('Warning !'),_('You must rate the ticket to enter the "%s" stage' % stage.name))
+                if method.code == 'implementation' and not ticket.my_rating and stage.force_rating and not ticket.child_ids:
+                    raise osv.except_osv(_('Warning !'),_('You must rate the ticket "%s" to enter the "%s" stage' % (ticket.name, stage.name)))
                 if method.code == 'implementation' and ticket.my_rating.id in [i.id for i in stage.forbidden_complexity_ids]:
                     raise osv.except_osv(_('Warning !'),_('You cannot enter this stage with a ticket rated "%s"' % ticket.my_rating.name))
             # set all children as well
