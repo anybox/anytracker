@@ -118,22 +118,19 @@ class Ticket(osv.osv):
         """write the project_id when writing the parent
         """
         if not hasattr(ids, '__iter__'): ids = [ids]
-        assert(len(ids)==1)
-        ticket_id = ids[0]
-
         res = super(Ticket, self).write(cr, uid, ids, values, context=context)
+        for ticket_id in ids:
+            # set the project of the ticket
+            self._set_project(cr, uid, ticket_id, context)
 
-        # set the project of the ticket
-        self._set_project(cr, uid, ticket_id, context)
 
-
-        # create a menu for the project
-        if 'parent_id' in values and values['parent_id']==False:
-            project = self.browse(cr, uid, ticket_id, context)
-            self._create_menu(cr, uid, project, context)
-        if 'parent_id' in values and values['parent_id']:
-            project = self.browse(cr, uid, ticket_id, context)
-            self._delete_menu(cr, uid, project, context)
+            # create a menu for the project
+            if 'parent_id' in values and values['parent_id']==False:
+                project = self.browse(cr, uid, ticket_id, context)
+                self._create_menu(cr, uid, project, context)
+            if 'parent_id' in values and values['parent_id']:
+                project = self.browse(cr, uid, ticket_id, context)
+                self._delete_menu(cr, uid, project, context)
 
         return res
 
