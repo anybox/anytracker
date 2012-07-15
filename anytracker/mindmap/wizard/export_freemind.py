@@ -98,10 +98,7 @@ class FreemindWriterHandler(XMLGenerator):
                        'ID' : attrs['id_mindmap'] or 'ID_' + str(random.randint(1, 10**10)),
                        'TEXT' : attrs['name'],
                        }
-        try:
-            XMLGenerator.startElement(self, tag, attrs_write)
-        except:
-            import pdb; pdb.set_trace()
+        XMLGenerator.startElement(self, tag, attrs_write)
         #super(FreemindWriterHandler, self).startElement(tag, attrs_write)
 
     def endElement(self, tag):
