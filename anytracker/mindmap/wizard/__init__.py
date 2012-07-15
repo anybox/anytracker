@@ -1,3 +1,3 @@
-import import_freemind_wizard
-import export_freemind_wizard
+import import_freemind
+import export_freemind
 

@@ -39,8 +39,8 @@
         'update_xml' : [
             'security/ir.model.access.csv',
             'view.xml',
-            'mindmap/wizard/import_freemind_wizard.xml',
-            'mindmap/wizard/export_freemind_wizard.xml',
+            'mindmap/wizard/import_freemind.xml',
+            'mindmap/wizard/export_freemind.xml',
             #data
             'method/data.xml',
             'method/view.xml',
