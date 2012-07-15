@@ -2,12 +2,6 @@
 <openerp>
     <data>
         <!-- Implementation project -->
-        <record id="stage_implementation_new" model="anytracker.stage">
-            <field name="name">New</field>
-            <field name="state">new</field>
-            <field name="method_id" ref="method_implementation"/>
-            <field name="sequence">10</field>
-        </record>
         <record id="stage_implementation_analysis" model="anytracker.stage">
             <field name="name">Analysis</field>
             <field name="state">analysis</field>
@@ -54,12 +48,6 @@
         </record>
 
         <!-- Maintenance -->
-        <record id="stage_maintenance_new" model="anytracker.stage">
-            <field name="name">New</field>
-            <field name="state">new</field>
-            <field name="method_id" ref="method_maintenance"/>
-            <field name="sequence">10</field>
-        </record>
         <record id="stage_maintenance_ack" model="anytracker.stage">
             <field name="name">Acknowledged</field>
             <field name="state">ack</field>
