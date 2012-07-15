@@ -1,4 +1,5 @@
 from osv import osv, fields
+import random
 from tools.translate import _
 from datetime import datetime
 
@@ -26,6 +27,8 @@ class export_freemind_wizard(osv.osv_memory):
                                 any_tick_complexity_pool.search(cr, uid, [('value', '=', 3)])[0],
                                }
             ticket_id = wizard.ticket_id and wizard.ticket_id.id or False
+            if not ticket_id:
+                raise osv.except_osv('Error', 'Please select a ticket to export')
             fp = open(wizard.mindmap_file, 'wb')
             writer_handler = FreemindWriterHandler(cr, uid, self.pool, fp)
             writer_parser = FreemindParser(cr, uid, self.pool, writer_handler, ticket_id, complexity_dict)
@@ -62,7 +65,10 @@ class FreemindParser():
 
 def gMF(date):
     '''getMindmapDateFormat'''
-    time = datetime.strptime(date, '%Y-%m-%d %H:%M:%S')
+    if not date:
+        time = datetime.now()
+    else:
+        time = datetime.strptime(date, '%Y-%m-%d %H:%M:%S')
     mindmap_time = '1303' + str(time.toordinal()) + '000'
     return mindmap_time
     
@@ -89,10 +95,13 @@ class FreemindWriterHandler(XMLGenerator):
     def startElement(self, tag, attrs={}):
         attrs_write = {'CREATED' :gMF(attrs['created_mindmap']),
                        'MODIFIED' : gMF(attrs['modified_mindmap']),
-                       'ID' : attrs['id_mindmap'],
+                       'ID' : attrs['id_mindmap'] or 'ID_' + str(random.randint(1, 10**10)),
                        'TEXT' : attrs['name'],
                        }
-        XMLGenerator.startElement(self, tag, attrs_write)
+        try:
+            XMLGenerator.startElement(self, tag, attrs_write)
+        except:
+            import pdb; pdb.set_trace()
         #super(FreemindWriterHandler, self).startElement(tag, attrs_write)
 
     def endElement(self, tag):

@@ -32,7 +32,10 @@
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="domain">[]</field>
-            <field name="context">{}</field>
+            <field name="context" eval="{'default_green_complexity': ref('anytracker.complexity_implementation_green'),
+                                          'default_orange_complexity': ref('anytracker.complexity_implementation_orange'),
+                                          'default_red_complexity': ref('anytracker.complexity_implementation_red'),
+                                        }" />
             <field name="target">new</field>
         </record>
 
