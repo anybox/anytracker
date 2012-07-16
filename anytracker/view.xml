@@ -80,7 +80,7 @@
         </page>
         <page string="Ratings">
           <label>Here are all the ratings made for this ticket:</label>
-          <field name="rating_ids" nolabel="1" colspan="4">
+          <field name="rating_ids" nolabel="1" colspan="4" readonly="1">
             <tree string="Ratings">
               <field name="user_id"/>
               <field name="time"/>
