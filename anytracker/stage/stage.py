@@ -3,7 +3,7 @@ from osv import fields, osv
 from tools.translate import _
 
 
-class stage(osv.osv):
+class Stage(osv.osv):
     """Stage of a ticket.
     Correspond to kanban columns
     """

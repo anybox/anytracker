@@ -48,6 +48,7 @@
             'complexity/view.xml',
             'stage/data.xml',
             'stage/view.xml',
+            'progress/view.xml',
         ],
         'active': False,
         'installable': True
