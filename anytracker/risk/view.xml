@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+<!-- VIEWS -->
+<record id="ticket_view_form_with_risk" model="ir.ui.view">
+    <field name="name">Ticket</field>
+    <field name="model">anytracker.ticket</field>
+    <field name="inherit_id" ref="ticket_view_form" />
+    <field name="arch" type="xml">
+        <xpath expr="/form//field[@name='my_rating']" position="after">
+            <field name="risk" string="Risk level"/>
+        </xpath>
+    </field>
+</record>
+
+<record id="ticket_view_tree_with_risk" model="ir.ui.view">
+    <field name="name">Ticket</field>
+    <field name="model">anytracker.ticket</field>
+    <field name="inherit_id" ref="ticket_view_tree" />
+    <field name="arch" type="xml">
+        <xpath expr="/tree/field[@name='my_rating']" position="after">
+            <field name="risk" string="Risk level"/>
+        </xpath>
+    </field>
+</record>
+
+<record id="tickets_hierarchy_with_risk" model="ir.ui.view">
+    <field name="name">anytracker.ticket.hierarchy</field>
+    <field name="model">anytracker.ticket</field>
+    <field name="inherit_id" ref="tickets_hierarchy" />
+    <field name="arch" type="xml">
+        <xpath expr="/tree/field[@name='stage_id']" position="after">
+            <field name="risk" string="Risk level"/>
+        </xpath>
+    </field>
+</record>
+
+</data>
+</openerp>
+

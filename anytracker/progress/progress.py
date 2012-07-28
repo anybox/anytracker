@@ -1,6 +1,5 @@
 from osv import fields, osv
 from tools.translate import _
-import time
 
 class Stage(osv.osv):
     """Add progress value to the stage
@@ -29,7 +28,7 @@ class ticket(osv.osv):
             if nb_tickets != 0:
                 progress, nb_tickets = (sum(progresses) / nb_tickets, nb_tickets)
             else:
-                progress, nb_tickets = (ticket.stage_id.progress, 0)
+                progress, nb_tickets = (ticket.stage_id.progress, 1)
             res[ticket.id] = progress, nb_tickets
         return res
 

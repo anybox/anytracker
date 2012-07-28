@@ -49,6 +49,7 @@
             'stage/data.xml',
             'stage/view.xml',
             'progress/view.xml',
+            'risk/view.xml',
         ],
         'active': False,
         'installable': True
