@@ -23,7 +23,7 @@ class import_freemind_wizard(osv.osv_memory):
         'green_complexity': fields.many2one('anytracker.complexity', 'green complexity', required=True),
         'orange_complexity': fields.many2one('anytracker.complexity', 'orange complexity', required=True),
         'red_complexity': fields.many2one('anytracker.complexity', 'red complexity', required=True),
-        'method_id': fields.many2one('anytracker.method', 'Project method'),
+        'method_id': fields.many2one('anytracker.method', 'Project method', required=True),
     }
     _defaults = {
         'import_method': 'insert'
@@ -62,8 +62,8 @@ class FreemindContentHandler(sax.ContentHandler):
         self.rich_content_buffer = False
         self.context = self.pool.get('res.users').context_get(cr, uid, uid)
         self.context['import_mindmap'] = True
-        stages = sorted(wizard.method_id.stage_ids, key=lambda x:x and x.sequence, reverse=True)
-        self.initial_stage = stages[-1].id if stages else False
+        stages = wizard.method_id.stage_ids
+        self.initial_stage = sorted(stages, key=lambda x:x and x.sequence)[0].id if stages else False
 
     def startElement(self, name, attrs):
         names = attrs.getNames()

@@ -74,6 +74,7 @@ class Ticket(osv.osv):
              'context': {
                 'search_default_project_id': project.id,
                 'default_project_id': project.id,
+                'default_parent_id': project.id,
                 'default_method_id': project.method_id.id},
              # warning: the domain below is also used to find the action at delete time
              'domain': "[('project_id','=',%s),('child_ids','=',False),('stage_id','!=',False)]" % project.id,
@@ -110,7 +111,9 @@ class Ticket(osv.osv):
         ticket = self.browse(cr, uid, ticket_id, context)
         parent_id = ticket.parent_id and ticket.parent_id.id
         if parent_id:
-            breadcrumb = self._breadcrumb(cr, uid, [parent_id], context)[parent_id] + [ticket]
+            breadcrumb = self._breadcrumb(cr, uid, [parent_id], context)[parent_id]
+            if not breadcrumb:
+                breadcrumb = [self.browse(cr, uid, parent_id)]
             project_id = breadcrumb[0].id
         else:
             # if no parent, we are the project
