@@ -8,14 +8,16 @@
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
                 <form string="export freemind map">
-                    <field name="mindmap_file" select="1" string="File mindmap to write" />
-                    <separator string="" colspan="4" />
-                    <field name="ticket_id" string="Parent ticket"/>
-                    <separator string="" colspan="4" />
-                    <field name="green_complexity" string="complexity level for green flag"/>
-                    <field name="orange_complexity" string="complexity level for orange flag"/>
-                    <field name="red_complexity" string="complexity level for red flag"/>
-                	<separator string="" colspan="4" />
+                    <group colspan="4" col="2">
+                        <field name="mindmap_file" select="1" string="File mindmap to write" />
+                        <separator string="" colspan="4" />
+                        <field name="ticket_id" string="Parent ticket"/>
+                        <separator string="" colspan="4" />
+                        <field name="green_complexity" string="complexity level for green flag"/>
+                        <field name="orange_complexity" string="complexity level for orange flag"/>
+                        <field name="red_complexity" string="complexity level for red flag"/>
+                        <separator string="" colspan="4" />
+                    </group>
                     <group colspan="4" col="6">
                         <label string ="" colspan="2"/>
                         <button icon="gtk-cancel" special="cancel" string="Cancel"/>

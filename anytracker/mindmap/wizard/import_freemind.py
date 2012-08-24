@@ -10,13 +10,22 @@ import time
 
 class import_freemind_wizard(osv.osv_memory):
     _name = 'import.freemind.wizard'
-    _description = 'Import freemind .mm file for generate anytracker tree'
+    _description = 'Import freemind .mm file into anytracker tree'
     _columns = {
-        'ticket_id': fields.many2one('anytracker.ticket', 'Ticket', domain="[('parent_id', '=', False)]"),
+        'ticket_id': fields.many2one('anytracker.ticket', 'Ticket',
+            domain="[('child_ids', '!=', False)]",
+            help="Ticket that will be updated"),
+        'import_method': fields.selection(
+            [('update', 'Update the ticket tree'), ('insert', 'Insert under the ticket')],
+            'Import method', required=True,
+            help="You can either update a tree or insert the mindmap under an existing ticket"),
         'mindmap_content': fields.binary(_('File'), required=True),
         'green_complexity': fields.many2one('anytracker.complexity', 'green complexity', required=True),
         'orange_complexity': fields.many2one('anytracker.complexity', 'orange complexity', required=True),
         'red_complexity': fields.many2one('anytracker.complexity', 'red complexity', required=True),
+    }
+    _defaults = {
+        'import_method': 'insert'
     }
 
     def execute_import(self, cr, uid, ids, context=None):
@@ -27,7 +36,8 @@ class import_freemind_wizard(osv.osv_memory):
                                'red_complexity_id': wizard.red_complexity.id or False,
                                }
             ticket_id = wizard.ticket_id and wizard.ticket_id.id or False
-            content_handler = FreemindContentHandler(cr, uid, self.pool, ticket_id, complexity_dict)
+            content_handler = FreemindContentHandler(cr, uid, self.pool,
+                ticket_id, complexity_dict, wizard.import_method)
             error_handler = FreemindErrorHandler()
             sax.parse(StringIO(b64decode(wizard.mindmap_content)),
                       content_handler, error_handler)
@@ -39,12 +49,13 @@ import_freemind_wizard()
 class FreemindContentHandler(sax.ContentHandler):
     '''Handling event of sax xml parser'''
 
-    def __init__(self, cr, uid, pool, ticket_id, complexity_dict):
+    def __init__(self, cr, uid, pool, initial_ticket_id, complexity_dict, import_method):
         '''get element for access to openobject pool and db cursor'''
         self.cr = cr
         self.uid = uid
         self.pool = pool
-        self.ticket_id = ticket_id
+        self.import_method = import_method
+        self.ticket_id = initial_ticket_id
         self.parent_ids = []
         self.updated_ticket_ids = []
         self.complexity_dict = complexity_dict
@@ -54,16 +65,22 @@ class FreemindContentHandler(sax.ContentHandler):
 
     def startElement(self, name, attrs):
         names = attrs.getNames()
-        any_tick_pool = self.pool.get('anytracker.ticket')
-        stage_pool = self.pool.get('anytracker.stage')
-        if name in ['node']:
+        ticket_pool = self.pool.get('anytracker.ticket')
+        if name == 'node':
             text_name = ''
             if 'TEXT' in names:
                 text_name = attrs.getValue("TEXT")
             else:
                 text_name = ''
             if len(self.parent_ids) == 0:
-                self.parent_id = False
+                # first ticket
+                if self.import_method == 'insert':
+                    self.parent_id = self.ticket_id
+                elif self.import_method == 'update':
+                    ticket = ticket_pool.browse(self.cr, self.uid, self.ticket_id, self.context)
+                    self.parent_id = ticket.parent_id.id if ticket.parent_id else False
+                else:
+                    raise Exception('Bad import method')
             else:
                 self.parent_id = self.parent_ids[-1:][0]['osv_id']
 
@@ -80,6 +97,8 @@ class FreemindContentHandler(sax.ContentHandler):
                 'created_mindmap': created_mindmap,
                 'modified_openerp': modified_mindmap,
             }
+            # construct the domain to search the ticket
+            # and update it or create a new one
             domain = [
                 ('id_mindmap', '=', id_mindmap),
                 ('created_mindmap', '=', created_mindmap),
@@ -88,22 +107,24 @@ class FreemindContentHandler(sax.ContentHandler):
                 domain.append(('parent_id', '=', self.parent_id))
             elif self.ticket_id:
                 domain.append(('id', '=', self.ticket_id))
-            osv_id = any_tick_pool.search(self.cr, self.uid, domain,
+            osv_id = ticket_pool.search(self.cr, self.uid, domain,
                     context=self.context)
             if (not osv_id) or (not self.parent_id and not self.ticket_id):
-                osv_id = any_tick_pool.create(self.cr, self.uid, vals, context=self.context)
+                osv_id = ticket_pool.create(self.cr, self.uid, vals, context=self.context)
             else:
-                any_tick_pool.write(self.cr, self.uid, osv_id, vals, context=self.context)
+                ticket_pool.write(self.cr, self.uid, osv_id, vals, context=self.context)
                 osv_id = osv_id[0]
             self.parent_ids.append({'id': id_mindmap, 'osv_id': osv_id})
             self.updated_ticket_ids.append(osv_id)
         # rich content
-        if name in ['richcontent']:
+        if name == 'richcontent':
             self.rich_content_buffer = ''
         #if name in ['html', 'head', 'body', 'p']:
             #self.rich_content_buffer += '<' + name + '>'
+        if name == 'br':
+            self.rich_content_buffer += '\n'
         # icon
-        if name in ['icon']:
+        if name == 'icon':
             icon = attrs.getValue('BUILTIN')
             if icon == 'flag-green':
                 complexity_id = self.complexity_dict['green_complexity_id']
@@ -127,27 +148,28 @@ class FreemindContentHandler(sax.ContentHandler):
         content = content.strip()
         if content != '':
             if self.rich_content_buffer != False:
-                self.rich_content_buffer += content
+                self.rich_content_buffer += ' ' + content
 
     def endElement(self, name):
-        any_tick_pool = self.pool.get('anytracker.ticket')
+        ticket_pool = self.pool.get('anytracker.ticket')
         if name in ['node']:
             if len(self.parent_ids) != 0:
                 self.parent_ids.pop()
         # rich content
         #if name in ['html', 'head', 'body', 'p']:
         #    self.rich_content_buffer += '</' + name + '>'
-        if name in ['richcontent']:
-            any_tick_pool.write(self.cr, self.uid, self.parent_ids[-1:][0]['osv_id'],
+        if name == 'richcontent':
+            ticket_pool.write(self.cr, self.uid, self.parent_ids[-1:][0]['osv_id'],
                 {'description': self.rich_content_buffer}, context=self.context)
             self.rich_content_buffer = False
+        if name == 'p':
+            self.rich_content_buffer += '\n'
 
     def endDocument(self):
         ticket_obj = self.pool.get('anytracker.ticket')
         first_ticket_id = self.updated_ticket_ids[0]
-        if self.ticket_id:
-            if self.ticket_id != first_ticket_id:
-                raise osv.except_osv(_('Error'), _('You try to update the wrong main ticket'))
+        if self.ticket_id and self.ticket_id != first_ticket_id and self.import_method == 'update':
+            raise osv.except_osv(_('Error'), _('You try to update the wrong main ticket'))
         domain = [
             ('id', 'child_of', first_ticket_id),  # children of main ticket
             ('id', 'not in', self.updated_ticket_ids),  # ticket not updated

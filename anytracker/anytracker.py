@@ -1,7 +1,6 @@
 # coding: utf-8
 from osv import fields, osv
 from tools.translate import _
-import time
 
 class Ticket(osv.osv):
 
@@ -33,7 +32,7 @@ class Ticket(osv.osv):
         """
         res = {}
         for ticket in self.browse(cr, uid, ids, context):
-            breadcrumb = [ticket]
+            breadcrumb = []
             current_ticket = ticket
             while current_ticket.parent_id:
                 breadcrumb.insert(0, current_ticket.parent_id)
@@ -107,7 +106,7 @@ class Ticket(osv.osv):
         ticket = self.browse(cr, uid, ticket_id, context)
         parent_id = ticket.parent_id and ticket.parent_id.id
         if parent_id:
-            breadcrumb = self._breadcrumb(cr, uid, [parent_id], context)[parent_id]
+            breadcrumb = self._breadcrumb(cr, uid, [parent_id], context)[parent_id] + [ticket]
             project_id = breadcrumb[0].id
         else:
             # if no parent, we are the project

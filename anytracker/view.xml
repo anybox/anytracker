@@ -112,27 +112,26 @@
     <kanban default_group_by="stage_id">
       <field name="color"/>
       <field name="name"/>
+      <field name="description"/>
       <field name="siblings_ids"/>
       <field name="child_ids"/>
       <templates>
         <t t-name="ticket_details">
-          <ul class="oe_kanban_tooltip">
-            <li><b>Name: </b> <field name="name"/>%%</li>
-          </ul>
+            <div><i><field name="breadcrumb"/></i> / <b><field name="name"/></b></div>
+            <div><field name="description"/></div>
         </t>
         <t t-name="kanban-box">
           <div t-attf-class="#{kanban_color(record.color.raw_value)} #{border || ''}">
             <div class="oe_kanban_box oe_kanban_color_border">
               <table class="oe_kanban_table oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
                 <tr>
-                  <td align="left" valign="middle" class="oe_kanban_title" tooltip="lead_details">
+                  <td align="left" valign="middle" class="oe_kanban_title" tooltip="ticket_details">
                     <a type="edit"><field name="name"/></a> 
                   </td>
                 </tr>
               </table>
               <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger at_kanban_box_content">
                 <div>
-                  <div><field name="breadcrumb"/></div>
                   <field name="shortened_description"/>
                 </div>
               </div>
@@ -199,19 +198,19 @@
 
 <!-- MENUITEMS -->
 <menuitem id="anytracker"
-  name="AnyTracker"
+  name="Anytracker"
   sequence="-1"
   web_icon="images/iconbw.png"
   web_icon_hover="images/icon.png" />
+<menuitem id="tickets_menu_tree"
+  name="Tickets hierarchy"
+  parent="anytracker"
+  sequence="0"
+  action="tickets_action_tree" />
 <menuitem id="projects"
   name="Projects"
   sequence="10"
   parent="anytracker"/>  
-<menuitem id="tickets_menu_tree"
-  name="Tickets hierarchy"
-  parent="projects"
-  sequence="0"
-  action="tickets_action_tree" />
 <menuitem id="tickets"
   name="Tickets"
   sequence="20"
