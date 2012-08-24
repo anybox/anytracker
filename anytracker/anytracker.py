@@ -95,6 +95,7 @@ class Ticket(osv.osv):
             # warning: the domain below is defined in the _create_menu method
              ('domain','=',"[('project_id','=',%s),('child_ids','=',False),('stage_id','!=',False)]" % project.id)])
         act_pool.unlink(cr, uid, action_id)
+
         # delete the menu
         menu_pool = self.pool.get('ir.ui.menu')
         menu_id = menu_pool.search(cr, uid,
@@ -196,6 +197,7 @@ class Ticket(osv.osv):
             'anytracker.ticket',
             'Parent',
             required=False,
+            domain="[('id','child_of',project_id)]",
             ondelete='cascade'), #TODO ondelete doesnt seem to work
         'project_id': fields.many2one(
             'anytracker.ticket',
