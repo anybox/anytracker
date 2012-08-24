@@ -16,7 +16,7 @@ class complexity(osv.osv):
         'description': fields.text('Description', help='Description of this complexity'),
         'value': fields.float('Value', required=True),
         'color': fields.integer('Color'),
-        'method_id': fields.many2one('anytracker.method', 'Method', help='Projet method'),
+        'method_id': fields.many2one('anytracker.method', 'Project method', help='Projet method'),
     }
 
 
@@ -83,7 +83,7 @@ class ticket(osv.osv):
         'my_rating': fields.function(_get_my_rating,
                                      fnct_inv=_set_my_rating,
                                      type='many2one',
-                                     domain="[('method_id','=',project_method_id)]",
+                                     domain="[('method_id','=',method_id)]",
                                      relation='anytracker.complexity',
                                      string="My Rating"),
         'color': fields.function(_get_color, type='integer', relation='anytracker.complexity', string='Color'),

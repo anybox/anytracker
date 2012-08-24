@@ -12,7 +12,7 @@ class Stage(osv.osv):
     _columns = {
         'name': fields.char('name', size=64, required=True),
         'state': fields.char('state', size=64, required=True),
-        'method_id': fields.many2one('anytracker.method', _('Project method')),
+        'method_id': fields.many2one('anytracker.method', 'Project method'),
         'sequence': fields.integer('Sequence', help='Sequence'),
         'force_rating': fields.boolean('Force rating', help='Forbid entering this stage without a rating on the ticket'),
         'forbidden_complexity_ids': fields.many2many('anytracker.complexity', 'anytracker_stage_forbidden_complexities', 'stage_id', 'complexity_id', 'Forbidden complexities', help='complexities forbidden for this stage'),
@@ -106,7 +106,7 @@ class Ticket(osv.osv):
     _columns = {
         'stage_id': fields.many2one('anytracker.stage',
                                     ('Stage'),
-                                    domain="[('method_id','=',project_method_id)]")
+                                    domain="[('method_id','=',method_id)]")
     }
 
     _group_by_full = {
