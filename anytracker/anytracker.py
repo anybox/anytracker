@@ -73,11 +73,10 @@ class Ticket(osv.osv):
              'view_id': xml_pool.get_object_reference(cr, uid, 'anytracker', 'tickets_view_kanban')[1],
              'context': {
                 'search_default_project_id': project.id,
+                'search_default_filter_tasks': 1,
                 'default_project_id': project.id,
                 'default_parent_id': project.id,
                 'default_method_id': project.method_id.id},
-             # warning: the domain below is also used to find the action at delete time
-             'domain': "[('project_id','=',%s),('child_ids','=',False),('stage_id','!=',False)]" % project.id,
             })
         self.pool.get('ir.ui.menu').create(cr, uid,
             {'name': project.name,
@@ -93,8 +92,8 @@ class Ticket(osv.osv):
         uid = self._get_admin_id(cr, uid, context=context)
         action_id = act_pool.search(cr, uid,
             [('res_model','=','anytracker.ticket'),
-            # warning: the domain below is defined in the _create_menu method
-             ('domain','=',"[('project_id','=',%s),('child_ids','=',False),('stage_id','!=',False)]" % project.id)])
+             ('name','=',project.name),
+             ])
         act_pool.unlink(cr, uid, action_id)
 
         # delete the menu

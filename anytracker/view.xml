@@ -9,9 +9,21 @@
   <field name="priority" eval="8"/>
   <field name="arch" type="xml">
   <search string="Search tickets">
-    <filter string="Projects" domain="[('parent_id','=',False)]" icon="terp-go-home" help="Show only toplevel tickets. They correspond to projects"/>
-    <filter string="Topics" domain="[('child_ids','!=',False)]" icon="terp-folder-green" help="Show only tickets which have sub-tickets. They are used to gather tickets by topics"/>
-    <filter string="Tasks" domain="[('child_ids','=',False)]" icon="terp-check" help="Show only leaf tickets. They correspond to tasks"/>
+    <filter name="filter_projects"
+            string="Projects"
+            domain="[('parent_id','=',False)]"
+            icon="terp-go-home"
+            help="Show only toplevel tickets. They correspond to projects"/>
+    <filter name="filter_topics"
+            string="Topics"
+            domain="[('child_ids','!=',False)]"
+            icon="terp-folder-green"
+            help="Show only tickets which have sub-tickets. They are used to gather tickets by topics"/>
+    <filter name="filter_tasks"
+            string="Tasks"
+            domain="[('child_ids','=',False)]"
+            icon="terp-check"
+            help="Show only leaf tickets. They correspond to tasks"/>
     <field name="project_id" widget="selection"/>
     <field name="name" select="True"/>
     <field name="description"/>
