@@ -11,6 +11,8 @@
                     <group colspan="4" col="2">
                         <field name="mindmap_content" select="1" string="File mindmap to upload" />
                         <separator string="" colspan="4"/>
+                        <field name="method_id"/>
+                        <separator string="" colspan="4"/>
                         <field name="import_method"/>
                         <field name="ticket_id"/>
                         <separator string="" colspan="4"/>

@@ -9,6 +9,7 @@ class method(osv.osv):
     _columns = {
         'code': fields.char('Name', size=32, help='Short name of the project management method'),
         'name': fields.char('Name', size=64, help='Name of the project management method'),
+        'stage_ids': fields.one2many('anytracker.stage', 'method_id', 'Available stages'),
         }
 
 class Ticket(osv.osv):

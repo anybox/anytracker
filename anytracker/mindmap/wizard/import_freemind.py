@@ -23,6 +23,7 @@ class import_freemind_wizard(osv.osv_memory):
         'green_complexity': fields.many2one('anytracker.complexity', 'green complexity', required=True),
         'orange_complexity': fields.many2one('anytracker.complexity', 'orange complexity', required=True),
         'red_complexity': fields.many2one('anytracker.complexity', 'red complexity', required=True),
+        'method_id': fields.many2one('anytracker.method', 'Project method'),
     }
     _defaults = {
         'import_method': 'insert'
@@ -35,9 +36,7 @@ class import_freemind_wizard(osv.osv_memory):
                                'orange_complexity_id': wizard.orange_complexity.id or False,
                                'red_complexity_id': wizard.red_complexity.id or False,
                                }
-            ticket_id = wizard.ticket_id and wizard.ticket_id.id or False
-            content_handler = FreemindContentHandler(cr, uid, self.pool,
-                ticket_id, complexity_dict, wizard.import_method)
+            content_handler = FreemindContentHandler(cr, uid, self.pool, wizard, complexity_dict)
             error_handler = FreemindErrorHandler()
             sax.parse(StringIO(b64decode(wizard.mindmap_content)),
                       content_handler, error_handler)
@@ -49,19 +48,22 @@ import_freemind_wizard()
 class FreemindContentHandler(sax.ContentHandler):
     '''Handling event of sax xml parser'''
 
-    def __init__(self, cr, uid, pool, initial_ticket_id, complexity_dict, import_method):
+    def __init__(self, cr, uid, pool, wizard, complexity_dict):
         '''get element for access to openobject pool and db cursor'''
         self.cr = cr
         self.uid = uid
         self.pool = pool
-        self.import_method = import_method
-        self.ticket_id = initial_ticket_id
+        self.wizard = wizard
+        self.import_method = wizard.import_method
+        self.ticket_id = wizard.ticket_id.id if wizard.ticket_id else False
         self.parent_ids = []
         self.updated_ticket_ids = []
         self.complexity_dict = complexity_dict
         self.rich_content_buffer = False
         self.context = self.pool.get('res.users').context_get(cr, uid, uid)
         self.context['import_mindmap'] = True
+        stages = sorted(wizard.method_id.stage_ids, key=lambda x:x and x.sequence, reverse=True)
+        self.initial_stage = stages[-1].id if stages else False
 
     def startElement(self, name, attrs):
         names = attrs.getNames()
@@ -96,6 +98,8 @@ class FreemindContentHandler(sax.ContentHandler):
                 'modified_mindmap': modified_mindmap,
                 'created_mindmap': created_mindmap,
                 'modified_openerp': modified_mindmap,
+                'method_id': self.wizard.method_id.id,
+                'stage_id': self.initial_stage,
             }
             # construct the domain to search the ticket
             # and update it or create a new one
