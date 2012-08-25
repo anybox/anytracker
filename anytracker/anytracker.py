@@ -210,12 +210,6 @@ class Ticket(osv.osv):
         'requester_id': fields.many2one(
             'res.users',
             'Requester'),
-        'id_mindmap': fields.char(
-            'ID MindMap',
-            size=64),
-        'created_mindmap': fields.datetime('Created MindMap'),
-        'modified_mindmap': fields.datetime('Modified MindMap'),
-        'modified_openerp': fields.datetime('Modified OpenERP'),
     }
 
     _defaults = {
