@@ -103,6 +103,15 @@ class Ticket(osv.osv):
             self._set_stage(cr, uid, ids, stage_id, context)
         return super(Ticket, self).write(cr, uid, ids, values, context=context)
 
+    def _default_stage(self, cr, uid, context):
+        project_id = context.get('default_project_id')
+        if project_id:
+            ticket_pool = self.pool.get('anytracker.ticket')
+            stages = ticket_pool.browse(cr, uid, project_id).method_id.stage_ids
+            return sorted(stages, key=lambda x:x and x.sequence)[0].id if stages else False
+        else:
+            return False        
+
     _columns = {
         'stage_id': fields.many2one('anytracker.stage',
                                     ('Stage'),
@@ -110,6 +119,9 @@ class Ticket(osv.osv):
     }
 
     _group_by_full = {
-        'stage_id': _read_group_stage_ids
+        'stage_id': _read_group_stage_ids,
     }
 
+    _defaults = {
+        'stage_id': _default_stage,
+    }

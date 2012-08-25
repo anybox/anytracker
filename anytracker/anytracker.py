@@ -76,7 +76,8 @@ class Ticket(osv.osv):
                 'search_default_filter_tasks': 1,
                 'default_project_id': project.id,
                 'default_parent_id': project.id,
-                'default_method_id': project.method_id.id},
+                'default_method_id': project.method_id.id,
+                },
             })
         self.pool.get('ir.ui.menu').create(cr, uid,
             {'name': project.name,
