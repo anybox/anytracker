@@ -11,40 +11,38 @@ class Stage(osv.osv):
 
 class Ticket(osv.osv):
     """Add progress functionnality to tickets
+    Progress is based on stages. Each stage has a progress,
+    and the progress is copied on the ticket
     """
     _inherit = 'anytracker.ticket'
 
-    def _get_weighted_progress(self, cr, uid, ids, field_name, args, context=None):
-        """get the overall progress of the ticket and number of tickets, based on subtickets.
-        It should return a tuple with a float between 0 and 1, and the total number of subtickets.
-        Progress is defined by the mean of percentages defined in stages.
+    def write(self, cr, uid, ids, values, context=None):
+        """Climb the tree from the ticket to the root
+        and recompute the progress of parents
         """
-        if not context: context = {}
-        res = {}
-        for ticket in self.browse(cr, uid, ids, context):
-            child_ids = self.search(cr, uid, [('id', 'child_of', ticket.id),
-                                              ('child_ids', '=', False),
-                                              ('id', '!=', ticket.id)])
-            progresses = self.read(cr, uid, child_ids, ['progress'])
-            nb_tickets = len(progresses)
-            if nb_tickets != 0:
-                progress, nb_tickets = sum([t['progress'] or 0.0 for t in progresses]) / float(nb_tickets), nb_tickets
-            else:
-                progress, nb_tickets = ticket.stage_id.progress, 1
-            res[ticket.id] = progress, nb_tickets
-        return res
+        if 'stage_id' in values:
+            old_progress = dict([(t.id, t.stage_id.progress) for t in self.browse(cr, uid, ids, context)])
 
-    def _get_progress(self, cr, uid, ids, field_name, args, context=None):
-        """ keep only the progress, skip the number
-        """
-        res = self._get_weighted_progress(cr, uid, ids, field_name, args, context)
-        for i in res:
-            res[i] = res[i][0]
+        res = super(Ticket, self).write(cr, uid, ids, values, context)
+
+        if 'stage_id' not in values:
+            return res
+        for ticket in self.browse(cr, uid, ids, context):
+            ticket.write({'progress': ticket.stage_id.progress})
+            parent = ticket.parent_id
+            #loop up to the root
+            while parent:
+                child_ids = self.search(cr, uid, [('id', 'child_of', parent.id),
+                                                  ('child_ids', '=', False),
+                                                  ('id', '!=', parent.id)])
+                progression = (ticket.stage_id.progress - old_progress[ticket.id])/len(child_ids)
+                new_progress = parent.progress + progression
+                new_progress = 100.0 if new_progress > 100.0 else new_progress
+                new_progress = 0.0 if new_progress < 0.0 else new_progress
+                parent.write({'progress': new_progress})
+                parent = parent.parent_id
         return res
 
     _columns = { 
-        'progress': fields.function(_get_progress,
-                                    method=True,
-                                    type='float',
-                                    string="Progress"),
+        'progress': fields.float('Progress'),
      }

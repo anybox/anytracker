@@ -44,6 +44,10 @@
       <field name="project_id"/>
       <field name="shortened_description"/>
       <field name="stage_id"/>
+      <button name="stage_previous" string=""
+              type="object" icon="gtk-go-back" />
+      <button name="stage_next" string=""
+        type="object" icon="gtk-go-forward" />
       <field name="my_rating"/>
     </tree>
   </field>

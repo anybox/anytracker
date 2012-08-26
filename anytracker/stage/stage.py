@@ -40,24 +40,6 @@ class Ticket(osv.osv):
         stage_names = stage_osv.name_get(cr, access_rights_uid, stage_ids, context=context)
         return stage_names
 
-    def _set_stage(self, cr, uid, ids, stage_id, context):
-        """set the stage of a ticket.
-        For a node, it should set all children as well
-        """
-        for ticket in self.browse(cr, uid, ids, context):
-            method = ticket.project_id.method_id
-            # TODO: replace with a configurable wf?
-            if stage_id:
-                stage = self.pool.get('anytracker.stage').browse(cr, uid, stage_id, context)
-                if method.code == 'implementation' and not ticket.my_rating and stage.force_rating and not ticket.child_ids:
-                    raise osv.except_osv(_('Warning !'),_('You must rate the ticket "%s" to enter the "%s" stage' % (ticket.name, stage.name)))
-                if method.code == 'implementation' and ticket.my_rating.id in [i.id for i in stage.forbidden_complexity_ids]:
-                    raise osv.except_osv(_('Warning !'),_('The ticket "%s" is rated "%s" so it cannot enter this stage' % (ticket.name, ticket.my_rating.name)))
-            # set all children as well
-            self._set_stage(cr, uid, [i.id for i in ticket.child_ids], stage_id, context)
-            self.write(cr, uid, ids, {'participant_ids': [(6,0,[uid])]}, context)
-            super(Ticket, self).write(cr, uid, ticket.id, {'stage_id': stage_id}, context)
-
     def stage_previous(self, cr, uid, ids, context=None):
         """move the ticket to the previous stage
         """
@@ -74,7 +56,7 @@ class Ticket(osv.osv):
                 continue
             else:
                 next_stage = stage_ids[stage_ids.index(stage_id)-1]
-            self._set_stage(cr, uid, [ticket.id], next_stage, context)
+            self.write(cr, uid, [ticket.id], {'stage_id': next_stage}, context)
 
     def stage_next(self, cr, uid, ids, context=None):
         """move the ticket to the next stage
@@ -92,15 +74,31 @@ class Ticket(osv.osv):
                 next_stage = stage_ids[0]
             else:
                 next_stage = stage_ids[stage_ids.index(stage_id)+1]
-            self._set_stage(cr, uid, [ticket.id], next_stage, context)
+            self.write(cr, uid, [ticket.id], {'stage_id': next_stage}, context)
 
     def write(self, cr, uid, ids, values, context=None):
         """set children stages when writing stage_id
         """
-        stage_id = values.pop('stage_id', None)
-        if stage_id:
-            if not hasattr(ids, '__iter__'): ids = [ids]
-            self._set_stage(cr, uid, ids, stage_id, context)
+        res = super(Ticket, self).write(cr, uid, ids, values, context=context)
+        stage_id = values.get('stage_id', None)
+        
+        if not stage_id:
+            return res
+
+        if not hasattr(ids, '__iter__'): ids = [ids]
+        for ticket in self.browse(cr, uid, ids, context):
+            method = ticket.project_id.method_id
+            # TODO: replace with a configurable wf?
+            stage = self.pool.get('anytracker.stage').browse(cr, uid, stage_id, context)
+            if method.code == 'implementation' and not ticket.my_rating and stage.force_rating and not ticket.child_ids:
+                raise osv.except_osv(_('Warning !'),_('You must rate the ticket "%s" to enter the "%s" stage' % (ticket.name, stage.name)))
+            if method.code == 'implementation' and ticket.my_rating.id in [i.id for i in stage.forbidden_complexity_ids]:
+                    raise osv.except_osv(_('Warning !'),_('The ticket "%s" is rated "%s" so it cannot enter this stage' % (ticket.name, ticket.my_rating.name)))
+            # set all children as well
+            super(Ticket, self).write(cr, uid, ticket.id, {'stage_id': stage_id}, context)
+            self.write(cr, uid, [i.id for i in ticket.child_ids], {'stage_id': stage_id}, context)
+        return res
+
         return super(Ticket, self).write(cr, uid, ids, values, context=context)
 
     def _default_stage(self, cr, uid, context):

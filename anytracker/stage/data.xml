@@ -7,6 +7,7 @@
             <field name="state">analysis</field>
             <field name="method_id" ref="method_implementation"/>
             <field name="sequence">20</field>
+            <field name="progress">0.0</field>
         </record>
         <record id="stage_implementation_todo" model="anytracker.stage">
             <field name="name">To do</field>
@@ -15,80 +16,121 @@
             <field name="force_rating" eval="True"/>
             <field name="forbidden_complexity_ids" eval="[(6,0,[ref('complexity_implementation_red')])]"/>
             <field name="sequence">30</field>
+            <field name="progress">20.0</field>
         </record>
         <record id="stage_implementation_started" model="anytracker.stage">
             <field name="name">Started</field>
             <field name="state">started</field>
             <field name="method_id" ref="method_implementation"/>
             <field name="sequence">40</field>
+            <field name="progress">30.0</field>
         </record>
         <record id="stage_implementation_finished" model="anytracker.stage">
             <field name="name">Finished</field>
             <field name="state">finished</field>
             <field name="method_id" ref="method_implementation"/>
             <field name="sequence">50</field>
+            <field name="progress">50.0</field>
+        </record>
+        <record id="stage_implementation_reviewed" model="anytracker.stage">
+            <field name="name">Reviewed</field>
+            <field name="state">reviewed</field>
+            <field name="method_id" ref="method_implementation"/>
+            <field name="sequence">50</field>
+            <field name="progress">60.0</field>
+        </record>
+        <record id="stage_implementation_delivered" model="anytracker.stage">
+            <field name="name">Delivered</field>
+            <field name="state">delivered</field>
+            <field name="method_id" ref="method_implementation"/>
+            <field name="sequence">60</field>
+            <field name="progress">70.0</field>
         </record>
         <record id="stage_implementation_checked" model="anytracker.stage">
             <field name="name">Checked</field>
             <field name="state">checked</field>
             <field name="method_id" ref="method_implementation"/>
-            <field name="sequence">60</field>
-        </record>
-        <record id="stage_implementation_delivered" model="anytracker.stage">
-            <field name="name">Delivered in Acceptance</field>
-            <field name="state">delivered</field>
-            <field name="method_id" ref="method_implementation"/>
             <field name="sequence">70</field>
+            <field name="progress">90.0</field>
         </record>
         <record id="stage_implementation_deployed" model="anytracker.stage">
-            <field name="name">Deployed in Production</field>
+            <field name="name">Deployed</field>
             <field name="state">deployed</field>
             <field name="method_id" ref="method_implementation"/>
             <field name="sequence">80</field>
+            <field name="progress">100.0</field>
         </record>
 
         <!-- Maintenance -->
+        <record id="stage_maintenance_new" model="anytracker.stage">
+            <field name="name">New</field>
+            <field name="state">new</field>
+            <field name="method_id" ref="method_maintenance"/>
+            <field name="sequence">10</field>
+            <field name="progress">0.0</field>
+        </record>
         <record id="stage_maintenance_ack" model="anytracker.stage">
             <field name="name">Acknowledged</field>
             <field name="state">ack</field>
             <field name="method_id" ref="method_maintenance"/>
             <field name="sequence">20</field>
+            <field name="progress">5.0</field>
         </record>
         <record id="stage_maintenance_analysis" model="anytracker.stage">
             <field name="name">Analysis</field>
             <field name="state">analysis</field>
             <field name="method_id" ref="method_maintenance"/>
             <field name="sequence">30</field>
+            <field name="progress">10.0</field>
         </record>
         <record id="stage_maintenance_todo" model="anytracker.stage">
-            <field name="name">To do</field>
-            <field name="state">todo</field>
+            <field name="name">Fixing</field>
+            <field name="state">fixing</field>
             <field name="method_id" ref="method_maintenance"/>
             <field name="sequence">40</field>
+            <field name="progress">30.0</field>
         </record>
         <record id="stage_maintenance_finished" model="anytracker.stage">
             <field name="name">Finished</field>
             <field name="state">finished</field>
             <field name="method_id" ref="method_maintenance"/>
             <field name="sequence">50</field>
+            <field name="progress">60.0</field>
         </record>
-        <record id="stage_maintenance_checked" model="anytracker.stage">
-            <field name="name">Checked</field>
-            <field name="state">checked</field>
+        <record id="stage_maintenance_reviewed" model="anytracker.stage">
+            <field name="name">Reviewed</field>
+            <field name="state">reviewed</field>
             <field name="method_id" ref="method_maintenance"/>
-            <field name="sequence">60</field>
+            <field name="sequence">50</field>
+            <field name="progress">70.0</field>
         </record>
         <record id="stage_maintenance_delivered" model="anytracker.stage">
             <field name="name">Delivered</field>
             <field name="state">delivered</field>
             <field name="method_id" ref="method_maintenance"/>
+            <field name="sequence">60</field>
+            <field name="progress">75.0</field>
+        </record>
+        <record id="stage_maintenance_checked" model="anytracker.stage">
+            <field name="name">Checked</field>
+            <field name="state">checked</field>
+            <field name="method_id" ref="method_maintenance"/>
             <field name="sequence">70</field>
+            <field name="progress">90.0</field>
         </record>
         <record id="stage_maintenance_deployed" model="anytracker.stage">
             <field name="name">Deployed</field>
             <field name="state">deployed</field>
             <field name="method_id" ref="method_maintenance"/>
             <field name="sequence">80</field>
+            <field name="progress">99.0</field>
+        </record>
+        <record id="stage_maintenance_debriefing" model="anytracker.stage">
+            <field name="name">Debriefing</field>
+            <field name="state">debriefing</field>
+            <field name="method_id" ref="method_maintenance"/>
+            <field name="sequence">90</field>
+            <field name="progress">100.0</field>
         </record>
 
     </data>
