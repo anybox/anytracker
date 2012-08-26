@@ -9,7 +9,7 @@ class Stage(osv.osv):
         'progress': fields.float('Progress', help='Progress value of the ticket reaching this stage'),
     }
 
-class ticket(osv.osv):
+class Ticket(osv.osv):
     """Add progress functionnality to tickets
     """
     _inherit = 'anytracker.ticket'
@@ -22,13 +22,15 @@ class ticket(osv.osv):
         if not context: context = {}
         res = {}
         for ticket in self.browse(cr, uid, ids, context):
-            progresses = [(i[0] or 0.0) for i in
-                self._get_weighted_progress(cr, uid, [i.id for i in ticket.child_ids], field_name, context).values()]
+            child_ids = self.search(cr, uid, [('id', 'child_of', ticket.id),
+                                              ('child_ids', '=', False),
+                                              ('id', '!=', ticket.id)])
+            progresses = self.read(cr, uid, child_ids, ['progress'])
             nb_tickets = len(progresses)
             if nb_tickets != 0:
-                progress, nb_tickets = (sum(progresses) / nb_tickets, nb_tickets)
+                progress, nb_tickets = sum([t['progress'] or 0.0 for t in progresses]) / float(nb_tickets), nb_tickets
             else:
-                progress, nb_tickets = (ticket.stage_id.progress, 1)
+                progress, nb_tickets = ticket.stage_id.progress, 1
             res[ticket.id] = progress, nb_tickets
         return res
 

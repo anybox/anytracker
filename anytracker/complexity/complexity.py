@@ -6,8 +6,8 @@ import time
 class complexity(osv.osv):
     """Definition of the different complexity levels, in different contexts.
     Example:
-        - with a scrum method, values can be the fibonacci series
-        - with a anytracker method, values are green, orange, red
+        - with a 'scrum' method, values can be the fibonacci series
+        - with an 'implementation' method, values are green, orange, red
         - ...
     """
     _name = 'anytracker.complexity'
