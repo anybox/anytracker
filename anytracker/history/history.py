@@ -3,7 +3,7 @@ from osv import fields, osv
 from tools.translate import _
 import time
 
-class history(osv.osv):
+class History(osv.osv):
 
     _name = 'anytracker.history'
     _description = 'History of ticket'
@@ -15,7 +15,7 @@ class history(osv.osv):
     }
 
 
-class ticket(osv.osv):
+class Ticket(osv.osv):
 
     _inherit = 'anytracker.ticket'
 

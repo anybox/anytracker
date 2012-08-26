@@ -1,7 +1,7 @@
 from osv import osv
 from osv import fields
 
-class method(osv.osv):
+class Method(osv.osv):
     """ Choice of project method
     such as GTD, anytracker, TMA, etc.
     """

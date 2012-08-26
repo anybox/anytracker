@@ -3,7 +3,7 @@ from tools.translate import _
 import time
 
 
-class complexity(osv.osv):
+class Complexity(osv.osv):
     """Definition of the different complexity levels, in different contexts.
     Example:
         - with a 'scrum' method, values can be the fibonacci series
@@ -20,7 +20,7 @@ class complexity(osv.osv):
     }
 
 
-class rating(osv.osv):
+class Rating(osv.osv):
     """Represents the rating of a ticket by one person at one time
     """
     _name = 'anytracker.rating'
@@ -32,7 +32,7 @@ class rating(osv.osv):
         'time': fields.datetime('Date', required=True),
     }
 
-class ticket(osv.osv):
+class Ticket(osv.osv):
     """Add complexity functionnality to tickets
     """
     _inherit = 'anytracker.ticket'
