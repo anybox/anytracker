@@ -141,3 +141,7 @@ class Ticket(osv.osv):
         'risk': fields.float('Risk'),
         'color': fields.function(_get_color, type='integer', relation='anytracker.complexity', string='Color'),
      }
+
+    _defaults = {
+        'risk': 100.0,
+    }
