@@ -38,16 +38,16 @@
         'demo_xml' : [],
         'update_xml' : [
             'security/ir.model.access.csv',
+            'complexity/data.xml',
+            'method/data.xml',
             'view.xml',
             'mindmap/wizard/import_freemind.xml',
             'mindmap/wizard/export_freemind.xml',
-            #data
-            'method/data.xml',
             'method/view.xml',
             'stage/data.xml',
             'stage/view.xml',
-            'complexity/data.xml',
             'complexity/view.xml',
+            'complexity/wizard/view.xml',
         ],
         'active': False,
         'installable': True
