@@ -30,7 +30,7 @@
     <field name="model">anytracker.ticket</field>
     <field name="inherit_id" ref="tickets_hierarchy" />
     <field name="arch" type="xml">
-        <xpath expr="/tree/field[@name='my_rating']" position="after">
+        <xpath expr="/tree/field[@name='stage_id']" position="after">
             <field name="risk" string="Risk level"/>
         </xpath>
     </field>
