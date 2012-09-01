@@ -2,7 +2,7 @@
 <openerp>
 <data>
 
-<!-- VIEWS -->
+<!-- STAGE -->
 <record id="view_stage_tree" model="ir.ui.view">
     <field name="name">Project stages</field>
     <field name="model">anytracker.stage</field>
@@ -12,6 +12,7 @@
     <tree string="Ticket stages">
         <field name="name"/>
         <field name="state"/>
+        <field name="progress" string="Progress"/>
         <field name="method_id"/>
         <field name="sequence"/>
         <field name="force_rating"/>
@@ -29,6 +30,7 @@
         <field name="method_id" widget="selection"/>
         <field name="name" select="True"/>
         <field name="state" />
+        <field name="progress" string="Progress"/>
     </search>
     </field>
 </record>
@@ -49,6 +51,56 @@
     </form>
     </field>
 </record>
+
+<!-- TICKET -->
+<record id="view_ticket_form_with_progress" model="ir.ui.view">
+    <field name="name">Ticket</field>
+    <field name="model">anytracker.ticket</field>
+    <field name="inherit_id" ref="ticket_view_form" />
+    <field name="arch" type="xml">
+        <xpath expr="/form//group[@col='6']" position="after">
+        <group col="7" colspan="2">
+          <field name="stage_id"/>
+          <button name="stage_previous" string=""
+                  type="object" icon="gtk-go-back" />
+          <button name="stage_next" string=""
+            type="object" icon="gtk-go-forward" />
+          <field name="progress" string="Progress" widget="progressbar"/>
+        </group>
+        </xpath>
+    </field>
+</record>
+
+<record id="view_ticket_tree_with_progress" model="ir.ui.view">
+    <field name="name">Ticket</field>
+    <field name="model">anytracker.ticket</field>
+    <field name="inherit_id" ref="ticket_view_tree" />
+    <field name="arch" type="xml">
+        <xpath expr="/tree/field[@name='shortened_description']" position="after">
+            <field name="stage_id"/>
+              <button name="stage_previous" string=""
+                      type="object" icon="gtk-go-back" />
+              <button name="stage_next" string=""
+                type="object" icon="gtk-go-forward" />
+            <field name="progress" string="Progress" widget="progressbar"/>
+        </xpath>
+    </field>
+</record>
+
+<record id="tickets_hierarchy_with_progress" model="ir.ui.view">
+    <field name="name">anytracker.ticket.hierarchy</field>
+    <field name="model">anytracker.ticket</field>
+    <field name="inherit_id" ref="tickets_hierarchy" />
+    <field name="arch" type="xml">
+        <xpath expr="/tree/field[@name='name']" position="after">
+            <field name="stage_id"/>
+            <field name="progress" string="Progress" widget="progressbar"/>
+        </xpath>
+    </field>
+</record>
+
+
+
 
 <!-- ACTIONS -->
 <record model="ir.actions.act_window" id="act_open_stage_view">

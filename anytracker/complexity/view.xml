@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
+<!-- COMPLEXITY -->
 <record id="view_complexity_search" model="ir.ui.view">
     <field name="name">anytracker.complexity.search</field>
     <field name="model">anytracker.complexity</field>
@@ -23,6 +24,7 @@
         <field name="value"/>
         <field name="color"/>
         <field name="method_id"/>
+        <field name="risk"/>
     </tree>
     </field>
 </record>
@@ -43,11 +45,74 @@
           <field name="value"/>
           <field name="color" />
           <field name="method_id" widget="selection"/>
+          <field name="risk"/>
         </group>
       </group>
     </form>
     </field>
 </record>
+
+<!-- TICKET -->
+<record id="ticket_view_search_with_complexity" model="ir.ui.view">
+    <field name="name">Ticket</field>
+    <field name="model">anytracker.ticket</field>
+    <field name="inherit_id" ref="ticket_view_search" />
+    <field name="arch" type="xml">
+        <xpath expr="/search//field[@name='id']" position="after">
+            <field name="my_rating"/>
+        </xpath>
+    </field>
+</record>
+
+<record id="ticket_view_form_with_complexity" model="ir.ui.view">
+    <field name="name">Ticket</field>
+    <field name="model">anytracker.ticket</field>
+    <field name="inherit_id" ref="ticket_view_form" />
+    <field name="arch" type="xml">
+        <xpath expr="/form//group[@col='6']" position="after">
+            <group col="4" colspan="4">
+                <field name="my_rating"/>
+                <field name="risk" string="Risk level" readonly="1"/>
+            </group>
+        </xpath>
+        <xpath expr="/form//page[@string='Participants']" position="after">
+            <page string="Ratings">
+              <label>Here are all the ratings made for this ticket:</label>
+              <field name="rating_ids" nolabel="1" colspan="4" readonly="1">
+                <tree string="Ratings">
+                  <field name="user_id"/>
+                  <field name="time"/>
+                  <field name="complexity_id"/>
+                </tree>
+              </field>
+            </page>
+        </xpath>
+    </field>
+</record>
+
+<record id="ticket_view_tree_with_complexity" model="ir.ui.view">
+    <field name="name">Ticket</field>
+    <field name="model">anytracker.ticket</field>
+    <field name="inherit_id" ref="ticket_view_tree" />
+    <field name="arch" type="xml">
+        <xpath expr="/tree/field[@name='shortened_description']" position="after">
+            <field name="my_rating" options='{"quick_create": false}' />
+            <field name="risk" string="Risk level" />
+        </xpath>
+    </field>
+</record>
+
+<record id="tickets_hierarchy_with_complexity" model="ir.ui.view">
+    <field name="name">anytracker.ticket.hierarchy</field>
+    <field name="model">anytracker.ticket</field>
+    <field name="inherit_id" ref="tickets_hierarchy" />
+    <field name="arch" type="xml">
+        <xpath expr="/tree/field[@name='name']" position="after">
+            <field name="risk" string="Risk"/>
+        </xpath>
+    </field>
+</record>
+
 
 <record model="ir.actions.act_window" id="act_open_complexity_view">
     <field name="name">Complexities</field>

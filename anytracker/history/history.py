@@ -103,7 +103,7 @@ class Ticket(osv.osv):
             #TODO generate time
             pass
         values = self._add_history(cr, uid, values, context=context)
-        return super(ticket, self).create(cr, uid, values, context=context)
+        return super(Ticket, self).create(cr, uid, values, context=context)
 
     def write(self, cr, uid, ids, values, context=None):
         if not context: context = {}
@@ -122,5 +122,5 @@ class Ticket(osv.osv):
         elif _be_updated():
             values['modified_openerp'] = time.strftime('%Y-%m-%d %H:%M:%S')
         values = self._add_history(cr, uid, values, context=context)
-        return super(ticket, self).write(cr, uid, ids, values, context=context)
+        return super(Ticket, self).write(cr, uid, ids, values, context=context)
 

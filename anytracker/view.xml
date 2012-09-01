@@ -2,7 +2,7 @@
 <openerp><data>
 
 <!-- VIEWS -->
-<record id="view_ticket_search" model="ir.ui.view">
+<record id="ticket_view_search" model="ir.ui.view">
   <field name="name">Search tickets</field>
   <field name="model">anytracker.ticket</field>
   <field name="type">search</field>
@@ -28,7 +28,6 @@
     <field name="name" select="True"/>
     <field name="description"/>
     <field name="id" invisible="1"/>
-    <field name="my_rating"/>
   </search>
   </field>
 </record>
@@ -43,12 +42,6 @@
       <field name="name"/>
       <field name="project_id"/>
       <field name="shortened_description"/>
-      <field name="stage_id"/>
-      <button name="stage_previous" string=""
-              type="object" icon="gtk-go-back" />
-      <button name="stage_next" string=""
-        type="object" icon="gtk-go-forward" />
-      <field name="my_rating"/>
     </tree>
   </field>
 </record>
@@ -65,19 +58,11 @@
         <field name="description"/>
       </group>
       <group col="2" colspan="2">
-        <group col="4" colspan="2">
+        <group col="6" colspan="2">
           <field name="project_id"/>
           <field name="project_method_id" attrs="{'invisible': [('parent_id','=',False)]}"/>
           <field name="method_id" widget="selection"
                  attrs="{'invisible' : [('parent_id','!=',False)]}"/>
-        </group>
-        <field name="my_rating" options='{"quick_create": false}' />
-        <group col="4" colspan="2">
-          <field name="stage_id"/>
-          <button name="stage_previous" string=""
-                  type="object" icon="gtk-go-back" />
-          <button name="stage_next" string=""
-            type="object" icon="gtk-go-forward" />
         </group>
       </group>
 
@@ -93,16 +78,6 @@
 
         <page string="Participants">
           <field name="participant_ids"/>
-        </page>
-        <page string="Ratings">
-          <label>Here are all the ratings made for this ticket:</label>
-          <field name="rating_ids" nolabel="1" colspan="4" readonly="1">
-            <tree string="Ratings">
-              <field name="user_id"/>
-              <field name="time"/>
-              <field name="complexity_id"/>
-            </tree>
-          </field>
         </page>
 
         <page string="History">
@@ -168,7 +143,6 @@
   <field name="arch" type="xml">
     <tree string="Tickets hierarchy">
       <field name="name"/>
-      <field name="stage_id"/>
     </tree>
   </field>
 </record>

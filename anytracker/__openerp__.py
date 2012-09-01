@@ -44,12 +44,10 @@
             #data
             'method/data.xml',
             'method/view.xml',
-            'complexity/data.xml',
-            'complexity/view.xml',
             'stage/data.xml',
             'stage/view.xml',
-            'progress/view.xml',
-            'risk/view.xml',
+            'complexity/data.xml',
+            'complexity/view.xml',
         ],
         'active': False,
         'installable': True

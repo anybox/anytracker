@@ -1,5 +1,4 @@
 from osv import fields, osv
-from tools.translate import _
 import time
 
 
@@ -17,6 +16,8 @@ class Complexity(osv.osv):
         'value': fields.float('Value', required=True),
         'color': fields.integer('Color'),
         'method_id': fields.many2one('anytracker.method', 'Project method', help='Projet method'),
+        'risk': fields.float('Risk', required=True,
+            help="risk is a value between 0 (no risk) and 100 (full risk)"),
     }
 
 
@@ -33,7 +34,9 @@ class Rating(osv.osv):
     }
 
 class Ticket(osv.osv):
-    """Add complexity functionnality to tickets
+    """Add complexity and risk functionnality to tickets
+    Risk is based on complexities. Each complexity has a risk value,
+    and the risk is copied on the ticket
     """
     _inherit = 'anytracker.ticket'
 
@@ -78,6 +81,55 @@ class Ticket(osv.osv):
             tickets[ticket.id] = getattr(complexity, 'color', False)
         return tickets
 
+    def compute_risk(self, cr, uid, ids, context=None):
+        """compute the risk of a leaf ticket, given its ratings
+        """
+        res = {}
+        if type(ids) is int: ids = [ids]
+        for ticket in self.browse(cr, uid, ids, context):
+            if ticket.child_ids: # not a leaf
+                res[ticket.id] = ticket.risk
+                continue
+            latest_person_ratings = {}
+            # find latest rating for each person
+            relevant_ratings = sorted([(r.time, r.user_id, r.complexity_id.risk) for r in ticket.rating_ids])
+            for rating in relevant_ratings:
+                latest_person_ratings[rating[1]] = rating[2]
+            # compute the mean of all latest ratings
+            risk_mean = sum(latest_person_ratings.values())/len(latest_person_ratings) if latest_person_ratings else 100.0
+            res[ticket.id] = risk_mean
+        return res
+
+    def write(self, cr, uid, ids, values, context=None):
+        """Climb the tree from the ticket to the root
+        and recompute the risk of parents
+        Unrated tickets have a risk of 100.0!!
+        """
+        if 'my_rating' in values:
+            old_risk = self.compute_risk(cr, uid, ids, context)
+
+        res = super(Ticket, self).write(cr, uid, ids, values, context)
+
+        if 'my_rating' not in values:
+            return res
+        for ticket in self.browse(cr, uid, ids, context):
+            new_risk = self.compute_risk(cr, uid, [ticket.id], context)[ticket.id]
+            ticket.write({'risk': new_risk})
+            parent = ticket.parent_id
+            #loop up to the root
+            while parent:
+                child_ids = self.search(cr, uid, [('id', 'child_of', parent.id),
+                                                  ('child_ids', '=', False),
+                                                  ('id', '!=', parent.id)])
+                risk_increase = (ticket.risk - old_risk[ticket.id])/len(child_ids)
+                new_risk = parent.risk + risk_increase
+                new_risk = 100.0 if new_risk > 100.0 else new_risk
+                new_risk = 0.0 if new_risk < 0.0 else new_risk
+                parent.write({'risk': new_risk})
+                parent = parent.parent_id
+        return res
+
+
     _columns = { 
         'rating_ids': fields.one2many('anytracker.rating', 'ticket_id', 'Ratings'),
         'my_rating': fields.function(_get_my_rating,
@@ -86,5 +138,6 @@ class Ticket(osv.osv):
                                      domain="[('method_id','=',method_id)]",
                                      relation='anytracker.complexity',
                                      string="My Rating"),
+        'risk': fields.float('Risk'),
         'color': fields.function(_get_color, type='integer', relation='anytracker.complexity', string='Color'),
      }
