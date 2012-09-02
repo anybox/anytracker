@@ -26,7 +26,7 @@
 </record>
 
 <record id="action_quickrating" model="ir.actions.act_window">
-    <field name="name">Quick rate tickets</field>
+    <field name="name">Rate subtickets...</field>
     <field name="type">ir.actions.act_window</field>
     <field name="res_model">anytracker.quickrating</field>
     <field name="view_type">form</field>
@@ -36,7 +36,7 @@
 
 <record model="ir.values" id="action_quickrating_values">
     <field name="model_id" ref="model_anytracker_ticket"/>
-    <field name="name">Quick rate tickets</field>
+    <field name="name">Rate subtickets...</field>
     <field name="key2">client_action_multi</field>
     <field name="value" eval="'ir.actions.act_window,' + str(ref('action_quickrating'))" />
     <field name="key">action</field>

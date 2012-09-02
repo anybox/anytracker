@@ -72,6 +72,7 @@
         <xpath expr="/form//group[@col='6']" position="after">
             <group col="4" colspan="4">
                 <field name="my_rating"/>
+                <button string="Rate subtickets" icon="gtk-execute" type="action" name="%(action_quickrating)d"/>
                 <field name="risk" string="Risk level" readonly="1"/>
             </group>
         </xpath>
@@ -97,6 +98,7 @@
     <field name="arch" type="xml">
         <xpath expr="/tree/field[@name='shortened_description']" position="after">
             <field name="my_rating" options='{"quick_create": false}' />
+            <button string="Rate subtickets" icon="gtk-execute" type="action" name="%(action_quickrating)d"/>
             <field name="risk" string="Risk level" />
         </xpath>
     </field>
