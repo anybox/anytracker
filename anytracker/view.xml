@@ -211,7 +211,7 @@
 
 <!-- MENUITEMS -->
 <menuitem id="anytracker"
-  name="Anytracker"
+  name="Anytracker 0.1"
   sequence="-1"
   web_icon="images/iconbw.png"
   web_icon_hover="images/icon.png" />
