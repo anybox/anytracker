@@ -3,7 +3,7 @@ from osv import fields, osv
 from tools.translate import _
 
 
-class Stage(osv.osv):
+class Stage(osv.Model):
     """Stage of a ticket.
     Correspond to kanban columns
     """
@@ -20,7 +20,7 @@ class Stage(osv.osv):
     }
 
 
-class Ticket(osv.osv):
+class Ticket(osv.Model):
     """ Add stage and progress functionality to tickets
     Progress is based on stages. Each stage has a progress,
     and the progress is copied on the ticket

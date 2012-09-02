@@ -1,7 +1,7 @@
 from osv import osv
 from osv import fields
 
-class Method(osv.osv):
+class Method(osv.Model):
     """ Choice of project method
     such as GTD, anytracker, TMA, etc.
     """
@@ -12,7 +12,7 @@ class Method(osv.osv):
         'stage_ids': fields.one2many('anytracker.stage', 'method_id', 'Available stages'),
         }
 
-class Ticket(osv.osv):
+class Ticket(osv.Model):
     """add method selection on tickets
     """
     _inherit = 'anytracker.ticket'

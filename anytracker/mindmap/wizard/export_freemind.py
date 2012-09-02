@@ -4,7 +4,7 @@ from tools.translate import _
 from datetime import datetime
 
 #TODO complexity icon, mindmapfile to binary?, richtext content generation
-class export_freemind_wizard(osv.osv_memory):
+class export_freemind_wizard(osv.TransientModel):
     _name = 'export.freemind.wizard'
     _description = 'export freemind .mm file for generate by anytracker tree'
     _columns = {
@@ -38,7 +38,7 @@ class export_freemind_wizard(osv.osv_memory):
 
 export_freemind_wizard()
 
-class FreemindParser():
+class FreemindParser(object):
     '''Parse openerp project'''
     def __init__(self, cr, uid, pool, handler, ticket_id, complexity_dict):
         self.handler = handler

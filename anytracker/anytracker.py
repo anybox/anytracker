@@ -2,7 +2,7 @@
 from osv import fields, osv
 from tools.translate import _
 
-class Ticket(osv.osv):
+class Ticket(osv.Model):
 
     _name = 'anytracker.ticket'
     _description = "Anytracker tickets"

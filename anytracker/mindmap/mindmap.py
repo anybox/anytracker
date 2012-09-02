@@ -2,7 +2,7 @@
 from osv import fields, osv
 from tools.translate import _
 
-class Ticket(osv.osv):
+class Ticket(osv.Model):
 
     _inherit = 'anytracker.ticket'
 

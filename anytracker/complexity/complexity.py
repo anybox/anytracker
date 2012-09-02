@@ -2,7 +2,7 @@ from osv import fields, osv
 import time
 
 
-class Complexity(osv.osv):
+class Complexity(osv.Model):
     """Definition of the different complexity levels, in different contexts.
     Example:
         - with a 'scrum' method, values can be the fibonacci series
@@ -21,7 +21,7 @@ class Complexity(osv.osv):
     }
 
 
-class Rating(osv.osv):
+class Rating(osv.Model):
     """Represents the rating of a ticket by one person at one time
     """
     _name = 'anytracker.rating'
@@ -33,7 +33,7 @@ class Rating(osv.osv):
         'time': fields.datetime('Date', required=True),
     }
 
-class Ticket(osv.osv):
+class Ticket(osv.Model):
     """Add complexity and risk functionnality to tickets
     Risk is based on complexities. Each complexity has a risk value,
     and the risk is copied on the ticket

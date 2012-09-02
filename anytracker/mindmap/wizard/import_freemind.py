@@ -8,7 +8,7 @@ from base64 import b64decode
 import time
 
 
-class import_freemind_wizard(osv.osv_memory):
+class import_freemind_wizard(osv.TransientModel):
     _name = 'import.freemind.wizard'
     _description = 'Import freemind .mm file into anytracker tree'
     _columns = {

@@ -2,7 +2,7 @@ from osv import osv
 from osv import fields
 from tools.translate import _
 
-class QuickRating(osv.osv_memory):
+class QuickRating(osv.TransientModel):
     """Wizard for quick rating
     """
     _name = 'anytracker.quickrating'
