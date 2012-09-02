@@ -5,7 +5,7 @@ from tools.translate import _
 class Ticket(osv.osv):
 
     _name = 'anytracker.ticket'
-    _description = "Tickets for project management"
+    _description = "Anytracker tickets"
 
     def _get_siblings(self, cr, uid, ids, field_name, args, context=None):
         """ get tickets at the same hierachical level
@@ -163,6 +163,33 @@ class Ticket(osv.osv):
 
         return super(Ticket, self).unlink(cr, uid, ids, context=context)
 
+    def _default_parent_id(self, cr, uid, context=None):
+        """Return the parent or the project
+        """
+        ticket_pool = self.pool.get('anytracker.ticket')
+        active_id = context.get('active_id')
+        if not active_id:
+            return False
+        ticket = ticket_pool.browse(cr, uid, active_id)
+        if not ticket.parent_id:
+            return active_id
+        else:
+            return ticket.parent_id.id
+
+    def _default_project_id(self, cr, uid, context=None):
+        """Return the same project as the active_id
+        """
+        ticket_pool = self.pool.get('anytracker.ticket')
+        active_id = context.get('active_id')
+        if not active_id:
+            return False
+        ticket = ticket_pool.browse(cr, uid, active_id)
+        if not ticket.parent_id:
+            return active_id
+        else:
+            return ticket.project_id.id
+
+
     _columns = {
         'name': fields.char('Name', 255, required=True),
         'description': fields.text('Description', required=False),
@@ -201,7 +228,7 @@ class Ticket(osv.osv):
             'Parent',
             required=False,
             domain="[('id','child_of',project_id)]",
-            ondelete='cascade'), #TODO ondelete doesnt seem to work
+            ondelete='cascade'),
         'project_id': fields.many2one(
             'anytracker.ticket',
             'Project',
@@ -215,6 +242,8 @@ class Ticket(osv.osv):
 
     _defaults = {
         'duration': 0,
+        'parent_id': _default_parent_id,
+        'project_id': _default_project_id,
     }
 
 

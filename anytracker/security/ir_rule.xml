@@ -1,12 +1,14 @@
 <?xml version="1.0"?>
-<openerp>
-  <data>
+<openerp><data>
 
 <record id="property_rule_tickets_participants" model="ir.rule">
-    <field name="name">Participant tickets</field>
+    <field name="name">Tickets only for participant</field>
     <field model="ir.model" name="model_id" ref="model_anytracker_ticket"/>
     <field name="domain_force">[('project_id.participant_ids', 'in', user.id)]</field>
+    <field name="perm_create" eval="False"/>
+    <field name="perm_write" eval="True"/>
+    <field name="perm_read" eval="True"/>
+    <field name="perm_unlink" eval="True"/>
 </record>
 
-  </data>
-</openerp>
+</data></openerp>
