@@ -24,7 +24,7 @@ class QuickRating(osv.osv_memory):
         position -= 1
         previous_ticket_id = ticket_ids[position]
         ticket = self.pool.get('anytracker.ticket').browse(cr, uid, previous_ticket_id)
-        self.write(cr, uid, ids, {'ticket_id': previous_ticket_id,
+        return self.write(cr, uid, ids, {'ticket_id': previous_ticket_id,
                                   'method_id': ticket.project_id.method_id.id,
                                   'my_rating': ticket.my_rating.id,
                                   'progress': 100.0 * (position) / len(ticket_ids)
@@ -47,7 +47,7 @@ class QuickRating(osv.osv_memory):
         position += 1
         next_ticket_id = ticket_ids[position]
         ticket = self.pool.get('anytracker.ticket').browse(cr, uid, next_ticket_id)
-        self.write(cr, uid, ids, {'ticket_id': next_ticket_id,
+        return self.write(cr, uid, ids, {'ticket_id': next_ticket_id,
                                   'method_id': ticket.project_id.method_id.id,
                                   'my_rating': ticket.my_rating.id,
                                   'progress': 100.0 * (position) / len(ticket_ids)
