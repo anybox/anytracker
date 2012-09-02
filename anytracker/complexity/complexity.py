@@ -105,6 +105,7 @@ class Ticket(osv.osv):
         and recompute the risk of parents
         Unrated tickets have a risk of 100.0!!
         """
+        if type(ids) is int: ids = [ids]
         if 'my_rating' in values:
             old_risk = self.compute_risk(cr, uid, ids, context)
 
