@@ -76,7 +76,7 @@
           </group>
         </page>
 
-        <page string="Participants">
+        <page string="Participants" attrs="{'invisible': [('parent_id', '!=', False)]}">
           <field name="participant_ids"/>
         </page>
 
