@@ -97,17 +97,17 @@ class Ticket(osv.Model):
         return ticket_id
 
     def _default_parent_id(self, cr, uid, context=None):
-        """Return the parent or the project
+        """Return the current ticket of the parent if this is a leaf
         """
         ticket_pool = self.pool.get('anytracker.ticket')
         active_id = context.get('active_id')
         if not active_id:
             return False
         ticket = ticket_pool.browse(cr, uid, active_id)
-        if not ticket.parent_id:
-            return active_id
-        else:
+        if not ticket.child_ids:
             return ticket.parent_id.id
+        else:
+            return active_id
 
     def _default_project_id(self, cr, uid, context=None):
         """Return the same project as the active_id
@@ -121,6 +121,13 @@ class Ticket(osv.Model):
             return active_id
         else:
             return ticket.project_id.id
+
+    def _nb_children(self, cr, uid, ids, field_name, args, context=None):
+        res = {}
+        for i in ids:
+            nb_children = self.search(cr, uid, [('id', 'child_of', i)], count=True)
+            res[i] = nb_children
+        return res
 
     _columns = {
         'name': fields.char('Name', 255, required=True),
@@ -149,6 +156,12 @@ class Ticket(osv.Model):
             'parent_id',
             'Children',
             required=False),
+        'nb_children': fields.function(_nb_children,
+                            method=True,
+                            string='# of children',
+                            type='integer',
+                            store=False,
+                            help='Number of children'),
         'participant_ids': fields.many2many(
             'res.users', 
             'ticket_assignement_rel', 

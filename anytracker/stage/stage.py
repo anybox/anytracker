@@ -119,7 +119,7 @@ class Ticket(osv.Model):
                 child_ids = self.search(cr, uid, [('id', 'child_of', parent.id),
                                                   ('child_ids', '=', False),
                                                   ('id', '!=', parent.id)])
-                progression = (ticket.stage_id.progress - old_progress[ticket.id])/len(child_ids)
+                progression = (ticket.stage_id.progress - (old_progress[ticket.id]or 0.0)) / len(child_ids)
                 new_progress = parent.progress + progression
                 new_progress = 100.0 if new_progress > 100.0 else new_progress
                 new_progress = 0.0 if new_progress < 0.0 else new_progress

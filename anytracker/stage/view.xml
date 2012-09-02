@@ -92,8 +92,7 @@
     <field name="model">anytracker.ticket</field>
     <field name="inherit_id" ref="tickets_hierarchy" />
     <field name="arch" type="xml">
-        <xpath expr="/tree/field[@name='name']" position="after">
-            <field name="stage_id"/>
+        <xpath expr="/tree/field[@name='nb_children']" position="after">
             <field name="progress" string="Progress" widget="progressbar"/>
         </xpath>
     </field>

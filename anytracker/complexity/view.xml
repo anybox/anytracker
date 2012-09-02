@@ -98,7 +98,7 @@
     <field name="model">anytracker.ticket</field>
     <field name="inherit_id" ref="tickets_hierarchy" />
     <field name="arch" type="xml">
-        <xpath expr="/tree/field[@name='name']" position="after">
+        <xpath expr="/tree/field[@name='nb_children']" position="after">
             <field name="risk" string="Risk"/>
         </xpath>
     </field>

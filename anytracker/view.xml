@@ -145,6 +145,7 @@
   <field name="arch" type="xml">
     <tree string="Tickets hierarchy">
       <field name="name"/>
+      <field name="nb_children"/>
     </tree>
   </field>
 </record>
@@ -158,7 +159,7 @@
     <field name="view_mode">kanban,tree,form</field>
     <field name="view_id" ref="tickets_view_kanban"/>
     <field name="domain">[('id', 'child_of', active_id)]</field>
-    <field name="context">{'search_default_filter_tasks': 1, 'group_by': 'stage_id', 'default_group_by': 'stage_id'}</field>
+    <field name="context">{'search_default_filter_tasks': 1}</field>
 </record>
 <record id="ir_value_hierarchy_line_select" model="ir.values">
     <field name="key2">tree_but_open</field>
@@ -168,12 +169,13 @@
 </record>
 
 <!-- ACTIONS -->
-<record model="ir.actions.act_window" id="action_general_overview">
+<record model="ir.actions.act_window" id="action_overview">
   <field name="name">Anytracker - Projects</field>
   <field name="res_model">anytracker.ticket</field>
   <field name="view_type">tree</field>
   <field name="view_id" ref="tickets_hierarchy"/>
-  <field name="domain">[('parent_id','=',False)]</field>
+  <field name="domain">[('parent_id', '=', False)]</field>
+  <field name="help">To create a new ticket, open the tree below and click on the relevant parent ticket, then click on "Create"</field>
 </record>
 
 <record model="ir.actions.act_window" id="tickets_action_form">
@@ -211,15 +213,15 @@
 
 <!-- MENUITEMS -->
 <menuitem id="anytracker"
-  name="Anytracker 0.1"
+  name="Anytracker"
   sequence="-1"
   web_icon="images/iconbw.png"
   web_icon_hover="images/icon.png" />
-<menuitem id="menu_general_overview"
+<menuitem id="menu_overview"
   name="Overview"
   parent="anytracker"
   sequence="0"
-  action="action_general_overview" />
+  action="action_overview" />
 <menuitem id="projects"
   name="Projects"
   sequence="10"
