@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.1-20120831-231939\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-09-02 14:26+0000\n"
-"PO-Revision-Date: 2012-09-02 14:26+0000\n"
+"POT-Creation-Date: 2012-09-02 21:05+0000\n"
+"PO-Revision-Date: 2012-09-02 21:05+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -43,6 +43,11 @@ msgid "Progress"
 msgstr ""
 
 #. module: anytracker
+#: view:anytracker.ticket:0
+msgid "Nodes"
+msgstr ""
+
+#. module: anytracker
 #: help:anytracker.method,code:0
 msgid "Short name of the project management method"
 msgstr ""
@@ -53,8 +58,8 @@ msgid "Parent"
 msgstr ""
 
 #. module: anytracker
-#: view:anytracker.ticket:0
-msgid "Navigation"
+#: model:ir.model,name:anytracker.model_import_freemind_wizard
+msgid "Import freemind .mm file for generate anytracker tree"
 msgstr ""
 
 #. module: anytracker
@@ -159,6 +164,11 @@ msgid "You can either update a tree or insert the mindmap under an existing tick
 msgstr ""
 
 #. module: anytracker
+#: model:ir.ui.menu,name:anytracker.menu_general_overview
+msgid "Overview"
+msgstr ""
+
+#. module: anytracker
 #: help:anytracker.stage,progress:0
 msgid "Progress value of the ticket reaching this stage"
 msgstr ""
@@ -172,6 +182,12 @@ msgstr ""
 #: view:anytracker.ticket:0
 #: field:anytracker.ticket,rating_ids:0
 msgid "Ratings"
+msgstr ""
+
+#. module: anytracker
+#: model:ir.actions.act_window,name:anytracker.act_all_projects
+#: model:ir.ui.menu,name:anytracker.menu_all_projects
+msgid "All projects"
 msgstr ""
 
 #. module: anytracker
@@ -190,7 +206,7 @@ msgid "Location"
 msgstr ""
 
 #. module: anytracker
-#: model:ir.actions.act_window,name:anytracker.tickets_action_tree
+#: model:ir.actions.act_window,name:anytracker.action_general_overview
 msgid "Anytracker - Projects"
 msgstr ""
 
@@ -262,10 +278,6 @@ msgstr ""
 
 #. module: anytracker
 #: view:anytracker.ticket:0
-msgid "Show only tickets which have sub-tickets. They are used to gather tickets by topics"
-msgstr ""
-
-#. module: anytracker
 #: model:ir.actions.act_window,name:anytracker.action_quickrating
 msgid "Rate subtickets..."
 msgstr ""
@@ -292,24 +304,20 @@ msgid "Tasks"
 msgstr ""
 
 #. module: anytracker
-#: field:anytracker.ticket,created_mindmap:0
-msgid "Created MindMap"
+#: view:anytracker.ticket:0
+msgid "Show only tickets which have sub-tickets. They are used to gather tickets by nodes"
 msgstr ""
 
 #. module: anytracker
-#: view:anytracker.ticket:0
-msgid "Topics"
+#: model:ir.actions.act_window,name:anytracker.act_all_nodes
+#: model:ir.ui.menu,name:anytracker.menu_all_nodes
+msgid "All nodes"
 msgstr ""
 
 #. module: anytracker
 #: view:export.freemind.wizard:0
 #: view:import.freemind.wizard:0
 msgid "complexity level for red flag"
-msgstr ""
-
-#. module: anytracker
-#: field:anytracker.ticket,participant_ids:0
-msgid "unknown"
 msgstr ""
 
 #. module: anytracker
@@ -397,8 +405,8 @@ msgid "Force rating"
 msgstr ""
 
 #. module: anytracker
-#: model:ir.ui.menu,name:anytracker.tickets_menu_list
-msgid "All tickets"
+#: field:anytracker.ticket,participant_ids:0
+msgid "unknown"
 msgstr ""
 
 #. module: anytracker
@@ -418,8 +426,8 @@ msgid "Date"
 msgstr ""
 
 #. module: anytracker
-#: model:ir.actions.act_window,name:anytracker.tickets_action_list
-msgid "Anytracker - Tickets"
+#: field:anytracker.ticket,created_mindmap:0
+msgid "Created MindMap"
 msgstr ""
 
 #. module: anytracker
@@ -443,8 +451,8 @@ msgid "Description of this complexity"
 msgstr ""
 
 #. module: anytracker
-#: model:ir.model,name:anytracker.model_import_freemind_wizard
-msgid "Import freemind .mm file for generate anytracker tree"
+#: view:anytracker.ticket:0
+msgid "Navigation"
 msgstr ""
 
 #. module: anytracker
@@ -506,6 +514,12 @@ msgid "Parent ticket"
 msgstr ""
 
 #. module: anytracker
+#: model:ir.actions.act_window,name:anytracker.act_all_tasks
+#: model:ir.ui.menu,name:anytracker.menu_all_tasks
+msgid "All tasks"
+msgstr ""
+
+#. module: anytracker
 #: field:anytracker.ticket,project_method_id:0
 msgid "Method of the project"
 msgstr ""
@@ -525,7 +539,6 @@ msgstr ""
 
 #. module: anytracker
 #: view:anytracker.ticket:0
-#: model:ir.ui.menu,name:anytracker.tickets_menu_tree
 msgid "Tickets hierarchy"
 msgstr ""
 

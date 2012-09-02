@@ -61,49 +61,6 @@ class Ticket(osv.osv):
             return admin_ids[0]
         raise osv.except_osv(_('Error'), _('No user with ERP Manager group found'))
 
-    def _create_menu(self, cr, uid, project, context=None):
-        """Create a menu for a project
-        """
-        xml_pool = self.pool.get('ir.model.data')
-        uid = self._get_admin_id(cr, uid, context=context)
-        action_id = self.pool.get('ir.actions.act_window').create(cr, uid,
-            {'name': project.name,
-             'res_model': 'anytracker.ticket',
-             'view_mode': 'kanban,tree,page,form',
-             'view_id': xml_pool.get_object_reference(cr, uid, 'anytracker', 'tickets_view_kanban')[1],
-             'context': {
-                'search_default_project_id': project.id,
-                'search_default_filter_tasks': 1,
-                'default_project_id': project.id,
-                'default_parent_id': project.id,
-                'default_method_id': project.method_id.id,
-                },
-            })
-        self.pool.get('ir.ui.menu').create(cr, uid,
-            {'name': project.name,
-             'parent_id': xml_pool.get_object_reference(cr, uid, 'anytracker', 'projects')[1],
-             'action': 'ir.actions.act_window,'+str(action_id),
-            })
-
-    def _delete_menu(self, cr, uid, project, context=None):
-        """delete the menu for a project
-        """
-        # delete the action
-        act_pool = self.pool.get('ir.actions.act_window')
-        uid = self._get_admin_id(cr, uid, context=context)
-        action_id = act_pool.search(cr, uid,
-            [('res_model','=','anytracker.ticket'),
-             ('name','=',project.name),
-             ])
-        act_pool.unlink(cr, uid, action_id)
-
-        # delete the menu
-        menu_pool = self.pool.get('ir.ui.menu')
-        menu_id = menu_pool.search(cr, uid,
-            [('name','=',project.name),
-             ('action','=','ir.actions.act_window,'+str(action_id))])
-        menu_pool.unlink(cr, uid, menu_id)
-
     def _set_project(self, cr, uid, ticket_id, context=None):
         """store the root ticket (the project) in the ticket
         Should be more efficient than looking up the project everytime
@@ -128,16 +85,6 @@ class Ticket(osv.osv):
         for ticket_id in ids:
             # set the project of the ticket
             self._set_project(cr, uid, ticket_id, context)
-
-
-            # create a menu for the project
-            if 'parent_id' in values and values['parent_id']==False:
-                project = self.browse(cr, uid, ticket_id, context)
-                self._create_menu(cr, uid, project, context)
-            if 'parent_id' in values and values['parent_id']:
-                project = self.browse(cr, uid, ticket_id, context)
-                self._delete_menu(cr, uid, project, context)
-
         return res
 
     def create(self, cr, uid, values, context=None):
@@ -147,21 +94,7 @@ class Ticket(osv.osv):
         # set the project of the ticket
         self._set_project(cr, uid, ticket_id, context)
 
-        # create a menu for the project
-        if not values.get('parent_id'):
-            project = self.browse(cr, uid, ticket_id, context)
-            self._create_menu(cr, uid, project, context)
-
         return ticket_id
-
-    def unlink(self, cr, uid, ids, context=None):
-        """delete the menu corresponding to the project
-        """
-        for ticket in self.browse(cr, uid, ids, context):
-            if not ticket.parent_id:
-                self._delete_menu(cr, uid, ticket, context)
-
-        return super(Ticket, self).unlink(cr, uid, ids, context=context)
 
     def _default_parent_id(self, cr, uid, context=None):
         """Return the parent or the project
@@ -188,7 +121,6 @@ class Ticket(osv.osv):
             return active_id
         else:
             return ticket.project_id.id
-
 
     _columns = {
         'name': fields.char('Name', 255, required=True),

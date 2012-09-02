@@ -14,11 +14,11 @@
             domain="[('parent_id','=',False)]"
             icon="terp-go-home"
             help="Show only toplevel tickets. They correspond to projects"/>
-    <filter name="filter_topics"
-            string="Topics"
+    <filter name="filter_nodes"
+            string="Nodes"
             domain="[('child_ids','!=',False)]"
             icon="terp-folder-green"
-            help="Show only tickets which have sub-tickets. They are used to gather tickets by topics"/>
+            help="Show only tickets which have sub-tickets. They are used to gather tickets by nodes"/>
     <filter name="filter_tasks"
             string="Tasks"
             domain="[('child_ids','=',False)]"
@@ -155,38 +155,58 @@
     <field name="name">Tickets</field>
     <field name="res_model">anytracker.ticket</field>
     <field name="view_type">form</field>
-    <field name="view_mode">form,page,tree</field>
-    <field name="view_id" ref="ticket_view_tree"/>
-    <field name="domain">[('id','=',active_id)]</field>
+    <field name="view_mode">kanban,tree,form</field>
+    <field name="view_id" ref="tickets_view_kanban"/>
+    <field name="domain">[('id', 'child_of', active_id)]</field>
+    <field name="context">{'search_default_filter_tasks': 1, 'group_by': 'stage_id', 'default_group_by': 'stage_id'}</field>
 </record>
 <record id="ir_value_hierarchy_line_select" model="ir.values">
     <field name="key2">tree_but_open</field>
     <field name="model">anytracker.ticket</field>
     <field name="name">Open ticket</field>
-    <field eval="'ir.actions.act_window,%d'%action_hierarchy_line_select" name="value"/>
+    <field name="value" eval="'ir.actions.act_window,%d'%action_hierarchy_line_select"/>
 </record>
 
 <!-- ACTIONS -->
-<record model="ir.actions.act_window" id="tickets_action_form">
-  <field name="name">Anytracker - Ticket</field>
-  <field name="res_model">anytracker.ticket</field>
-  <field name="view_type">form</field>
-  <field name="view_id" ref="ticket_view_form"/>
-</record>
-<record model="ir.actions.act_window" id="tickets_action_list">
-  <field name="name">Anytracker - Tickets</field>
-  <field name="res_model">anytracker.ticket</field>
-  <field name="view_mode">tree,form,kanban</field>
-  <field name="view_type">form</field>
-  <field name="view_id" ref="ticket_view_tree"/>
-</record>
-
-<record model="ir.actions.act_window" id="tickets_action_tree">
+<record model="ir.actions.act_window" id="action_general_overview">
   <field name="name">Anytracker - Projects</field>
   <field name="res_model">anytracker.ticket</field>
   <field name="view_type">tree</field>
   <field name="view_id" ref="tickets_hierarchy"/>
   <field name="domain">[('parent_id','=',False)]</field>
+</record>
+
+<record model="ir.actions.act_window" id="tickets_action_form">
+  <field name="name">Anytracker - Ticket</field>
+  <field name="res_model">anytracker.ticket</field>
+  <field name="view_mode">tree,form,kanban</field>
+  <field name="view_type">form</field>
+  <field name="view_id" ref="ticket_view_form"/>
+</record>
+
+<record model="ir.actions.act_window" id="act_all_projects">
+  <field name="name">All projects</field>
+  <field name="res_model">anytracker.ticket</field>
+  <field name="view_mode">tree,form,kanban</field>
+  <field name="view_type">form</field>
+  <field name="view_id" ref="ticket_view_tree"/>
+  <field name="context">{'search_default_filter_projects': 1}</field>
+</record>
+<record model="ir.actions.act_window" id="act_all_nodes">
+  <field name="name">All nodes</field>
+  <field name="res_model">anytracker.ticket</field>
+  <field name="view_mode">tree,form,kanban</field>
+  <field name="view_type">form</field>
+  <field name="view_id" ref="ticket_view_tree"/>
+  <field name="context">{'search_default_filter_nodes': 1}</field>
+</record>
+<record model="ir.actions.act_window" id="act_all_tasks">
+  <field name="name">All tasks</field>
+  <field name="res_model">anytracker.ticket</field>
+  <field name="view_mode">tree,form,kanban</field>
+  <field name="view_type">form</field>
+  <field name="view_id" ref="ticket_view_tree"/>
+  <field name="context">{'search_default_filter_tasks': 1}</field>
 </record>
 
 <!-- MENUITEMS -->
@@ -195,11 +215,11 @@
   sequence="-1"
   web_icon="images/iconbw.png"
   web_icon_hover="images/icon.png" />
-<menuitem id="tickets_menu_tree"
-  name="Tickets hierarchy"
+<menuitem id="menu_general_overview"
+  name="Overview"
   parent="anytracker"
   sequence="0"
-  action="tickets_action_tree" />
+  action="action_general_overview" />
 <menuitem id="projects"
   name="Projects"
   sequence="10"
@@ -208,11 +228,21 @@
   name="Tickets"
   sequence="20"
   parent="anytracker"/>  
-<menuitem id="tickets_menu_list"
-  name="All tickets"
-  parent="tickets"
-  sequence="20"
-  action="tickets_action_list" />  
+    <menuitem id="menu_all_projects"
+      name="All projects"
+      parent="tickets"
+      sequence="10"
+      action="act_all_projects" />
+    <menuitem id="menu_all_nodes"
+      name="All nodes"
+      parent="tickets"
+      sequence="20"
+      action="act_all_nodes" />  
+    <menuitem id="menu_all_tasks"
+      name="All tasks"
+      parent="tickets"
+      sequence="30"
+      action="act_all_tasks" />  
 <menuitem id="configuration"
   name="Configuration"
   sequence="200"

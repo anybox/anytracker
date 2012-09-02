@@ -53,17 +53,6 @@
 </record>
 
 <!-- TICKET -->
-<record id="ticket_view_search_with_complexity" model="ir.ui.view">
-    <field name="name">Ticket</field>
-    <field name="model">anytracker.ticket</field>
-    <field name="inherit_id" ref="ticket_view_search" />
-    <field name="arch" type="xml">
-        <xpath expr="/search//field[@name='id']" position="after">
-            <field name="my_rating"/>
-        </xpath>
-    </field>
-</record>
-
 <record id="ticket_view_form_with_complexity" model="ir.ui.view">
     <field name="name">Ticket</field>
     <field name="model">anytracker.ticket</field>
@@ -72,7 +61,7 @@
         <xpath expr="/form//group[@col='6']" position="after">
             <group col="6" colspan="4">
                 <field name="my_rating" attrs="{'invisible': [('child_ids', '!=', False)]}" groups="anytracker.group_member" options='{"quick_create": false}'/>
-                <button string="Rate subtickets" icon="gtk-execute" type="action" name="%(action_quickrating)d" attrs="{'invisible': [('child_ids', '=', False)]}" groups="anytracker.group_member"/>
+                <button string="Rate subtickets..." icon="gtk-execute" type="action" name="%(action_quickrating)d" attrs="{'invisible': [('child_ids', '=', False)]}" groups="anytracker.group_member"/>
                 <field name="risk" string="Risk level" readonly="1"/>
             </group>
         </xpath>

@@ -29,16 +29,16 @@ class Ticket(osv.osv):
     _inherit = 'anytracker.ticket'
 
     def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
-        """return stage names for the group_by_full directive
+        """return all stage names for the group_by directive, so that the kanban
+        has all columns even if there is no ticket in a stage.
         """
         # XXX improve the filter to handle categories
         stage_osv = self.pool.get('anytracker.stage')
-        project_id = context.get('own_values', None)
+        ticket_pool = self.pool.get('anytracker.ticket')
+        project_id = ticket_pool.browse(cr, uid, context.get('active_id')).project_id
         if not project_id:
             return []
-        project_id = project_id['self']
-        ticket_osv = self.pool.get('anytracker.ticket')
-        method = ticket_osv.browse(cr, uid, project_id, context).method_id
+        method = project_id.method_id
         if not method:
             return []
         stage_ids = stage_osv.search(cr, uid, [('method_id','=',method.id)], context=context)
