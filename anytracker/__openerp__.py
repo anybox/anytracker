@@ -48,8 +48,8 @@
             'method/view.xml',
             'stage/data.xml',
             'stage/view.xml',
-            'complexity/view.xml',
             'complexity/wizard/view.xml',
+            'complexity/view.xml',
         ],
         'active': False,
         'installable': True
