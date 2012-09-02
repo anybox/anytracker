@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<openerp>
+  <data>
+
+<record id="property_rule_tickets_participants" model="ir.rule">
+    <field name="name">Participant tickets</field>
+    <field model="ir.model" name="model_id" ref="model_anytracker_ticket"/>
+    <field name="domain_force">[('project_id.participant_ids', 'in', user.id)]</field>
+</record>
+
+  </data>
+</openerp>

@@ -39,6 +39,7 @@
         'update_xml' : [
             'security/groups.xml',
             'security/ir.model.access.csv',
+            'security/ir_rule.xml',
             'complexity/data.xml',
             'method/data.xml',
             'view.xml',
