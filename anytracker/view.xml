@@ -176,6 +176,7 @@
 <record model="ir.actions.act_window" id="tickets_action_list">
   <field name="name">Anytracker - Tickets</field>
   <field name="res_model">anytracker.ticket</field>
+  <field name="view_mode">tree,form,kanban</field>
   <field name="view_type">form</field>
   <field name="view_id" ref="ticket_view_tree"/>
 </record>
