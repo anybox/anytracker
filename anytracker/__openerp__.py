@@ -37,6 +37,7 @@
         'init_xml' : [],
         'demo_xml' : [],
         'update_xml' : [
+            'security/groups.xml',
             'security/ir.model.access.csv',
             'complexity/data.xml',
             'method/data.xml',

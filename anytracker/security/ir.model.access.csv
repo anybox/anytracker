@@ -1,7 +1,14 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-"acc_anytracker_complexity","Complexity","model_anytracker_complexity","",1,1,1,1
-"acc_anytracker_rating","Ratings","model_anytracker_rating","",1,1,1,1
-"acc_anytracker_stage","Stages","model_anytracker_stage","",1,1,1,1
-"acc_anytracker_history","History","model_anytracker_history","",1,1,1,1
-"acc_anytracker_ticket","Ticket","model_anytracker_ticket","",1,1,1,1
-"acc_anytracker_method","Method","model_anytracker_method","",1,1,1,1
+"acc_anytracker_complexity_customer","Complexity access for customer","model_anytracker_complexity","group_customer",1,0,0,0
+"acc_anytracker_complexity_manager","Complexity access for manager","model_anytracker_complexity","group_manager",1,1,1,1
+"acc_anytracker_rating_customer","Rating access for customer","model_anytracker_rating","group_customer",1,0,0,0
+"acc_anytracker_rating_member","Rating access for member","model_anytracker_rating","group_member",1,0,1,0
+"acc_anytracker_rating_manager","Rating access for manager","model_anytracker_rating","group_manager",1,1,1,1
+"acc_anytracker_stage_customer","Stage access for customer","model_anytracker_stage","group_customer",1,0,0,0
+"acc_anytracker_stage_member","Stage access for member","model_anytracker_stage","group_member",1,0,0,0
+"acc_anytracker_stage_manager","Stage access for manager","model_anytracker_stage","group_manager",1,1,1,1
+"acc_anytracker_history_customer","History access for customer","model_anytracker_history","group_customer",1,0,1,0
+"acc_anytracker_history_manager","History access for manager","model_anytracker_history","group_manager",1,0,1,0
+"acc_anytracker_ticket_access","Ticket access","model_anytracker_ticket","group_customer",1,1,1,1
+"acc_anytracker_method_customer","Method access for customer","model_anytracker_method","group_customer",1,0,0,0
+"acc_anytracker_method_manager","Method access for manager","model_anytracker_method","group_manager",1,1,1,1

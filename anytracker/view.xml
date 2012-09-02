@@ -80,14 +80,16 @@
           <field name="participant_ids"/>
         </page>
 
-        <page string="History">
-          <field name="history_ids" nolabel="1" colspan="4" readonly="1">
+        <page string="History" groups="anytracker.group_manager">
+        <group groups="anytracker.group_manager">
+          <field name="history_ids" nolabel="1" colspan="4" readonly="1" groups="anytracker.group_manager">
             <tree string="History">
-              <field name="create_uid"/>
-              <field name="create_date"/>
-              <field name="modification"/>
+              <field name="create_uid" groups="anytracker.group_manager"/>
+              <field name="create_date" groups="anytracker.group_manager"/>
+              <field name="modification" groups="anytracker.group_manager"/>
             </tree>
           </field>
+        </group>
         </page>
       </notebook>
     </form>
@@ -213,6 +215,7 @@
 <menuitem id="configuration"
   name="Configuration"
   sequence="200"
+  groups="group_manager"
   parent="anytracker"/>
 
 </data> </openerp>

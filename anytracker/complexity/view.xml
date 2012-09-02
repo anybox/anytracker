@@ -143,6 +143,7 @@
 <menuitem id="menu_complexity"
     parent="configuration"
     sequence="20"
+    groups="group_manager"
     action="act_open_complexity_view"/>
 </data>
 </openerp>
