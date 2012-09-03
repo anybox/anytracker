@@ -104,7 +104,9 @@ class Ticket(osv.Model):
         if not active_id:
             return False
         ticket = ticket_pool.browse(cr, uid, active_id)
-        if not ticket.child_ids:
+        if not ticket.parent_id:
+            return active_id
+        elif not ticket.child_ids:
             return ticket.parent_id.id
         else:
             return active_id
