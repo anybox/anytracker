@@ -44,6 +44,7 @@
     <form string="Ticket stage">
         <field name="name" select="1"/>
         <field name="state"/>
+        <field name="progress" string="Progress"/>
         <field name="method_id"/>
         <field name="force_rating"/>
         <field name="sequence"/>
