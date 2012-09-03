@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.1-20120831-231939\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-09-02 21:05+0000\n"
-"PO-Revision-Date: 2012-09-02 21:05+0000\n"
+"POT-Creation-Date: 2012-09-03 13:17+0000\n"
+"PO-Revision-Date: 2012-09-03 13:17+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -164,7 +164,7 @@ msgid "You can either update a tree or insert the mindmap under an existing tick
 msgstr ""
 
 #. module: anytracker
-#: model:ir.ui.menu,name:anytracker.menu_general_overview
+#: model:ir.ui.menu,name:anytracker.menu_overview
 msgid "Overview"
 msgstr ""
 
@@ -206,7 +206,7 @@ msgid "Location"
 msgstr ""
 
 #. module: anytracker
-#: model:ir.actions.act_window,name:anytracker.action_general_overview
+#: model:ir.actions.act_window,name:anytracker.action_overview
 msgid "Anytracker - Projects"
 msgstr ""
 
@@ -231,6 +231,11 @@ msgstr ""
 #. module: anytracker
 #: field:anytracker.ticket,modified_openerp:0
 msgid "Modified OpenERP"
+msgstr ""
+
+#. module: anytracker
+#: model:ir.actions.act_window,help:anytracker.action_overview
+msgid "To create a new ticket, open the tree below and click on the relevant parent ticket, then click on \"Create\""
 msgstr ""
 
 #. module: anytracker
@@ -359,6 +364,11 @@ msgid "My Rating"
 msgstr ""
 
 #. module: anytracker
+#: help:anytracker.ticket,nb_children:0
+msgid "Number of children"
+msgstr ""
+
+#. module: anytracker
 #: model:res.groups,name:anytracker.group_member
 msgid "Member"
 msgstr ""
@@ -428,6 +438,11 @@ msgstr ""
 #. module: anytracker
 #: field:anytracker.ticket,created_mindmap:0
 msgid "Created MindMap"
+msgstr ""
+
+#. module: anytracker
+#: field:anytracker.ticket,nb_children:0
+msgid "# of children"
 msgstr ""
 
 #. module: anytracker

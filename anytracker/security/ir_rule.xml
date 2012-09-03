@@ -5,6 +5,7 @@
     <field name="name">Tickets only for participant</field>
     <field model="ir.model" name="model_id" ref="model_anytracker_ticket"/>
     <field name="domain_force">[('project_id.participant_ids', 'in', user.id)]</field>
+    <field name="groups" eval="[(6, 0, [ref('anytracker.group_customer'), ref('anytracker.group_member')])]"/>
     <field name="perm_create" eval="False"/>
     <field name="perm_write" eval="True"/>
     <field name="perm_read" eval="True"/>

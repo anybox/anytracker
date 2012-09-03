@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-09-02 21:05+0000\n"
+"POT-Creation-Date: 2012-09-03 13:17+0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Christophe Combelles <ccomb@free.fr>\n"
 "Language-Team: \n"
@@ -160,7 +160,7 @@ msgid "You can either update a tree or insert the mindmap under an existing tick
 msgstr "Vous pouvez soit mettre à jour un arbre entier soit insérer le mindmap sous un ticket existant"
 
 #. module: anytracker
-#: model:ir.ui.menu,name:anytracker.menu_general_overview
+#: model:ir.ui.menu,name:anytracker.menu_overview
 msgid "Overview"
 msgstr "Aperçu général"
 
@@ -202,7 +202,7 @@ msgid "Location"
 msgstr "Emplacement"
 
 #. module: anytracker
-#: model:ir.actions.act_window,name:anytracker.action_general_overview
+#: model:ir.actions.act_window,name:anytracker.action_overview
 msgid "Anytracker - Projects"
 msgstr "Anytracker - Projets"
 
@@ -228,6 +228,11 @@ msgstr "Risque"
 #: field:anytracker.ticket,modified_openerp:0
 msgid "Modified OpenERP"
 msgstr ""
+
+#. module: anytracker
+#: model:ir.actions.act_window,help:anytracker.action_overview
+msgid "To create a new ticket, open the tree below and click on the relevant parent ticket, then click on \"Create\""
+msgstr "Pour créer un nouveau ticket, ouvrez l'arbre ci-dessous, cliquez sur le ticket dans lequel vous voulez créer un sous-ticket puis cliquez sur \"Créer\"."
 
 #. module: anytracker
 #: field:anytracker.stage,state:0
@@ -355,6 +360,11 @@ msgid "My Rating"
 msgstr "Mon évaluation"
 
 #. module: anytracker
+#: help:anytracker.ticket,nb_children:0
+msgid "Number of children"
+msgstr "Nombre de sous-tickets"
+
+#. module: anytracker
 #: model:res.groups,name:anytracker.group_member
 msgid "Member"
 msgstr "Membre"
@@ -425,6 +435,11 @@ msgstr "Date"
 #: field:anytracker.ticket,created_mindmap:0
 msgid "Created MindMap"
 msgstr "Mindmap créé"
+
+#. module: anytracker
+#: field:anytracker.ticket,nb_children:0
+msgid "# of children"
+msgstr "Nb sous-tickets"
 
 #. module: anytracker
 #: field:anytracker.stage,forbidden_complexity_ids:0
