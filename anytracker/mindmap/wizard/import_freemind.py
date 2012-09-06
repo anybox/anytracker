@@ -41,8 +41,6 @@ class import_freemind_wizard(osv.TransientModel):
                       content_handler, error_handler)
         return {'type': 'ir.actions.act_window_close'}
 
-import_freemind_wizard()
-
 
 class FreemindContentHandler(sax.ContentHandler):
     '''Handling event of sax xml parser'''
@@ -198,4 +196,3 @@ class FreemindErrorHandler(sax.ErrorHandler):
         raise osv.except_osv(_('Warning !'),
                         exception.args[0])
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

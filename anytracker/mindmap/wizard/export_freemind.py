@@ -36,7 +36,6 @@ class export_freemind_wizard(osv.TransientModel):
             fp.close()
         return {'type': 'ir.actions.act_window_close'}
 
-export_freemind_wizard()
 
 class FreemindParser(object):
     '''Parse openerp project'''
