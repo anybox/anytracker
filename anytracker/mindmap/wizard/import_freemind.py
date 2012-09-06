@@ -13,7 +13,6 @@ class import_freemind_wizard(osv.TransientModel):
     _description = 'Import freemind .mm file into anytracker tree'
     _columns = {
         'ticket_id': fields.many2one('anytracker.ticket', 'Ticket',
-            domain="[('child_ids', '!=', False)]",
             help="Ticket that will be updated"),
         'import_method': fields.selection(
             [('update', 'Update the ticket tree'), ('insert', 'Insert under the ticket')],

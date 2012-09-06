@@ -8,7 +8,7 @@ class export_freemind_wizard(osv.TransientModel):
     _name = 'export.freemind.wizard'
     _description = 'export freemind .mm file for generate by anytracker tree'
     _columns = {
-        'ticket_id': fields.many2one('anytracker.ticket', 'Ticket', domain="[('parent_id', '=', False)]"),
+        'ticket_id': fields.many2one('anytracker.ticket', 'Ticket'),
         'mindmap_file': fields.char('Path of file to write', 256),
         'green_complexity': fields.many2one('anytracker.complexity', 'green complexity'),
         'orange_complexity': fields.many2one('anytracker.complexity', 'orange complexity'),
