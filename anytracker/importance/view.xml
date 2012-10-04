@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="view_anytracker_importance_tree" model="ir.ui.view">
+            <field name="name">anytracker.importance.tree</field>
+            <field name="model">anytracker.importance</field>
+            <field name="type">tree</field>
+            <field name="sequence" eval="8"/>
+            <field name="arch" type="xml">
+                <tree string="Importance by method">
+                    <field name="seq"/>
+                    <field name="name"/>
+                    <field name="method_id"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_anytracker_importance_form" model="ir.ui.view">
+            <field name="name">anytracker.importance.form</field>
+            <field name="model">anytracker.importance</field>
+            <field name="type">form</field>
+            <field name="sequence" eval="8"/>
+            <field name="arch" type="xml">
+                <form string="Importance by method">
+                    <field name="seq"/>
+                    <field name="name"/>
+                    <field name="method_id"/>
+                    <field name="active"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_anytracker_importance_search" model="ir.ui.view">
+            <field name="name">anytracker.importance.search</field>
+            <field name="model">anytracker.importance</field>
+            <field name="type">search</field>
+            <field name="sequence" eval="8"/>
+            <field name="arch" type="xml">
+                <search string="Importance by method">
+                    <field name="seq"/>
+                    <field name="name"/>
+                    <field name="method_id"/>
+                    <filter string="Show active/inactive" name="active" domain="[('active', 'in', (True, False))]"/>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="act_open_anytracker_importance_view">
+            <field name="name">Importance by method</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">anytracker.importance</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_anytracker_importance_search"/>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="act_open_anytracker_importance_view_form">
+            <field name="act_window_id" ref="act_open_anytracker_importance_view"/>
+            <field name="seqence" eval="20"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_anytracker_importance_form"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="act_open_anytracker_importance_view_tree">
+            <field name="act_window_id" ref="act_open_anytracker_importance_view"/>
+            <field name="sequence" eval="10"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_anytracker_importance_tree"/>
+        </record>
+
+        <menuitem id="menu_anytracker_importance"
+            parent="configuration"
+            sequence="30"
+            action="act_open_anytracker_importance_view"/>
+
+        <record id="importance_ticket_view_search" model="ir.ui.view">
+            <field name="name">anytracker.ticket.search add seq</field>
+            <field name="model">anytracker.ticket</field>
+            <field name="inherit_id" ref="anytracker.ticket_view_search"/>
+            <field name="priority" eval="16"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='id']" position="after">
+                    <field name="seq"/>
+                    <field name="importance_id" widget="selection"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="importance_ticket_view_tree" model="ir.ui.view">
+            <field name="name">Tickets</field>
+            <field name="model">anytracker.ticket</field>
+            <field name="type">tree</field>
+            <field name="priority" eval="16"/>
+            <field name="inherit_id" ref="anytracker.ticket_view_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='shortened_description']" position="after">
+                    <field name="importance_id"/>
+                    <field name="seq" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="importance_ticket_view_form" model="ir.ui.view">
+            <field name="name">ticket.form</field>
+            <field name="model">anytracker.ticket</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="anytracker.ticket_view_form"/>
+            <field name="priority" eval="16"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='method_id']" position="after">
+                    <field name="importance_id" domain="[('method_id', '=', method_id)]"/>
+                    <field name="seq"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

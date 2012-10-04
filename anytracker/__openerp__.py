@@ -50,6 +50,7 @@
             'stage/view.xml',
             'complexity/wizard/view.xml',
             'complexity/view.xml',
+            'importance/view.xml',
         ],
         'active': False,
         'installable': True
