@@ -31,7 +31,7 @@ class Ticket(osv.Model):
         return res
 
     _columns = {
-        'importance_id': fields.many2one('anytracker.importance', 'Importance', required=True),
+        'importance_id': fields.many2one('anytracker.importance', 'Importance', required=False),
         'seq': fields.function(_get_importance_seq,
                             method=True,
                             string='Importance (Number)',
