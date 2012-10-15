@@ -68,8 +68,8 @@ class QuickRating(osv.TransientModel):
                 context=context)
             tickets = ticket_pool.browse(cr, uid, ticket_ids, context)
             unrated_ticket_ids = [t.id for t in tickets if not t.my_rating]
-        if unrated_ticket_ids:
-            return str(sorted(unrated_ticket_ids))
+            if unrated_ticket_ids:
+                return str(sorted(unrated_ticket_ids))
         return str(sorted(ticket_ids))
 
     def _default_ticket(self, cr, uid, context=None):
