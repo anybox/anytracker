@@ -141,7 +141,7 @@ class Ticket(osv.Model):
     _columns = {
         'stage_id': fields.many2one('anytracker.stage',
                                     ('Stage'),
-                                    domain="[('method_id','=',method_id)]"),
+                                    domain="[('method_id','=',project_method_id)]"),
         'progress': fields.float('Progress'),
     }
 
