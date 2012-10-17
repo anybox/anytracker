@@ -59,7 +59,7 @@
 
         <record model="ir.actions.act_window.view" id="act_open_anytracker_importance_view_form">
             <field name="act_window_id" ref="act_open_anytracker_importance_view"/>
-            <field name="seqence" eval="20"/>
+            <field name="sequence" eval="20"/>
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_anytracker_importance_form"/>
         </record>
@@ -77,8 +77,9 @@
             action="act_open_anytracker_importance_view"/>
 
         <record id="importance_ticket_view_search" model="ir.ui.view">
-            <field name="name">anytracker.ticket.search add seq</field>
+            <field name="name">anytracker.ticket.search</field>
             <field name="model">anytracker.ticket</field>
+            <field name="type">search</field>
             <field name="inherit_id" ref="anytracker.ticket_view_search"/>
             <field name="priority" eval="16"/>
             <field name="arch" type="xml">
