@@ -52,27 +52,25 @@
     </field>
 </record>
 
-<!-- TICKET -->
+<!-- ADD A TAB IN TICKET FORM -->
 <record id="ticket_view_form_with_complexity" model="ir.ui.view">
     <field name="name">Ticket</field>
     <field name="model">anytracker.ticket</field>
     <field name="inherit_id" ref="ticket_view_form" />
     <field name="arch" type="xml">
-        <xpath expr="/form//group[@col='6']" position="after">
+        <xpath expr="/form/notebook/page[@string='Participants']" position="after">
+            <page string="Ratings" attrs="{'invisible': [('child_ids', '!=', False)]}">
             <group col="6" colspan="4">
                 <field name="my_rating" attrs="{'invisible': [('child_ids', '!=', False)]}" groups="anytracker.group_member" options='{"quick_create": false}'/>
                 <button string="Rate subtickets..." icon="gtk-execute" type="action" name="%(action_quickrating)d" attrs="{'invisible': [('child_ids', '=', False)]}" groups="anytracker.group_member"/>
                 <field name="risk" string="Risk level" readonly="1"/>
             </group>
-        </xpath>
-        <xpath expr="/form//page[@string='Participants']" position="after">
-            <page string="Ratings" attrs="{'invisible': [('child_ids', '!=', False)]}">
               <label>Here are all the ratings made for this ticket:</label>
               <field name="rating_ids" nolabel="1" colspan="4" readonly="1">
                 <tree string="Ratings">
                   <field name="user_id"/>
-                  <field name="time"/>
                   <field name="complexity_id"/>
+                  <field name="time"/>
                 </tree>
               </field>
             </page>

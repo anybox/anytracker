@@ -6,6 +6,7 @@ class Ticket(osv.Model):
 
     _name = 'anytracker.ticket'
     _description = "Anytracker tickets"
+    _rec_name = 'breadcrumb'
 
     def _get_siblings(self, cr, uid, ids, field_name, args, context=None):
         """ get tickets at the same hierachical level
@@ -32,7 +33,7 @@ class Ticket(osv.Model):
         """
         res = {}
         for ticket in self.browse(cr, uid, ids, context):
-            breadcrumb = []
+            breadcrumb = [ticket]
             current_ticket = ticket
             while current_ticket.parent_id:
                 breadcrumb.insert(0, current_ticket.parent_id)
@@ -132,7 +133,7 @@ class Ticket(osv.Model):
         return res
 
     _columns = {
-        'name': fields.char('Name', 255, required=True),
+        'name': fields.char('Title', 255, required=True),
         'description': fields.text('Description', required=False),
         'shortened_description': fields.function(
             _shorten_description,
@@ -156,7 +157,7 @@ class Ticket(osv.Model):
         'child_ids': fields.one2many(
             'anytracker.ticket',
             'parent_id',
-            'Children',
+            'Sub-tickets',
             required=False),
         'nb_children': fields.function(_nb_children,
                             method=True,

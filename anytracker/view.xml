@@ -53,31 +53,22 @@
   <field name="priority" eval="10"/>
   <field name="arch" type="xml">
     <form string="ticket form">
-      <group col="2" colspan="2">
-        <field name="name" select="True"/>
-        <field name="description"/>
-      </group>
-      <group col="2" colspan="2">
-        <group col="6" colspan="2">
-          <field name="project_id"/>
-          <field name="project_method_id" attrs="{'invisible': [('parent_id','=',False)]}"/>
-          <field name="method_id" widget="selection"
-                 attrs="{'invisible' : [('parent_id','!=',False)]}"/>
+        <group col="2" colspan="4">
+            <field name="parent_id" attrs="{'invisible': [('parent_id','=',False)]}"/>
+            <field name="method_id" widget="selection" attrs="{'invisible' : [('parent_id','!=',False)]}"/>
+            <field name="project_method_id" invisible="1"/>
+            <field name="method_id" widget="selection" attrs="{'invisible' : [('parent_id','!=',False)]}"/>
+            <field name="name" select="1"/>
+            <field name="description" colspan="4"/>
         </group>
-      </group>
 
       <notebook colspan="4">
 
-        <page string="Navigation">
-          <group col="2" colspan="2">
-            <field name="breadcrumb"/>
-            <field name="parent_id"/>
-            <field name="child_ids" />
-          </group>
-        </page>
-
         <page string="Participants" attrs="{'invisible': [('parent_id', '!=', False)]}">
           <field name="participant_ids"/>
+        </page>
+        <page string="Sub-tickets">
+          <field name="child_ids" nolabel="1"/>
         </page>
 
         <page string="History" groups="anytracker.group_manager">
@@ -110,7 +101,7 @@
       <field name="child_ids"/>
       <templates>
         <t t-name="ticket_details">
-            <div><i><field name="breadcrumb"/></i> / <b><field name="name"/></b></div>
+            <div><i><b><field name="breadcrumb"/></b></i></div>
             <div><field name="description"/></div>
         </t>
         <t t-name="kanban-box">

@@ -53,13 +53,14 @@
     </field>
 </record>
 
-<!-- TICKET -->
+<!-- ADD A TAB IN TICKET FORM -->
 <record id="view_ticket_form_with_progress" model="ir.ui.view">
     <field name="name">Ticket</field>
     <field name="model">anytracker.ticket</field>
     <field name="inherit_id" ref="ticket_view_form" />
     <field name="arch" type="xml">
-      <xpath expr="/form//group[@col='6']" position="after">
+      <xpath expr="/form/notebook/page[@string='Participants']" position="after">
+        <page string="Progress">
         <group col="7" colspan="2">
           <field name="stage_id" attrs="{'invisible': [('child_ids', '!=', False)]}" groups="anytracker.group_member"/>
           <button name="stage_previous" string=""
@@ -68,6 +69,7 @@
             type="object" icon="gtk-go-forward" attrs="{'invisible': [('child_ids', '!=', False)]}" groups="anytracker.group_member"/>
           <field name="progress" string="Progress" widget="progressbar"/>
         </group>
+        </page>
       </xpath>
     </field>
 </record>

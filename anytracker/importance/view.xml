@@ -104,6 +104,7 @@
             </field>
         </record>
 
+        <!-- ADD A TAB IN TICKET FORM -->
         <record id="importance_ticket_view_form" model="ir.ui.view">
             <field name="name">ticket.form</field>
             <field name="model">anytracker.ticket</field>
@@ -111,9 +112,11 @@
             <field name="inherit_id" ref="anytracker.ticket_view_form"/>
             <field name="priority" eval="16"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='method_id']" position="after">
-                    <field name="importance_id" domain="[('method_id', '=', method_id)]"/>
-                    <field name="seq"/>
+                <xpath expr="/form/notebook/page[@string='Participants']" position="after">
+                    <page string="Importance">
+                        <field name="importance_id" domain="[('method_id', '=', method_id)]"/>
+                        <field name="seq"/>
+                    </page>
                 </xpath>
             </field>
         </record>
