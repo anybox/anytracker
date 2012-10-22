@@ -57,7 +57,6 @@
             <field name="parent_id" attrs="{'invisible': [('parent_id','=',False)]}"/>
             <field name="method_id" widget="selection" attrs="{'invisible' : [('parent_id','!=',False)]}"/>
             <field name="project_method_id" invisible="1"/>
-            <field name="method_id" widget="selection" attrs="{'invisible' : [('parent_id','!=',False)]}"/>
             <field name="name" select="1"/>
             <field name="description" colspan="4"/>
         </group>

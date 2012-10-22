@@ -1,1 +1,0 @@
-import assigned_user

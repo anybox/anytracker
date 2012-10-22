@@ -51,7 +51,7 @@
             'complexity/wizard/view.xml',
             'complexity/view.xml',
             'importance/view.xml',
-            'assigned_user/view.xml',
+            'assignment/view.xml',
              ],
         'active': False,
         'installable': True,

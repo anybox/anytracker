@@ -8,6 +8,6 @@ class Ticket(osv.Model):
 
     _inherit = 'anytracker.ticket'
     _columns = {
-            'assigned_user_id': fields.many2one('res.users',
+            'assigned_id': fields.many2one('res.users',
                  'Assigned to'),
               }
