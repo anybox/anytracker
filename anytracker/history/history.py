@@ -80,8 +80,6 @@ class Ticket(osv.Model):
                 vals += _many2one(k, 'anytracker.ticket', v)
             elif k == 'requester_id':
                 vals += _many2one(k, 'res.users', v)
-            elif k == 'assigned_ids':
-                vals += _all2many(k, 'res.users', v)
             elif k == 'child_ids':
                 vals += _all2many(k, 'anytracker.ticket', v)
             elif k == 'duration':

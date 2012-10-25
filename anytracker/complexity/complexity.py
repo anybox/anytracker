@@ -45,9 +45,9 @@ class Ticket(osv.Model):
         """
         if not context: context = {}
         ar_pool = self.pool.get('anytracker.rating')
-        tickets = {}
+        ratings = {}
         for ticket_id in ids:
-            tickets[ticket_id] = False
+            ratings[ticket_id] = False
             rating_ids = ar_pool.search(cr, uid, 
                             [('user_id', '=', uid),
                              ('ticket_id', '=', ticket_id)],
@@ -59,8 +59,8 @@ class Ticket(osv.Model):
                 my_rating = (rating.complexity_id.id, rating.complexity_id.name)
             else:
                 my_rating = False
-            tickets[ticket_id] = my_rating
-        return tickets
+            ratings[ticket_id] = my_rating
+        return ratings
 
     def _set_my_rating(self, cr, uid, id, name, value, fnct_inv_arg, context):
         """set my rating
