@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+"acc_anytracker_stage_customer","Stage access for customer","model_anytracker_stage","group_customer",1,0,0,0
+"acc_anytracker_stage_member","Stage access for member","model_anytracker_stage","group_member",1,0,0,0
+"acc_anytracker_stage_manager","Stage access for manager","model_anytracker_stage","group_manager",1,1,1,1

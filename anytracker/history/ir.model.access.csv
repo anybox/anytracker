@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+"acc_anytracker_history_customer","History access for customer","model_anytracker_history","group_customer",1,0,1,0
+"acc_anytracker_history_manager","History access for manager","model_anytracker_history","group_manager",1,0,1,0
