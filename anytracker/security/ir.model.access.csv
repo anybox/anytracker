@@ -14,3 +14,6 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 "acc_anytracker_method_manager","Method access for manager","model_anytracker_method","group_manager",1,1,1,1
 "acc_anytracker_importance_customer","Importance access for customer","model_anytracker_importance","group_customer",1,0,0,0
 "acc_anytracker_importance_manager","Importance access for manager","model_anytracker_importance","group_manager",1,1,1,1
+"acc_anytracker_assignment_customer","Assignment access for customer","model_anytracker_assignment","group_customer",1,0,1,0
+"acc_anytracker_assignment_member","Assignment access for member","model_anytracker_assignment","group_customer",1,0,1,0
+"acc_anytracker_assignment_manager","Assignment access for manager","model_anytracker_assignment","group_manager",1,0,1,1
