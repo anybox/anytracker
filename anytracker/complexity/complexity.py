@@ -114,12 +114,8 @@ class Ticket(osv.Model):
                 leaf_ids = self.search(cr, uid, [('id', 'child_of', node_id),
                                                   ('child_ids', '=', False),
                                                   ('id', '!=', node_id)])
-                risks = self.read(cr, uid, leaf_ids, ['risk'])
-                nb_tickets = len(risks)
-                if nb_tickets != 0:
-                    risk, nb_tickets = sum([t['risk'] or 0.0 for t in risks]) / float(nb_tickets), nb_tickets
-                else:
-                    risk, nb_tickets = node.stage_id.risk, 1
+                risks = self.compute_risk(cr, uid, leaf_ids, context)
+                risk = sum([t or 0.0 for t in risks.values()]) / float(len(risks))
                 self.write(cr, uid, node_id, {'risk': risk}, context)
         return True
 

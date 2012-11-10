@@ -155,9 +155,9 @@ class Ticket(osv.Model):
                 progresses = self.read(cr, uid, leaf_ids, ['progress'])
                 nb_tickets = len(progresses)
                 if nb_tickets != 0:
-                    progress, nb_tickets = sum([t['progress'] or 0.0 for t in progresses]) / float(nb_tickets), nb_tickets
+                    progress = sum([t['progress'] or 0.0 for t in progresses]) / float(nb_tickets)
                 else:
-                    progress, nb_tickets = node.stage_id.progress, 1
+                    progress = node.stage_id.progress
                 self.write(cr, uid, node_id, {'progress': progress}, context)
         return True
 
