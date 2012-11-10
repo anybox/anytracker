@@ -144,11 +144,20 @@ class Ticket(osv.Model):
         And recompute sub-nodes as well
         """
         if not context: context = {}
-        for node in self.browse(cr, uid, ids, context):
-            sub_node_ids = self.search(cr, uid, [('id', 'child_of', node.id),
+        for ticket in self.browse(cr, uid, ids, context):
+            if not ticket.child_ids:
+                self.write(cr, uid, ticket.id, {'progress': ticket.stage_id.progress}, context)
+            else:
+                leaf_ids = self.search(cr, uid, [('id', 'child_of', ticket.id),
+                                                 ('child_ids', '=', False),
+                                                 ('id', '!=', ticket.id)])
+                for leaf in self.browse(cr, uid, leaf_ids, context):
+                    leaf.write({'progress': leaf.stage_id.progress})
+
+            sub_node_ids = self.search(cr, uid, [('id', 'child_of', ticket.id),
                                               ('child_ids', '!=', False),
-                                              ('id', '!=', node.id)])
-            for node_id in [node.id] + sub_node_ids:
+                                              ('id', '!=', ticket.id)])
+            for node_id in [ticket.id] + sub_node_ids:
                 leaf_ids = self.search(cr, uid, [('id', 'child_of', node_id),
                                                   ('child_ids', '=', False),
                                                   ('id', '!=', node_id)])
@@ -157,7 +166,7 @@ class Ticket(osv.Model):
                 if nb_tickets != 0:
                     progress = sum([t['progress'] or 0.0 for t in progresses]) / float(nb_tickets)
                 else:
-                    progress = node.stage_id.progress
+                    progress = ticket.stage_id.progress
                 self.write(cr, uid, node_id, {'progress': progress}, context)
         return True
 
