@@ -138,6 +138,25 @@ class Ticket(osv.Model):
         else:
             return False        
 
+
+    def recompute_progress(self, cr, uid, ids, context=None):
+        """recompute the overall progress of the ticket, based on subtickets.
+        """
+        if not context: context = {}
+        for ticket in self.browse(cr, uid, ids, context):
+            child_ids = self.search(cr, uid, [('id', 'child_of', ticket.id),
+                                              ('child_ids', '=', False),
+                                              ('id', '!=', ticket.id)])
+            progresses = self.read(cr, uid, child_ids, ['progress'])
+            nb_tickets = len(progresses)
+            if nb_tickets != 0:
+                progress, nb_tickets = sum([t['progress'] or 0.0 for t in progresses]) / float(nb_tickets), nb_tickets
+            else:
+                progress, nb_tickets = ticket.stage_id.progress, 1
+            self.write(cr, uid, ticket.id, {'progress': progress}, context)
+        return ids
+
+
     _columns = {
         'stage_id': fields.many2one('anytracker.stage',
                                     ('Stage'),

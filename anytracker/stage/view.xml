@@ -61,13 +61,15 @@
     <field name="arch" type="xml">
       <xpath expr="/form/notebook/page[@string='Participants']" position="after">
         <page string="Progress">
-        <group col="7" colspan="2">
+        <group col="9" colspan="2">
           <field name="stage_id" attrs="{'invisible': [('child_ids', '!=', False)]}" groups="anytracker.group_member"/>
           <button name="stage_previous" string=""
                   type="object" icon="gtk-go-back" attrs="{'invisible': [('child_ids', '!=', False)]}" groups="anytracker.group_member"/>
           <button name="stage_next" string=""
             type="object" icon="gtk-go-forward" attrs="{'invisible': [('child_ids', '!=', False)]}" groups="anytracker.group_member"/>
           <field name="progress" string="Progress" widget="progressbar"/>
+          <button name="recompute_progress" string="Recompute progress"
+            type="object" icon="gtk-execute" attrs="{'invisible': [('child_ids', '=', False)]}" groups="anytracker.group_manager"/>
         </group>
         </page>
       </xpath>
