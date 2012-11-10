@@ -142,7 +142,7 @@ class Ticket(osv.Model):
         'stage_id': fields.many2one('anytracker.stage',
                                     ('Stage'),
                                     domain="[('method_id','=',project_method_id)]"),
-        'progress': fields.float('Progress'),
+        'progress': fields.float('Progress', group_operator="avg"),
     }
 
     _group_by_full = {
@@ -151,4 +151,5 @@ class Ticket(osv.Model):
 
     _defaults = {
         'stage_id': _default_stage,
+        'progress': 0.0,
     }

@@ -24,6 +24,12 @@
             domain="[('child_ids','=',False)]"
             icon="terp-check"
             help="Show only leaf tickets. They correspond to tasks"/>
+    <separator orientation="vertical"/>
+    <filter name="group_tasks2"
+            string="By project"
+            context="{'group_by': ['project_id', 'parent_id']}"
+            icon="gtk-indent"
+            help="Group tasks"/>
     <field name="project_id" widget="selection"/>
     <field name="name" select="True"/>
     <field name="description"/>
@@ -41,6 +47,7 @@
     <tree string="Ticket treeview">
       <field name="name"/>
       <field name="project_id"/>
+      <field name="parent_id" invisible="1"/>
       <field name="shortened_description"/>
     </tree>
   </field>

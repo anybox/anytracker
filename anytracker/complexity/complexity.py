@@ -140,7 +140,7 @@ class Ticket(osv.Model):
                                      domain="[('method_id','=',project_method_id)]",
                                      relation='anytracker.complexity',
                                      string="My Rating"),
-        'risk': fields.float('Risk'),
+        'risk': fields.float('Risk', group_operator="avg",),
         'color': fields.function(_get_color, type='integer', relation='anytracker.complexity', string='Color'),
      }
 
