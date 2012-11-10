@@ -157,6 +157,7 @@
     <field name="view_type">form</field>
     <field name="view_mode">kanban,tree,form</field>
     <field name="view_id" ref="tickets_view_kanban"/>
+    <!-- The reload bug on the kanban view comes from the line below -->
     <field name="domain">[('id', 'child_of', active_id)]</field>
     <field name="context">{'search_default_filter_tasks': 1}</field>
 </record>
@@ -168,7 +169,7 @@
 </record>
 
 <!-- ACTIONS -->
-<record model="ir.actions.act_window" id="action_overview">
+<record model="ir.actions.act_window" id="action_kanbans">
   <field name="name">Anytracker - Projects</field>
   <field name="res_model">anytracker.ticket</field>
   <field name="view_type">tree</field>
@@ -188,7 +189,7 @@
 <record model="ir.actions.act_window" id="act_all_projects">
   <field name="name">All projects</field>
   <field name="res_model">anytracker.ticket</field>
-  <field name="view_mode">tree,form,kanban</field>
+  <field name="view_mode">tree,form</field>
   <field name="view_type">form</field>
   <field name="view_id" ref="ticket_view_tree"/>
   <field name="context">{'search_default_filter_projects': 1}</field>
@@ -196,7 +197,7 @@
 <record model="ir.actions.act_window" id="act_all_nodes">
   <field name="name">All nodes</field>
   <field name="res_model">anytracker.ticket</field>
-  <field name="view_mode">tree,form,kanban</field>
+  <field name="view_mode">tree,form</field>
   <field name="view_type">form</field>
   <field name="view_id" ref="ticket_view_tree"/>
   <field name="context">{'search_default_filter_nodes': 1}</field>
@@ -204,7 +205,7 @@
 <record model="ir.actions.act_window" id="act_all_tasks">
   <field name="name">All tasks</field>
   <field name="res_model">anytracker.ticket</field>
-  <field name="view_mode">tree,form,kanban</field>
+  <field name="view_mode">tree,form</field>
   <field name="view_type">form</field>
   <field name="view_id" ref="ticket_view_tree"/>
   <field name="context">{'search_default_filter_tasks': 1}</field>
@@ -216,11 +217,11 @@
   sequence="-1"
   web_icon="images/iconbw.png"
   web_icon_hover="images/icon.png" />
-<menuitem id="menu_overview"
-  name="Overview"
+<menuitem id="menu_kanbans"
+  name="Kanbans"
   parent="anytracker"
   sequence="0"
-  action="action_overview" />
+  action="action_kanbans" />
 <menuitem id="projects"
   name="Projects"
   sequence="10"

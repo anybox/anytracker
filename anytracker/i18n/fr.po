@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-09-03 13:17+0000\n"
+"POT-Creation-Date: 2012-11-10 16:09+0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Christophe Combelles <ccomb@free.fr>\n"
 "Language-Team: \n"
@@ -13,7 +13,6 @@ msgstr ""
 
 #. module: anytracker
 #: model:ir.model,name:anytracker.model_anytracker_history
-#: model:ir.model,name:anytracker.model_anytracker_ticket_history
 msgid "History of ticket"
 msgstr "Historique des tickets"
 
@@ -23,6 +22,21 @@ msgstr "Historique des tickets"
 #: model:ir.ui.menu,name:anytracker.menu_export_freemind_wizard
 msgid "export freemind map"
 msgstr "Export freemind"
+
+#. module: anytracker
+#: field:anytracker.ticket,name:0
+msgid "Title"
+msgstr "Titre"
+
+#. module: anytracker
+#: view:anytracker.ticket:0
+msgid "My tasks"
+msgstr "Mes tâches"
+
+#. module: anytracker
+#: help:anytracker.assignment,date:0
+msgid "Assignment date"
+msgstr "Date d'affectation"
 
 #. module: anytracker
 #: field:anytracker.history,modification:0
@@ -49,24 +63,31 @@ msgid "Short name of the project management method"
 msgstr "Nom court pour la méthode de gestion de projet"
 
 #. module: anytracker
+#: help:anytracker.complexity,description:0
+msgid "Description of this complexity"
+msgstr "Description de la complexité"
+
+#. module: anytracker
 #: field:anytracker.ticket,parent_id:0
 msgid "Parent"
 msgstr "Parent"
 
 #. module: anytracker
-#: model:ir.model,name:anytracker.model_import_freemind_wizard
-msgid "Import freemind .mm file for generate anytracker tree"
-msgstr "Import d'un fichier Freemind .mm pour un arbre Anytracker"
+#: field:anytracker.importance,seq:0
+#: view:anytracker.ticket:0
+#: field:anytracker.ticket,importance_id:0
+msgid "Importance"
+msgstr "Importance"
+
+#. module: anytracker
+#: view:anytracker.assignment:0
+msgid "Assignment"
+msgstr "Affectation"
 
 #. module: anytracker
 #: help:import.freemind.wizard,ticket_id:0
 msgid "Ticket that will be updated"
 msgstr "Ticket qui va être mis à jour"
-
-#. module: anytracker
-#: model:ir.model,name:anytracker.model_anytracker_ticket_stage
-msgid "anytracker.ticket.stage"
-msgstr ""
 
 #. module: anytracker
 #: view:export.freemind.wizard:0
@@ -133,6 +154,11 @@ msgid "name"
 msgstr "nom"
 
 #. module: anytracker
+#: view:anytracker.ticket:0
+msgid "Show only tickets which have sub-tickets. They are used to gather tickets by nodes"
+msgstr "Montrer seulement les noeuds intermédiaires"
+
+#. module: anytracker
 #: view:anytracker.method:0
 #: model:ir.actions.act_window,name:anytracker.act_open_method_view
 #: model:ir.ui.menu,name:anytracker.menu_method
@@ -160,9 +186,11 @@ msgid "You can either update a tree or insert the mindmap under an existing tick
 msgstr "Vous pouvez soit mettre à jour un arbre entier soit insérer le mindmap sous un ticket existant"
 
 #. module: anytracker
-#: model:ir.ui.menu,name:anytracker.menu_overview
-msgid "Overview"
-msgstr "Aperçu général"
+#: view:anytracker.importance:0
+#: model:ir.actions.act_window,name:anytracker.act_open_anytracker_importance_view
+#: model:ir.ui.menu,name:anytracker.menu_anytracker_importance
+msgid "Importance by method"
+msgstr "Importance par méthode"
 
 #. module: anytracker
 #: help:anytracker.stage,progress:0
@@ -202,7 +230,7 @@ msgid "Location"
 msgstr "Emplacement"
 
 #. module: anytracker
-#: model:ir.actions.act_window,name:anytracker.action_overview
+#: model:ir.actions.act_window,name:anytracker.action_kanbans
 msgid "Anytracker - Projects"
 msgstr "Anytracker - Projets"
 
@@ -218,6 +246,12 @@ msgid "Anytracker"
 msgstr "Anytracker"
 
 #. module: anytracker
+#: model:ir.actions.act_window,name:anytracker.action_import_freemind_view
+#: model:ir.ui.menu,name:anytracker.menu_import_freemind_wizard
+msgid "Import freemind data"
+msgstr "Import données Freemind"
+
+#. module: anytracker
 #: field:anytracker.complexity,risk:0
 #: view:anytracker.ticket:0
 #: field:anytracker.ticket,risk:0
@@ -230,7 +264,7 @@ msgid "Modified OpenERP"
 msgstr ""
 
 #. module: anytracker
-#: model:ir.actions.act_window,help:anytracker.action_overview
+#: model:ir.actions.act_window,help:anytracker.action_kanbans
 msgid "To create a new ticket, open the tree below and click on the relevant parent ticket, then click on \"Create\""
 msgstr "Pour créer un nouveau ticket, ouvrez l'arbre ci-dessous, cliquez sur le ticket dans lequel vous voulez créer un sous-ticket puis cliquez sur \"Créer\"."
 
@@ -251,8 +285,6 @@ msgstr "Évaluation rapide"
 
 #. module: anytracker
 #: view:import.freemind.wizard:0
-#: model:ir.actions.act_window,name:anytracker.action_import_freemind_view
-#: model:ir.ui.menu,name:anytracker.menu_import_freemind_wizard
 msgid "Import freemind map"
 msgstr "Import Freemind"
 
@@ -273,6 +305,7 @@ msgid "Projects"
 msgstr "Projets"
 
 #. module: anytracker
+#: field:anytracker.assignment,stage_id:0
 #: field:anytracker.ticket,stage_id:0
 msgid "Stage"
 msgstr "Étape"
@@ -289,15 +322,15 @@ msgid "anytracker.method"
 msgstr ""
 
 #. module: anytracker
-#: model:ir.model,name:anytracker.model_anytracker_ticket_workflow1
-msgid "anytracker.ticket.workflow1"
-msgstr ""
-
-#. module: anytracker
 #: model:ir.actions.act_window,name:anytracker.act_open_stage_view
 #: model:ir.ui.menu,name:anytracker.menu_stage
 msgid "Stages"
 msgstr "Étapes"
+
+#. module: anytracker
+#: model:ir.model,name:anytracker.model_export_freemind_wizard
+msgid "export freemind .mm file for generate by anytracker tree"
+msgstr "Export d'un fichier Freemind .mm pour un arbre Anytracker"
 
 #. module: anytracker
 #: view:anytracker.ticket:0
@@ -305,9 +338,9 @@ msgid "Tasks"
 msgstr "Tâches"
 
 #. module: anytracker
-#: view:anytracker.ticket:0
-msgid "Show only tickets which have sub-tickets. They are used to gather tickets by nodes"
-msgstr "Montrer seulement les noeuds intermédiaires"
+#: field:anytracker.ticket,created_mindmap:0
+msgid "Created MindMap"
+msgstr "Mindmap créé"
 
 #. module: anytracker
 #: model:ir.actions.act_window,name:anytracker.act_all_nodes
@@ -316,10 +349,9 @@ msgid "All nodes"
 msgstr "Tous les noeuds"
 
 #. module: anytracker
-#: view:export.freemind.wizard:0
-#: view:import.freemind.wizard:0
-msgid "complexity level for red flag"
-msgstr "Niveau de complexité pour le drapeau ROUGE"
+#: view:anytracker.ticket:0
+msgid "Show only tickets where I have an assignment"
+msgstr "Montrer seulement les tickets où j'ai une affectation"
 
 #. module: anytracker
 #: field:anytracker.ticket,modified_mindmap:0
@@ -370,9 +402,19 @@ msgid "Member"
 msgstr "Membre"
 
 #. module: anytracker
+#: field:anytracker.ticket,seq:0
+msgid "Importance (Number)"
+msgstr "Importance (nombre)"
+
+#. module: anytracker
 #: view:anytracker.ticket:0
 msgid "Participants"
 msgstr "Participants"
+
+#. module: anytracker
+#: view:anytracker.ticket:0
+msgid "Recompute progress"
+msgstr "Recalculer l'avancement"
 
 #. module: anytracker
 #: selection:anytracker.ticket,duration:0
@@ -394,6 +436,7 @@ msgid "Project method"
 msgstr "Méthode du projet"
 
 #. module: anytracker
+#: field:anytracker.importance,method_id:0
 #: view:anytracker.method:0
 #: field:anytracker.quickrating,method_id:0
 #: field:anytracker.ticket,method_id:0
@@ -416,25 +459,31 @@ msgid "unknown"
 msgstr "inconnu"
 
 #. module: anytracker
+#: model:ir.actions.act_window,name:anytracker.act_open_my_tickets_view
+msgid "My tickets"
+msgstr "Mes tickets"
+
+#. module: anytracker
 #: view:anytracker.stage:0
 msgid "Ticket stages"
 msgstr "Étapes des tickets"
 
 #. module: anytracker
+#: field:anytracker.assignment,user_id:0
 #: field:anytracker.history,create_uid:0
 #: field:anytracker.rating,user_id:0
 msgid "User"
 msgstr "Utilisateur"
 
 #. module: anytracker
-#: field:anytracker.rating,time:0
-msgid "Date"
-msgstr "Date"
+#: view:anytracker.ticket:0
+msgid "By project"
+msgstr "Par projet"
 
 #. module: anytracker
-#: field:anytracker.ticket,created_mindmap:0
-msgid "Created MindMap"
-msgstr "Mindmap créé"
+#: field:anytracker.importance,active:0
+msgid "Active"
+msgstr "Actif"
 
 #. module: anytracker
 #: field:anytracker.ticket,nb_children:0
@@ -447,9 +496,12 @@ msgid "Forbidden complexities"
 msgstr "Complexités interdites"
 
 #. module: anytracker
-#: model:ir.model,name:anytracker.model_export_freemind_wizard
-msgid "export freemind .mm file for generate by anytracker tree"
-msgstr "Export d'un fichier Freemind .mm pour un arbre Anytracker"
+#: view:anytracker.assignment:0
+#: view:anytracker.ticket:0
+#: field:anytracker.ticket,assignment_ids:0
+#: model:ir.model,name:anytracker.model_anytracker_assignment
+msgid "Assignments"
+msgstr "Affectations"
 
 #. module: anytracker
 #: help:anytracker.method,name:0
@@ -457,14 +509,14 @@ msgid "Name of the project management method"
 msgstr "Nom de la méthode de gestion de projet"
 
 #. module: anytracker
-#: help:anytracker.complexity,description:0
-msgid "Description of this complexity"
-msgstr "Description de la complexité"
+#: model:ir.ui.menu,name:anytracker.menu_kanbans
+msgid "Kanbans"
+msgstr "Kanbans"
 
 #. module: anytracker
-#: view:anytracker.ticket:0
-msgid "Navigation"
-msgstr "Navigation"
+#: model:ir.model,name:anytracker.model_import_freemind_wizard
+msgid "Import freemind .mm file for generate anytracker tree"
+msgstr "Import d'un fichier Freemind .mm pour un arbre Anytracker"
 
 #. module: anytracker
 #: view:anytracker.ticket:0
@@ -476,6 +528,12 @@ msgstr "Historique"
 #: view:anytracker.method:0
 msgid "Code"
 msgstr "Code"
+
+#. module: anytracker
+#: view:anytracker.ticket:0
+#: field:anytracker.ticket,child_ids:0
+msgid "Sub-tickets"
+msgstr "Sous-tickets"
 
 #. module: anytracker
 #: field:import.freemind.wizard,import_method:0
@@ -494,9 +552,10 @@ msgid "Close"
 msgstr "Fermer"
 
 #. module: anytracker
-#: field:anytracker.ticket,child_ids:0
-msgid "Children"
-msgstr "Enfants"
+#: view:export.freemind.wizard:0
+#: view:import.freemind.wizard:0
+msgid "complexity level for red flag"
+msgstr "Niveau de complexité pour le drapeau ROUGE"
 
 #. module: anytracker
 #: help:anytracker.stage,forbidden_complexity_ids:0
@@ -554,11 +613,27 @@ msgid "Tickets hierarchy"
 msgstr "Hiérarchie de tickets"
 
 #. module: anytracker
+#: view:anytracker.ticket:0
+msgid "Group tasks"
+msgstr "Grouper les tâches"
+
+#. module: anytracker
+#: help:anytracker.importance,active:0
+msgid "if check, this object is always available"
+msgstr "Si coché, l'objet est toujours disponible"
+
+#. module: anytracker
+#: field:anytracker.importance,name:0
+msgid "Label of the importance"
+msgstr "Label de l'importance"
+
+#. module: anytracker
 #: field:anytracker.ticket,requester_id:0
 msgid "Requester"
 msgstr "Demandeur"
 
 #. module: anytracker
+#: field:anytracker.assignment,ticket_id:0
 #: field:anytracker.quickrating,ticket_id:0
 #: field:anytracker.rating,ticket_id:0
 #: field:export.freemind.wizard,ticket_id:0
@@ -572,6 +647,11 @@ msgid "Customer"
 msgstr "Client"
 
 #. module: anytracker
+#: field:anytracker.ticket,assigned_user_id:0
+msgid "Last assigned user"
+msgstr "Dernier utilisateur affecté"
+
+#. module: anytracker
 #: help:anytracker.complexity,method_id:0
 msgid "Projet method"
 msgstr "Méthode de projet"
@@ -580,8 +660,7 @@ msgstr "Méthode de projet"
 #: field:anytracker.complexity,name:0
 #: field:anytracker.method,code:0
 #: field:anytracker.method,name:0
-#: field:anytracker.quickrating,name:0
-#: field:anytracker.ticket,name:0
+#: field:anytracker.quickrating,breadcrumb:0
 msgid "Name"
 msgstr "Nom"
 
@@ -591,9 +670,19 @@ msgid "export file"
 msgstr "Export fichier"
 
 #. module: anytracker
+#: view:anytracker.ticket:0
+msgid "Recompute risk"
+msgstr "Recalculer le risque"
+
+#. module: anytracker
 #: model:ir.model,name:anytracker.model_anytracker_quickrating
 msgid "anytracker.quickrating"
 msgstr ""
+
+#. module: anytracker
+#: view:anytracker.importance:0
+msgid "Show active/inactive"
+msgstr "Montrer actif/inactif"
 
 #. module: anytracker
 #: view:anytracker.ticket:0
@@ -649,6 +738,12 @@ msgid "Rate subtickets"
 msgstr "Évaluer les sous-tickets"
 
 #. module: anytracker
+#: field:anytracker.assignment,date:0
+#: field:anytracker.rating,time:0
+msgid "Date"
+msgstr "Date"
+
+#. module: anytracker
 #: view:anytracker.ticket:0
 msgid "Risk level"
 msgstr "Niveau de risque"
@@ -677,6 +772,20 @@ msgstr ""
 #: selection:import.freemind.wizard,import_method:0
 msgid "Update the ticket tree"
 msgstr "Mettre à jour un arbre de ticket"
+
+#. module: anytracker
+#: model:ir.model,name:anytracker.model_anytracker_importance
+msgid "Importance of Ticket by methode"
+msgstr "Importances par méthode"
+
+#~ msgid "Overview"
+#~ msgstr "Aperçu général"
+
+#~ msgid "Navigation"
+#~ msgstr "Navigation"
+
+#~ msgid "Children"
+#~ msgstr "Enfants"
 
 #~ msgid "All topics"
 #~ msgstr "Tous les noeuds"
