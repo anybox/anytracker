@@ -101,6 +101,28 @@ class Ticket(osv.Model):
             res[ticket.id] = risk_mean
         return res
 
+    def recompute_risk(self, cr, uid, ids, context=None):
+        """recompute the overall risk of the ticket, based on subtickets.
+        And recompute sub-nodes as well
+        """
+        if not context: context = {}
+        for node in self.browse(cr, uid, ids, context):
+            sub_node_ids = self.search(cr, uid, [('id', 'child_of', node.id),
+                                              ('child_ids', '!=', False),
+                                              ('id', '!=', node.id)])
+            for node_id in [node.id] + sub_node_ids:
+                leaf_ids = self.search(cr, uid, [('id', 'child_of', node_id),
+                                                  ('child_ids', '=', False),
+                                                  ('id', '!=', node_id)])
+                risks = self.read(cr, uid, leaf_ids, ['risk'])
+                nb_tickets = len(risks)
+                if nb_tickets != 0:
+                    risk, nb_tickets = sum([t['risk'] or 0.0 for t in risks]) / float(nb_tickets), nb_tickets
+                else:
+                    risk, nb_tickets = node.stage_id.risk, 1
+                self.write(cr, uid, node_id, {'risk': risk}, context)
+        return True
+
     def write(self, cr, uid, ids, values, context=None):
         """Climb the tree from the ticket to the root
         and recompute the risk of parents

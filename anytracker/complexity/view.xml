@@ -59,12 +59,16 @@
     <field name="inherit_id" ref="ticket_view_form" />
     <field name="arch" type="xml">
         <xpath expr="/form/notebook/page[@string='Participants']" position="after">
-            <page string="Ratings" attrs="{'invisible': [('child_ids', '!=', False)]}">
+            <page string="Ratings">
             <group col="6" colspan="4">
                 <field name="my_rating" attrs="{'invisible': [('child_ids', '!=', False)]}" groups="anytracker.group_member" options='{"quick_create": false}'/>
                 <button string="Rate subtickets..." icon="gtk-execute" type="action" name="%(action_quickrating)d" attrs="{'invisible': [('child_ids', '=', False)]}" groups="anytracker.group_member"/>
                 <field name="risk" string="Risk level" readonly="1"/>
+                <button name="recompute_risk" string="Recompute risk"
+                        type="object" icon="gtk-execute" attrs="{'invisible': [('child_ids', '=', False)]}" groups="anytracker.group_manager"/>
+
             </group>
+            <group col="6" colspan="4" attrs="{'invisible': [('child_ids', '!=', False)]}">
               <label>Here are all the ratings made for this ticket:</label>
               <field name="rating_ids" nolabel="1" colspan="4" readonly="1">
                 <tree string="Ratings">
@@ -73,6 +77,7 @@
                   <field name="time"/>
                 </tree>
               </field>
+            </group>
             </page>
         </xpath>
     </field>
