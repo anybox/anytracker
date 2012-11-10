@@ -97,7 +97,7 @@ class Ticket(osv.Model):
             for rating in relevant_ratings:
                 latest_person_ratings[rating[1]] = rating[2]
             # compute the mean of all latest ratings
-            risk_mean = sum(latest_person_ratings.values())/len(latest_person_ratings) if latest_person_ratings else 100.0
+            risk_mean = sum([r or 100.0 for r in latest_person_ratings.values()])/len(latest_person_ratings) if latest_person_ratings else 100.0
             res[ticket.id] = risk_mean
         return res
 
@@ -106,17 +106,27 @@ class Ticket(osv.Model):
         And recompute sub-nodes as well
         """
         if not context: context = {}
-        for node in self.browse(cr, uid, ids, context):
-            sub_node_ids = self.search(cr, uid, [('id', 'child_of', node.id),
-                                              ('child_ids', '!=', False),
-                                              ('id', '!=', node.id)])
-            for node_id in [node.id] + sub_node_ids:
-                leaf_ids = self.search(cr, uid, [('id', 'child_of', node_id),
+        for ticket in self.browse(cr, uid, ids, context):
+            if not ticket.child_ids:
+                risk = self.compute_risk(cr, uid, ticket.id, context)[ticket.id]
+                self.write(cr, uid, ticket.id, {'risk': risk}, context)
+            else:
+                leaf_ids = self.search(cr, uid, [('id', 'child_of', ticket.id),
                                                   ('child_ids', '=', False),
-                                                  ('id', '!=', node_id)])
-                risks = self.compute_risk(cr, uid, leaf_ids, context)
-                risk = sum([t or 0.0 for t in risks.values()]) / float(len(risks))
-                self.write(cr, uid, node_id, {'risk': risk}, context)
+                                                  ('id', '!=', ticket.id)])
+                self.recompute_risk(cr, uid, leaf_ids, context)
+
+                sub_node_ids = self.search(cr, uid, [('id', 'child_of', ticket.id),
+                                                     ('child_ids', '!=', False),
+                                                     ('id', '!=', ticket.id)])
+                for node_id in [ticket.id] + sub_node_ids:
+                    leaf_ids = self.search(cr, uid, [('id', 'child_of', node_id),
+                                                      ('child_ids', '=', False),
+                                                      ('id', '!=', node_id)])
+                    risks = [i['risk'] for i in self.read(cr, uid, leaf_ids, ['risk'], context)]
+                    print risks
+                    risk = sum([(r is False and 100.0 or r) for r in risks]) / float(len(risks))
+                    self.write(cr, uid, node_id, {'risk': risk}, context)
         return True
 
     def write(self, cr, uid, ids, values, context=None):
