@@ -141,20 +141,25 @@ class Ticket(osv.Model):
 
     def recompute_progress(self, cr, uid, ids, context=None):
         """recompute the overall progress of the ticket, based on subtickets.
+        And recompute sub-nodes as well
         """
         if not context: context = {}
-        for ticket in self.browse(cr, uid, ids, context):
-            child_ids = self.search(cr, uid, [('id', 'child_of', ticket.id),
-                                              ('child_ids', '=', False),
-                                              ('id', '!=', ticket.id)])
-            progresses = self.read(cr, uid, child_ids, ['progress'])
-            nb_tickets = len(progresses)
-            if nb_tickets != 0:
-                progress, nb_tickets = sum([t['progress'] or 0.0 for t in progresses]) / float(nb_tickets), nb_tickets
-            else:
-                progress, nb_tickets = ticket.stage_id.progress, 1
-            self.write(cr, uid, ticket.id, {'progress': progress}, context)
-        return ids
+        for node in self.browse(cr, uid, ids, context):
+            sub_node_ids = self.search(cr, uid, [('id', 'child_of', node.id),
+                                              ('child_ids', '!=', False),
+                                              ('id', '!=', node.id)])
+            for node_id in [node.id] + sub_node_ids:
+                leaf_ids = self.search(cr, uid, [('id', 'child_of', node_id),
+                                                  ('child_ids', '=', False),
+                                                  ('id', '!=', node_id)])
+                progresses = self.read(cr, uid, leaf_ids, ['progress'])
+                nb_tickets = len(progresses)
+                if nb_tickets != 0:
+                    progress, nb_tickets = sum([t['progress'] or 0.0 for t in progresses]) / float(nb_tickets), nb_tickets
+                else:
+                    progress, nb_tickets = node.stage_id.progress, 1
+                self.write(cr, uid, node_id, {'progress': progress}, context)
+        return True
 
 
     _columns = {
