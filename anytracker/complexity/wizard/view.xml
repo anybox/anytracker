@@ -12,7 +12,7 @@
         <field name="ticket_ids" invisible="1"/>
         <field name="ticket_id" invisible="1"/>
         <field name="method_id" invisible="1"/>
-        <field name="name"/>
+        <field name="breadcrumb"/>
         <field name="description"/>
         <field name="my_rating" domain="[('method_id', '=', method_id)]"/>
         <field name="progress" widget="progressbar"/>

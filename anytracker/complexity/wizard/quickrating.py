@@ -78,9 +78,9 @@ class QuickRating(osv.TransientModel):
         ticket_id = eval(self._default_tickets(cr, uid, context))[0]
         return ticket_id
 
-    def _default_name(self, cr, uid, context=None):
+    def _default_breadcrumb(self, cr, uid, context=None):
         ticket_id = eval(self._default_tickets(cr, uid, context))[0]
-        return self.pool.get('anytracker.ticket').browse(cr, uid, ticket_id).name
+        return self.pool.get('anytracker.ticket').browse(cr, uid, ticket_id).breadcrumb
 
     def _default_description(self, cr, uid, context=None):
         ticket_id = eval(self._default_tickets(cr, uid, context))[0]
@@ -97,7 +97,7 @@ class QuickRating(osv.TransientModel):
     _columns = {
         'ticket_id': fields.many2one('anytracker.ticket', 'Ticket'),
         'ticket_ids': fields.text('Tickets to rate'),
-        'name': fields.related('ticket_id', 'name', type='char',
+        'breadcrumb': fields.related('ticket_id', 'breadcrumb', type='char',
                             string='Name', readonly=True),
         'description': fields.related('ticket_id', 'description', type='text',
                             string='Description', readonly=True),
@@ -109,7 +109,7 @@ class QuickRating(osv.TransientModel):
     _defaults = {
         'ticket_ids': _default_tickets,
         'ticket_id': _default_ticket,
-        'name': _default_name,
+        'breadcrumb': _default_breadcrumb,
         'description': _default_description,
         'method_id': _default_method,
         'progress': 0.0,
