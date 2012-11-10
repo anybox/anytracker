@@ -11,7 +11,7 @@ class Complexity(osv.Model):
     """
     _name = 'anytracker.complexity'
     _columns = {
-        'name': fields.char('Name', size=16, required=True),
+        'name': fields.char('Name', size=64, required=True),
         'description': fields.text('Description', help='Description of this complexity'),
         'value': fields.float('Value', required=True),
         'color': fields.integer('Color'),
@@ -102,7 +102,7 @@ class Ticket(osv.Model):
         return res
 
     def recompute_risk(self, cr, uid, ids, context=None):
-        """recompute the overall risk of the ticket, based on subtickets.
+        """recompute the overall risk of the node, based on subtickets.
         And recompute sub-nodes as well
         """
         if not context: context = {}
