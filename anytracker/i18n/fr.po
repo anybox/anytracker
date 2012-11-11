@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-11 20:29+0000\n"
+"POT-Creation-Date: 2012-11-11 23:12+0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Christophe Combelles <ccomb@free.fr>\n"
 "Language-Team: \n"
@@ -22,6 +22,11 @@ msgstr "Historique des tickets"
 #: model:ir.ui.menu,name:anytracker.menu_export_freemind_wizard
 msgid "export freemind map"
 msgstr "Export freemind"
+
+#. module: anytracker
+#: model:ir.actions.act_window,help:anytracker.action_kanbans
+msgid "To create a new ticket, open the tree below and click on the relevant parent ticket, then click on \"Create\""
+msgstr "Pour créer un nouveau ticket, ouvrez l'arbre ci-dessous, cliquez sur le ticket dans lequel vous voulez créer un sous-ticket puis cliquez sur \"Créer\"."
 
 #. module: anytracker
 #: field:anytracker.ticket,name:0
@@ -88,9 +93,9 @@ msgid "1"
 msgstr "1"
 
 #. module: anytracker
-#: help:anytracker.complexity,description:0
-msgid "Description of this complexity"
-msgstr "Description de la complexité"
+#: model:ir.ui.menu,name:anytracker.menu_kanbans
+msgid "Kanbans"
+msgstr "Kanbans"
 
 #. module: anytracker
 #: model:anytracker.complexity,name:anytracker.complexity_scrum_21
@@ -103,6 +108,7 @@ msgid "Parent"
 msgstr "Parent"
 
 #. module: anytracker
+#: model:anytracker.stage,name:anytracker.stage_gtd_action
 #: model:anytracker.stage,name:anytracker.stage_implementation_todo
 msgid "To do"
 msgstr "À faire"
@@ -147,9 +153,9 @@ msgid "Description of the importance"
 msgstr "Description de l'importance"
 
 #. module: anytracker
-#: model:ir.model,name:anytracker.model_anytracker_ticket
-msgid "Tickets for project management"
-msgstr "Tickets pour la gestion de projet"
+#: model:anytracker.complexity,description:anytracker.complexity_gtd_delegate
+msgid "Someone else can do this"
+msgstr "Quelqu'un d'autre peut le faire"
 
 #. module: anytracker
 #: model:anytracker.complexity,name:anytracker.complexity_scrum_8
@@ -174,9 +180,15 @@ msgid "Tickets"
 msgstr "Tickets"
 
 #. module: anytracker
+#: model:anytracker.stage,name:anytracker.stage_gtd_oneday
+msgid "Maybe one day"
+msgstr "Un jour peut-être"
+
+#. module: anytracker
 #: model:ir.model,name:anytracker.model_anytracker_rating
+#, fuzzy
 msgid "anytracker.rating"
-msgstr ""
+msgstr "Anytracker"
 
 #. module: anytracker
 #: selection:import.freemind.wizard,import_method:0
@@ -201,6 +213,7 @@ msgid "Number of children"
 msgstr "Nombre de sous-tickets"
 
 #. module: anytracker
+#: model:anytracker.stage,name:anytracker.stage_gtd_project
 #: field:anytracker.ticket,project_id:0
 msgid "Project"
 msgstr "Projet"
@@ -212,11 +225,21 @@ msgid "Complexity"
 msgstr "Complexité"
 
 #. module: anytracker
+#: model:anytracker.complexity,name:anytracker.complexity_gtd_action
+msgid "I can do it today"
+msgstr "Je peux faire ça aujourd'hui"
+
+#. module: anytracker
 #: view:anytracker.complexity:0
 #: view:anytracker.importance:0
 #: view:anytracker.stage:0
 msgid "Group by method"
 msgstr "Grouper par méthode"
+
+#. module: anytracker
+#: model:anytracker.complexity,name:anytracker.complexity_gtd_delegate
+msgid "I cannot do it"
+msgstr "Je ne sais pas le faire"
 
 #. module: anytracker
 #: field:anytracker.stage,name:0
@@ -279,9 +302,7 @@ msgstr "Je sais que ce problème est complexe"
 
 #. module: anytracker
 #: model:anytracker.complexity,description:anytracker.complexity_implementation_green
-#: model:anytracker.complexity,description:anytracker.complexity_simple_green
 #: model:anytracker.complexity,name:anytracker.complexity_implementation_green
-#: model:anytracker.complexity,name:anytracker.complexity_simple_green
 msgid "Green (less than 0.5 day. I've already done it)"
 msgstr "Vert (moins que 0,5j. Je l'ai déjà fait !)"
 
@@ -311,6 +332,11 @@ msgstr "Montrer seulement les tâches (les tickets feuilles)"
 #: view:anytracker.quickrating:0
 msgid "Next"
 msgstr "Suivant"
+
+#. module: anytracker
+#: model:anytracker.importance,name:anytracker.importance_gtd_wishlist
+msgid "Future wishlist"
+msgstr "Souhait futur"
 
 #. module: anytracker
 #: model:anytracker.complexity,name:anytracker.complexity_maintenance_complex
@@ -360,6 +386,11 @@ msgid "Name"
 msgstr "Nom"
 
 #. module: anytracker
+#: view:anytracker.stage:0
+msgid "Ticket stage"
+msgstr "Étape de ticket"
+
+#. module: anytracker
 #: field:anytracker.complexity,risk:0
 #: view:anytracker.ticket:0
 #: field:anytracker.ticket,risk:0
@@ -377,9 +408,14 @@ msgid "Modified OpenERP"
 msgstr "Modifié OpenERP"
 
 #. module: anytracker
-#: model:ir.actions.act_window,help:anytracker.action_kanbans
-msgid "To create a new ticket, open the tree below and click on the relevant parent ticket, then click on \"Create\""
-msgstr "Pour créer un nouveau ticket, ouvrez l'arbre ci-dessous, cliquez sur le ticket dans lequel vous voulez créer un sous-ticket puis cliquez sur \"Créer\"."
+#: model:anytracker.complexity,description:anytracker.complexity_gtd_schedule
+msgid "Simple task I can schedule"
+msgstr "Simple tâche que je peux planifier"
+
+#. module: anytracker
+#: model:anytracker.complexity,description:anytracker.complexity_gtd_project
+msgid "Complex project that should be split"
+msgstr "Projet complexe qui devrait être découpé"
 
 #. module: anytracker
 #: selection:anytracker.ticket,duration:0
@@ -390,6 +426,11 @@ msgstr "Sera calculé"
 #: model:anytracker.complexity,name:anytracker.complexity_scrum_3
 msgid "3"
 msgstr "3"
+
+#. module: anytracker
+#: model:anytracker.importance,name:anytracker.importance_gtd_notimportant
+msgid "Not important"
+msgstr "Pas important"
 
 #. module: anytracker
 #: view:anytracker.ticket:0
@@ -427,6 +468,16 @@ msgstr "Déployé"
 #: field:anytracker.ticket,stage_id:0
 msgid "Stage"
 msgstr "Étape"
+
+#. module: anytracker
+#: model:anytracker.complexity,name:anytracker.complexity_gtd_schedule
+msgid "I can do it later"
+msgstr "Je peux faire ça plus tard"
+
+#. module: anytracker
+#: model:anytracker.stage,name:anytracker.stage_gtd_classify
+msgid "Classified"
+msgstr "Classé"
 
 #. module: anytracker
 #: model:anytracker.importance,name:anytracker.importance_implementation_should
@@ -468,6 +519,11 @@ msgid "export freemind .mm file for generate by anytracker tree"
 msgstr "Export d'un fichier Freemind .mm pour un arbre Anytracker"
 
 #. module: anytracker
+#: model:anytracker.stage,name:anytracker.stage_gtd_doing
+msgid "In progress"
+msgstr "En cours"
+
+#. module: anytracker
 #: view:anytracker.ticket:0
 msgid "Tasks"
 msgstr "Tâches"
@@ -500,9 +556,7 @@ msgstr "Montrer seulement les tickets où j'ai une affectation"
 
 #. module: anytracker
 #: model:anytracker.complexity,description:anytracker.complexity_implementation_orange
-#: model:anytracker.complexity,description:anytracker.complexity_simple_orange
 #: model:anytracker.complexity,name:anytracker.complexity_implementation_orange
-#: model:anytracker.complexity,name:anytracker.complexity_simple_orange
 msgid "Orange (should be less than 0.5 day but I'm not sure)"
 msgstr "Orange (moins que 0,5j, mais je ne suis pas sûr)"
 
@@ -612,11 +666,6 @@ msgid "Tickets to rate"
 msgstr "Tickets à évaluer"
 
 #. module: anytracker
-#: model:anytracker.importance,name:anytracker.importance_simple_normal
-msgid "Normal"
-msgstr "Normal"
-
-#. module: anytracker
 #: field:anytracker.stage,force_rating:0
 msgid "Force rating"
 msgstr "Forcer l'évaluation"
@@ -666,9 +715,14 @@ msgid "By project"
 msgstr "Par projet"
 
 #. module: anytracker
-#: field:anytracker.importance,active:0
-msgid "Active"
-msgstr "Actif"
+#: model:anytracker.complexity,name:anytracker.complexity_gtd_now
+msgid "2 minutes: I do it now!"
+msgstr "2 minutes : je le fais maintenant !"
+
+#. module: anytracker
+#: model:ir.model,name:anytracker.model_anytracker_ticket
+msgid "Tickets for project management"
+msgstr "Tickets pour la gestion de projet"
 
 #. module: anytracker
 #: field:anytracker.ticket,nb_children:0
@@ -686,22 +740,14 @@ msgid "Acknowledged"
 msgstr "Reconnu"
 
 #. module: anytracker
-#: view:anytracker.stage:0
-msgid "Ticket stage"
-msgstr "Étape de ticket"
+#: model:anytracker.complexity,description:anytracker.complexity_gtd_now
+msgid "Less than 2 min (I do it now!)"
+msgstr "Moins de 2 minutes (je le fais maintenant)"
 
 #. module: anytracker
-#: model:anytracker.importance,name:anytracker.importance_simple_urgent
-msgid "Urgent"
-msgstr "Urgent"
-
-#. module: anytracker
-#: view:anytracker.assignment:0
-#: view:anytracker.ticket:0
-#: field:anytracker.ticket,assignment_ids:0
-#: model:ir.model,name:anytracker.model_anytracker_assignment
-msgid "Assignments"
-msgstr "Affectations"
+#: field:anytracker.importance,active:0
+msgid "Active"
+msgstr "Actif"
 
 #. module: anytracker
 #: help:anytracker.method,name:0
@@ -709,9 +755,14 @@ msgid "Name of the project management method"
 msgstr "Nom de la méthode de gestion de projet"
 
 #. module: anytracker
-#: model:ir.ui.menu,name:anytracker.menu_kanbans
-msgid "Kanbans"
-msgstr "Kanbans"
+#: model:anytracker.complexity,description:anytracker.complexity_gtd_action
+msgid "It's a simple action I can do today"
+msgstr "C'est une action simple que je peux faire aujourd'hui"
+
+#. module: anytracker
+#: help:anytracker.complexity,description:0
+msgid "Description of this complexity"
+msgstr "Description de la complexité"
 
 #. module: anytracker
 #: model:ir.model,name:anytracker.model_import_freemind_wizard
@@ -747,10 +798,21 @@ msgid "Sub-tickets"
 msgstr "Sous-tickets"
 
 #. module: anytracker
+#: field:anytracker.stage,sequence:0
+#: help:anytracker.stage,sequence:0
+msgid "Sequence"
+msgstr "Séquence"
+
+#. module: anytracker
 #: model:anytracker.stage,name:anytracker.stage_implementation_reviewed
 #: model:anytracker.stage,name:anytracker.stage_maintenance_reviewed
 msgid "Reviewed"
 msgstr "Revu"
+
+#. module: anytracker
+#: model:anytracker.stage,name:anytracker.stage_gtd_done
+msgid "Done"
+msgstr "Terminé"
 
 #. module: anytracker
 #: field:import.freemind.wizard,import_method:0
@@ -773,6 +835,11 @@ msgstr "Fermer"
 #: model:anytracker.stage,name:anytracker.stage_maintenance_checked
 msgid "Validated"
 msgstr "Validé"
+
+#. module: anytracker
+#: model:anytracker.complexity,name:anytracker.complexity_gtd_project
+msgid "I can split it"
+msgstr "Je peux découper ça"
 
 #. module: anytracker
 #: view:export.freemind.wizard:0
@@ -847,6 +914,11 @@ msgid "Siblings"
 msgstr "Tickets au même niveau"
 
 #. module: anytracker
+#: model:anytracker.stage,name:anytracker.stage_gtd_trash
+msgid "Trash"
+msgstr "Poubelle"
+
+#. module: anytracker
 #: model:anytracker.complexity,description:anytracker.complexity_maintenance_trivial
 msgid "Trivial bug, I can fix it immediately"
 msgstr "Problème trivial. Je peux le corriger immédiatement"
@@ -886,6 +958,11 @@ msgid "Finished"
 msgstr "Fini"
 
 #. module: anytracker
+#: model:anytracker.importance,name:anytracker.importance_gtd_important
+msgid "Important"
+msgstr "Important"
+
+#. module: anytracker
 #: model:anytracker.complexity,name:anytracker.complexity_scrum_5
 msgid "5"
 msgstr "5"
@@ -908,11 +985,6 @@ msgstr "Demandeur"
 #: field:import.freemind.wizard,ticket_id:0
 msgid "Ticket"
 msgstr "Ticket"
-
-#. module: anytracker
-#: model:anytracker.importance,name:anytracker.importance_simple_wishlist
-msgid "Wishlist"
-msgstr "Souhait"
 
 #. module: anytracker
 #: model:res.groups,name:anytracker.group_customer
@@ -962,9 +1034,7 @@ msgstr "Liste de tickets"
 
 #. module: anytracker
 #: model:anytracker.complexity,description:anytracker.complexity_implementation_red
-#: model:anytracker.complexity,description:anytracker.complexity_simple_red
 #: model:anytracker.complexity,name:anytracker.complexity_implementation_red
-#: model:anytracker.complexity,name:anytracker.complexity_simple_red
 msgid "Red (More than 0.5 day or I don't know)"
 msgstr "Rouge (Je ne sais pas, ou plus que 0,5j)"
 
@@ -994,10 +1064,12 @@ msgid "anytracker.stage"
 msgstr ""
 
 #. module: anytracker
-#: field:anytracker.stage,sequence:0
-#: help:anytracker.stage,sequence:0
-msgid "Sequence"
-msgstr "Séquence"
+#: view:anytracker.assignment:0
+#: view:anytracker.ticket:0
+#: field:anytracker.ticket,assignment_ids:0
+#: model:ir.model,name:anytracker.model_anytracker_assignment
+msgid "Assignments"
+msgstr "Affectations"
 
 #. module: anytracker
 #: field:anytracker.complexity,color:0
@@ -1042,6 +1114,11 @@ msgid "Create Date"
 msgstr "Date de création"
 
 #. module: anytracker
+#: model:anytracker.stage,name:anytracker.stage_gtd_inbox
+msgid "Inbox"
+msgstr "Nouveaux trucs"
+
+#. module: anytracker
 #: field:import.freemind.wizard,mindmap_content:0
 msgid "File"
 msgstr "Fichier"
@@ -1060,6 +1137,42 @@ msgstr "Trivial"
 #: model:ir.model,name:anytracker.model_anytracker_importance
 msgid "Importance of Ticket by methode"
 msgstr "Importances par méthode"
+
+#~ msgid "Something for the long term"
+#~ msgstr "Pour le long terme"
+
+#~ msgid "Complex project"
+#~ msgstr "Projet à découper"
+
+#~ msgid "I Schedule it"
+#~ msgstr "Je le planifie"
+
+#~ msgid "I eliminate"
+#~ msgstr "J'élimine"
+
+#~ msgid "Action I can do"
+#~ msgstr "Action que je peux faire"
+
+#~ msgid "Unuseful crap I decide to trash"
+#~ msgstr "Truc inutile que je décide d'éliminer"
+
+#~ msgid "For someone else"
+#~ msgstr "Pour quelqu'un d'autre"
+
+#~ msgid "Normal"
+#~ msgstr "Normal"
+
+#~ msgid "I just store"
+#~ msgstr "Info que je stocke juste"
+
+#~ msgid "Urgent"
+#~ msgstr "Urgent"
+
+#~ msgid "Far future"
+#~ msgstr "Futur lointain"
+
+#~ msgid "Information I want to keep"
+#~ msgstr "Information que je veux conserver"
 
 #~ msgid "Checked"
 #~ msgstr "Vérifié"

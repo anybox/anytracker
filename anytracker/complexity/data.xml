@@ -85,32 +85,47 @@
             <field name="method_id" ref="method_implementation"/>
         </record>
 
-        <!-- Complexities for simple method -->
-        <record id="complexity_simple_red" model="anytracker.complexity">
-            <field name="name">Red (More than 0.5 day or I don't know)</field>
-            <field name="description">Red (More than 0.5 day or I don't know)</field>
-            <field name="value">3</field>
+        <!-- Complexities for gtd method -->
+        <!-- (There is a confusion between complexity and action) -->
+        <record id="complexity_gtd_project" model="anytracker.complexity">
+            <field name="name">I can split it</field>
+            <field name="description">Complex project that should be split</field>
+            <field name="value">4</field>
             <field name="risk" eval="100.0"/>
             <field name="color">2</field>
-            <field name="method_id" ref="method_simple"/>
+            <field name="method_id" ref="method_gtd"/>
         </record>
-
-        <record id="complexity_simple_orange" model="anytracker.complexity">
-            <field name="name">Orange (should be less than 0.5 day but I'm not sure)</field>
-            <field name="description">Orange (should be less than 0.5 day but I'm not sure)</field>
+        <record id="complexity_gtd_delegate" model="anytracker.complexity">
+            <field name="name">I cannot do it</field>
+            <field name="description">Someone else can do this</field>
+            <field name="value">4</field>
+            <field name="risk" eval="0.0"/>
+            <field name="color">2</field>
+            <field name="method_id" ref="method_gtd"/>
+        </record>
+        <record id="complexity_gtd_action" model="anytracker.complexity">
+            <field name="name">I can do it today</field>
+            <field name="description">It's a simple action I can do today</field>
+            <field name="value">4</field>
+            <field name="risk" eval="50.0"/>
+            <field name="color">2</field>
+            <field name="method_id" ref="method_gtd"/>
+        </record>
+        <record id="complexity_gtd_schedule" model="anytracker.complexity">
+            <field name="name">I can do it later</field>
+            <field name="description">Simple task I can schedule</field>
             <field name="value">2</field>
             <field name="risk" eval="60.0"/>
             <field name="color">3</field>
-            <field name="method_id" ref="method_simple"/>
+            <field name="method_id" ref="method_gtd"/>
         </record>
-
-        <record id="complexity_simple_green" model="anytracker.complexity">
-            <field name="name">Green (less than 0.5 day. I've already done it)</field>
-            <field name="description">Green (less than 0.5 day. I've already done it)</field>
+        <record id="complexity_gtd_now" model="anytracker.complexity">
+            <field name="name">2 minutes: I do it now!</field>
+            <field name="description">Less than 2 min (I do it now!)</field>
             <field name="value">1</field>
-            <field name="risk" eval="20.0"/>
+            <field name="risk" eval="5.0"/>
             <field name="color">4</field>
-            <field name="method_id" ref="method_simple"/>
+            <field name="method_id" ref="method_gtd"/>
         </record>
 
         <!-- Complexities for maintenance -->

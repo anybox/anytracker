@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
   <data>
-    <!-- simple method -->
-    <record model="anytracker.importance" id="importance_simple_normal">
+    <!-- gtd method -->
+    <record model="anytracker.importance" id="importance_gtd_notimportant">
       <field name="active" eval="1"/>
-      <field name="method_id" ref="method_simple"/>
-      <field name="name">Normal</field>
+      <field name="method_id" ref="method_gtd"/>
+      <field name="name">Not important</field>
       <field name="seq" eval="100"/>
     </record>
-    <record model="anytracker.importance" id="importance_simple_urgent">
+    <record model="anytracker.importance" id="importance_gtd_important">
       <field name="active" eval="1"/>
-      <field name="method_id" ref="method_simple"/>
-      <field name="name">Urgent</field>
+      <field name="method_id" ref="method_gtd"/>
+      <field name="name">Important</field>
       <field name="seq" eval="20"/>
     </record>
-    <record model="anytracker.importance" id="importance_simple_wishlist">
+    <record model="anytracker.importance" id="importance_gtd_wishlist">
       <field name="active" eval="1"/>
-      <field name="method_id" ref="method_simple"/>
-      <field name="name">Wishlist</field>
+      <field name="method_id" ref="method_gtd"/>
+      <field name="name">Future wishlist</field>
       <field name="seq" eval="10"/>
     </record>
 
