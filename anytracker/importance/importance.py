@@ -4,9 +4,9 @@ from osv import osv
 from osv import fields
 
 
-class TicketImportance(osv.Model):
+class Importance(osv.Model):
     _name = 'anytracker.importance'
-    _description = 'Importance of Ticket by methode'
+    _description = 'Importance of Ticket by method'
 
     _columns = {
         'name': fields.char('Label of the importance', required=True, size=64),
@@ -16,10 +16,11 @@ class TicketImportance(osv.Model):
     }
 
     _defaults = {
-        'active': lambda *a: True,
+        'active': True,
     }
 
     _order = 'method_id,seq'
+
 
 class Ticket(osv.Model):
     _inherit = 'anytracker.ticket'
@@ -39,6 +40,3 @@ class Ticket(osv.Model):
                             store=True),
     }
 
-    _order = 'method_id,seq'
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

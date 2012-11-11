@@ -7,7 +7,7 @@
             <field name="type">tree</field>
             <field name="sequence" eval="8"/>
             <field name="arch" type="xml">
-                <tree string="Importance by method">
+                <tree string="Importances">
                     <field name="seq"/>
                     <field name="name"/>
                     <field name="method_id"/>
@@ -22,7 +22,7 @@
             <field name="type">form</field>
             <field name="sequence" eval="8"/>
             <field name="arch" type="xml">
-                <form string="Importance by method">
+                <form string="Importance">
                     <field name="seq"/>
                     <field name="name"/>
                     <field name="method_id"/>
@@ -37,7 +37,7 @@
             <field name="type">search</field>
             <field name="sequence" eval="8"/>
             <field name="arch" type="xml">
-                <search string="Importance by method">
+                <search string="Importances">
                     <field name="seq"/>
                     <field name="name"/>
                     <field name="method_id"/>
@@ -47,7 +47,7 @@
         </record>
 
         <record model="ir.actions.act_window" id="act_open_anytracker_importance_view">
-            <field name="name">Importance by method</field>
+            <field name="name">Importances</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">anytracker.importance</field>
             <field name="view_type">form</field>
