@@ -18,8 +18,8 @@
         <field name="progress" widget="progressbar"/>
         <group col="10" colspan="4">
             <button special="cancel"  string="Close" icon='gtk-cancel'/>
-            <button name="previous_ticket" string="Previous" colspan="1" type="object" icon="gtk-go-back"/>
-            <button name="next_ticket" string="Next" colspan="1" type="object" icon="gtk-go-forward"/>
+            <button name="next_ticket" string="Previous" colspan="1" type="object" icon="gtk-go-back" context="{'step': -1}"/>
+            <button name="next_ticket" string="Next" colspan="1" type="object" icon="gtk-go-forward" context="{'step': 1}"/>
         </group>
     </form>
     </field>

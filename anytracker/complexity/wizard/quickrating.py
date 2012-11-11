@@ -7,44 +7,30 @@ class QuickRating(osv.TransientModel):
     """
     _name = 'anytracker.quickrating'
 
-    def previous_ticket(self, cr, uid, ids, context=None):
-        """React to the "Previous" button"""
-        # save rating
-        wizard = self.browse(cr, uid, ids, context)[0]
-        rating_id = wizard.my_rating
-        if rating_id:
-            self.pool.get('anytracker.ticket').write(cr, uid, [wizard.ticket_id.id], {'my_rating': rating_id.id})
-
-        # go to next ticket
-        ticket_vals = self.read(cr, uid, ids, ['ticket_id', 'ticket_ids'])[0]
-        ticket_id, ticket_ids = ticket_vals['ticket_id'][0], eval(ticket_vals['ticket_ids'])
-        position = ticket_ids.index(ticket_id)
-        if position == 0:
-            raise osv.except_osv(_('Nothing before!'),_('You are already on the first ticket.'))
-        position -= 1
-        previous_ticket_id = ticket_ids[position]
-        ticket = self.pool.get('anytracker.ticket').browse(cr, uid, previous_ticket_id)
-        return self.write(cr, uid, ids, {'ticket_id': previous_ticket_id,
-                                  'method_id': ticket.project_id.method_id.id,
-                                  'my_rating': ticket.my_rating.id,
-                                  'progress': 100.0 * (position) / len(ticket_ids)
-                                 }, context)
-
     def next_ticket(self, cr, uid, ids, context=None):
-        """React to the "Next" button"""
-        # save rating
+        """React to the "Next" or "Previous" button
+        """
+        # save ticket data
         wizard = self.browse(cr, uid, ids, context)[0]
+        ticket_data = {
+            'description': wizard.description,
+        }
         rating_id = wizard.my_rating
         if rating_id:
-            self.pool.get('anytracker.ticket').write(cr, uid, [wizard.ticket_id.id], {'my_rating': rating_id.id})
+            ticket_data['my_rating'] = rating_id.id
+        self.pool.get('anytracker.ticket').write(cr, uid,
+            [wizard.ticket_id.id], ticket_data)
 
         # go to next ticket
         ticket_vals = self.read(cr, uid, ids, ['ticket_id', 'ticket_ids'])[0]
         ticket_id, ticket_ids = ticket_vals['ticket_id'][0], eval(ticket_vals['ticket_ids'])
         position = ticket_ids.index(ticket_id)
-        if position == len(ticket_ids) - 1:
+        step = context.get('step')
+        if step < 0 and position == 0:
+            raise osv.except_osv(_('Nothing before!'),_('You are already on the first ticket.'))
+        elif step > 0 and position == len(ticket_ids) - 1:
             return {'type': 'ir.actions.act_window_close'}
-        position += 1
+        position += context.get('step')
         next_ticket_id = ticket_ids[position]
         ticket = self.pool.get('anytracker.ticket').browse(cr, uid, next_ticket_id)
         return self.write(cr, uid, ids, {'ticket_id': next_ticket_id,
@@ -100,7 +86,7 @@ class QuickRating(osv.TransientModel):
         'breadcrumb': fields.related('ticket_id', 'breadcrumb', type='char',
                             string='Name', readonly=True),
         'description': fields.related('ticket_id', 'description', type='text',
-                            string='Description', readonly=True),
+                            string='Description'),
         'method_id': fields.many2one('anytracker.method', 'Method'),
         'my_rating': fields.many2one('anytracker.complexity', 'My rating',),
         'progress': fields.float('Progress'),
