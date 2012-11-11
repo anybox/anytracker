@@ -59,8 +59,8 @@
 
         <!-- Anybox implementation complexities -->
         <record id="complexity_implementation_red" model="anytracker.complexity">
-            <field name="name">red (More than 0.5 day or I don't know)</field>
-            <field name="description">red (More than 0.5 day or I don't know)</field>
+            <field name="name">Red (More than 0.5 day or I don't know)</field>
+            <field name="description">Red (More than 0.5 day or I don't know)</field>
             <field name="value">3</field>
             <field name="risk" eval="100.0"/>
             <field name="color">2</field>
