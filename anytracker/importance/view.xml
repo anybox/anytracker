@@ -25,7 +25,7 @@
                 <form string="Importance">
                     <field name="seq"/>
                     <field name="name"/>
-                    <field name="method_id"/>
+                    <field name="method_id" widget="selection"/>
                     <field name="active"/>
                 </form>
             </field>
@@ -38,7 +38,11 @@
             <field name="sequence" eval="8"/>
             <field name="arch" type="xml">
                 <search string="Importances">
-                    <field name="method_id"/>
+                    <filter name="importances_by_method"
+                        string="By method"
+                        context="{'group_by': 'method_id'}"
+                        icon="gtk-indent"
+                        help="Group by method"/>
                 </search>
             </field>
         </record>
@@ -51,7 +55,7 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_anytracker_importance_search"/>
             <field name="domain">[]</field>
-            <field name="context">{}</field>
+            <field name="context">{'search_default_importances_by_method': 1}</field>
         </record>
 
         <record model="ir.actions.act_window.view" id="act_open_anytracker_importance_view_form">

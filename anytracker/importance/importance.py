@@ -9,7 +9,8 @@ class Importance(osv.Model):
     _description = 'Importance of Ticket by method'
 
     _columns = {
-        'name': fields.char('Label of the importance', required=True, size=64),
+        'name': fields.char('Label of the importance', required=True, size=64, translate=True),
+        'description': fields.text('Description of the importance', translate=True),
         'seq': fields.integer('Importance'),
         'active': fields.boolean('Active', help='if check, this object is always available'),
         'method_id': fields.many2one('anytracker.method', 'Method', required=True),

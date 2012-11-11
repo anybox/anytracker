@@ -9,7 +9,11 @@
     <field name="priority" eval="8"/>
     <field name="arch" type="xml">
     <search string="Complexities">
-        <field name="method_id" widget="selection"/>
+        <filter name="complexities_by_method"
+            string="By method"
+            context="{'group_by': 'method_id'}"
+            icon="gtk-indent"
+            help="Group by method"/>
     </search>
     </field>
 </record>
@@ -115,7 +119,7 @@
     <field name="view_type">form</field>
     <field name="view_mode">tree,form</field>
     <field name="domain">[]</field>
-    <field name="context">{}</field>
+    <field name="context">{'search_default_complexities_by_method': 1}</field>
 </record>
 
 <record model="ir.actions.act_window.view" id="act_open_complexity_view_form">

@@ -10,7 +10,7 @@ class Stage(osv.Model):
     _name = 'anytracker.stage'
     _order = 'sequence'
     _columns = {
-        'name': fields.char('name', size=64, required=True),
+        'name': fields.char('name', size=64, required=True, translate=True),
         'state': fields.char('state', size=64, required=True),
         'method_id': fields.many2one('anytracker.method', 'Project method'),
         'sequence': fields.integer('Sequence', help='Sequence'),

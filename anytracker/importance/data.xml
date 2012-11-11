@@ -1,23 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
   <data>
-    <record model="anytracker.importance" id="importance_normal">
+    <!-- simple method -->
+    <record model="anytracker.importance" id="importance_simple_normal">
       <field name="active" eval="1"/>
       <field name="method_id" ref="method_simple"/>
       <field name="name">Normal</field>
+      <field name="seq" eval="100"/>
     </record>
-    <record model="anytracker.importance" id="importance_urgent">
+    <record model="anytracker.importance" id="importance_simple_urgent">
       <field name="active" eval="1"/>
       <field name="method_id" ref="method_simple"/>
       <field name="name">Urgent</field>
       <field name="seq" eval="20"/>
     </record>
-    <record model="anytracker.importance" id="importance_wishlist">
+    <record model="anytracker.importance" id="importance_simple_wishlist">
       <field name="active" eval="1"/>
       <field name="method_id" ref="method_simple"/>
       <field name="name">Wishlist</field>
+      <field name="seq" eval="10"/>
+    </record>
+
+    <!-- maintenance -->
+    <record model="anytracker.importance" id="importance_maintenance_blocker">
+      <field name="active" eval="1"/>
+      <field name="method_id" ref="method_maintenance"/>
+      <field name="name">Blocker</field>
+      <field name="seq" eval="50"/>
+    </record>
+    <record model="anytracker.importance" id="importance_maintenance_critical">
+      <field name="active" eval="1"/>
+      <field name="method_id" ref="method_maintenance"/>
+      <field name="name">Critical</field>
+      <field name="seq" eval="40"/>
+    </record>
+    <record model="anytracker.importance" id="importance_maintenance_major">
+      <field name="active" eval="1"/>
+      <field name="method_id" ref="method_maintenance"/>
+      <field name="name">Major</field>
+      <field name="seq" eval="40"/>
+    </record>
+    <record model="anytracker.importance" id="importance_maintenance_minor">
+      <field name="active" eval="1"/>
+      <field name="method_id" ref="method_maintenance"/>
+      <field name="name">Minor</field>
       <field name="seq" eval="20"/>
     </record>
+    <record model="anytracker.importance" id="importance_maintenance_detail">
+      <field name="active" eval="1"/>
+      <field name="method_id" ref="method_maintenance"/>
+      <field name="name">Detail</field>
+      <field name="seq" eval="10"/>
+    </record>
+
+    <!-- Scrum -->
+    <record model="anytracker.importance" id="importance_scrum_must">
+      <field name="name">Must have</field>
+      <field name="description">Critical to project success and has to be included in the current delivery timebox in order for it to be a success.</field>
+      <field name="seq" eval="20"/>
+      <field name="active" eval="1"/>
+      <field name="method_id" ref="method_scrum"/>
+    </record>
+    <record model="anytracker.importance" id="importance_scrum_should">
+      <field name="active" eval="1"/>
+      <field name="method_id" ref="method_scrum"/>
+      <field name="name">Should have</field>
+      <field name="description">Important to project success, but not necessary for the next delivery.</field>
+      <field name="seq" eval="20"/>
+    </record>
+    <record model="anytracker.importance" id="importance_scrum_could">
+      <field name="active" eval="1"/>
+      <field name="method_id" ref="method_scrum"/>
+      <field name="name">Could have</field>
+      <field name="description"> Not critical but would be nice to have if it does not cost too much.</field>
+      <field name="seq" eval="20"/>
+    </record>
+    <record model="anytracker.importance" id="importance_scrum_wont">
+      <field name="active" eval="1"/>
+      <field name="method_id" ref="method_scrum"/>
+      <field name="name">Won't have</field>
+      <field name="description">Not planned for this version of the application, but may be reconsidered for later version.</field>
+      <field name="seq" eval="10"/>
+    </record>
+
+    <!-- Implementation -->
+    <record model="anytracker.importance" id="importance_implementation_must">
+      <field name="name">Must have</field>
+      <field name="description">Critical to project success and has to be included in the current delivery timebox in order for it to be a success.</field>
+      <field name="seq" eval="20"/>
+      <field name="active" eval="1"/>
+      <field name="method_id" ref="method_implementation"/>
+    </record>
+    <record model="anytracker.importance" id="importance_implementation_should">
+      <field name="active" eval="1"/>
+      <field name="method_id" ref="method_implementation"/>
+      <field name="name">Should have</field>
+      <field name="description">Important to project success, but not necessary for the next delivery.</field>
+      <field name="seq" eval="20"/>
+    </record>
+    <record model="anytracker.importance" id="importance_implementation_could">
+      <field name="active" eval="1"/>
+      <field name="method_id" ref="method_implementation"/>
+      <field name="name">Could have</field>
+      <field name="description"> Not critical but would be nice to have if it does not cost too much.</field>
+      <field name="seq" eval="20"/>
+    </record>
+    <record model="anytracker.importance" id="importance_implementation_wont">
+      <field name="active" eval="1"/>
+      <field name="method_id" ref="method_implementation"/>
+      <field name="name">Won't have</field>
+      <field name="description">Not planned for this version of the application, but may be reconsidered for later version.</field>
+      <field name="seq" eval="10"/>
+    </record>
+
+    
   </data>
 </openerp>
 

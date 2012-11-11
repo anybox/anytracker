@@ -36,7 +36,7 @@
             <field name="name">Reviewed</field>
             <field name="state">reviewed</field>
             <field name="method_id" ref="method_implementation"/>
-            <field name="sequence">50</field>
+            <field name="sequence">60</field>
             <field name="progress">60.0</field>
         </record>
         <record id="stage_implementation_delivered" model="anytracker.stage">
@@ -47,8 +47,8 @@
             <field name="progress">70.0</field>
         </record>
         <record id="stage_implementation_checked" model="anytracker.stage">
-            <field name="name">Checked</field>
-            <field name="state">checked</field>
+            <field name="name">Validated</field>
+            <field name="state">validated</field>
             <field name="method_id" ref="method_implementation"/>
             <field name="sequence">70</field>
             <field name="progress">90.0</field>
@@ -112,8 +112,8 @@
             <field name="progress">75.0</field>
         </record>
         <record id="stage_maintenance_checked" model="anytracker.stage">
-            <field name="name">Checked</field>
-            <field name="state">checked</field>
+            <field name="name">Validated</field>
+            <field name="state">validated</field>
             <field name="method_id" ref="method_maintenance"/>
             <field name="sequence">70</field>
             <field name="progress">90.0</field>

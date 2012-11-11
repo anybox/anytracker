@@ -25,7 +25,7 @@
             icon="terp-check"
             help="Show only leaf tickets. They correspond to tasks"/>
     <separator orientation="vertical"/>
-    <filter name="group_tasks2"
+    <filter name="tickets_by_project"
             string="By project"
             context="{'group_by': ['project_id', 'parent_id']}"
             icon="gtk-indent"

@@ -11,8 +11,8 @@ class Complexity(osv.Model):
     """
     _name = 'anytracker.complexity'
     _columns = {
-        'name': fields.char('Name', size=64, required=True),
-        'description': fields.text('Description', help='Description of this complexity'),
+        'name': fields.char('Name', size=64, required=True, translate=True),
+        'description': fields.text('Description', help='Description of this complexity', translate=True),
         'value': fields.float('Value', required=True),
         'color': fields.integer('Color'),
         'method_id': fields.many2one('anytracker.method', 'Project method', help='Projet method'),
