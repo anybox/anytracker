@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-10 16:09+0000\n"
+"POT-Creation-Date: 2012-11-11 18:01+0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Christophe Combelles <ccomb@free.fr>\n"
 "Language-Team: \n"
@@ -73,6 +73,7 @@ msgid "Parent"
 msgstr "Parent"
 
 #. module: anytracker
+#: view:anytracker.importance:0
 #: field:anytracker.importance,seq:0
 #: view:anytracker.ticket:0
 #: field:anytracker.ticket,importance_id:0
@@ -186,13 +187,6 @@ msgid "You can either update a tree or insert the mindmap under an existing tick
 msgstr "Vous pouvez soit mettre à jour un arbre entier soit insérer le mindmap sous un ticket existant"
 
 #. module: anytracker
-#: view:anytracker.importance:0
-#: model:ir.actions.act_window,name:anytracker.act_open_anytracker_importance_view
-#: model:ir.ui.menu,name:anytracker.menu_anytracker_importance
-msgid "Importance by method"
-msgstr "Importance par méthode"
-
-#. module: anytracker
 #: help:anytracker.stage,progress:0
 msgid "Progress value of the ticket reaching this stage"
 msgstr "Pourcentage d'avancement pour le ticket atteignant cette étape"
@@ -244,6 +238,13 @@ msgstr "durée"
 #: model:ir.ui.menu,name:anytracker.anytracker
 msgid "Anytracker"
 msgstr "Anytracker"
+
+#. module: anytracker
+#: view:anytracker.importance:0
+#: model:ir.actions.act_window,name:anytracker.act_open_anytracker_importance_view
+#: model:ir.ui.menu,name:anytracker.menu_anytracker_importance
+msgid "Importances"
+msgstr "Importances"
 
 #. module: anytracker
 #: model:ir.actions.act_window,name:anytracker.action_import_freemind_view
@@ -680,11 +681,6 @@ msgid "anytracker.quickrating"
 msgstr ""
 
 #. module: anytracker
-#: view:anytracker.importance:0
-msgid "Show active/inactive"
-msgstr "Montrer actif/inactif"
-
-#. module: anytracker
 #: view:anytracker.ticket:0
 msgid "Ticket treeview"
 msgstr "Liste de tickets"
@@ -777,6 +773,12 @@ msgstr "Mettre à jour un arbre de ticket"
 #: model:ir.model,name:anytracker.model_anytracker_importance
 msgid "Importance of Ticket by methode"
 msgstr "Importances par méthode"
+
+#~ msgid "Importance by method"
+#~ msgstr "Importance par méthode"
+
+#~ msgid "Show active/inactive"
+#~ msgstr "Montrer actif/inactif"
 
 #~ msgid "Overview"
 #~ msgstr "Aperçu général"
