@@ -38,10 +38,7 @@
             <field name="sequence" eval="8"/>
             <field name="arch" type="xml">
                 <search string="Importances">
-                    <field name="seq"/>
-                    <field name="name"/>
                     <field name="method_id"/>
-                    <filter string="Show active/inactive" name="active" domain="[('active', 'in', (True, False))]"/>
                 </search>
             </field>
         </record>

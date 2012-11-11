@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+    <record model="anytracker.importance" id="importance_normal">
+      <field name="active" eval="1"/>
+      <field name="method_id" ref="method_simple"/>
+      <field name="name">Normal</field>
+    </record>
+    <record model="anytracker.importance" id="importance_urgent">
+      <field name="active" eval="1"/>
+      <field name="method_id" ref="method_simple"/>
+      <field name="name">Urgent</field>
+      <field name="seq" eval="20"/>
+    </record>
+    <record model="anytracker.importance" id="importance_wishlist">
+      <field name="active" eval="1"/>
+      <field name="method_id" ref="method_simple"/>
+      <field name="name">Wishlist</field>
+      <field name="seq" eval="20"/>
+    </record>
+  </data>
+</openerp>
+

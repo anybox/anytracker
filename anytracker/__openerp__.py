@@ -54,6 +54,7 @@
             'complexity/wizard/view.xml',
             'complexity/view.xml',
             'complexity/ir.model.access.csv',
+            'importance/data.xml',
             'importance/view.xml',
             'importance/ir.model.access.csv',
             'assignment/view.xml',

@@ -13,5 +13,9 @@
             <field name="code">scrum</field>
             <field name="name">Scrum</field>
         </record>
+        <record id="method_simple" model="anytracker.method">
+            <field name="code">simple</field>
+            <field name="name">Simple</field>
+        </record>
     </data>
 </openerp>
