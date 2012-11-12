@@ -72,11 +72,11 @@
 
       <notebook colspan="4">
 
-        <page string="Participants" attrs="{'invisible': [('parent_id', '!=', False)]}">
-          <field name="participant_ids"/>
-        </page>
         <page string="Sub-tickets">
           <field name="child_ids" nolabel="1"/>
+        </page>
+        <page string="Participants" attrs="{'invisible': [('parent_id', '!=', False)]}">
+          <field name="participant_ids"/>
         </page>
 
         <page string="History" groups="anytracker.group_manager">
