@@ -73,7 +73,7 @@
       <notebook colspan="4">
 
         <page string="Sub-tickets">
-          <field name="child_ids" nolabel="1"/>
+          <field name="child_ids" nolabel="1" context="{'default_parent_id': active_id}"/>
         </page>
         <page string="Participants" attrs="{'invisible': [('parent_id', '!=', False)]}">
           <field name="participant_ids"/>
