@@ -31,6 +31,7 @@
             icon="gtk-indent"
             help="Group tasks"/>
     <field name="project_id" widget="selection"/>
+    <field name="number" select="True"/>
     <field name="name" select="True"/>
     <field name="description"/>
     <field name="id" invisible="1"/>
