@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+<!-- Sequence for ticket numbers -->
+<record id="seq_type_anytracker_ticket" model="ir.sequence.type">
+    <field name="name">Anytracker ticket</field>
+    <field name="code">anytracker.ticket</field>
+</record>
+<record id="seq_anytracker_ticket" model="ir.sequence">
+    <field name="name">Anytracker ticket</field>
+    <field name="code">anytracker.ticket</field>
+</record>
+
+</data>
+</openerp>

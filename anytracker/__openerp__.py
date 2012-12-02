@@ -44,6 +44,7 @@
             'method/data.xml',
             'method/ir.model.access.csv',
             'complexity/data.xml',
+            'data.xml',
             'view.xml',
             'mindmap/wizard/import_freemind.xml',
             'mindmap/wizard/export_freemind.xml',

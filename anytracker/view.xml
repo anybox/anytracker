@@ -45,6 +45,7 @@
   <field name="priority" eval="10"/>
   <field name="arch" type="xml">
     <tree string="Ticket treeview">
+      <field name="number"/>
       <field name="name"/>
       <field name="project_id"/>
       <field name="parent_id" invisible="1"/>
@@ -61,13 +62,16 @@
   <field name="arch" type="xml">
     <form string="ticket form">
         <group col="2" colspan="4">
-            <group col="6" colspan="2">
-                <field name="parent_id"/>
+            <group col="8" colspan="2">
+                <field name="parent_id" colspan="4"/>
                 <field name="method_id" widget="selection" attrs="{'invisible': [('parent_id', '!=', False)]}"/>
                 <field name="project_method_id" readonly="1" attrs="{'invisible': [('parent_id', '=', False)]}"/>
             </group>
-            <field name="name" select="1"/>
-            <field name="description" colspan="4"/>
+            <group col="8" colspan="2">
+                <field name="name" colspan="6" select="1"/>
+                <field name="number" readonly="1"/>
+            </group>
+            <field name="description" colspan="2"/>
         </group>
 
       <notebook colspan="4">
@@ -103,13 +107,14 @@
   <field name="arch" type="xml">
     <kanban default_group_by="stage_id">
       <field name="color"/>
+      <field name="number"/>
       <field name="name"/>
       <field name="description"/>
       <field name="siblings_ids"/>
       <field name="child_ids"/>
       <templates>
         <t t-name="ticket_details">
-            <div><i><b><field name="breadcrumb"/></b></i></div>
+            <div><i><b><field name="breadcrumb"/></b><span> </span>(#<b><field name="number"/></b>)</i></div>
             <div><field name="description"/></div>
         </t>
         <t t-name="kanban-box">
@@ -230,21 +235,21 @@
   name="Tickets"
   sequence="20"
   parent="anytracker"/>  
-    <menuitem id="menu_all_projects"
-      name="All projects"
+    <menuitem id="menu_all_tasks"
+      name="All tasks"
       parent="tickets"
       sequence="10"
-      action="act_all_projects" />
+      action="act_all_tasks" />  
     <menuitem id="menu_all_nodes"
       name="All nodes"
       parent="tickets"
       sequence="20"
       action="act_all_nodes" />  
-    <menuitem id="menu_all_tasks"
-      name="All tasks"
+    <menuitem id="menu_all_projects"
+      name="All projects"
       parent="tickets"
       sequence="30"
-      action="act_all_tasks" />  
+      action="act_all_projects" />
 <menuitem id="configuration"
   name="Configuration"
   sequence="200"
