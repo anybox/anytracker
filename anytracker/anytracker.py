@@ -92,6 +92,9 @@ class Ticket(osv.Model):
     def create(self, cr, uid, values, context=None):
         """write the project_id when writing the parent
         """
+        values.update({
+            'number': self.pool.get('ir.sequence').next_by_code(cr, self._get_admin_id(cr, uid), 'anytracker.ticket'),
+        })
         ticket_id = super(Ticket, self).create(cr, uid, values, context=context)
         # set the project of the ticket
         self._set_project(cr, uid, ticket_id, context)
@@ -135,7 +138,7 @@ class Ticket(osv.Model):
 
     _columns = {
         'name': fields.char('Title', 255, required=True),
-        'number': fields.char('Number', 32),
+        'number': fields.integer('Number'),
         'description': fields.text('Description', required=False),
         'shortened_description': fields.function(
             _shorten_description,
@@ -194,7 +197,6 @@ class Ticket(osv.Model):
         'duration': 0,
         'parent_id': _default_parent_id,
         'project_id': _default_project_id,
-        'number': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').next_by_code(cr, uid, 'anytracker.ticket'),
 
     }
 
