@@ -12,3 +12,4 @@ $BODY$
 ALTER TABLE anytracker_ticket ALTER COLUMN number TYPE integer USING pc_chartoint(number);
 
 select setval('ir_sequence_053', (select max(number)+1 from anytracker_ticket), false);
+update ir_sequence set number_next=(select last_value from ir_sequence_053) where id=53;
