@@ -5,6 +5,9 @@ from osv import fields
 
 
 class Importance(osv.Model):
+    """For a task, importance is the added value for the customer,
+    For an issue, it is the the impact
+    """
     _name = 'anytracker.importance'
     _description = 'Importance of Ticket by method'
 
