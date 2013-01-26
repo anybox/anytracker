@@ -17,6 +17,23 @@ class Ticket(osv.Model):
     """
     _inherit = 'anytracker.ticket'
 
+    def create(self, cr, uid, data, context=None):
+        """Set the same method as the parent while creating the ticket
+        """
+        if 'parent_id' in data:
+            parent_id = data['parent_id']
+            method_id = self.browse(cr, uid, parent_id).method_id.id
+            data['method_id'] = method_id
+        return super(Ticket, self).create(cr, uid, data, context) 
+
+    def write(self, cr, uid, ids, data, context=None):
+        """Forbid to change the method (unexpected results)
+        """
+        if 'method_id' in data:
+            raise osv.except_osv('Error', 'You cannot change the method of a project')
+        return super(Ticket, self).write(cr, uid, ids, data, context)
+
+
     _columns = {
         'method_id': fields.many2one('anytracker.method', 'Method', help='Project method'),
         'project_method_id': fields.related('project_id', 'method_id',
@@ -27,13 +44,3 @@ class Ticket(osv.Model):
             help='Project method'),
         }
     
-    def _get_default_method(self, cr, uid, context):
-        code = context.get('method', 'gtd')
-        method_ids = self.pool.get('anytracker.method').search(cr, uid, [('code','=',code)])
-        if method_ids:
-            return method_ids[0]
-        return False
-
-    _defaults = {
-        'method_id': _get_default_method,
-    }
