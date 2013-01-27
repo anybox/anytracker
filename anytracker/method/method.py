@@ -20,7 +20,7 @@ class Ticket(osv.Model):
     def create(self, cr, uid, data, context=None):
         """Set the same method as the parent while creating the ticket
         """
-        if 'parent_id' in data:
+        if 'parent_id' in data and data['parent_id']:
             parent_id = data['parent_id']
             method_id = self.browse(cr, uid, parent_id).method_id.id
             data['method_id'] = method_id
