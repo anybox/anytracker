@@ -123,13 +123,19 @@
               <table class="oe_kanban_table oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
                 <tr>
                   <td align="left" valign="middle" class="oe_kanban_title" tooltip="ticket_details">
-                    <a type="edit"><field name="name"/></a> 
+                    <field name="name"/>
                   </td>
                 </tr>
               </table>
               <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger at_kanban_box_content">
                 <div>
                   <field name="shortened_description"/>
+                </div>
+                <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
+                    <div class="oe_kanban_left">
+                        <a string="Edit" icon="gtk-edit" type="edit"/>
+                    </div>
+                    <br class="oe_kanban_clear"/>
                 </div>
               </div>
             </div>
