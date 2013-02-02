@@ -2,6 +2,7 @@
 from osv import fields, osv
 from tools.translate import _
 
+
 class Ticket(osv.Model):
 
     _name = 'anytracker.ticket'
@@ -82,7 +83,8 @@ class Ticket(osv.Model):
     def write(self, cr, uid, ids, values, context=None):
         """write the project_id when writing the parent
         """
-        if not hasattr(ids, '__iter__'): ids = [ids]
+        if not hasattr(ids, '__iter__'):
+            ids = [ids]
         res = super(Ticket, self).write(cr, uid, ids, values, context=context)
         for ticket_id in ids:
             # set the project of the ticket
@@ -93,7 +95,8 @@ class Ticket(osv.Model):
         """write the project_id when writing the parent
         """
         values.update({
-            'number': self.pool.get('ir.sequence').next_by_code(cr, self._get_admin_id(cr, uid), 'anytracker.ticket'),
+            'number': self.pool.get('ir.sequence').next_by_code(cr, self._get_admin_id(cr, uid),
+                                                                'anytracker.ticket'),
         })
         ticket_id = super(Ticket, self).create(cr, uid, values, context=context)
         # set the project of the ticket
@@ -146,9 +149,9 @@ class Ticket(osv.Model):
             obj='anytracker.ticket',
             string='Description'),
         'breadcrumb': fields.function(
-            _formatted_breadcrumb, 
-            type='char', 
-            obj='anytracker.ticket', 
+            _formatted_breadcrumb,
+            type='char',
+            obj='anytracker.ticket',
             string='Location'),
         'siblings_ids': fields.function(
             _get_siblings,
@@ -164,17 +167,17 @@ class Ticket(osv.Model):
             'parent_id',
             'Sub-tickets',
             required=False),
-        'nb_children': fields.function(_nb_children,
-                            method=True,
-                            string='# of children',
-                            type='integer',
-                            store=False,
-                            help='Number of children'),
+        'nb_children': fields.function(
+            _nb_children,
+            method=True,
+            string='# of children',
+            type='integer',
+            store=False, help='Number of children'),
         'participant_ids': fields.many2many(
-            'res.users', 
-            'ticket_assignement_rel', 
-            'ticket_id', 
-            'user_id', 
+            'res.users',
+            'ticket_assignement_rel',
+            'ticket_id',
+            'user_id',
             required=False),
         'parent_id': fields.many2one(
             'anytracker.ticket',
@@ -186,7 +189,7 @@ class Ticket(osv.Model):
             'anytracker.ticket',
             'Project',
             ondelete='cascade',
-            domain=[('parent_id','=',False)],
+            domain=[('parent_id', '=', False)],
             readonly=True),
         'requester_id': fields.many2one(
             'res.users',
@@ -200,7 +203,4 @@ class Ticket(osv.Model):
 
     }
 
-    _sql_constraints = [('number_uniq','unique(number)', 'Number must be unique!')]
-
-
-
+    _sql_constraints = [('number_uniq', 'unique(number)', 'Number must be unique!')]

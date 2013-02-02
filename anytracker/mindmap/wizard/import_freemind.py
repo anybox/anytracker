@@ -12,16 +12,29 @@ class import_freemind_wizard(osv.TransientModel):
     _name = 'import.freemind.wizard'
     _description = 'Import freemind .mm file into anytracker tree'
     _columns = {
-        'ticket_id': fields.many2one('anytracker.ticket', 'Ticket',
+        'ticket_id': fields.many2one(
+            'anytracker.ticket', 'Ticket',
             help="Ticket that will be updated"),
         'import_method': fields.selection(
-            [('update', 'Update the ticket tree'), ('insert', 'Insert under the ticket')],
-            'Import method', required=True,
-            help="You can either update a tree or insert the mindmap under an existing ticket"),
+            [('update', 'Update the ticket tree'),
+             ('insert', 'Insert under the ticket')],
+            'Import method',
+            required=True,
+            help="You can either update a tree or insert the mindmap under an existing ticket"
+        ),
         'mindmap_content': fields.binary(_('File'), required=True),
-        'green_complexity': fields.many2one('anytracker.complexity', 'green complexity', required=True),
-        'orange_complexity': fields.many2one('anytracker.complexity', 'orange complexity', required=True),
-        'red_complexity': fields.many2one('anytracker.complexity', 'red complexity', required=True),
+        'green_complexity': fields.many2one(
+            'anytracker.complexity',
+            'green complexity',
+            required=True),
+        'orange_complexity': fields.many2one(
+            'anytracker.complexity',
+            'orange complexity',
+            required=True),
+        'red_complexity': fields.many2one(
+            'anytracker.complexity',
+            'red complexity',
+            required=True),
         'method_id': fields.many2one('anytracker.method', 'Project method', required=True),
     }
     _defaults = {
@@ -60,7 +73,8 @@ class FreemindContentHandler(sax.ContentHandler):
         self.context = self.pool.get('res.users').context_get(cr, uid, uid)
         self.context['import_mindmap'] = True
         stages = wizard.method_id.stage_ids
-        self.initial_stage = sorted(stages, key=lambda x:x and x.sequence)[0].id if stages else False
+        self.initial_stage = sorted(stages,
+                                    key=lambda x: x and x.sequence)[0].id if stages else False
 
     def startElement(self, name, attrs):
         names = attrs.getNames()
@@ -109,7 +123,7 @@ class FreemindContentHandler(sax.ContentHandler):
             elif self.ticket_id:
                 domain.append(('id', '=', self.ticket_id))
             osv_id = ticket_pool.search(self.cr, self.uid, domain,
-                    context=self.context)
+                                        context=self.context)
             if (not osv_id) or (not self.parent_id and not self.ticket_id):
                 osv_id = ticket_pool.create(self.cr, self.uid, vals, context=self.context)
             else:
@@ -142,13 +156,13 @@ class FreemindContentHandler(sax.ContentHandler):
                      'complexity_id': complexity_id,
                      'user_id': self.uid,
                      'time': time.strftime('%Y-%m-%d %H:%M:%S'),
-                    },
+                     },
                     context=self.context)
 
     def characters(self, content):
         content = content.strip()
         if content != '':
-            if self.rich_content_buffer != False:
+            if self.rich_content_buffer is not False:
                 self.rich_content_buffer += ' ' + content
 
     def endElement(self, name):
@@ -160,8 +174,11 @@ class FreemindContentHandler(sax.ContentHandler):
         #if name in ['html', 'head', 'body', 'p']:
         #    self.rich_content_buffer += '</' + name + '>'
         if name == 'richcontent':
-            ticket_pool.write(self.cr, self.uid, self.parent_ids[-1:][0]['osv_id'],
-                {'description': self.rich_content_buffer}, context=self.context)
+            ticket_pool.write(
+                self.cr, self.uid,
+                self.parent_ids[-1:][0]['osv_id'],
+                {'description': self.rich_content_buffer},
+                context=self.context)
             self.rich_content_buffer = False
         if name == 'p':
             self.rich_content_buffer += '\n'
@@ -178,21 +195,21 @@ class FreemindContentHandler(sax.ContentHandler):
         deleted_ticket_ids = ticket_obj.search(self.cr, self.uid, domain, context=self.context)
         ticket_obj.unlink(self.cr, self.uid, deleted_ticket_ids, context=self.context)
 
+
 class FreemindErrorHandler(sax.ErrorHandler):
     '''Handling error event of sax xml parser'''
 
     def error(self, exception):
         "Handle a recoverable error."
         raise osv.except_osv(_('Error !'),
-                        exception.args[0])
+                             exception.args[0])
 
     def fatalError(self, exception):
         "Handle a non-recoverable error."
         raise osv.except_osv(_('Error !'),
-                        exception.args[0])
+                             exception.args[0])
 
     def warning(self, exception):
         "Handle a warning."
         raise osv.except_osv(_('Warning !'),
-                        exception.args[0])
-
+                             exception.args[0])

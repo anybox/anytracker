@@ -2,6 +2,7 @@ from osv import osv
 from osv import fields
 from tools.translate import _
 
+
 class QuickRating(osv.TransientModel):
     """Wizard for quick rating
     """
@@ -18,8 +19,10 @@ class QuickRating(osv.TransientModel):
         rating_id = wizard.my_rating
         if rating_id:
             ticket_data['my_rating'] = rating_id.id
-        self.pool.get('anytracker.ticket').write(cr, uid,
-            [wizard.ticket_id.id], ticket_data)
+        self.pool.get('anytracker.ticket').write(
+            cr, uid,
+            [wizard.ticket_id.id],
+            ticket_data)
 
         # go to next ticket
         ticket_vals = self.read(cr, uid, ids, ['ticket_id', 'ticket_ids'])[0]
@@ -27,17 +30,19 @@ class QuickRating(osv.TransientModel):
         position = ticket_ids.index(ticket_id)
         step = context.get('step')
         if step < 0 and position == 0:
-            raise osv.except_osv(_('Nothing before!'),_('You are already on the first ticket.'))
+            raise osv.except_osv(_('Nothing before!'),
+                                 _('You are already on the first ticket.'))
         elif step > 0 and position == len(ticket_ids) - 1:
             return {'type': 'ir.actions.act_window_close'}
         position += context.get('step')
         next_ticket_id = ticket_ids[position]
         ticket = self.pool.get('anytracker.ticket').browse(cr, uid, next_ticket_id)
-        return self.write(cr, uid, ids, {'ticket_id': next_ticket_id,
-                                  'method_id': ticket.project_id.method_id.id,
-                                  'my_rating': ticket.my_rating.id,
-                                  'progress': 100.0 * (position) / len(ticket_ids)
-                                 }, context)
+        return self.write(cr, uid, ids,
+                          {'ticket_id': next_ticket_id,
+                           'method_id': ticket.project_id.method_id.id,
+                           'my_rating': ticket.my_rating.id,
+                           'progress': 100.0 * (position) / len(ticket_ids)
+                           }, context)
 
     def _default_tickets(self, cr, uid, context=None):
         """select all tickets we will work on
@@ -48,7 +53,8 @@ class QuickRating(osv.TransientModel):
         # if one ticket selected, we take all the children
         if len(ticket_ids) == 1:
             ticket_id = context.get('active_ids')[0]
-            ticket_ids = ticket_pool.search(cr, uid,
+            ticket_ids = ticket_pool.search(
+                cr, uid,
                 [('id', 'child_of', ticket_id),
                  ('child_ids', '=', False)],
                 context=context)
@@ -83,10 +89,17 @@ class QuickRating(osv.TransientModel):
     _columns = {
         'ticket_id': fields.many2one('anytracker.ticket', 'Ticket'),
         'ticket_ids': fields.text('Tickets to rate'),
-        'breadcrumb': fields.related('ticket_id', 'breadcrumb', type='char',
-                            string='Name', readonly=True),
-        'description': fields.related('ticket_id', 'description', type='text',
-                            string='Description'),
+        'breadcrumb': fields.related(
+            'ticket_id',
+            'breadcrumb',
+            type='char',
+            string='Name',
+            readonly=True),
+        'description': fields.related(
+            'ticket_id',
+            'description',
+            type='text',
+            string='Description'),
         'method_id': fields.many2one('anytracker.method', 'Method'),
         'my_rating': fields.many2one('anytracker.complexity', 'My rating',),
         'progress': fields.float('Progress'),
