@@ -60,6 +60,8 @@
             'importance/ir.model.access.csv',
             'assignment/view.xml',
             'assignment/ir.model.access.csv',
+            'comment/view.xml',
+            'comment/ir.model.access.csv',
              ],
         'active': False,
         'installable': True,

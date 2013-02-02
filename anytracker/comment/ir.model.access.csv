@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+"acc_anytracker_comment_customer","Comment access for customer","model_anytracker_comment","group_customer",1,1,1,1
+"acc_anytracker_comment_member","Comment access for member","model_anytracker_comment","group_customer",1,1,1,1
+"acc_anytracker_comment_manager","Comment access for manager","model_anytracker_comment","group_manager",1,1,1,1

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-11 23:12+0000\n"
+"POT-Creation-Date: 2013-02-02 14:20+0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Christophe Combelles <ccomb@free.fr>\n"
 "Language-Team: \n"
@@ -47,6 +47,12 @@ msgstr "En cours"
 #: help:anytracker.assignment,date:0
 msgid "Assignment date"
 msgstr "Date d'affectation"
+
+#. module: anytracker
+#: view:anytracker.ticket:0
+#: field:anytracker.ticket,comment_ids:0
+msgid "Comments"
+msgstr "Commentaires"
 
 #. module: anytracker
 #: help:anytracker.complexity,method_id:0
@@ -186,9 +192,8 @@ msgstr "Un jour peut-être"
 
 #. module: anytracker
 #: model:ir.model,name:anytracker.model_anytracker_rating
-#, fuzzy
 msgid "anytracker.rating"
-msgstr "Anytracker"
+msgstr ""
 
 #. module: anytracker
 #: selection:import.freemind.wizard,import_method:0
@@ -514,9 +519,15 @@ msgid "Stages"
 msgstr "Étapes"
 
 #. module: anytracker
-#: model:ir.model,name:anytracker.model_export_freemind_wizard
-msgid "export freemind .mm file for generate by anytracker tree"
-msgstr "Export d'un fichier Freemind .mm pour un arbre Anytracker"
+#: model:ir.model,name:anytracker.model_anytracker_comment
+msgid "A comment attached to a ticket"
+msgstr "Un commentaire attaché à un ticket"
+
+#. module: anytracker
+#: view:anytracker.comment:0
+#: field:anytracker.comment,text:0
+msgid "Comment"
+msgstr "Commentaire"
 
 #. module: anytracker
 #: model:anytracker.stage,name:anytracker.stage_gtd_doing
@@ -704,6 +715,7 @@ msgstr "Étapes des tickets"
 
 #. module: anytracker
 #: field:anytracker.assignment,user_id:0
+#: field:anytracker.comment,user_id:0
 #: field:anytracker.history,create_uid:0
 #: field:anytracker.rating,user_id:0
 msgid "User"
@@ -755,6 +767,11 @@ msgid "Name of the project management method"
 msgstr "Nom de la méthode de gestion de projet"
 
 #. module: anytracker
+#: model:ir.model,name:anytracker.model_export_freemind_wizard
+msgid "export freemind .mm file for generate by anytracker tree"
+msgstr "Export d'un fichier Freemind .mm pour un arbre Anytracker"
+
+#. module: anytracker
 #: model:anytracker.complexity,description:anytracker.complexity_gtd_action
 msgid "It's a simple action I can do today"
 msgstr "C'est une action simple que je peux faire aujourd'hui"
@@ -802,6 +819,11 @@ msgstr "Sous-tickets"
 #: help:anytracker.stage,sequence:0
 msgid "Sequence"
 msgstr "Séquence"
+
+#. module: anytracker
+#: field:anytracker.ticket,number:0
+msgid "Number"
+msgstr "Numéro"
 
 #. module: anytracker
 #: model:anytracker.stage,name:anytracker.stage_implementation_reviewed
@@ -919,6 +941,11 @@ msgid "Trash"
 msgstr "Poubelle"
 
 #. module: anytracker
+#: sql_constraint:anytracker.ticket:0
+msgid "Number must be unique!"
+msgstr "Le numéro doit être unique !"
+
+#. module: anytracker
 #: model:anytracker.complexity,description:anytracker.complexity_maintenance_trivial
 msgid "Trivial bug, I can fix it immediately"
 msgstr "Problème trivial. Je peux le corriger immédiatement"
@@ -979,6 +1006,7 @@ msgstr "Demandeur"
 
 #. module: anytracker
 #: field:anytracker.assignment,ticket_id:0
+#: field:anytracker.comment,ticket_id:0
 #: field:anytracker.quickrating,ticket_id:0
 #: field:anytracker.rating,ticket_id:0
 #: field:export.freemind.wizard,ticket_id:0
@@ -1011,6 +1039,11 @@ msgstr "Import données Freemind"
 #: view:export.freemind.wizard:0
 msgid "export file"
 msgstr "Export fichier"
+
+#. module: anytracker
+#: view:anytracker.ticket:0
+msgid "Edit"
+msgstr "Modifier"
 
 #. module: anytracker
 #: view:anytracker.ticket:0
@@ -1094,6 +1127,7 @@ msgstr "Évaluer les sous-tickets"
 
 #. module: anytracker
 #: field:anytracker.assignment,date:0
+#: field:anytracker.comment,date:0
 #: field:anytracker.rating,time:0
 msgid "Date"
 msgstr "Date"

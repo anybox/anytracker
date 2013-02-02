@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.1-20121026-233219\n"
+"Project-Id-Version: OpenERP Server 6.1-20130114-003439\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-11 23:12+0000\n"
-"PO-Revision-Date: 2012-11-11 23:12+0000\n"
+"POT-Creation-Date: 2013-02-02 14:20+0000\n"
+"PO-Revision-Date: 2013-02-02 14:20+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -50,6 +50,12 @@ msgstr ""
 #. module: anytracker
 #: help:anytracker.assignment,date:0
 msgid "Assignment date"
+msgstr ""
+
+#. module: anytracker
+#: view:anytracker.ticket:0
+#: field:anytracker.ticket,comment_ids:0
+msgid "Comments"
 msgstr ""
 
 #. module: anytracker
@@ -517,8 +523,14 @@ msgid "Stages"
 msgstr ""
 
 #. module: anytracker
-#: model:ir.model,name:anytracker.model_export_freemind_wizard
-msgid "export freemind .mm file for generate by anytracker tree"
+#: model:ir.model,name:anytracker.model_anytracker_comment
+msgid "A comment attached to a ticket"
+msgstr ""
+
+#. module: anytracker
+#: view:anytracker.comment:0
+#: field:anytracker.comment,text:0
+msgid "Comment"
 msgstr ""
 
 #. module: anytracker
@@ -707,6 +719,7 @@ msgstr ""
 
 #. module: anytracker
 #: field:anytracker.assignment,user_id:0
+#: field:anytracker.comment,user_id:0
 #: field:anytracker.history,create_uid:0
 #: field:anytracker.rating,user_id:0
 msgid "User"
@@ -758,6 +771,11 @@ msgid "Name of the project management method"
 msgstr ""
 
 #. module: anytracker
+#: model:ir.model,name:anytracker.model_export_freemind_wizard
+msgid "export freemind .mm file for generate by anytracker tree"
+msgstr ""
+
+#. module: anytracker
 #: model:anytracker.complexity,description:anytracker.complexity_gtd_action
 msgid "It's a simple action I can do today"
 msgstr ""
@@ -804,6 +822,11 @@ msgstr ""
 #: field:anytracker.stage,sequence:0
 #: help:anytracker.stage,sequence:0
 msgid "Sequence"
+msgstr ""
+
+#. module: anytracker
+#: field:anytracker.ticket,number:0
+msgid "Number"
 msgstr ""
 
 #. module: anytracker
@@ -922,6 +945,11 @@ msgid "Trash"
 msgstr ""
 
 #. module: anytracker
+#: sql_constraint:anytracker.ticket:0
+msgid "Number must be unique!"
+msgstr ""
+
+#. module: anytracker
 #: model:anytracker.complexity,description:anytracker.complexity_maintenance_trivial
 msgid "Trivial bug, I can fix it immediately"
 msgstr ""
@@ -982,6 +1010,7 @@ msgstr ""
 
 #. module: anytracker
 #: field:anytracker.assignment,ticket_id:0
+#: field:anytracker.comment,ticket_id:0
 #: field:anytracker.quickrating,ticket_id:0
 #: field:anytracker.rating,ticket_id:0
 #: field:export.freemind.wizard,ticket_id:0
@@ -1013,6 +1042,11 @@ msgstr ""
 #. module: anytracker
 #: view:export.freemind.wizard:0
 msgid "export file"
+msgstr ""
+
+#. module: anytracker
+#: view:anytracker.ticket:0
+msgid "Edit"
 msgstr ""
 
 #. module: anytracker
@@ -1097,6 +1131,7 @@ msgstr ""
 
 #. module: anytracker
 #: field:anytracker.assignment,date:0
+#: field:anytracker.comment,date:0
 #: field:anytracker.rating,time:0
 msgid "Date"
 msgstr ""
