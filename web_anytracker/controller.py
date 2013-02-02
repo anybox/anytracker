@@ -4,6 +4,7 @@ from openerp.addons.web.common import http
 import werkzeug.utils
 from openerp import pooler, SUPERUSER_ID
 
+
 class UrlDirection(http.Controller):
     _cp_path = '/anytracker'
 
@@ -36,6 +37,7 @@ class UrlDirection(http.Controller):
             ('model', 'anytracker.ticket'),
             ('action_id', str(action_id)),
         ]
+        # FIXME: just below use urllib.urlencode
         url += '&'.join(v[0] + "=" + v[1] for v in val)
         redirect = werkzeug.utils.redirect(url, 302)
         redirect.autocorrect_location_header = False
