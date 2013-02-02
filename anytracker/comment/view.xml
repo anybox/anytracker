@@ -12,8 +12,8 @@
     <field name="arch" type="xml">
     <xpath expr="/form/notebook/page[@string='Sub-tickets']" position="before">
         <page string="Comments" colspan="4" col="2">
-            <field name="comment_ids" context="{'default_ticket_id': active_id}">
-                <tree string="Comments">
+            <field name="comment_ids" context="{'default_ticket_id': active_id}" nolabel="1">
+                <tree>
                     <field name="user_id"/>
                     <field name="text"/>
                 </tree>
