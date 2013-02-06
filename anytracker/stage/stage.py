@@ -12,7 +12,7 @@ class Stage(osv.Model):
     _columns = {
         'name': fields.char('name', size=64, required=True, translate=True),
         'state': fields.char('state', size=64, required=True),
-        'method_id': fields.many2one('anytracker.method', 'Project method'),
+        'method_id': fields.many2one('anytracker.method', 'Project method', required=True),
         'sequence': fields.integer('Sequence', help='Sequence'),
         'force_rating': fields.boolean(
             'Force rating', help='Forbid entering this stage without a rating on the ticket'),
