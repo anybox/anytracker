@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data>
+    <data noupdate="1">
         <!-- fibonacci SCRUM complexities -->
         <record id="complexity_scrum_0" model="anytracker.complexity">
             <field name="name">0</field>
