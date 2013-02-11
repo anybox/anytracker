@@ -160,10 +160,9 @@ class FreemindContentHandler(sax.ContentHandler):
                     context=self.context)
 
     def characters(self, content):
-        content = content.strip()
         if content != '':
             if self.rich_content_buffer is not False:
-                self.rich_content_buffer += ' ' + content
+                self.rich_content_buffer += content
 
     def endElement(self, name):
         ticket_pool = self.pool.get('anytracker.ticket')
