@@ -133,11 +133,9 @@ class FreemindContentHandler(sax.ContentHandler):
             self.updated_ticket_ids.append(osv_id)
         # rich content
         if name == 'richcontent':
-            self.rich_content_buffer = ''
-        #if name in ['html', 'head', 'body', 'p']:
-            #self.rich_content_buffer += '<' + name + '>'
+            self.rich_content_buffer = ['']
         if name == 'br':
-            self.rich_content_buffer += '\n'
+            self.rich_content_buffer[-1] += '\n'
         # icon
         if name == 'icon':
             icon = attrs.getValue('BUILTIN')
@@ -158,29 +156,32 @@ class FreemindContentHandler(sax.ContentHandler):
                      'time': time.strftime('%Y-%m-%d %H:%M:%S'),
                      },
                     context=self.context)
+        if self.rich_content_buffer:
+            self.rich_content_buffer[-1] = self.rich_content_buffer[-1].strip()
+            self.rich_content_buffer.append('')
 
     def characters(self, content):
-        if content != '':
-            if self.rich_content_buffer is not False:
-                self.rich_content_buffer += content
+        if self.rich_content_buffer and content.strip != '':
+            self.rich_content_buffer[-1] += content.replace('\n', ' ')
 
     def endElement(self, name):
         ticket_pool = self.pool.get('anytracker.ticket')
+        if self.rich_content_buffer:
+            self.rich_content_buffer[-1] = self.rich_content_buffer[-1].strip()
+        if name == 'p':
+            self.rich_content_buffer.append('\n')
         if name in ['node']:
             if len(self.parent_ids) != 0:
                 self.parent_ids.pop()
-        # rich content
-        #if name in ['html', 'head', 'body', 'p']:
-        #    self.rich_content_buffer += '</' + name + '>'
         if name == 'richcontent':
             ticket_pool.write(
                 self.cr, self.uid,
                 self.parent_ids[-1:][0]['osv_id'],
-                {'description': self.rich_content_buffer},
+                {'description': ''.join(self.rich_content_buffer)},
                 context=self.context)
             self.rich_content_buffer = False
-        if name == 'p':
-            self.rich_content_buffer += '\n'
+        if self.rich_content_buffer:
+            self.rich_content_buffer.append('')
 
     def endDocument(self):
         ticket_obj = self.pool.get('anytracker.ticket')
