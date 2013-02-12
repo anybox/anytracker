@@ -110,12 +110,13 @@
       <field name="number"/>
       <field name="name"/>
       <field name="description"/>
+      <field name="kanban_description"/>
       <field name="siblings_ids"/>
       <field name="child_ids"/>
       <templates>
         <t t-name="ticket_details">
             <div><i><b><field name="breadcrumb"/></b><span> </span>(#<b><field name="number"/></b>)</i></div>
-            <div><field name="description"/></div>
+            <div><t t-raw="record.kanban_description.raw_value"/></div>
         </t>
         <t t-name="kanban-box">
           <div t-attf-class="#{kanban_color(record.color.raw_value)} #{border || ''}">
@@ -129,7 +130,7 @@
               </table>
               <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger at_kanban_box_content">
                 <div>
-                  <field name="shortened_description"/>
+                  <t t-raw="record.kanban_description.raw_value"/>
                 </div>
                 <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
                     <div class="oe_kanban_left">
@@ -236,21 +237,21 @@
 <menuitem id="projects"
   name="Projects"
   sequence="10"
-  parent="anytracker"/>  
+  parent="anytracker"/>
 <menuitem id="tickets"
   name="Tickets"
   sequence="20"
-  parent="anytracker"/>  
+  parent="anytracker"/>
     <menuitem id="menu_all_tasks"
       name="All tasks"
       parent="tickets"
       sequence="10"
-      action="act_all_tasks" />  
+      action="act_all_tasks" />
     <menuitem id="menu_all_nodes"
       name="All nodes"
       parent="tickets"
       sequence="20"
-      action="act_all_nodes" />  
+      action="act_all_nodes" />
     <menuitem id="menu_all_projects"
       name="All projects"
       parent="tickets"

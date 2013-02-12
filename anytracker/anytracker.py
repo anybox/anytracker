@@ -23,11 +23,31 @@ class Ticket(osv.Model):
         return res
 
     def _shorten_description(self, cr, uid, ids, field_name, args, context=None):
+        """shortened description
+        """
+        res = {}
+        for ticket in self.browse(cr, uid, ids, context):
+            if not ticket.description:
+                res[ticket.id] = False
+                continue
+            res[ticket.id] = ticket.description[:200]
+            if len(ticket.description) > 200:
+                res[ticket.id] += ' (...)'
+        return res
+
+    def _kanban_description(self, cr, uid, ids, field_name, args, context=None):
         """shortened description for the kanban
         """
         res = {}
         for ticket in self.browse(cr, uid, ids, context):
-            res[ticket.id] = ticket.description and ticket.description[:250] + '...' or False
+            if not ticket.description:
+                res[ticket.id] = False
+                continue
+            all_lines = ticket.description.splitlines()
+            few_lines = all_lines[:5]
+            if len(few_lines) < len(all_lines):
+                few_lines.append('(...)')
+            res[ticket.id] = '<br/>'.join(few_lines)
         return res
 
     def _breadcrumb(self, cr, uid, ids, context=None):
@@ -145,6 +165,11 @@ class Ticket(osv.Model):
         'description': fields.text('Description', required=False),
         'shortened_description': fields.function(
             _shorten_description,
+            type='text',
+            obj='anytracker.ticket',
+            string='Description'),
+        'kanban_description': fields.function(
+            _kanban_description,
             type='text',
             obj='anytracker.ticket',
             string='Description'),
