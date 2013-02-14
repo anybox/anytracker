@@ -32,6 +32,7 @@
             help="Group tasks"/>
     <field name="parent_id" widget="dynatree_selection"
            operator="child_of"
+           options='{"child_field": "child_ids"}'
            string="Nodes"/>
     <field name="number" select="True"/>
     <field name="name" select="True"/>
