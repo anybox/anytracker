@@ -32,6 +32,7 @@
     'category': 'Project Management',
     'depends': [
         'base',
+        'web_dynatree'
     ],
     'description': 'Hierarchical task manager',
     'init_xml': [],

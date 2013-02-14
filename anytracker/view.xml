@@ -30,7 +30,9 @@
             context="{'group_by': ['project_id', 'parent_id']}"
             icon="gtk-indent"
             help="Group tasks"/>
-    <field name="project_id" widget="selection"/>
+    <field name="parent_id" widget="dynatree_selection"
+           operator="child_of"
+           string="Nodes"/>
     <field name="number" select="True"/>
     <field name="name" select="True"/>
     <field name="description"/>
