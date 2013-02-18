@@ -36,7 +36,23 @@
         'base',
         'web_dynatree'
     ],
-    'description': 'Hierarchical task manager',
+    'description': '''Project management application, which provides:
+
+- Hierarchical ticket management
+- Freemind import/export
+- Hierarchical Risk management
+- Hierarchical progress management
+- Complexity management
+- Importance management
+- Simple commenting
+- Assignment
+- Kanban view
+- Modification history tracking
+
+Anytracker depends on a specific hierarchical search widget : web_dynatree,
+which is available at https://bitbucket.org/anybox/web_dynatree
+
+''',
     'init_xml': [],
     'demo_xml': [],
     'update_xml': [
