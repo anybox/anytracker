@@ -27,7 +27,7 @@
 ##############################################################################
 
 {
-    'name': 'anytracker',
+    'name': 'Anytracker',
     'version': '0.1',
     'author': 'Anybox',
     'website': 'http://anybox.fr',
