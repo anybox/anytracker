@@ -228,6 +228,11 @@ class Ticket(osv.Model):
         'requester_id': fields.many2one(
             'res.users',
             'Requester'),
+        #'active': fields.boolean(
+        #    'Active',
+        #    help=("If the active field is set to False, "
+        #          "it will allow you to hide the ticket without removing it.")),
+
     }
 
     _defaults = {
