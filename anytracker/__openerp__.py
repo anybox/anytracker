@@ -66,9 +66,12 @@
         'comment/view.xml',
         'comment/ir.model.access.csv',
     ],
+    "js": ["static/*/*.js", "static/*/js/*.js"],
+    "css": ["static/*/css/*.css"],
     'active': False,
     'installable': True,
     'application': True,
+    'web_preload': True,
 
 }
 
