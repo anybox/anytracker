@@ -73,8 +73,7 @@ class Ticket(osv.Model):
         req = ('select distinct a.ticket_id, a.date '
                'from anytracker_assignment a, anytracker_ticket t '
                'where a.user_id%s%s and a.stage_id = t.stage_id order by a.date desc')
-        assert(len(domain) == 1)  # handle just this case
-        assert(len(domain[0]) == 3)  # handle just this case
+        assert(len(domain) == 1 and len(domain[0]) == 3)  # handle just this case
         cr.execute(req % (domain[0][1], domain[0][2]))
         res = cr.fetchall()
         return [('id', 'in', [a[0] for a in res])]

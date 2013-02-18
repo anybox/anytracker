@@ -159,6 +159,14 @@ class Ticket(osv.Model):
             res[i] = nb_children
         return res
 
+    def _search_breadcrumb(self, cr, uid, obj, field, domain, context=None):
+        """Use the 'name' in the search function for the parent,
+        instead of 'breadcrum' which is implcitly used because of the _rec_name
+        """
+        assert(len(domain) == 1 and len(domain[0]) == 3)  # handle just this case
+        (f, o, v) = domain[0]
+        return [('name', o, v)]
+
     _columns = {
         'name': fields.char('Title', 255, required=True),
         'number': fields.integer('Number'),
@@ -175,6 +183,7 @@ class Ticket(osv.Model):
             string='Description'),
         'breadcrumb': fields.function(
             _formatted_breadcrumb,
+            fnct_search=_search_breadcrumb,
             type='char',
             obj='anytracker.ticket',
             string='Location'),
