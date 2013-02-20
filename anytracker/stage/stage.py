@@ -150,7 +150,6 @@ class Ticket(osv.Model):
         return super(Ticket, self).write(cr, uid, ids, values, context=context)
 
     def _default_stage(self, cr, uid, context):
-        import pdb; pdb.set_trace()
         project_id = context.get('default_project_id')
         if project_id:
             ticket_pool = self.pool.get('anytracker.ticket')
