@@ -84,6 +84,7 @@ which is available at https://bitbucket.org/anybox/web_dynatree
         'comment/ir.model.access.csv',
         'notify/view.xml',
         'notify/data.xml',
+        'notify/ir.model.access.csv',
     ],
     "js": ["static/*/*.js", "static/*/js/*.js"],
     "css": ["static/*/css/*.css"],
