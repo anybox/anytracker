@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data>
+    <data noupdate="1">
         <!--Email template for ticket in initial stage -->
         <record id="email_template_ticket_new" model="email.template">
             <field name="name">Anytracker ticket new</field>
