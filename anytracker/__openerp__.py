@@ -34,7 +34,8 @@
     'category': 'Project Management',
     'depends': [
         'base',
-        'web_dynatree'
+        'web_dynatree',
+        'email_template',
     ],
     'description': '''Project management application, which provides:
 
@@ -81,6 +82,8 @@ which is available at https://bitbucket.org/anybox/web_dynatree
         'assignment/ir.model.access.csv',
         'comment/view.xml',
         'comment/ir.model.access.csv',
+        'notify/view.xml',
+        'notify/data.xml',
     ],
     "js": ["static/*/*.js", "static/*/js/*.js"],
     "css": ["static/*/css/*.css"],

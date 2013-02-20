@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+<!-- Add a fieldset the stage form -->
+<record id="view_stage_form_with_notif" model="ir.ui.view">
+    <field name="name">Stage</field>
+    <field name="model">anytracker.stage</field>
+    <field name="inherit_id" ref="view_stage_form" />
+    <field name="arch" type="xml">
+      <field name="forbidden_complexity_ids" position="after">
+        <group>
+          <field name="notify"/>
+          <field name="notify_urgent"/>
+          <field name="notify_sms" readonly="1"/>
+          <field name="notify_template_id"/>
+        </group>
+      </field>
+    </field>
+</record>
+
+<!-- Add a column in stage tree -->
+<record id="view_stage_tree_with_notif" model="ir.ui.view">
+    <field name="name">Stage</field>
+    <field name="model">anytracker.stage</field>
+    <field name="inherit_id" ref="view_stage_tree" />
+    <field name="arch" type="xml">
+      <field name="force_rating" position="after">
+        <field name="notify"/>
+      </field>
+    </field>
+</record>
+
+</data>
+</openerp>
+
