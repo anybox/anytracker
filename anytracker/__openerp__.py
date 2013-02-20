@@ -44,7 +44,7 @@
 - Email notification
 - Hierarchical Risk management
 - Hierarchical progress management
-- Complexity management
+- Complexity/evaluation management
 - Importance management
 - Simple commenting
 - Assignment
