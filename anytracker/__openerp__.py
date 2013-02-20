@@ -41,6 +41,7 @@
 
 - Hierarchical ticket management
 - Freemind import/export
+- Email notification
 - Hierarchical Risk management
 - Hierarchical progress management
 - Complexity management
@@ -48,7 +49,7 @@
 - Simple commenting
 - Assignment
 - Kanban view
-- Modification history tracking
+- Modifications history tracking
 
 Anytracker depends on a specific hierarchical search widget : web_dynatree,
 which is available at https://bitbucket.org/anybox/web_dynatree
