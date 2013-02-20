@@ -9,16 +9,16 @@ class Stage(osv.Model):
     _inherit = 'anytracker.stage'
     _columns = {
         'notify': fields.boolean(
-            'Enable notification to project members',
+            u'Notify project members',
             help=u"Notify project members when a ticket enter this stage"),
         'notify_template_id': fields.many2one(
             'email.template',
-            'Email template'),
+            u'Email template'),
         'notify_urgent': fields.boolean(
-            'Urgent notification',
+            u'Urgent notification',
             help=u"Immediate notification (don't wait for email scheduler"),
         'notify_sms': fields.boolean(
-            'SMS notification',
+            u'SMS notification',
             help=u"NOT YET IMPLEMENTED (Enable SMS notification)"),
     }
 
@@ -36,8 +36,8 @@ class Ticket(osv.Model):
             return False
         if not ticket.stage_id.notify_template_id:
             raise osv.except_osv(
-                _('Warning !'),
-                _('No email template selected in the "%s" "%s" stage of the "%s" method'
+                _(u'Warning !'),
+                _(u'No email template selected in the "%s" "%s" stage of the "%s" method'
                   % (ticket.stage_id.name, ticket.method_id.name)))
         return True
 
@@ -54,6 +54,7 @@ class Ticket(osv.Model):
             ticket.id,
             force_send=ticket.stage_id.notify_urgent,
             context=context)
+        return res
 
     def write(self, cr, uid, ids, values, context=None):
         """ Notify on write

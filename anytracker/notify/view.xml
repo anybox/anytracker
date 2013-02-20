@@ -26,7 +26,7 @@
     <field name="inherit_id" ref="view_stage_tree" />
     <field name="arch" type="xml">
       <field name="force_rating" position="after">
-        <field name="notify"/>
+        <field name="notify" string="Notify"/>
       </field>
     </field>
 </record>
