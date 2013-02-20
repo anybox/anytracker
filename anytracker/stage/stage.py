@@ -150,13 +150,15 @@ class Ticket(osv.Model):
         return super(Ticket, self).write(cr, uid, ids, values, context=context)
 
     def _default_stage(self, cr, uid, context):
-        project_id = context.get('default_project_id')
-        if project_id:
-            ticket_pool = self.pool.get('anytracker.ticket')
-            stages = ticket_pool.browse(cr, uid, project_id).method_id.stage_ids
-            return sorted(stages, key=lambda x: x and x.sequence)[0].id if stages else False
-        else:
+        active_id = context.get('active_id')
+        if not active_id:
             return False
+        stages = [(s.progress, s.id)
+                  for s in self.pool.get('anytracker.ticket').browse(
+                      cr, uid, context.get('active_id')).method_id.stage_ids
+                  ]
+        smallest = sorted(stages)[0][1] if len(stages) else False
+        return smallest
 
     def recompute_progress(self, cr, uid, ids, context=None):
         """recompute the overall progress of the ticket, based on subtickets.
