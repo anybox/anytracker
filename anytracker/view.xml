@@ -86,13 +86,13 @@
           <field name="participant_ids"/>
         </page>
 
-        <page string="History" groups="anytracker.group_manager">
-        <group groups="anytracker.group_manager">
-          <field name="history_ids" nolabel="1" colspan="4" readonly="1" groups="anytracker.group_manager">
+        <page string="History" groups="anytracker.group_member">
+        <group groups="anytracker.group_member">
+          <field name="history_ids" nolabel="1" colspan="4" readonly="1" groups="anytracker.group_member">
             <tree string="History">
-              <field name="create_uid" groups="anytracker.group_manager"/>
-              <field name="create_date" groups="anytracker.group_manager"/>
-              <field name="modification" groups="anytracker.group_manager"/>
+              <field name="create_uid" groups="anytracker.group_member"/>
+              <field name="create_date" groups="anytracker.group_member"/>
+              <field name="modification" groups="anytracker.group_member"/>
             </tree>
           </field>
         </group>
