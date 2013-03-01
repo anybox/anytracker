@@ -1,6 +1,6 @@
 from osv import osv, fields
 import random
-from datetime import datetime
+import time
 from xml.sax.saxutils import XMLGenerator
 
 
@@ -69,13 +69,13 @@ class FreemindParser(object):
 
 
 def gMF(date):
-    '''getMindmapDateFormat'''
-    if not date:
-        time = datetime.now()
-    else:
-        time = datetime.strptime(date, '%Y-%m-%d %H:%M:%S')
-    mindmap_time = '1303' + str(time.toordinal()) + '000'
-    return mindmap_time
+    '''getMindmapDateFormat
+
+    input: OpenERP string date/time format
+    output: str of decimal representation of Epoch-based timestamp milliseconds, rounded.
+    '''
+    timestamp = time.mktime(time.strptime(date, '%Y-%m-%d %H:%M:%S')) if date else time.time()
+    return '%d' % (timestamp * 1000)
 
 
 class FreemindWriterHandler(XMLGenerator):
