@@ -98,7 +98,8 @@ class FreemindWriterHandler(XMLGenerator):
 
     def startElement(self, tag, attrs={}):
         attrs_write = {'CREATED': gMF(attrs['created_mindmap']),
-                       'MODIFIED': gMF(attrs['modified_mindmap']),
+                       'MODIFIED': gMF(max(attrs['modified_mindmap'],
+                                           attrs['modified_openerp'])),
                        'ID': attrs['id_mindmap'] or 'ID_' + str(random.randint(1, 10**10)),
                        'TEXT': attrs['name'],
                        }
