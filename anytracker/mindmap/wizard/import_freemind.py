@@ -109,7 +109,6 @@ class FreemindContentHandler(sax.ContentHandler):
                 'modified_mindmap': modified_mindmap,
                 'created_mindmap': created_mindmap,
                 'modified_openerp': modified_mindmap,
-                'method_id': self.wizard.method_id.id,
                 'stage_id': self.initial_stage,
             }
             # construct the domain to search the ticket
@@ -125,8 +124,11 @@ class FreemindContentHandler(sax.ContentHandler):
             osv_id = ticket_pool.search(self.cr, self.uid, domain,
                                         context=self.context)
             if (not osv_id) or (not self.parent_id and not self.ticket_id):
+                vals['method_id'] = self.wizard.method_id.id,
                 osv_id = ticket_pool.create(self.cr, self.uid, vals, context=self.context)
             else:
+                assert self.import_method == 'update', "Found existing ticket, but "
+                "import method is not update"
                 ticket_pool.write(self.cr, self.uid, osv_id, vals, context=self.context)
                 osv_id = osv_id[0]
             self.parent_ids.append({'id': id_mindmap, 'osv_id': osv_id})
