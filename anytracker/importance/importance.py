@@ -41,3 +41,5 @@ class Ticket(osv.Model):
             _get_importance_seq, method=True, string='Importance (Number)',
             type='integer', store=True),
     }
+
+    _order = 'seq desc,create_date desc'
