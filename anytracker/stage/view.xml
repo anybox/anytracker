@@ -104,7 +104,18 @@
     </field>
 </record>
 
-
+<record id="ticket_stage_piechart" model="ir.ui.view">
+  <field name="name">anytracker.ticket.stage_piechart</field>
+  <field name="model">anytracker.ticket</field>
+  <field name="type">graph</field>
+  <field name="arch" type="xml">
+    <graph string="Stages">
+      <field name="stage_id"/>
+      <!-- hack to get the count by summing on a constant field -->
+      <field name="constant_one" operator="+"/>
+    </graph>
+  </field>
+</record>
 
 
 <!-- ACTIONS -->
@@ -130,6 +141,10 @@
     <field name="sequence" eval="10"/>
     <field name="view_mode">tree</field>
     <field name="view_id" ref="view_stage_tree"/>
+</record>
+
+<record model="ir.actions.act_window" id="act_all_tasks">
+  <field name="view_mode">tree,form,graph</field>
 </record>
 
 <menuitem id="menu_stage"

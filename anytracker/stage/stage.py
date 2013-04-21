@@ -197,6 +197,9 @@ class Ticket(osv.Model):
                                     ('Stage'),
                                     domain="[('method_id','=',project_method_id)]"),
         'progress': fields.float('Progress', group_operator="avg"),
+        # this field can be used to count tickets if the only available operation
+        # on them is to sum field values (shameless hack for charts)
+        'constant_one': fields.integer('Constant one', invisible=True),
     }
 
     _group_by_full = {
@@ -206,4 +209,5 @@ class Ticket(osv.Model):
     _defaults = {
         'stage_id': _default_stage,
         'progress': 0.0,
+        'constant_one': 1,
     }
