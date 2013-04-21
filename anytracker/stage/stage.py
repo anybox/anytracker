@@ -192,6 +192,9 @@ class Ticket(osv.Model):
                 self.write(cr, uid, node_id, {'progress': progress}, context)
         return True
 
+    def _constant_one(self, cr, uid, ids, *a, **kw):
+        return dict((i, 1) for i in ids)
+
     _columns = {
         'stage_id': fields.many2one('anytracker.stage',
                                     ('Stage'),
@@ -199,7 +202,9 @@ class Ticket(osv.Model):
         'progress': fields.float('Progress', group_operator="avg"),
         # this field can be used to count tickets if the only available operation
         # on them is to sum field values (shameless hack for charts)
-        'constant_one': fields.integer('Constant one', invisible=True),
+        'constant_one': fields.function(_constant_one, type='integer',
+                                        obj='anytracker.ticket', string='Constant one',
+                                        invisible=True),
     }
 
     _group_by_full = {
@@ -209,5 +214,4 @@ class Ticket(osv.Model):
     _defaults = {
         'stage_id': _default_stage,
         'progress': 0.0,
-        'constant_one': 1,
     }
