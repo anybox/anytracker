@@ -171,6 +171,8 @@ class Ticket(osv.Model):
         'name': fields.char('Title', 255, required=True),
         'number': fields.integer('Number'),
         'description': fields.text('Description', required=False),
+        'create_date': fields.datetime('Creation Time'),
+        'write_date': fields.datetime('Modification Time'),
         'shortened_description': fields.function(
             _shorten_description,
             type='text',

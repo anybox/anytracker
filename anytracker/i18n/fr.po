@@ -959,6 +959,16 @@ msgid "Description"
 msgstr "Description"
 
 #. module: anytracker
+#: field:anytracker.ticket,create_date:0
+msgid "Creation Time"
+msgstr "Date de création"
+
+#. module: anytracker
+#: field:anytracker.ticket,write_date:0
+msgid "Modification Time"
+msgstr "Date de modification"
+
+#. module: anytracker
 #: view:anytracker.ticket:0
 msgid "Tickets hierarchy"
 msgstr "Hiérarchie de tickets"

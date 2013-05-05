@@ -54,6 +54,8 @@
       <field name="project_id"/>
       <field name="parent_id" invisible="1"/>
       <field name="shortened_description"/>
+      <field name="create_date"/>
+      <field name="write_date"/>
     </tree>
   </field>
 </record>
