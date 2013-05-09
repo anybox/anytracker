@@ -27,12 +27,8 @@ class Ticket(osv.Model):
         """
         res = {}
         for ticket in self.browse(cr, uid, ids, context):
-            if not ticket.description:
-                res[ticket.id] = False
-                continue
-            res[ticket.id] = ticket.description[:200]
-            if len(ticket.description) > 200:
-                res[ticket.id] += ' (...)'
+            descr = ticket.description or ''
+            res[ticket.id] = descr[:200] + u'(…)' if len(descr) > 200 else descr
         return res
 
     def _kanban_description(self, cr, uid, ids, field_name, args, context=None):
@@ -40,14 +36,11 @@ class Ticket(osv.Model):
         """
         res = {}
         for ticket in self.browse(cr, uid, ids, context):
-            if not ticket.description:
-                res[ticket.id] = False
-                continue
-            all_lines = ticket.description.splitlines()
-            few_lines = all_lines[:5]
-            if len(few_lines) < len(all_lines):
-                few_lines.append('(...)')
-            res[ticket.id] = '<br/>'.join(few_lines)
+            lines = (ticket.description or '').splitlines()
+            if len(lines) > 5:
+                lines = lines[:5]
+                lines.append(u'(…)')
+            res[ticket.id] = '<br/>'.join(lines)
         return res
 
     def _breadcrumb(self, cr, uid, ids, context=None):
