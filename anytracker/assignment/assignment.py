@@ -10,7 +10,7 @@ class Assignment(osv.Model):
     So we have a separated object for assignment
     """
     _name = 'anytracker.assignment'
-    _description = 'Assignments'
+    _description = 'Stage assignments'
     _rec_name = 'user_id'
     _order = 'date DESC'
 
@@ -102,9 +102,19 @@ class Ticket(osv.Model):
             fnct_search=_search_assignment,
             type='many2one',
             relation='res.users',
-            string="Last assigned user",
+            string="Assigned user",
             multi='assigned_user'),  # multi is the key to group function fields
         'assigned_user_email': fields.function(
             _get_assignment, type='string', multi='assigned_user', string='Assigned user email'),
-        'assignment_ids': fields.one2many('anytracker.assignment', 'ticket_id', 'Assignments'),
+        'assignment_ids': fields.one2many('anytracker.assignment', 'ticket_id',
+                                          string="Stage assignments",
+                                          help="Each time you assign a ticket to someone, "
+                                          "the user and stage get recorded in this mapping. "
+                                          "Later on, the assignment will change upon a stage "
+                                          "change if and only if the new stage is found in "
+                                          "this mapping. "
+                                          "Only the most recent assignment for a given "
+                                          "stage will be considered. Older ones are "
+                                          "being displayed here for logging purposes only.",
+                                          readonly=True),
     }

@@ -562,8 +562,8 @@ msgstr "Démarré"
 
 #. module: anytracker
 #: view:anytracker.ticket:0
-msgid "Show only tickets where I have an assignment"
-msgstr "Montrer seulement les tickets où j'ai une affectation"
+msgid "Show only tickets where I have had an assignment"
+msgstr "Montrer seulement les tickets où j'ai eu une affectation"
 
 #. module: anytracker
 #: model:anytracker.complexity,description:anytracker.complexity_implementation_orange
@@ -1031,8 +1031,8 @@ msgstr "Client"
 
 #. module: anytracker
 #: field:anytracker.ticket,assigned_user_id:0
-msgid "Last assigned user"
-msgstr "Dernier utilisateur assigné"
+msgid "Assignee"
+msgstr "Affecté à"
 
 #. module: anytracker
 #: model:anytracker.complexity,description:anytracker.complexity_maintenance_normal
@@ -1109,10 +1109,14 @@ msgstr ""
 #. module: anytracker
 #: view:anytracker.assignment:0
 #: view:anytracker.ticket:0
-#: field:anytracker.ticket,assignment_ids:0
-#: model:ir.model,name:anytracker.model_anytracker_assignment
 msgid "Assignments"
 msgstr "Affectations"
+
+#. module: anytracker
+#: field:anytracker.ticket,assignment_ids:0
+#: model:ir.model,name:anytracker.model_anytracker_assignment
+msgid "Stage assignments"
+msgstr "Affectations par étapes"
 
 #. module: anytracker
 #: field:anytracker.complexity,color:0

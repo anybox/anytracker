@@ -1035,7 +1035,7 @@ msgstr ""
 
 #. module: anytracker
 #: field:anytracker.ticket,assigned_user_id:0
-msgid "Last assigned user"
+msgid "Assignee"
 msgstr ""
 
 #. module: anytracker
@@ -1113,9 +1113,13 @@ msgstr ""
 #. module: anytracker
 #: view:anytracker.assignment:0
 #: view:anytracker.ticket:0
+msgid "Assignments"
+msgstr ""
+
+#. module: anytracker
 #: field:anytracker.ticket,assignment_ids:0
 #: model:ir.model,name:anytracker.model_anytracker_assignment
-msgid "Assignments"
+msgid "Stage assignments"
 msgstr ""
 
 #. module: anytracker
