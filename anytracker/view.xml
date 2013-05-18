@@ -16,7 +16,6 @@
             help="Show only toplevel tickets. They correspond to projects"/>
     <filter name="filter_nodes"
             string="Nodes"
-            domain="[('child_ids','!=',False)]"
             icon="terp-folder-green"
             help="Show only tickets which have sub-tickets. They are used to gather tickets by nodes"/>
     <filter name="filter_tasks"
@@ -118,6 +117,8 @@
       <field name="kanban_description"/>
       <field name="siblings_ids"/>
       <field name="child_ids"/>
+      <field name="assigned_user_email"/>
+      <field name="assigned_user_id"/>
       <templates>
         <t t-name="ticket_details">
             <div><i><b><field name="breadcrumb"/></b><span> </span>(#<b><field name="number"/></b>)</i></div>
@@ -131,6 +132,9 @@
                   <td align="left" valign="middle" class="oe_kanban_title" tooltip="ticket_details">
                     <field name="name"/>
                   </td>
+                  <td valign="top" width="22">
+                    <img t-att-src="kanban_gravatar(record.assigned_user_email.value, 22)"
+                         class="oe_kanban_gravatar" t-att-title="record.assigned_user_id.value"/></td>
                 </tr>
               </table>
               <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger at_kanban_box_content">

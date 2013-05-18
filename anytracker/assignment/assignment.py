@@ -31,15 +31,17 @@ class Ticket(osv.Model):
     """
     _inherit = 'anytracker.ticket'
 
-    def _get_assignment(self, cr, uid, ids, field_name, args, context=None):
+    def _get_assignment(self, cr, uid, ids, field_names, args, context=None):
         """ Return the last assignment of the ticket for the current stage
         """
         if not context:
             context = {}
         as_obj = self.pool.get('anytracker.assignment')
         assignments = {}
+
+        default = dict((fid, False) for fid in field_names)
         for ticket in self.read(cr, uid, ids, ['stage_id'], context):
-            assignments[ticket['id']] = False
+            assignments[ticket['id']] = default.copy()
             if not ticket['stage_id']:
                 continue
             assignment_ids = as_obj.search(
@@ -51,7 +53,11 @@ class Ticket(osv.Model):
                 continue
             # assignments are ordered by 'date DESC' so we take the last
             assignment = as_obj.browse(cr, uid, assignment_ids[0])
-            assignments[ticket['id']] = (assignment.id, assignment.user_id.name)
+
+            assignments[ticket['id']] = dict(
+                assigned_user_id=(assignment.id, assignment.user_id.name),
+                assigned_user_email=(assignment.user_id.user_email))
+
         return assignments
 
     def _set_assignment(self, cr, uid, ticket_id, name, value, fnct_inv_arg, context):
@@ -85,6 +91,9 @@ class Ticket(osv.Model):
             fnct_search=_search_assignment,
             type='many2one',
             relation='res.users',
-            string="Last assigned user"),
+            string="Last assigned user",
+            multi='assigned_user'),  # multi is the key to group function fields
+        'assigned_user_email': fields.function(
+            _get_assignment, type='string', multi='assigned_user', string='Assigned user email'),
         'assignment_ids': fields.one2many('anytracker.assignment', 'ticket_id', 'Assignments'),
     }
