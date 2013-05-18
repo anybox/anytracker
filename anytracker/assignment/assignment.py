@@ -22,7 +22,7 @@ class Assignment(osv.Model):
     }
 
     _defaults = {
-        'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
+        'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),  # TODO use a constant
     }
 
 
@@ -32,7 +32,7 @@ class Ticket(osv.Model):
     _inherit = 'anytracker.ticket'
 
     def _get_assignment(self, cr, uid, ids, field_names, args, context=None):
-        """ Return the last assignment of the ticket for the current stage
+        """ Return the latest assignment of the ticket for the current stage
         """
         if not context:
             context = {}
@@ -40,23 +40,33 @@ class Ticket(osv.Model):
         assignments = {}
 
         default = dict((fid, False) for fid in field_names)
+
+        def ass_search(domain, **kw):
+            return as_obj.search(cr, uid, domain, order='date DESC', context=context, **kw)
+
+        # TODO PERF rewrite this without browsing users inside of a loop
+        # (at least a small cache if that's more readable than a direct read or SQL request)
         for ticket in self.read(cr, uid, ids, ['stage_id'], context):
-            assignments[ticket['id']] = default.copy()
-            if not ticket['stage_id']:
+            tid = ticket['id']
+            assignments[tid] = default.copy()
+
+            stage_id = ticket['stage_id']
+            if not stage_id:
                 continue
-            assignment_ids = as_obj.search(
-                cr, uid,
-                [('stage_id', '=', ticket['stage_id'][0]),
-                 ('ticket_id', '=', ticket['id'])],
-                context=context)
-            if not assignment_ids:
-                continue
-            # assignments are ordered by 'date DESC' so we take the last
+            stage_id = stage_id[0]
+            stage_domain = ('stage_id', '=', stage_id)
+            ticket_domain = ('ticket_id', '=', tid)
+
+            assignment_ids = ass_search([ticket_domain, stage_domain], limit=1)
+            if not assignment_ids:  # retry for any stage
+                assignment_ids = ass_search([ticket_domain], limit=1)
+                if not assignment_ids:
+                    continue
+
             assignment = as_obj.browse(cr, uid, assignment_ids[0])
 
-            assignments[ticket['id']] = dict(
-                assigned_user_id=(assignment.id, assignment.user_id.name),
-                assigned_user_email=(assignment.user_id.user_email))
+            assignments[tid] = dict(assigned_user_id=(assignment.id, assignment.user_id.name),
+                                    assigned_user_email=(assignment.user_id.user_email))
 
         return assignments
 
@@ -73,8 +83,9 @@ class Ticket(osv.Model):
                 })
 
     def _search_assignment(self, cr, uid, obj, field, domain, context=None):
-        """search for assigned_user_id.
-        Should return a domain for a search of tickets
+        """search on assigned_user_id.
+
+        Return a domain for a search of tickets
         """
         req = ('select distinct a.ticket_id, a.date '
                'from anytracker_assignment a, anytracker_ticket t '
