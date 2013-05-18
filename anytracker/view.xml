@@ -112,6 +112,7 @@
     <kanban default_group_by="stage_id">
       <field name="color"/>
       <field name="number"/>
+      <field name="permalink"/>
       <field name="name"/>
       <field name="description"/>
       <field name="kanban_description"/>
@@ -144,6 +145,10 @@
                 <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
                     <div class="oe_kanban_left">
                         <a string="Edit" icon="gtk-edit" type="edit"/>
+                    </div>
+                    <div class="oe_kanban_right">
+                        <a title="Permalink"
+                           t-attf-href="#{record.permalink.value}">¶</a>
                     </div>
                     <br class="oe_kanban_clear"/>
                 </div>

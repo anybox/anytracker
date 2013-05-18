@@ -104,6 +104,11 @@ class Ticket(osv.Model):
             self._set_project(cr, uid, ticket_id, context)
         return res
 
+    def _get_permalink(self, cr, uid, ids, field_name, args, context=None):
+        base_uri = '/anytracker/%s/ticket/' % cr.dbname
+        return dict((r['id'], base_uri + str(r['number']))
+                    for r in self.read(cr, uid, ids, ('number',)))
+
     def create(self, cr, uid, values, context=None):
         """write the project_id when writing the parent
         """
@@ -163,6 +168,8 @@ class Ticket(osv.Model):
     _columns = {
         'name': fields.char('Title', 255, required=True),
         'number': fields.integer('Number'),
+        'permalink': fields.function(_get_permalink, type='string', string='Permalink',
+                                     obj='anytracker.ticket', method=True),
         'description': fields.text('Description', required=False),
         'create_date': fields.datetime('Creation Time'),
         'write_date': fields.datetime('Modification Time'),
