@@ -54,6 +54,9 @@
 Anytracker depends on a specific hierarchical search widget : web_dynatree,
 which is available at https://bitbucket.org/anybox/web_dynatree
 
+Anytracker includes some icons from the "fam fam fam silk" set,
+provided under the terms of the Creative Commons Attribution 2.5 license at
+http://www.famfamfam.com/lab/icons/silk/
 ''',
     'init_xml': [],
     'demo_xml': [],
@@ -66,7 +69,6 @@ which is available at https://bitbucket.org/anybox/web_dynatree
         'method/ir.model.access.csv',
         'complexity/data.xml',
         'data.xml',
-        'view.xml',
         'mindmap/wizard/import_freemind.xml',
         'mindmap/wizard/export_freemind.xml',
         'method/view.xml',
@@ -79,6 +81,7 @@ which is available at https://bitbucket.org/anybox/web_dynatree
         'importance/data.xml',
         'importance/view.xml',
         'importance/ir.model.access.csv',
+        'assignment/action.xml',
         'assignment/view.xml',
         'assignment/ir.model.access.csv',
         'comment/view.xml',
@@ -86,6 +89,7 @@ which is available at https://bitbucket.org/anybox/web_dynatree
         'notify/view.xml',
         'notify/data.xml',
         'notify/ir.model.access.csv',
+        'view.xml',
     ],
     "js": ["static/*/*.js", "static/*/js/*.js"],
     "css": ["static/*/css/*.css"],

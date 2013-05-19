@@ -146,6 +146,10 @@
                 <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
                     <div class="oe_kanban_left">
                         <a string="Edit" icon="gtk-edit" type="edit"/>
+                        <a string="Assign to yourself" type="action"
+                           name="%(action_assign_to_current_user)d">
+                          <img width="16" height="16" src="/anytracker/static/src/img/cart_put.png"/>
+                        </a>
                     </div>
                     <div class="oe_kanban_right">
                         <a title="Permalink"

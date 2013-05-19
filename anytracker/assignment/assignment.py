@@ -118,3 +118,13 @@ class Ticket(osv.Model):
                                           "being displayed here for logging purposes only.",
                                           readonly=True),
     }
+
+    def assign_to_current_user(self, cr, uid, record, context=None):
+        """Assign the browse record to current user.
+
+        Meant to be used in a server action of 'code' type.
+        This could as well have been a 'write' action but
+        - I don't have time to test these right now
+        - we may want to do more than a simple write at some point
+        """
+        self.write(cr, uid, record.id, dict(assigned_user_id=uid))
