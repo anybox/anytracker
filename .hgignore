@@ -1,3 +1,10 @@
-.*\.pyc$
-.*\.mo$
-.*\.swp$
+syntax: glob
+*.mo
+*.swp
+*.pyc
+*.pyo
+*.log
+*\#
+*.\#*
+*~
+*.orig
