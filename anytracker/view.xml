@@ -241,7 +241,10 @@
 <menuitem id="menu_kanbans"
   name="Kanbans"
   parent="anytracker"
-  sequence="0"
+  sequence="0"/>
+<menuitem id="submenu_kanbans"
+  name="Kanbans"
+  parent="menu_kanbans"
   action="action_kanbans" />
 <menuitem id="projects"
   name="Projects"
