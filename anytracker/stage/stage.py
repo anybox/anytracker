@@ -50,7 +50,7 @@ class Ticket(osv.Model):
             return []
         stage_ids = stage_osv.search(cr, uid, [('method_id', '=', method.id)], context=context)
         stage_names = stage_osv.name_get(cr, access_rights_uid, stage_ids, context=context)
-        return stage_names
+        return stage_names, dict([(i, False) for i in ids])  # all unfolded
 
     def stage_previous(self, cr, uid, ids, context=None):
         """move the ticket to the previous stage
