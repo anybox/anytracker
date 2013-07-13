@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from openerp.addons.web.common import http
+from openerp.addons.web import http
 import werkzeug.utils
 from openerp import pooler, SUPERUSER_ID
 
