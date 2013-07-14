@@ -131,12 +131,13 @@
   <field name="model">anytracker.ticket</field>
   <field name="type">kanban</field>
   <field name="arch" type="xml">
-    <kanban version="7.0" default_group_by="stage_id">
+    <kanban version="7.0" class="oe_background_grey">
       <field name="color"/>
       <field name="number"/>
       <field name="permalink"/>
       <field name="name"/>
       <field name="description"/>
+      <field name="shortened_description"/>
       <field name="kanban_description"/>
       <field name="siblings_ids"/>
       <field name="child_ids"/>
@@ -157,7 +158,7 @@
             <div class="oe_kanban_content">
               <h4><field name="name"/></h4>
                 <div>
-                  <t t-raw="record.kanban_description.raw_value"/>
+                  <t t-raw="record.shortened_description.raw_value"/>
                 </div>
 
                 <div class="oe_kanban_bottom_left">
@@ -197,9 +198,8 @@
     <field name="view_type">form</field>
     <field name="view_mode">kanban,tree,form</field>
     <field name="view_id" ref="tickets_view_kanban"/>
-    <!-- The reload bug on the kanban view comes from the line below -->
     <field name="domain">[('id', 'child_of', active_id), ('progress', '&lt;', 100.0)]</field>
-    <field name="context">{'search_default_filter_tasks': 1}</field>
+    <field name="context">{'search_default_filter_tasks': 1, 'group_by': 'stage_id'}</field>
 </record>
 <record id="ir_value_hierarchy_line_select" model="ir.values">
     <field name="key2">tree_but_open</field>
@@ -231,7 +231,7 @@
   <field name="res_model">anytracker.ticket</field>
   <field name="view_mode">kanban,tree,form</field>
   <field name="view_type">form</field>
-  <field name="view_id" ref="ticket_view_tree"/>
+  <field name="view_id" ref="tickets_view_kanban"/>
   <field name="context">{'search_default_filter_projects': 1}</field>
 </record>
 <record model="ir.actions.act_window" id="act_all_nodes">
