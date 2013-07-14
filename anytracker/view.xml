@@ -76,7 +76,7 @@
                 <h1><field name="name" colspan="6" select="1"/></h1>
                 <field name="number" readonly="1"/>
             </group>
-            <field name="description" colspan="2"/>
+            <field name="description" colspan="4" widget="html"/>
         </group>
 
       <notebook colspan="4">
