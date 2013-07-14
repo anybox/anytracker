@@ -113,7 +113,7 @@
             <field name="inherit_id" ref="anytracker.ticket_view_form"/>
             <field name="priority" eval="16"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page[@string='Participants']" position="after">
+                <xpath expr="//notebook/page[@string='Participants']" position="after">
                     <page string="Importance">
                         <field name="importance_id" domain="[('method_id', '=', method_id)]"/>
                         <field name="seq"/>

@@ -44,10 +44,10 @@ class Ticket(osv.Model):
         ticket_pool = self.pool.get('anytracker.ticket')
         project_id = ticket_pool.browse(cr, uid, context.get('active_id')).project_id
         if not project_id:
-            return []
+            return [], []
         method = project_id.method_id
         if not method:
-            return []
+            return [], []
         stage_ids = stage_osv.search(cr, uid, [('method_id', '=', method.id)], context=context)
         stage_names = stage_osv.name_get(cr, access_rights_uid, stage_ids, context=context)
         return stage_names, dict([(i, False) for i in ids])  # all unfolded

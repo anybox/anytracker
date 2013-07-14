@@ -65,14 +65,15 @@
   <field name="type">form</field>
   <field name="priority" eval="10"/>
   <field name="arch" type="xml">
-    <form string="ticket form">
+    <form version="7.0" string="ticket form">
+    <sheet string="ticket">
         <group col="2" colspan="4">
             <group col="8" colspan="2">
                 <field name="parent_id" colspan="4" domain="[('child_ids','!=',False)]"/>
                 <field name="method_id" widget="selection" attrs="{'readonly': [('parent_id', '!=', False)]}"/>
             </group>
             <group col="8" colspan="2">
-                <field name="name" colspan="6" select="1"/>
+                <h1><field name="name" colspan="6" select="1"/></h1>
                 <field name="number" readonly="1"/>
             </group>
             <field name="description" colspan="2"/>
@@ -84,7 +85,23 @@
           <field name="child_ids" nolabel="1" context="{'default_parent_id': active_id}"/>
         </page>
         <page string="Participants" attrs="{'invisible': [('parent_id', '!=', False)]}">
-          <field name="participant_ids"/>
+          <field name="participant_ids" colspan="4" widget="many2many_kanban">
+            <kanban quick_create="false" create="true">
+                <field name="name"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div style="position: relative">
+                            <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
+                            <div class="oe_module_vignette">
+                                <div class="oe_module_desc">
+                                    <field name="name"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+          </field>
         </page>
 
         <page string="History" groups="anytracker.group_member">
@@ -99,6 +116,11 @@
         </group>
         </page>
       </notebook>
+      </sheet>
+      <div class="oe_chatter">
+          <field name="message_follower_ids" widget="mail_followers" help="Follow this project to automatically track the events associated to tasks and issues of this project." groups="base.group_user"/>
+          <field name="message_ids" widget="mail_thread"/>
+      </div>
     </form>
   </field>
 </record>
@@ -213,7 +235,7 @@
 <record model="ir.actions.act_window" id="act_all_projects">
   <field name="name">All projects</field>
   <field name="res_model">anytracker.ticket</field>
-  <field name="view_mode">tree,form</field>
+  <field name="view_mode">kanban,tree,form</field>
   <field name="view_type">form</field>
   <field name="view_id" ref="ticket_view_tree"/>
   <field name="context">{'search_default_filter_projects': 1}</field>

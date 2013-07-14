@@ -62,7 +62,7 @@
     <field name="model">anytracker.ticket</field>
     <field name="inherit_id" ref="ticket_view_form" />
     <field name="arch" type="xml">
-        <xpath expr="/form/notebook/page[@string='Participants']" position="after">
+        <xpath expr="//notebook/page[@string='Participants']" position="after">
             <page string="Ratings">
             <group col="6" colspan="4">
                 <field name="my_rating" attrs="{'invisible': [('child_ids', '!=', False)]}" groups="anytracker.group_member" options='{"quick_create": false}'/>

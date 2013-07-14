@@ -9,6 +9,7 @@ class Ticket(osv.Model):
     _description = "Anytracker tickets"
     _rec_name = 'breadcrumb'
     _order = 'create_date DESC'
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
 
     def _get_siblings(self, cr, uid, ids, field_name, args, context=None):
         """ get tickets at the same hierachical level
