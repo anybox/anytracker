@@ -67,7 +67,6 @@
   <field name="arch" type="xml">
     <form version="7.0" string="ticket form">
       <header>
-          <field name="stage_id" widget="statusbar" clickable="True"/>
       </header>
 
     <sheet string="ticket">
