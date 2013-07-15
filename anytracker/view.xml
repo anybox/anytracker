@@ -227,7 +227,7 @@
 </record>
 
 <record model="ir.actions.act_window" id="act_all_projects">
-  <field name="name">All projects</field>
+  <field name="name">Projects</field>
   <field name="res_model">anytracker.ticket</field>
   <field name="view_mode">kanban,tree,form</field>
   <field name="view_type">form</field>
@@ -235,7 +235,7 @@
   <field name="context">{'search_default_filter_projects': 1}</field>
 </record>
 <record model="ir.actions.act_window" id="act_all_nodes">
-  <field name="name">All nodes</field>
+  <field name="name">Nodes</field>
   <field name="res_model">anytracker.ticket</field>
   <field name="view_mode">tree,form</field>
   <field name="view_type">form</field>
@@ -243,7 +243,7 @@
   <field name="context">{'search_default_filter_nodes': 1}</field>
 </record>
 <record model="ir.actions.act_window" id="act_all_tasks">
-  <field name="name">All tasks</field>
+  <field name="name">Tickets</field>
   <field name="res_model">anytracker.ticket</field>
   <field name="view_mode">tree,form</field>
   <field name="view_type">form</field>
