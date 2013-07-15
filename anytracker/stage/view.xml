@@ -148,7 +148,7 @@
 </record>
 
 <menuitem id="menu_stage"
-    parent="configuration"
+    parent="menu_configuration"
     sequence="20"
     action="act_open_stage_view"/>
 

@@ -45,7 +45,7 @@
         </record>
 
         <menuitem id="menu_import_freemind_wizard"
-            parent="tickets"
+            parent="menu_configuration"
             sequence="40"
             action="action_import_freemind_view"/>
 
