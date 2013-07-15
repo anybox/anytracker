@@ -66,15 +66,22 @@
   <field name="priority" eval="10"/>
   <field name="arch" type="xml">
     <form version="7.0" string="ticket form">
+      <header>
+          <field name="stage_id" widget="statusbar" clickable="True"/>
+      </header>
+
     <sheet string="ticket">
         <group col="2" colspan="4">
             <group col="8" colspan="2">
                 <field name="parent_id" colspan="4" domain="[('child_ids','!=',False)]"/>
                 <field name="method_id" widget="selection" attrs="{'readonly': [('parent_id', '!=', False)]}"/>
+                <field name="project_method_id" invisible="1"/>
             </group>
             <group col="8" colspan="2">
-                <h1><field name="name" colspan="6" select="1"/></h1>
-                <field name="number" readonly="1"/>
+                <h1>
+                    [<field name="number" readonly="1" class="oe_inline"/>]
+                    <field name="name" colspan="6" select="1" class="oe_inline"/>
+                </h1>
             </group>
             <field name="description" colspan="4" widget="html"/>
         </group>
@@ -210,7 +217,7 @@
 
 <!-- ACTIONS -->
 <record model="ir.actions.act_window" id="action_kanbans">
-  <field name="name">Anytracker - Projects</field>
+  <field name="name">Hierarchy</field>
   <field name="res_model">anytracker.ticket</field>
   <field name="view_type">tree</field>
   <field name="view_id" ref="tickets_hierarchy"/>
@@ -260,22 +267,18 @@
   parent="tabmenu_anytracker"
   sequence="0"/>
     <menuitem id="menu_hierarchy"
-      name="Hierarchy"
       parent="menu_anytracker"
       sequence="10"
       action="action_kanbans" />
     <menuitem id="menu_all_projects"
-      name="Projects"
       parent="menu_anytracker"
       sequence="20"
       action="act_all_projects" />
     <menuitem id="menu_all_nodes"
-      name="Nodes"
       parent="menu_anytracker"
       sequence="30"
       action="act_all_nodes" />
     <menuitem id="menu_all_tasks"
-      name="Tasks"
       parent="menu_anytracker"
       sequence="40"
       action="act_all_tasks" />

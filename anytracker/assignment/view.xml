@@ -16,7 +16,7 @@
         <xpath expr="//filter[@name='filter_tasks']" position="after">
             <separator orientation="vertical"/>
             <filter name="filter_my_tasks"
-                    string="My tasks"
+                    string="My tickets"
                     domain="[('assigned_user_id','=',uid)]"
                     icon="terp-personal"
                     help="Show only tickets where I have an assignment"/>
@@ -119,12 +119,10 @@
     <field name="context">{'search_default_filter_my_tasks': 1}</field>
     <field name="domain">[]</field>
 </record>
-<menuitem id="anytracker"
-  name="Anytracker"
-  sequence="-1"
-  web_icon="images/iconbw.png"
-  web_icon_hover="images/icon.png"
-  action="act_open_my_tickets_view"/>
+<menuitem id="menu_my_tickets"
+    parent="menu_anytracker"
+    sequence="-1"
+    action="act_open_my_tickets_view"/>
 
 </data>
 </openerp>
