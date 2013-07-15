@@ -213,7 +213,7 @@ class Ticket(osv.Model):
             store=False, help='Number of children'),
         'participant_ids': fields.many2many(
             'res.users',
-            'anytracker_ticket_assignement_rel',
+            'anytracker_ticket_assignment_rel',
             'ticket_id',
             'user_id',
             required=False),

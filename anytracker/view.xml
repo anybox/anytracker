@@ -12,27 +12,25 @@
     <filter name="filter_projects"
             string="Projects"
             domain="[('parent_id','=',False)]"
-            icon="terp-go-home"
             help="Show only toplevel tickets. They correspond to projects"/>
     <filter name="filter_nodes"
             string="Nodes"
-            icon="terp-folder-green"
             help="Show only tickets which have sub-tickets. They are used to gather tickets by nodes"/>
     <filter name="filter_tasks"
             string="Tasks"
             domain="[('child_ids','=',False)]"
-            icon="terp-check"
             help="Show only leaf tickets. They correspond to tasks"/>
     <separator orientation="vertical"/>
+    <group string="Group by...">
     <filter name="tickets_by_project"
-            string="By project"
+            string="Project"
             context="{'group_by': ['project_id', 'parent_id']}"
-            icon="gtk-indent"
-            help="Group tasks"/>
+            help="Group tickets by project"/>
     <field name="parent_id" widget="dynatree_selection"
            operator="child_of"
            options='{"child_field": "child_ids"}'
            string="Nodes"/>
+    </group>
     <field name="number" select="True"/>
     <field name="name" select="True"/>
     <field name="description"/>
