@@ -68,7 +68,7 @@ class Ticket(osv.Model):
             ticket = self.browse(cr, uid, ticket_id, context)
             self.pool.get('anytracker.assignment').create(
                 cr, uid, {
-                    'stage_id': ticket.stage_id.id,
+                    'stage_id': ticket.stage_id.id or self._default_stage(cr, uid, context={'active_id': ticket_id}),
                     'ticket_id': ticket_id,
                     'user_id': value,
                 })
