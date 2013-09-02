@@ -52,9 +52,10 @@ class Ticket(osv.Model):
             breadcrumb = [ticket]
             current_ticket = ticket
             while current_ticket['parent_id']:
-                breadcrumb.insert(0, current_ticket)
-                current_ticket = self.read(cr, uid, current_ticket['parent_id'],
-                                           ['name', 'parent_id'], context, load='_classic_write')
+                parent_ticket = self.read(cr, uid, current_ticket['parent_id'],
+                                          ['name', 'parent_id'], context, load='_classic_write')
+                breadcrumb.insert(0, parent_ticket)
+                current_ticket = parent_ticket
             res[ticket['id']] = breadcrumb
         return res
 
