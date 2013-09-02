@@ -47,13 +47,15 @@ class Ticket(osv.Model):
         """ get all the parents until the root ticket
         """
         res = {}
-        for ticket in self.browse(cr, uid, ids, context):
+        for ticket in self.read(cr, uid, ids, ['name', 'parent_id'],
+                                context, load='_classic_write'):
             breadcrumb = [ticket]
             current_ticket = ticket
-            while current_ticket.parent_id:
-                breadcrumb.insert(0, current_ticket.parent_id)
-                current_ticket = current_ticket.parent_id
-            res[ticket.id] = breadcrumb
+            while current_ticket['parent_id']:
+                breadcrumb.insert(0, current_ticket)
+                current_ticket = self.read(cr, uid, current_ticket['parent_id'],
+                                           ['name', 'parent_id'], context, load='_classic_write')
+            res[ticket['id']] = breadcrumb
         return res
 
     def _formatted_breadcrumb(self, cr, uid, ids, field_name, args, context=None):
@@ -62,7 +64,7 @@ class Ticket(osv.Model):
         """
         res = {}
         for i, breadcrumb in self._breadcrumb(cr, uid, ids, context).items():
-            res[i] = u' / '.join([b.name for b in breadcrumb])
+            res[i] = u' / '.join([b['name'] for b in breadcrumb])
         return res
 
     def _get_admin_id(self, cr, uid, context=None):
@@ -86,8 +88,8 @@ class Ticket(osv.Model):
         if parent_id:
             breadcrumb = self._breadcrumb(cr, uid, [parent_id], context)[parent_id]
             if not breadcrumb:
-                breadcrumb = [self.browse(cr, uid, parent_id)]
-            project_id = breadcrumb[0].id
+                breadcrumb = [self.read(cr, uid, parent_id, ['name', 'parent_id'])]
+            project_id = breadcrumb[0]['id']
         else:
             # if no parent, we are the project
             project_id = ticket_id
