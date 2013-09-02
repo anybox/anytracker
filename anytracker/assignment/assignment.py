@@ -51,12 +51,11 @@ class Ticket(osv.Model):
         assignments = {}
         # then process the result in a pure python loop, starting with the oldest
         for t_id, t_stage_id, a_id, a_stage_id, a_user_id, u_mail, a_date in ticket_assignments:
-            assignments.setdefault(t_id, {'assigned_user_id': a_user_id,
-                                          'assigned_user_email': u_mail})
+            assignment = {'assigned_user_id': a_user_id, 'assigned_user_email': u_mail}
+            assignments.setdefault(t_id, assignment)
             # a more recent with the exact stage, or assignment without stage, keep it
             if a_stage_id == t_stage_id or not a_stage_id:
-                assignments[t_id] = {'assigned_user_id': a_user_id,
-                                     'assigned_user_email': u_mail}
+                assignments[t_id] = assignment
 
         return assignments
 
