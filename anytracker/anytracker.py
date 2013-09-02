@@ -165,6 +165,16 @@ class Ticket(osv.Model):
         (f, o, v) = domain[0]
         return [('name', o, v)]
 
+    def onchange_parent(self, cr, uid, ids, parent_id, context=None):
+        """ Fill the method when changing parent
+        """
+        context = context or {}
+        if not parent_id:
+            return {}
+        method_id = self.read(cr, uid, parent_id, ['method_id'],
+                              context, load='_classic_write')['method_id']
+        return {'value': {'method_id': method_id}}
+
     _columns = {
         'name': fields.char('Title', 255, required=True),
         'number': fields.integer('Number'),
