@@ -68,7 +68,7 @@
     <form string="ticket form">
         <group col="2" colspan="4">
             <group col="8" colspan="2">
-                <field name="parent_id" colspan="4" domain="[('child_ids','!=',False)]"
+                <field name="parent_id" colspan="4" 
                        on_change="onchange_parent(parent_id)"/>
                 <field name="method_id" widget="selection" attrs="{'readonly': [('parent_id', '!=', False)]}"/>
             </group>

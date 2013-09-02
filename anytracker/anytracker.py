@@ -159,7 +159,7 @@ class Ticket(osv.Model):
 
     def _search_breadcrumb(self, cr, uid, obj, field, domain, context=None):
         """Use the 'name' in the search function for the parent,
-        instead of 'breadcrum' which is implcitly used because of the _rec_name
+        instead of 'breadcrum' which is implicitly used because of the _rec_name
         """
         assert(len(domain) == 1 and len(domain[0]) == 3)  # handle just this case
         (f, o, v) = domain[0]
@@ -229,7 +229,6 @@ class Ticket(osv.Model):
             'anytracker.ticket',
             'Parent',
             required=False,
-            domain="[('id','child_of',project_id)]",
             ondelete='cascade'),
         'project_id': fields.many2one(
             'anytracker.ticket',
