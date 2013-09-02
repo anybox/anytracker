@@ -26,6 +26,8 @@ class Ticket(osv.Model):
             parent_id = data['parent_id']
             method_id = self.browse(cr, uid, parent_id).method_id.id
             data['method_id'] = method_id
+        elif not data.get('method_id'):
+            raise osv.except_osv('Error', 'You must choose the method of the project')
         return super(Ticket, self).create(cr, uid, data, context)
 
     def write(self, cr, uid, ids, data, context=None):
