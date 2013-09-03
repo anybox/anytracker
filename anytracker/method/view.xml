@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
+
+<record id="method_ticket_view_search" model="ir.ui.view">
+    <field name="name">anytracker.ticket.search</field>
+    <field name="model">anytracker.ticket</field>
+    <field name="type">search</field>
+    <field name="inherit_id" ref="anytracker.ticket_view_search"/>
+    <field name="priority" eval="16"/>
+    <field name="arch" type="xml">
+        <xpath expr="//field[@name='id']" position="after">
+            <field name="method_id" widget="selection"/>
+        </xpath>
+    </field>
+</record>
+
 <record id="view_method_tree" model="ir.ui.view">
     <field name="name">Project methods</field>
     <field name="model">anytracker.method</field>
