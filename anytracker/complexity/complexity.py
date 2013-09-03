@@ -176,7 +176,6 @@ class Ticket(osv.Model):
         'rating_ids': fields.one2many('anytracker.rating', 'ticket_id', 'Ratings'),
         'my_rating': fields.function(
             _get_my_rating, fnct_inv=_set_my_rating, type='many2one',
-            domain="[('method_id','=',project_method_id)]",
             relation='anytracker.complexity',
             string="My Rating"),
         'risk': fields.float('Risk', group_operator="avg",),
