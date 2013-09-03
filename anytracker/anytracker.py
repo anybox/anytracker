@@ -56,9 +56,9 @@ class Ticket(osv.Model):
                        "WHERE t.id=p.parent_id) "
                        "SELECT id, parent_id, name "
                        "FROM parent "
-                       "WHERE id!=0 ORDER BY id", (ticket_id,))
+                       "WHERE id!=0", (ticket_id,))
             res[ticket_id] = [dict(zip(('id', 'parent_id', 'name'), line))
-                              for line in cr.fetchall()]
+                              for line in reversed(cr.fetchall())]
         return res
 
     def _formatted_breadcrumb(self, cr, uid, ids, field_name, args, context=None):
