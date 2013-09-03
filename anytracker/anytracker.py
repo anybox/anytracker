@@ -44,19 +44,21 @@ class Ticket(osv.Model):
         return res
 
     def _breadcrumb(self, cr, uid, ids, context=None):
-        """ get all the parents until the root ticket
+        """ get all the parents up to the root ticket
         """
         res = {}
-        for ticket in self.read(cr, uid, ids, ['name', 'parent_id'],
-                                context, load='_classic_write'):
-            breadcrumb = [ticket]
-            current_ticket = ticket
-            while current_ticket['parent_id']:
-                parent_ticket = self.read(cr, uid, current_ticket['parent_id'],
-                                          ['name', 'parent_id'], context, load='_classic_write')
-                breadcrumb.insert(0, parent_ticket)
-                current_ticket = parent_ticket
-            res[ticket['id']] = breadcrumb
+        for ticket_id in ids:
+            cr.execute("WITH RECURSIVE parent(id, parent_id, name) as "
+                       "(select 0, %s, text('') "
+                       "UNION "
+                       "SELECT t.id, t.parent_id, t.name "
+                       "FROM parent p, anytracker_ticket t "
+                       "WHERE t.id=p.parent_id) "
+                       "SELECT id, parent_id, name "
+                       "FROM parent "
+                       "WHERE id!=0 ORDER BY id", (ticket_id,))
+            res[ticket_id] = [dict(zip(('id', 'parent_id', 'name'), line))
+                              for line in cr.fetchall()]
         return res
 
     def _formatted_breadcrumb(self, cr, uid, ids, field_name, args, context=None):
