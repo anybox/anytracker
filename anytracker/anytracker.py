@@ -80,12 +80,14 @@ class Ticket(osv.Model):
             return admin_ids[0]
         raise osv.except_osv(_('Error'), _('No user with ERP Manager group found'))
 
-    def _set_project(self, cr, uid, ticket_id, context=None):
-        """store the root ticket (the project) in the ticket
-        Should be more efficient than looking up the project everytime
+    def _get_root(self, cr, uid, ticket_id, context=None):
+        """Return the real root ticket (not the project_id of the ticket)
         """
-        ticket = self.browse(cr, uid, ticket_id, context)
-        parent_id = ticket.parent_id and ticket.parent_id.id
+        if not ticket_id:
+            return False
+        ticket = self.read(cr, uid, ticket_id, ['parent_id'], context,
+                           load='_classic_write')
+        parent_id = ticket.get('parent_id', False)
         if parent_id:
             breadcrumb = self._breadcrumb(cr, uid, [parent_id], context)[parent_id]
             if not breadcrumb:
@@ -94,17 +96,26 @@ class Ticket(osv.Model):
         else:
             # if no parent, we are the project
             project_id = ticket_id
-        super(Ticket, self).write(cr, uid, ticket_id, {'project_id': project_id}, context)
+        return project_id
 
     def write(self, cr, uid, ids, values, context=None):
         """write the project_id when writing the parent
         """
         if not hasattr(ids, '__iter__'):
             ids = [ids]
+        if 'parent_id' in values:
+            root_id = self._get_root(cr, uid, values['parent_id'])
+            values['project_id'] = root_id
+            for ticket_id in ids:
+                if ticket_id == values['parent_id']:
+                    raise osv.except_osv(_('Error'),
+                                         _(u"Think about yourself. Can you be your own parent?"))
+                # reparenting to False, set current ticket as project for children
+                project_id = root_id or ticket_id
+                # set the project_id of me and all the children
+                children = self.search(cr, uid, [('id', 'child_of', ticket_id)])
+                self.write(cr, uid, children, {'project_id': project_id})
         res = super(Ticket, self).write(cr, uid, ids, values, context=context)
-        for ticket_id in ids:
-            # set the project of the ticket
-            self._set_project(cr, uid, ticket_id, context)
         return res
 
     def _get_permalink(self, cr, uid, ids, field_name, args, context=None):
@@ -113,7 +124,7 @@ class Ticket(osv.Model):
                     for r in self.read(cr, uid, ids, ('number',)))
 
     def create(self, cr, uid, values, context=None):
-        """write the project_id when writing the parent
+        """write the project_id when creating
         """
         values.update({
             'number': self.pool.get('ir.sequence').next_by_code(cr, self._get_admin_id(cr, uid),
@@ -121,8 +132,8 @@ class Ticket(osv.Model):
         })
         ticket_id = super(Ticket, self).create(cr, uid, values, context=context)
         # set the project of the ticket
-        self._set_project(cr, uid, ticket_id, context)
-
+        root_id = self._get_root(cr, uid, ticket_id)
+        self.write(cr, uid, ticket_id, {'project_id': root_id})
         return ticket_id
 
     def _default_parent_id(self, cr, uid, context=None):
