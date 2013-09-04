@@ -196,15 +196,22 @@ class Ticket(osv.Model):
         return dict((i, 1) for i in ids)
 
     _columns = {
-        'stage_id': fields.many2one('anytracker.stage',
-                                    ('Stage'),
-                                    domain="[('method_id','=',method_id)]"),
-        'progress': fields.float('Progress', group_operator="avg"),
+        'stage_id': fields.many2one(
+            'anytracker.stage',
+            'Stage',
+            select=True,
+            domain="[('method_id','=',method_id)]"),
+        'progress': fields.float(
+            'Progress',
+            select=True,
+            group_operator="avg"),
         # this field can be used to count tickets if the only available operation
         # on them is to sum field values (shameless hack for charts)
-        'constant_one': fields.function(_constant_one, type='integer',
-                                        obj='anytracker.ticket', string='Constant one',
-                                        invisible=True),
+        'constant_one': fields.function(
+            _constant_one, type='integer',
+            obj='anytracker.ticket',
+            string='Constant one',
+            invisible=True),
     }
 
     _group_by_full = {

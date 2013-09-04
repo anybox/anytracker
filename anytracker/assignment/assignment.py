@@ -96,18 +96,22 @@ class Ticket(osv.Model):
             string="Assigned user",
             multi='assigned_user'),  # multi is the key to group function fields
         'assigned_user_email': fields.function(
-            _get_assignment, type='string', multi='assigned_user', string='Assigned user email'),
-        'assignment_ids': fields.one2many('anytracker.assignment', 'ticket_id',
-                                          string="Stage assignments",
-                                          help="Each time you assign a ticket to someone, "
-                                          "the user and stage get recorded in this mapping. "
-                                          "Later on, the assignment will change upon a stage "
-                                          "change if and only if the new stage is found in "
-                                          "this mapping. "
-                                          "Only the most recent assignment for a given "
-                                          "stage will be considered. Older ones are "
-                                          "being displayed here for logging purposes only.",
-                                          readonly=True),
+            _get_assignment,
+            type='char',
+            multi='assigned_user',
+            string='Assigned user email'),
+        'assignment_ids': fields.one2many(
+            'anytracker.assignment', 'ticket_id',
+            string="Stage assignments",
+            help="Each time you assign a ticket to someone, "
+            "the user and stage get recorded in this mapping. "
+            "Later on, the assignment will change upon a stage "
+            "change if and only if the new stage is found in "
+            "this mapping. "
+            "Only the most recent assignment for a given "
+            "stage will be considered. Older ones are "
+            "being displayed here for logging purposes only.",
+            readonly=True),
     }
 
     def assign_to_current_user(self, cr, uid, record, context=None):

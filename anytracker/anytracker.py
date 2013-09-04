@@ -247,6 +247,7 @@ class Ticket(osv.Model):
             'anytracker.ticket',
             'Parent',
             required=False,
+            select=True,
             ondelete='cascade'),
         'project_id': fields.many2one(
             'anytracker.ticket',
