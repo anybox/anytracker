@@ -49,12 +49,18 @@ class Ticket(osv.Model):
         """
         res = {}
         for ticket_id in ids:
-            cr.execute("select b.id, b.parent_id, b.name "
-                       "from anytracker_ticket a join anytracker_ticket b "
-                       "on a.parent_left >= b.parent_left and a.parent_right<=b.parent_right "
-                       "and a.id=%s order by b.parent_left", (ticket_id,))
+            cr.execute("WITH RECURSIVE parent(id, parent_id, name) as "
+                       "(select 0, %s, text('') UNION SELECT t.id, t.parent_id, t.name "
+                       " FROM parent p, anytracker_ticket t WHERE t.id=p.parent_id) "
+                       "SELECT id, parent_id, name FROM parent WHERE id!=0", (ticket_id,))
+
+            # The same when using parent_store. Actually slower for our typical trees
+            #cr.execute("select b.id, b.parent_id, b.name "
+            #           "from anytracker_ticket a join anytracker_ticket b "
+            #           "on a.parent_left >= b.parent_left and a.parent_right<=b.parent_right "
+            #           "and a.id=%s order by b.parent_left", (ticket_id,))
             res[ticket_id] = [dict(zip(('id', 'parent_id', 'name'), line))
-                              for line in cr.fetchall()]
+                              for line in reversed(cr.fetchall())]
         return res
 
     def _formatted_breadcrumb(self, cr, uid, ids, field_name, args, context=None):
