@@ -9,6 +9,7 @@ class Ticket(osv.Model):
     _description = "Anytracker tickets"
     _rec_name = 'breadcrumb'
     _order = 'create_date DESC'
+    _parent_store = True
 
     def _get_siblings(self, cr, uid, ids, field_name, args, context=None):
         """ get tickets at the same hierachical level
@@ -48,17 +49,12 @@ class Ticket(osv.Model):
         """
         res = {}
         for ticket_id in ids:
-            cr.execute("WITH RECURSIVE parent(id, parent_id, name) as "
-                       "(select 0, %s, text('') "
-                       "UNION "
-                       "SELECT t.id, t.parent_id, t.name "
-                       "FROM parent p, anytracker_ticket t "
-                       "WHERE t.id=p.parent_id) "
-                       "SELECT id, parent_id, name "
-                       "FROM parent "
-                       "WHERE id!=0", (ticket_id,))
+            cr.execute("select b.id, b.parent_id, b.name "
+                       "from anytracker_ticket a join anytracker_ticket b "
+                       "on a.parent_left >= b.parent_left and a.parent_right<=b.parent_right "
+                       "and a.id=%s order by b.parent_left", (ticket_id,))
             res[ticket_id] = [dict(zip(('id', 'parent_id', 'name'), line))
-                              for line in reversed(cr.fetchall())]
+                              for line in cr.fetchall()]
         return res
 
     def _formatted_breadcrumb(self, cr, uid, ids, field_name, args, context=None):
@@ -255,6 +251,9 @@ class Ticket(osv.Model):
         'requester_id': fields.many2one(
             'res.users',
             'Requester'),
+        'parent_left': fields.integer('Parent Left', select=1),
+        'parent_right': fields.integer('Parent Right', select=1),
+
         #'active': fields.boolean(
         #    'Active',
         #    help=("If the active field is set to False, "
