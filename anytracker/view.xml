@@ -26,10 +26,6 @@
             string="Project"
             context="{'group_by': ['project_id', 'parent_id']}"
             help="Group tickets by project"/>
-    <field name="parent_id" widget="dynatree_selection"
-           operator="child_of"
-           options='{"child_field": "child_ids"}'
-           string="Nodes"/>
     </group>
     <field name="number" select="True"/>
     <field name="name" select="True"/>
