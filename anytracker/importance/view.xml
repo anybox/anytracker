@@ -85,7 +85,6 @@
             <field name="priority" eval="16"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='id']" position="after">
-                    <field name="seq"/>
                     <field name="importance_id" widget="selection"/>
                 </xpath>
             </field>

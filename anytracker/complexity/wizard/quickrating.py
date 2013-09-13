@@ -80,7 +80,7 @@ class QuickRating(osv.TransientModel):
 
     def _default_method(self, cr, uid, context=None):
         ticket_id = eval(self._default_tickets(cr, uid, context))[0]
-        return self.pool.get('anytracker.ticket').browse(cr, uid, ticket_id).project_method_id.id
+        return self.pool.get('anytracker.ticket').browse(cr, uid, ticket_id).project_id.method_id.id
 
     def _default_my_rating(self, cr, uid, context=None):
         ticket_id = eval(self._default_tickets(cr, uid, context))[0]

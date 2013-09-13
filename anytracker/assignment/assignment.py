@@ -10,19 +10,19 @@ class Assignment(osv.Model):
     So we have a separated object for assignment
     """
     _name = 'anytracker.assignment'
-    _description = 'Stage assignments'
+    _description = 'Assignments'
     _rec_name = 'user_id'
     _order = 'date DESC'
 
     _columns = {
         'user_id': fields.many2one('res.users', 'User', required=True),
         'ticket_id': fields.many2one('anytracker.ticket', 'Ticket', required=True),
-        'stage_id': fields.many2one('anytracker.stage', 'Stage', required=True),
+        'stage_id': fields.many2one('anytracker.stage', 'Stage'),
         'date': fields.datetime('Date', help='Assignment date', required=True),
     }
 
     _defaults = {
-        'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),  # TODO use a constant
+        'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
     }
 
 
@@ -33,40 +33,31 @@ class Ticket(osv.Model):
 
     def _get_assignment(self, cr, uid, ids, field_names, args, context=None):
         """ Return the latest assignment of the ticket for the current stage
+        If the assignment stage is not the ticket stage, take an older one.
         """
         if not context:
             context = {}
-        as_obj = self.pool.get('anytracker.assignment')
+
+        # Join in sql with a single request
+        sql = ('SELECT t.id, t.stage_id, a.id, a.stage_id, a.user_id, u.user_email, a.date '
+               'FROM anytracker_ticket t '
+               'LEFT OUTER JOIN anytracker_assignment a '
+               'ON t.id = a.ticket_id '
+               'LEFT OUTER JOIN res_users u ON u.id = a.user_id '
+               'WHERE t.id in %s '
+               'ORDER BY date, t.id')
+        cr.execute(sql, (tuple(ids),))
+        ticket_assignments = cr.fetchall()
         assignments = {}
-
-        default = dict((fid, False) for fid in field_names)
-
-        def ass_search(domain, **kw):
-            return as_obj.search(cr, uid, domain, order='date DESC', context=context, **kw)
-
-        # TODO PERF rewrite this without browsing users inside of a loop
-        # (at least a small cache if that's more readable than a direct read or SQL request)
-        for ticket in self.read(cr, uid, ids, ['stage_id'], context):
-            tid = ticket['id']
-            assignments[tid] = default.copy()
-
-            stage_id = ticket['stage_id']
-            if not stage_id:
-                continue
-            stage_id = stage_id[0]
-            stage_domain = ('stage_id', '=', stage_id)
-            ticket_domain = ('ticket_id', '=', tid)
-
-            assignment_ids = ass_search([ticket_domain, stage_domain], limit=1)
-            if not assignment_ids:  # retry for any stage
-                assignment_ids = ass_search([ticket_domain], limit=1)
-                if not assignment_ids:
-                    continue
-
-            assignment = as_obj.browse(cr, uid, assignment_ids[0])
-
-            assignments[tid] = dict(assigned_user_id=(assignment.id, assignment.user_id.name),
-                                    assigned_user_email=(assignment.user_id.user_email))
+        # then process the result in a pure python loop, starting with the oldest
+        for t_id, t_stage_id, a_id, a_stage_id, a_user_id, u_mail, a_date in ticket_assignments:
+            assignment = {'assigned_user_id': a_user_id, 'assigned_user_email': u_mail}
+            assignments[t_id] = assignment
+            # to reenable the stage_id logic in assignment, replace the previous line with:
+            #assignments.setdefault(t_id, assignment)
+            # a more recent with the exact stage, or assignment without stage, keep it
+            #if a_stage_id == t_stage_id or not a_stage_id:
+            #    assignments[t_id] = assignment
 
         return assignments
 
@@ -77,7 +68,7 @@ class Ticket(osv.Model):
             ticket = self.browse(cr, uid, ticket_id, context)
             self.pool.get('anytracker.assignment').create(
                 cr, uid, {
-                    'stage_id': ticket.stage_id.id,
+                    'stage_id': ticket.stage_id.id or self._default_stage(cr, uid, context={'active_id': ticket_id}),
                     'ticket_id': ticket_id,
                     'user_id': value,
                 })
@@ -105,18 +96,22 @@ class Ticket(osv.Model):
             string="Assigned user",
             multi='assigned_user'),  # multi is the key to group function fields
         'assigned_user_email': fields.function(
-            _get_assignment, type='string', multi='assigned_user', string='Assigned user email'),
-        'assignment_ids': fields.one2many('anytracker.assignment', 'ticket_id',
-                                          string="Stage assignments",
-                                          help="Each time you assign a ticket to someone, "
-                                          "the user and stage get recorded in this mapping. "
-                                          "Later on, the assignment will change upon a stage "
-                                          "change if and only if the new stage is found in "
-                                          "this mapping. "
-                                          "Only the most recent assignment for a given "
-                                          "stage will be considered. Older ones are "
-                                          "being displayed here for logging purposes only.",
-                                          readonly=True),
+            _get_assignment,
+            type='char',
+            multi='assigned_user',
+            string='Assigned user email'),
+        'assignment_ids': fields.one2many(
+            'anytracker.assignment', 'ticket_id',
+            string="Stage assignments",
+            help="Each time you assign a ticket to someone, "
+            "the user and stage get recorded in this mapping. "
+            "Later on, the assignment will change upon a stage "
+            "change if and only if the new stage is found in "
+            "this mapping. "
+            "Only the most recent assignment for a given "
+            "stage will be considered. Older ones are "
+            "being displayed here for logging purposes only.",
+            readonly=True),
     }
 
     def assign_to_current_user(self, cr, uid, record, context=None):
