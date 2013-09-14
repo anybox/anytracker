@@ -39,11 +39,11 @@ class Ticket(osv.Model):
             context = {}
 
         # Join in sql with a single request
-        sql = ('SELECT t.id, t.stage_id, a.id, a.stage_id, a.user_id, u.user_email, a.date '
+        sql = ('SELECT t.id, t.stage_id, a.id, a.stage_id, a.user_id, p.email, a.date '
                'FROM anytracker_ticket t '
-               'LEFT OUTER JOIN anytracker_assignment a '
-               'ON t.id = a.ticket_id '
+               'LEFT OUTER JOIN anytracker_assignment a ON t.id = a.ticket_id '
                'LEFT OUTER JOIN res_users u ON u.id = a.user_id '
+               'LEFT OUTER JOIN res_partner p ON u.partner_id = p.id '
                'WHERE t.id in %s '
                'ORDER BY date, t.id')
         cr.execute(sql, (tuple(ids),))

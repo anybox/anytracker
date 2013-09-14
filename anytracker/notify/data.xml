@@ -4,9 +4,9 @@
         <!--Email template for ticket in initial stage -->
         <record id="email_template_ticket_new" model="email.template">
             <field name="name">Anytracker ticket new</field>
-            <field name="email_from">${user.user_email}</field>
+            <field name="email_from">${user.email}</field>
             <field name="subject">New ticket #${object.number} created by ${user.name} in Anytracker</field>
-            <field name="email_to">${str([str(i.user_email) for i in object.project_id.participant_ids if i.user_email])[1:-1].replace("'",'')}</field>
+            <field name="email_to">${str([str(u.email) for u in object.project_id.participant_ids if u.email])[1:-1].replace("'",'')}</field>
             <field name="model_id" ref="anytracker.model_anytracker_ticket"/>
             <field name="lang">${user.context_lang}</field>
             <field name="auto_delete" eval="True"/>
@@ -28,9 +28,9 @@ ${object.description}
         <!--Email template for ticket acknowledged-->
         <record id="email_template_ticket_ack" model="email.template">
             <field name="name">Anytracker ticket acknowledged</field>
-            <field name="email_from">${user.user_email}</field>
+            <field name="email_from">${user.email}</field>
             <field name="subject">Ticket #${object.number} has been acknowledged by ${user.name}</field>
-            <field name="email_to">${str([str(i.user_email) for i in object.project_id.participant_ids if i.user_email])[1:-1].replace("'",'')}</field>
+            <field name="email_to">${str([str(u.email) for u in object.project_id.participant_ids if u.email])[1:-1].replace("'",'')}</field>
             <field name="model_id" ref="anytracker.model_anytracker_ticket"/>
             <field name="lang">${user.context_lang}</field>
             <field name="auto_delete" eval="True"/>
