@@ -70,7 +70,7 @@ class FreemindContentHandler(sax.ContentHandler):
         self.updated_ticket_ids = []
         self.complexity_dict = complexity_dict
         self.rich_content_buffer = False
-        self.context = self.pool.get('res.users').context_get(cr, uid, uid)
+        self.context = self.pool.get('res.users').context_get(cr, uid)
         self.context['import_mindmap'] = True
         stages = wizard.method_id.stage_ids
         self.initial_stage = sorted(stages,
