@@ -15,6 +15,7 @@
             help="Show only toplevel tickets. They correspond to projects"/>
     <filter name="filter_nodes"
             string="Nodes"
+            domain="[('child_ids','!=',False)]"
             help="Show only tickets which have sub-tickets. They are used to gather tickets by nodes"/>
     <filter name="filter_tasks"
             string="Tasks"
