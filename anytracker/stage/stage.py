@@ -211,6 +211,7 @@ class Ticket(osv.Model):
             _constant_one, type='integer',
             obj='anytracker.ticket',
             string='Constant one',
+            store=True,
             invisible=True),
     }
 

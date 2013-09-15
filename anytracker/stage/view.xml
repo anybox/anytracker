@@ -109,9 +109,8 @@
 <record id="ticket_stage_piechart" model="ir.ui.view">
   <field name="name">anytracker.ticket.stage_piechart</field>
   <field name="model">anytracker.ticket</field>
-  <field name="type">graph</field>
   <field name="arch" type="xml">
-    <graph string="Stages">
+    <graph string="Stages" type="pie">
       <field name="stage_id"/>
       <!-- hack to get the count by summing on a constant field -->
       <field name="constant_one" operator="+"/>
