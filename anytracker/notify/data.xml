@@ -5,17 +5,17 @@
         <record id="email_template_ticket_new" model="email.template">
             <field name="name">Anytracker ticket new</field>
             <field name="email_from">${user.email}</field>
-            <field name="subject">New ticket #${object.number} created by ${user.name} in Anytracker</field>
+            <field name="subject">[${object.project_id.name}] ${user.name} created a ticket #${object.number}</field>
             <field name="email_to">${str([str(u.email) for u in object.project_id.participant_ids if u.email])[1:-1].replace("'",'')}</field>
             <field name="model_id" ref="anytracker.model_anytracker_ticket"/>
             <field name="lang">${user.context_lang}</field>
             <field name="auto_delete" eval="True"/>
-            <field name="body_text"><![CDATA[A new ticket #${object.number} has been created in anytracker by ${user.name}. It is now in stage ${object.stage_id.name}
+            <field name="body_html"><![CDATA[A new ticket #${object.number} has been created in anytracker by ${user.name}. It is now in stage ${object.stage_id.name}
 
 
 ${object.name}
 --
-${object.description}
+${object.description or ''}
             ]]></field>
         </record>
         <!-- put the template at least on one stage, but disabled by default -->
@@ -34,12 +34,12 @@ ${object.description}
             <field name="model_id" ref="anytracker.model_anytracker_ticket"/>
             <field name="lang">${user.context_lang}</field>
             <field name="auto_delete" eval="True"/>
-            <field name="body_text"><![CDATA[Ticket #${object.number} is now in stage ${object.stage_id.name}
+            <field name="body_html"><![CDATA[Ticket #${object.number} is now in stage ${object.stage_id.name}
 
 
 ${object.name}
 --
-${object.description}
+${object.description or ''}
             ]]></field>
         </record>
         <!-- put the template at least on one stage, but disabled by default -->

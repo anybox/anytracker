@@ -37,7 +37,7 @@ class Ticket(osv.Model):
         if not ticket.stage_id.notify_template_id:
             raise osv.except_osv(
                 _(u'Warning !'),
-                _(u'No email template selected in the "%s" "%s" stage of the "%s" method'
+                _(u'No email template selected in the "%s" stage of the "%s" method'
                   % (ticket.stage_id.name, ticket.method_id.name)))
         return True
 
