@@ -6,9 +6,9 @@
             <field name="name">Anytracker ticket new</field>
             <field name="email_from">${user.email}</field>
             <field name="subject">[${object.project_id.name}] ${user.name} created a ticket #${object.number}</field>
-            <field name="email_to">${str([str(u.email) for u in object.project_id.participant_ids if u.email])[1:-1].replace("'",'')}</field>
+            <field name="email_to"><![CDATA[<% for u in object.project_id.participant_ids %>${u.email and u.email + ',' or ''}<% endfor %>]]></field>
             <field name="model_id" ref="anytracker.model_anytracker_ticket"/>
-            <field name="lang">${user.context_lang}</field>
+            <field name="lang">${user.lang}</field>
             <field name="auto_delete" eval="True"/>
             <field name="body_html"><![CDATA[A new ticket #${object.number} has been created in anytracker by ${user.name}. It is now in stage ${object.stage_id.name}
 
@@ -30,9 +30,9 @@ ${object.description or ''}
             <field name="name">Anytracker ticket acknowledged</field>
             <field name="email_from">${user.email}</field>
             <field name="subject">Ticket #${object.number} has been acknowledged by ${user.name}</field>
-            <field name="email_to">${str([str(u.email) for u in object.project_id.participant_ids if u.email])[1:-1].replace("'",'')}</field>
+            <field name="email_to"><![CDATA[<% for u in object.project_id.participant_ids %>${u.email and u.email + ',' or ''}<% endfor %>]]></field>
             <field name="model_id" ref="anytracker.model_anytracker_ticket"/>
-            <field name="lang">${user.context_lang}</field>
+            <field name="lang">${user.lang}</field>
             <field name="auto_delete" eval="True"/>
             <field name="body_html"><![CDATA[Ticket #${object.number} is now in stage ${object.stage_id.name}
 
