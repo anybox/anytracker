@@ -75,7 +75,7 @@
             <group col="8" colspan="2">
                 <h1>
                     [<field name="number" readonly="1" class="oe_inline"/>]
-                    <field name="name" colspan="6" select="1" class="oe_inline"/>
+                    <field name="name" colspan="6" default_focus="1" class="oe_inline"/>
                 </h1>
             </group>
             <field name="description" colspan="4" widget="html"/>
@@ -256,7 +256,7 @@
 <!-- MENUITEMS -->
 <menuitem id="tabmenu_anytracker"
   name="Anytracker"
-  sequence="-1"/>
+  sequence="11"/>
 <menuitem id="menu_anytracker"
   name="Anytracker"
   parent="tabmenu_anytracker"
