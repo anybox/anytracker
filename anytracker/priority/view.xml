@@ -99,7 +99,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='shortened_description']" position="after">
                     <field name="priority_id"/>
-                    <field name="seq" invisible="0"/>
+                    <field name="seq" invisible="1"/>
                 </xpath>
             </field>
         </record>

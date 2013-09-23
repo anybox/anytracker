@@ -46,6 +46,7 @@
 - Hierarchical progress management
 - Complexity/evaluation management
 - Importance management
+- Priority mangement
 - Simple commenting
 - Assignment
 - Kanban view
@@ -80,9 +81,6 @@ http://www.famfamfam.com/lab/icons/silk/
         'importance/data.xml',
         'importance/view.xml',
         'importance/ir.model.access.csv',
-        'priority/data.xml',
-        'priority/view.xml',
-        'priority/ir.model.access.csv',
         'assignment/action.xml',
         'assignment/view.xml',
         'assignment/ir.model.access.csv',
@@ -91,6 +89,9 @@ http://www.famfamfam.com/lab/icons/silk/
         'notify/view.xml',
         'notify/data.xml',
         'notify/ir.model.access.csv',
+        'priority/data.xml',
+        'priority/view.xml',
+        'priority/ir.model.access.csv',
     ],
     'test': [],
     'demo': [],
