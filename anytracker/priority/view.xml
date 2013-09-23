@@ -99,7 +99,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='shortened_description']" position="after">
                     <field name="priority_id"/>
-                    <field name="seq" invisible="1"/>
+                    <field name="priority_seq" invisible="1"/>
                 </xpath>
             </field>
         </record>
@@ -115,7 +115,7 @@
                 <xpath expr="//notebook/page[@string='Participants']" position="after">
                     <page string="Priority">
                         <field name="priority_id" domain="[('method_id', '=', method_id)]"/>
-                        <field name="seq"/>
+                        <field name="priority_seq"/>
                     </page>
                 </xpath>
             </field>
