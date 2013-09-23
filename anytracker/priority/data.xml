@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data noupdate="1">
+    <!-- gtd method -->
+    <record model="anytracker.priority" id="priority_gtd_should_be_done">
+      <field name="active" eval="1"/>
+      <field name="method_id" ref="method_gtd"/>
+      <field name="name">Should be already done</field>
+      <field name="seq" eval="20"/>
+    </record>
+    <record model="anytracker.priority" id="priority_gtd_for_yesterday">
+      <field name="active" eval="1"/>
+      <field name="method_id" ref="method_gtd"/>
+      <field name="name">For yesterday</field>
+      <field name="seq" eval="40"/>
+    </record> 
+    <record model="anytracker.priority" id="priority_gtd_normal">
+      <field name="active" eval="1"/>
+      <field name="method_id" ref="method_gtd"/>
+      <field name="name">Normal</field>
+      <field name="seq" eval="60"/>
+    </record> 
+    <record model="anytracker.priority" id="priority_gtd_if_time">
+      <field name="active" eval="1"/>
+      <field name="method_id" ref="method_gtd"/>
+      <field name="name">If time</field>
+      <field name="seq" eval="80"/>
+    </record> 
+
+    <!-- maintenance -->
+    <record model="anytracker.priority" id="priority_maintenance_emergence">
+      <field name="active" eval="1"/>
+      <field name="method_id" ref="method_maintenance"/>
+      <field name="name">Emergence</field>
+      <field name="seq" eval="25"/>
+    </record>
+    <record model="anytracker.priority" id="priority_maintenance_normal">
+      <field name="active" eval="1"/>
+      <field name="method_id" ref="method_maintenance"/>
+      <field name="name">Normal</field>
+      <field name="seq" eval="50"/>
+    </record> 
+    <record model="anytracker.priority" id="priority_maintenance_dont_worry">
+      <field name="active" eval="1"/>
+      <field name="method_id" ref="method_maintenance"/>
+      <field name="name">Don't worry you can do it tomorrow !</field>
+      <field name="seq" eval="75"/>
+    </record> 
+
+
+    <!-- Scrum -->
+    <record model="anytracker.priority" id="priority_scrum_0">
+      <field name="name">0</field>
+      <field name="description">Zero is the priority, you must start here !</field>
+      <field name="seq" eval="25"/>
+      <field name="active" eval="1"/>
+      <field name="method_id" ref="method_scrum"/>
+    </record>
+    <record model="anytracker.priority" id="priority_scrum_0">
+      <field name="name">1</field>
+      <field name="description">Do it right after 0 priorities tasks !</field>
+      <field name="seq" eval="50"/>
+      <field name="active" eval="1"/>
+      <field name="method_id" ref="method_scrum"/>
+    </record> 
+    <record model="anytracker.priority" id="priority_scrum_0">
+      <field name="name">2</field>
+      <field name="description">do it when you can't do any more 1 priority tasks !</field>
+      <field name="seq" eval="75"/>
+      <field name="active" eval="1"/>
+      <field name="method_id" ref="method_scrum"/>
+    </record> 
+
+
+    <!-- Implementation -->
+    <record model="anytracker.priority" id="priority_implementation_start">
+      <field name="name">Start here</field>
+      <field name="description">Start the project here.</field>
+      <field name="seq" eval="25"/>
+      <field name="active" eval="1"/>
+      <field name="method_id" ref="method_implementation"/>
+    </record>
+    <record model="anytracker.priority" id="priority_implementation_continue">
+      <field name="name">Continue here</field>
+      <field name="seq" eval="50"/>
+      <field name="active" eval="1"/>
+      <field name="method_id" ref="method_implementation"/>
+    </record> 
+    <record model="anytracker.priority" id="priority_implementation_end">
+      <field name="name">Last things to do</field>
+      <field name="description">It's sound's end of project !</field>
+      <field name="seq" eval="75"/>
+      <field name="active" eval="1"/>
+      <field name="method_id" ref="method_implementation"/>
+    </record> 
+    
+  </data>
+</openerp>
+

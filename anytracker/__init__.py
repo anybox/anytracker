@@ -6,6 +6,7 @@ from . import stage
 from . import method
 from . import complexity
 from . import importance
+from . import priority
 from . import mindmap
 from . import assignment
 from . import comment

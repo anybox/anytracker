@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="view_anytracker_priority_tree" model="ir.ui.view">
+            <field name="name">anytracker.priority.tree</field>
+            <field name="model">anytracker.priority</field>
+            <field name="type">tree</field>
+            <field name="sequence" eval="8"/>
+            <field name="arch" type="xml">
+                <tree string="Priority">
+                    <field name="seq"/>
+                    <field name="name"/>
+                    <field name="method_id"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_anytracker_priority_form" model="ir.ui.view">
+            <field name="name">anytracker.priority.form</field>
+            <field name="model">anytracker.priority</field>
+            <field name="type">form</field>
+            <field name="sequence" eval="8"/>
+            <field name="arch" type="xml">
+                <form string="Priority">
+                    <field name="seq"/>
+                    <field name="name"/>
+                    <field name="method_id" widget="selection"/>
+                    <field name="active"/>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_anytracker_priority_search" model="ir.ui.view">
+            <field name="name">anytracker.priority.search</field>
+            <field name="model">anytracker.priority</field>
+            <field name="type">search</field>
+            <field name="sequence" eval="8"/>
+            <field name="arch" type="xml">
+                <search string="Priorities">
+                    <filter name="priorities_by_method"
+                        string="By method"
+                        context="{'group_by': 'method_id'}"
+                        icon="gtk-indent"
+                        help="Group by method"/>
+                </search>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="act_open_anytracker_priority_view">
+            <field name="name">Priority</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">anytracker.priority</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_anytracker_priority_search"/>
+            <field name="domain">[]</field>
+            <field name="context">{'search_default_priorities_by_method': 1}</field>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="act_open_anytracker_priority_view_form">
+            <field name="act_window_id" ref="act_open_anytracker_priority_view"/>
+            <field name="sequence" eval="20"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_anytracker_priority_form"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="act_open_anytracker_priority_view_tree">
+            <field name="act_window_id" ref="act_open_anytracker_priority_view"/>
+            <field name="sequence" eval="10"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_anytracker_priority_tree"/>
+        </record>
+
+        <menuitem id="menu_anytracker_priority"
+            parent="menu_configuration"
+            sequence="35"
+            action="act_open_anytracker_priority_view"/>
+
+        <record id="priority_ticket_view_search" model="ir.ui.view">
+            <field name="name">anytracker.ticket.search</field>
+            <field name="model">anytracker.ticket</field>
+            <field name="type">search</field>
+            <field name="inherit_id" ref="anytracker.ticket_view_search"/>
+            <field name="priority" eval="16"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='id']" position="after">
+                    <field name="priority_id" widget="selection"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="priority_ticket_view_tree" model="ir.ui.view">
+            <field name="name">Tickets</field>
+            <field name="model">anytracker.ticket</field>
+            <field name="type">tree</field>
+            <field name="priority" eval="16"/>
+            <field name="inherit_id" ref="anytracker.ticket_view_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='shortened_description']" position="after">
+                    <field name="priority_id"/>
+                    <field name="seq" invisible="0"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- ADD A TAB IN TICKET FORM -->
+        <record id="priority_ticket_view_form" model="ir.ui.view">
+            <field name="name">ticket.form</field>
+            <field name="model">anytracker.ticket</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="anytracker.ticket_view_form"/>
+            <field name="priority" eval="16"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook/page[@string='Participants']" position="after">
+                    <page string="Priority">
+                        <field name="priority_id" domain="[('method_id', '=', method_id)]"/>
+                        <field name="seq"/>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>
