@@ -14,7 +14,7 @@ class Priority(osv.Model):
     _columns = {
         'name': fields.char('Priority name', required=True, size=64, translate=True),
         'description': fields.text('Priority description', translate=True),
-        'seq': fields.integer('Priority', translate=True, help='a low value is higher priority'),
+        'seq': fields.integer('Priority', help='a low value is higher priority'),
         'active': fields.boolean('Active', help='if check, this object is always available'),
         'method_id': fields.many2one('anytracker.method', 'Method', required=True),
     }
@@ -36,7 +36,7 @@ class Ticket(osv.Model):
         return res
 
     _columns = {
-        'priority_id': fields.many2one('anytracker.priority', 'Priority', required=False, translate=True),
+        'priority_id': fields.many2one('anytracker.priority', 'Priority', required=False),
         'priority_seq': fields.function(
             _get_priority_seq, method=True, string='Priority (Number)',
             type='integer', store=True),
