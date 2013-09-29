@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.1-20130114-003439\n"
+"Project-Id-Version: OpenERP Server 7.0-20130921-231041\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-02 14:20+0000\n"
-"PO-Revision-Date: 2013-02-02 14:20+0000\n"
+"POT-Creation-Date: 2013-09-26 07:58+0000\n"
+"PO-Revision-Date: 2013-09-26 07:58+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -38,8 +38,9 @@ msgid "Title"
 msgstr ""
 
 #. module: anytracker
-#: view:anytracker.ticket:0
-msgid "My tasks"
+#: code:addons/anytracker/mindmap/wizard/import_freemind.py:192
+#, python-format
+msgid "You try to update the wrong main ticket"
 msgstr ""
 
 #. module: anytracker
@@ -59,8 +60,10 @@ msgid "Comments"
 msgstr ""
 
 #. module: anytracker
-#: help:anytracker.complexity,method_id:0
-msgid "Projet method"
+#: code:addons/anytracker/history/history.py:42
+#, python-format
+msgid "Modify field %s\n"
+""
 msgstr ""
 
 #. module: anytracker
@@ -79,6 +82,8 @@ msgstr ""
 
 #. module: anytracker
 #: view:anytracker.ticket:0
+#: model:ir.actions.act_window,name:anytracker.act_all_nodes
+#: model:ir.ui.menu,name:anytracker.menu_all_nodes
 msgid "Nodes"
 msgstr ""
 
@@ -98,13 +103,20 @@ msgid "Minor"
 msgstr ""
 
 #. module: anytracker
-#: model:anytracker.complexity,name:anytracker.complexity_scrum_1
-msgid "1"
+#: code:addons/anytracker/anytracker.py:118
+#, python-format
+msgid "Think about yourself. Can you be your own parent?"
 msgstr ""
 
 #. module: anytracker
-#: model:ir.ui.menu,name:anytracker.menu_kanbans
-msgid "Kanbans"
+#: field:anytracker.stage,notify_sms:0
+msgid "SMS notification"
+msgstr ""
+
+#. module: anytracker
+#: code:addons/anytracker/stage/stage.py:126
+#, python-format
+msgid "The ticket \"%s\" is rated \"%s\" so it cannot enter this stage"
 msgstr ""
 
 #. module: anytracker
@@ -132,18 +144,14 @@ msgid "Importance"
 msgstr ""
 
 #. module: anytracker
-#: view:anytracker.assignment:0
-msgid "Assignment"
+#: model:anytracker.complexity,description:anytracker.complexity_implementation_orange
+#: model:anytracker.complexity,name:anytracker.complexity_implementation_orange
+msgid "Orange (should be less than 0.5 day but I'm not sure)"
 msgstr ""
 
 #. module: anytracker
 #: help:import.freemind.wizard,ticket_id:0
 msgid "Ticket that will be updated"
-msgstr ""
-
-#. module: anytracker
-#: field:anytracker.stage,state:0
-msgid "state"
 msgstr ""
 
 #. module: anytracker
@@ -153,8 +161,8 @@ msgid "complexity level for green flag"
 msgstr ""
 
 #. module: anytracker
-#: model:anytracker.complexity,name:anytracker.complexity_scrum_0
-msgid "0"
+#: view:anytracker.ticket:0
+msgid "í"
 msgstr ""
 
 #. module: anytracker
@@ -168,8 +176,15 @@ msgid "Someone else can do this"
 msgstr ""
 
 #. module: anytracker
-#: model:anytracker.complexity,name:anytracker.complexity_scrum_8
-msgid "8"
+#: help:anytracker.stage,notify_urgent:0
+msgid "Immediate notification (don't wait for email scheduler"
+msgstr ""
+
+#. module: anytracker
+#: code:addons/anytracker/stage/stage.py:62
+#: code:addons/anytracker/stage/stage.py:80
+#, python-format
+msgid "No method defined in the project."
 msgstr ""
 
 #. module: anytracker
@@ -179,19 +194,34 @@ msgid " Not critical but would be nice to have if it does not cost too much."
 msgstr ""
 
 #. module: anytracker
+#: model:email.template,body_html:anytracker.email_template_ticket_new
+msgid "A new ticket #${object.number} has been created in anytracker by ${user.name}. It is now in stage ${object.stage_id.name}<br/><br/><br/>${object.name}<br/>--<br/>${object.description}<br/>            "
+msgstr ""
+
+#. module: anytracker
 #: view:anytracker.ticket:0
 msgid "Search tickets"
 msgstr ""
 
 #. module: anytracker
-#: model:ir.actions.act_window,name:anytracker.action_hierarchy_line_select
-#: model:ir.ui.menu,name:anytracker.tickets
-msgid "Tickets"
+#: model:anytracker.complexity,name:0
+msgid "15 min"
 msgstr ""
 
 #. module: anytracker
 #: model:anytracker.stage,name:anytracker.stage_gtd_oneday
 msgid "Maybe one day"
+msgstr ""
+
+#. module: anytracker
+#: field:anytracker.ticket,write_date:0
+msgid "Modification Time"
+msgstr ""
+
+#. module: anytracker
+#: code:addons/anytracker/history/history.py:47
+#, python-format
+msgid "Create new value %s"
 msgstr ""
 
 #. module: anytracker
@@ -202,6 +232,11 @@ msgstr ""
 #. module: anytracker
 #: selection:import.freemind.wizard,import_method:0
 msgid "Insert under the ticket"
+msgstr ""
+
+#. module: anytracker
+#: field:anytracker.ticket,message_ids:0
+msgid "Messages"
 msgstr ""
 
 #. module: anytracker
@@ -223,14 +258,29 @@ msgstr ""
 
 #. module: anytracker
 #: model:anytracker.stage,name:anytracker.stage_gtd_project
+#: view:anytracker.ticket:0
 #: field:anytracker.ticket,project_id:0
 msgid "Project"
 msgstr ""
 
 #. module: anytracker
-#: view:anytracker.complexity:0
-#: field:anytracker.rating,complexity_id:0
-msgid "Complexity"
+#: field:anytracker.ticket,assigned_user_email:0
+msgid "Assigned user email"
+msgstr ""
+
+#. module: anytracker
+#: view:anytracker.quickrating:0
+msgid "Quick ticket rating"
+msgstr ""
+
+#. module: anytracker
+#: view:anytracker.ticket:0
+msgid "(#"
+msgstr ""
+
+#. module: anytracker
+#: view:anytracker.ticket:0
+msgid "ticket"
 msgstr ""
 
 #. module: anytracker
@@ -246,6 +296,11 @@ msgid "Group by method"
 msgstr ""
 
 #. module: anytracker
+#: help:anytracker.ticket,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr ""
+
+#. module: anytracker
 #: model:anytracker.complexity,name:anytracker.complexity_gtd_delegate
 msgid "I cannot do it"
 msgstr ""
@@ -256,8 +311,13 @@ msgid "name"
 msgstr ""
 
 #. module: anytracker
-#: view:anytracker.ticket:0
-msgid "Show only tickets which have sub-tickets. They are used to gather tickets by nodes"
+#: model:ir.ui.menu,name:anytracker.menu_configuration
+msgid "Configuration"
+msgstr ""
+
+#. module: anytracker
+#: model:email.template,body_html:anytracker.email_template_ticket_ack
+msgid "Ticket #${object.number} is now in stage ${object.stage_id.name}<br/><br/><br/>${object.name}<br/>--<br/>${object.description}<br/>            "
 msgstr ""
 
 #. module: anytracker
@@ -265,6 +325,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:anytracker.act_open_method_view
 #: model:ir.ui.menu,name:anytracker.menu_method
 msgid "Methods"
+msgstr ""
+
+#. module: anytracker
+#: code:addons/anytracker/notify/notify.py:41
+#, python-format
+msgid "No email template selected in the \"%s\" stage of the \"%s\" method"
 msgstr ""
 
 #. module: anytracker
@@ -288,8 +354,14 @@ msgid "You can either update a tree or insert the mindmap under an existing tick
 msgstr ""
 
 #. module: anytracker
+#: help:anytracker.ticket,message_summary:0
+msgid "Holds the Chatter summary (number of messages, ...). This summary is directly in html format in order to be inserted in kanban views."
+msgstr ""
+
+#. module: anytracker
 #: view:anytracker.ticket:0
-#: model:ir.ui.menu,name:anytracker.projects
+#: model:ir.actions.act_window,name:anytracker.act_all_projects
+#: model:ir.ui.menu,name:anytracker.menu_all_projects
 msgid "Projects"
 msgstr ""
 
@@ -300,8 +372,19 @@ msgid "Not planned for this version of the application, but may be reconsidered 
 msgstr ""
 
 #. module: anytracker
+#: code:addons/anytracker/history/history.py:126
+#, python-format
+msgid "You can t update the ticket %s"
+msgstr ""
+
+#. module: anytracker
 #: help:anytracker.stage,progress:0
 msgid "Progress value of the ticket reaching this stage"
+msgstr ""
+
+#. module: anytracker
+#: model:anytracker.complexity,name:0
+msgid "2h"
 msgstr ""
 
 #. module: anytracker
@@ -327,14 +410,15 @@ msgid "Ratings"
 msgstr ""
 
 #. module: anytracker
-#: model:ir.actions.act_window,name:anytracker.act_all_projects
-#: model:ir.ui.menu,name:anytracker.menu_all_projects
-msgid "All projects"
+#: code:addons/anytracker/history/history.py:58
+#, python-format
+msgid "Unlink value %s"
 msgstr ""
 
 #. module: anytracker
-#: view:anytracker.ticket:0
-msgid "Show only leaf tickets. They correspond to tasks"
+#: code:addons/anytracker/complexity/wizard/quickrating.py:33
+#, python-format
+msgid "Nothing before!"
 msgstr ""
 
 #. module: anytracker
@@ -343,13 +427,35 @@ msgid "Next"
 msgstr ""
 
 #. module: anytracker
+#: code:addons/anytracker/mindmap/wizard/import_freemind.py:216
+#: code:addons/anytracker/notify/notify.py:39
+#: code:addons/anytracker/stage/stage.py:62
+#: code:addons/anytracker/stage/stage.py:80
+#: code:addons/anytracker/stage/stage.py:84
+#: code:addons/anytracker/stage/stage.py:117
+#: code:addons/anytracker/stage/stage.py:124
+#, python-format
+msgid "Warning !"
+msgstr ""
+
+#. module: anytracker
 #: model:anytracker.importance,name:anytracker.importance_gtd_wishlist
 msgid "Future wishlist"
 msgstr ""
 
 #. module: anytracker
+#: field:anytracker.ticket,message_summary:0
+msgid "Summary"
+msgstr ""
+
+#. module: anytracker
 #: model:anytracker.complexity,name:anytracker.complexity_maintenance_complex
 msgid "Complex"
+msgstr ""
+
+#. module: anytracker
+#: field:anytracker.ticket,message_follower_ids:0
+msgid "Followers"
 msgstr ""
 
 #. module: anytracker
@@ -363,8 +469,13 @@ msgid "Easy"
 msgstr ""
 
 #. module: anytracker
-#: field:anytracker.ticket,duration:0
-msgid "duration"
+#: field:anytracker.ticket,message_unread:0
+msgid "Unread Messages"
+msgstr ""
+
+#. module: anytracker
+#: model:email.template,subject:anytracker.email_template_ticket_ack
+msgid "Ticket #${object.number} has been acknowledged by ${user.name}"
 msgstr ""
 
 #. module: anytracker
@@ -374,9 +485,25 @@ msgid "Could have"
 msgstr ""
 
 #. module: anytracker
+#: field:anytracker.stage,notify_urgent:0
+msgid "Urgent notification"
+msgstr ""
+
+#. module: anytracker
+#: model:anytracker.stage,name:0
+msgid "En cours"
+msgstr ""
+
+#. module: anytracker
 #: model:ir.module.category,name:anytracker.module_category_anytracker
-#: model:ir.ui.menu,name:anytracker.anytracker
+#: model:ir.ui.menu,name:anytracker.menu_anytracker
+#: model:ir.ui.menu,name:anytracker.tabmenu_anytracker
 msgid "Anytracker"
+msgstr ""
+
+#. module: anytracker
+#: model:anytracker.stage,name:0
+msgid "A faire"
 msgstr ""
 
 #. module: anytracker
@@ -400,6 +527,18 @@ msgid "Ticket stage"
 msgstr ""
 
 #. module: anytracker
+#: model:anytracker.stage,name:0
+msgid "Terminé"
+msgstr ""
+
+#. module: anytracker
+#: code:addons/anytracker/mindmap/wizard/import_freemind.py:206
+#: code:addons/anytracker/mindmap/wizard/import_freemind.py:211
+#, python-format
+msgid "Error !"
+msgstr ""
+
+#. module: anytracker
 #: field:anytracker.complexity,risk:0
 #: view:anytracker.ticket:0
 #: field:anytracker.ticket,risk:0
@@ -407,7 +546,14 @@ msgid "Risk"
 msgstr ""
 
 #. module: anytracker
+#: field:anytracker.stage,notify_template_id:0
+msgid "Email template"
+msgstr ""
+
+#. module: anytracker
+#: view:anytracker.ticket:0
 #: model:ir.actions.act_window,name:anytracker.act_open_my_tickets_view
+#: model:ir.ui.menu,name:anytracker.menu_my_tickets
 msgid "My tickets"
 msgstr ""
 
@@ -432,8 +578,8 @@ msgid "Will be computed"
 msgstr ""
 
 #. module: anytracker
-#: model:anytracker.complexity,name:anytracker.complexity_scrum_3
-msgid "3"
+#: field:anytracker.stage,state:0
+msgid "state"
 msgstr ""
 
 #. module: anytracker
@@ -447,18 +593,25 @@ msgid "ticket form"
 msgstr ""
 
 #. module: anytracker
-#: view:anytracker.quickrating:0
-msgid "Quick ticket rating"
+#: view:anytracker.ticket:0
+msgid "Group tickets by project"
+msgstr ""
+
+#. module: anytracker
+#: help:anytracker.stage,notify_sms:0
+msgid "NOT YET IMPLEMENTED (Enable SMS notification)"
 msgstr ""
 
 #. module: anytracker
 #: view:import.freemind.wizard:0
+#: model:ir.actions.act_window,name:anytracker.action_import_freemind_view
+#: model:ir.ui.menu,name:anytracker.menu_import_freemind_wizard
 msgid "Import freemind map"
 msgstr ""
 
 #. module: anytracker
-#: model:ir.ui.menu,name:anytracker.configuration
-msgid "Configuration"
+#: model:anytracker.stage,name:0
+msgid "Accepted"
 msgstr ""
 
 #. module: anytracker
@@ -479,6 +632,12 @@ msgid "Stage"
 msgstr ""
 
 #. module: anytracker
+#: field:export.freemind.wizard,orange_complexity:0
+#: field:import.freemind.wizard,orange_complexity:0
+msgid "orange complexity"
+msgstr ""
+
+#. module: anytracker
 #: model:anytracker.complexity,name:anytracker.complexity_gtd_schedule
 msgid "I can do it later"
 msgstr ""
@@ -495,8 +654,13 @@ msgid "Should have"
 msgstr ""
 
 #. module: anytracker
-#: model:anytracker.stage,name:anytracker.stage_maintenance_debriefing
-msgid "Debriefing"
+#: field:anytracker.ticket,create_date:0
+msgid "Creation Time"
+msgstr ""
+
+#. module: anytracker
+#: field:anytracker.complexity,value:0
+msgid "Value"
 msgstr ""
 
 #. module: anytracker
@@ -517,9 +681,15 @@ msgid "Won't have"
 msgstr ""
 
 #. module: anytracker
+#: view:anytracker.ticket:0
 #: model:ir.actions.act_window,name:anytracker.act_open_stage_view
 #: model:ir.ui.menu,name:anytracker.menu_stage
 msgid "Stages"
+msgstr ""
+
+#. module: anytracker
+#: view:anytracker.ticket:0
+msgid "Assign to me"
 msgstr ""
 
 #. module: anytracker
@@ -544,8 +714,19 @@ msgid "Tasks"
 msgstr ""
 
 #. module: anytracker
+#: view:anytracker.ticket:0
+msgid "Ticket treeview"
+msgstr ""
+
+#. module: anytracker
 #: field:anytracker.ticket,created_mindmap:0
 msgid "Created MindMap"
+msgstr ""
+
+#. module: anytracker
+#: model:ir.actions.act_window,name:anytracker.action_kanbans
+#: model:ir.ui.menu,name:anytracker.menu_hierarchy
+msgid "Hierarchy"
 msgstr ""
 
 #. module: anytracker
@@ -554,25 +735,24 @@ msgid "Blocker"
 msgstr ""
 
 #. module: anytracker
-#: model:ir.actions.act_window,name:anytracker.act_all_nodes
-#: model:ir.ui.menu,name:anytracker.menu_all_nodes
-msgid "All nodes"
+#: model:anytracker.importance,name:0
+msgid "Normal"
 msgstr ""
 
 #. module: anytracker
-#: model:anytracker.stage,name:anytracker.stage_implementation_started
-msgid "Started"
+#: code:addons/anytracker/history/history.py:64
+#, python-format
+msgid "Unlink all value %s"
+msgstr ""
+
+#. module: anytracker
+#: view:anytracker.ticket:0
+msgid "Group by..."
 msgstr ""
 
 #. module: anytracker
 #: view:anytracker.ticket:0
 msgid "Show only tickets where I have an assignment"
-msgstr ""
-
-#. module: anytracker
-#: model:anytracker.complexity,description:anytracker.complexity_implementation_orange
-#: model:anytracker.complexity,name:anytracker.complexity_implementation_orange
-msgid "Orange (should be less than 0.5 day but I'm not sure)"
 msgstr ""
 
 #. module: anytracker
@@ -592,8 +772,18 @@ msgid "complexity level for orange flag"
 msgstr ""
 
 #. module: anytracker
+#: help:anytracker.importance,active:0
+msgid "if check, this object is always available"
+msgstr ""
+
+#. module: anytracker
 #: selection:anytracker.ticket,duration:0
 msgid "Half a day"
+msgstr ""
+
+#. module: anytracker
+#: field:anytracker.ticket,assignment_ids:0
+msgid "Stage assignments"
 msgstr ""
 
 #. module: anytracker
@@ -649,6 +839,11 @@ msgid "Recompute progress"
 msgstr ""
 
 #. module: anytracker
+#: model:anytracker.stage,name:0
+msgid "Vérifié"
+msgstr ""
+
+#. module: anytracker
 #: selection:anytracker.ticket,duration:0
 msgid "< half a day"
 msgstr ""
@@ -676,8 +871,25 @@ msgid "Method"
 msgstr ""
 
 #. module: anytracker
+#: model:ir.model,name:anytracker.model_import_freemind_wizard
+msgid "Import freemind .mm file into anytracker tree"
+msgstr ""
+
+#. module: anytracker
 #: field:anytracker.quickrating,ticket_ids:0
 msgid "Tickets to rate"
+msgstr ""
+
+#. module: anytracker
+#: code:addons/anytracker/history/history.py:55
+#, python-format
+msgid "Remove value %s"
+msgstr ""
+
+#. module: anytracker
+#: model:anytracker.importance,description:anytracker.importance_implementation_should
+#: model:anytracker.importance,description:anytracker.importance_scrum_should
+msgid "Important to project success, but not necessary for the next delivery."
 msgstr ""
 
 #. module: anytracker
@@ -691,30 +903,34 @@ msgid "unknown"
 msgstr ""
 
 #. module: anytracker
+#: view:anytracker.ticket:0
+msgid "Show only tickets which have sub-tickets. They are used to gather tickets by nodes"
+msgstr ""
+
+#. module: anytracker
 #: model:anytracker.complexity,name:anytracker.complexity_maintenance_normal
 msgid "Needs investigation"
 msgstr ""
 
 #. module: anytracker
-#: model:anytracker.importance,description:anytracker.importance_implementation_should
-#: model:anytracker.importance,description:anytracker.importance_scrum_should
-msgid "Important to project success, but not necessary for the next delivery."
+#: model:anytracker.stage,name:0
+msgid "Demande"
 msgstr ""
 
 #. module: anytracker
-#: field:export.freemind.wizard,orange_complexity:0
-#: field:import.freemind.wizard,orange_complexity:0
-msgid "orange complexity"
+#: code:addons/anytracker/complexity/wizard/quickrating.py:34
+#, python-format
+msgid "You are already on the first ticket."
 msgstr ""
 
 #. module: anytracker
-#: model:anytracker.complexity,name:anytracker.complexity_scrum_2
-msgid "2"
+#: view:anytracker.ticket:0
+msgid "Edit ticket"
 msgstr ""
 
 #. module: anytracker
-#: view:anytracker.stage:0
-msgid "Ticket stages"
+#: field:anytracker.ticket,message_is_follower:0
+msgid "Is a Follower"
 msgstr ""
 
 #. module: anytracker
@@ -726,18 +942,35 @@ msgid "User"
 msgstr ""
 
 #. module: anytracker
-#: view:anytracker.ticket:0
-msgid "By project"
-msgstr ""
-
-#. module: anytracker
 #: model:anytracker.complexity,name:anytracker.complexity_gtd_now
 msgid "2 minutes: I do it now!"
 msgstr ""
 
 #. module: anytracker
-#: model:ir.model,name:anytracker.model_anytracker_ticket
-msgid "Tickets for project management"
+#: view:anytracker.stage:0
+msgid "Ticket stages"
+msgstr ""
+
+#. module: anytracker
+#: code:addons/anytracker/history/history.py:61
+#, python-format
+msgid "Link value %s"
+msgstr ""
+
+#. module: anytracker
+#: model:email.template,subject:anytracker.email_template_ticket_new
+msgid "New ticket #${object.number} created by ${user.name} in Anytracker"
+msgstr ""
+
+#. module: anytracker
+#: code:addons/anytracker/stage/stage.py:119
+#, python-format
+msgid "You must rate the ticket \"%s\" to enter the \"%s\" stage"
+msgstr ""
+
+#. module: anytracker
+#: help:anytracker.ticket,assignment_ids:0
+msgid "Each time you assign a ticket to someone, the user and stage get recorded in this mapping. Later on, the assignment will change upon a stage change if and only if the new stage is found in this mapping. Only the most recent assignment for a given stage will be considered. Older ones are being displayed here for logging purposes only."
 msgstr ""
 
 #. module: anytracker
@@ -761,6 +994,16 @@ msgid "Less than 2 min (I do it now!)"
 msgstr ""
 
 #. module: anytracker
+#: model:anytracker.stage,name:anytracker.stage_implementation_started
+msgid "Started"
+msgstr ""
+
+#. module: anytracker
+#: model:anytracker.importance,name:0
+msgid "Urgent"
+msgstr ""
+
+#. module: anytracker
 #: field:anytracker.importance,active:0
 msgid "Active"
 msgstr ""
@@ -768,6 +1011,32 @@ msgstr ""
 #. module: anytracker
 #: help:anytracker.method,name:0
 msgid "Name of the project management method"
+msgstr ""
+
+#. module: anytracker
+#: view:anytracker.ticket:0
+msgid "Here are all the ratings made for this ticket:"
+msgstr ""
+
+#. module: anytracker
+#: model:anytracker.stage,name:0
+msgid "Nouveau"
+msgstr ""
+
+#. module: anytracker
+#: code:addons/anytracker/anytracker.py:87
+#: code:addons/anytracker/anytracker.py:117
+#: code:addons/anytracker/history/history.py:125
+#: code:addons/anytracker/mindmap/wizard/import_freemind.py:192
+#, python-format
+msgid "Error"
+msgstr ""
+
+#. module: anytracker
+#: model:ir.actions.act_window,name:anytracker.act_all_tasks
+#: model:ir.actions.act_window,name:anytracker.action_hierarchy_line_select
+#: model:ir.ui.menu,name:anytracker.menu_all_tasks
+msgid "Tickets"
 msgstr ""
 
 #. module: anytracker
@@ -786,8 +1055,17 @@ msgid "Description of this complexity"
 msgstr ""
 
 #. module: anytracker
-#: model:ir.model,name:anytracker.model_import_freemind_wizard
-msgid "Import freemind .mm file for generate anytracker tree"
+#: help:anytracker.complexity,method_id:0
+msgid "Projet method"
+msgstr ""
+
+#. module: anytracker
+#: code:addons/anytracker/history/history.py:80
+#: code:addons/anytracker/history/history.py:95
+#: code:addons/anytracker/history/history.py:97
+#, python-format
+msgid "Modify field %s with new valeur %s\n"
+""
 msgstr ""
 
 #. module: anytracker
@@ -819,6 +1097,12 @@ msgid "Sub-tickets"
 msgstr ""
 
 #. module: anytracker
+#: code:addons/anytracker/stage/stage.py:84
+#, python-format
+msgid "You're already in the last stage"
+msgstr ""
+
+#. module: anytracker
 #: field:anytracker.stage,sequence:0
 #: help:anytracker.stage,sequence:0
 msgid "Sequence"
@@ -830,14 +1114,35 @@ msgid "Number"
 msgstr ""
 
 #. module: anytracker
+#: view:anytracker.ticket:0
+msgid "Show only leaf tickets. They correspond to tasks"
+msgstr ""
+
+#. module: anytracker
 #: model:anytracker.stage,name:anytracker.stage_implementation_reviewed
 #: model:anytracker.stage,name:anytracker.stage_maintenance_reviewed
 msgid "Reviewed"
 msgstr ""
 
 #. module: anytracker
+#: view:anytracker.ticket:0
+msgid "¶"
+msgstr ""
+
+#. module: anytracker
+#: model:ir.model,name:anytracker.model_anytracker_importance
+msgid "Importance of Ticket by method"
+msgstr ""
+
+#. module: anytracker
+#: model:anytracker.stage,name:0
 #: model:anytracker.stage,name:anytracker.stage_gtd_done
 msgid "Done"
+msgstr ""
+
+#. module: anytracker
+#: view:anytracker.stage:0
+msgid "Notify"
 msgstr ""
 
 #. module: anytracker
@@ -880,8 +1185,16 @@ msgid "Delivered"
 msgstr ""
 
 #. module: anytracker
-#: model:ir.actions.act_window,name:anytracker.action_kanbans
-msgid "Anytracker - Projects"
+#: code:addons/anytracker/history/history.py:37
+#, python-format
+msgid "Update from Import MindMap\n"
+""
+msgstr ""
+
+#. module: anytracker
+#: code:addons/anytracker/anytracker.py:87
+#, python-format
+msgid "No user with ERP Manager group found"
 msgstr ""
 
 #. module: anytracker
@@ -896,6 +1209,11 @@ msgid "Import file"
 msgstr ""
 
 #. module: anytracker
+#: view:anytracker.ticket:0
+msgid "Rate subtickets"
+msgstr ""
+
+#. module: anytracker
 #: model:anytracker.importance,description:anytracker.importance_implementation_must
 #: model:anytracker.importance,description:anytracker.importance_scrum_must
 msgid "Critical to project success and has to be included in the current delivery timebox in order for it to be a success."
@@ -907,14 +1225,13 @@ msgid "File mindmap to write"
 msgstr ""
 
 #. module: anytracker
-#: view:export.freemind.wizard:0
-msgid "Parent ticket"
+#: field:anytracker.ticket,parent_left:0
+msgid "Parent Left"
 msgstr ""
 
 #. module: anytracker
-#: model:ir.actions.act_window,name:anytracker.act_all_tasks
-#: model:ir.ui.menu,name:anytracker.menu_all_tasks
-msgid "All tasks"
+#: view:export.freemind.wizard:0
+msgid "Parent ticket"
 msgstr ""
 
 #. module: anytracker
@@ -940,8 +1257,8 @@ msgid "Siblings"
 msgstr ""
 
 #. module: anytracker
-#: model:anytracker.stage,name:anytracker.stage_gtd_trash
-msgid "Trash"
+#: help:anytracker.stage,notify:0
+msgid "Notify project members when a ticket enter this stage"
 msgstr ""
 
 #. module: anytracker
@@ -950,46 +1267,59 @@ msgid "Number must be unique!"
 msgstr ""
 
 #. module: anytracker
-#: model:anytracker.complexity,description:anytracker.complexity_maintenance_trivial
-msgid "Trivial bug, I can fix it immediately"
+#: field:anytracker.ticket,duration:0
+msgid "duration"
+msgstr ""
+
+#. module: anytracker
+#: view:anytracker.ticket:0
+msgid "Follow this project to automatically track the events associated to tasks and issues of this project."
+msgstr ""
+
+#. module: anytracker
+#: model:anytracker.stage,name:anytracker.stage_gtd_trash
+msgid "Trash"
 msgstr ""
 
 #. module: anytracker
 #: field:anytracker.complexity,description:0
 #: field:anytracker.quickrating,description:0
 #: field:anytracker.ticket,description:0
+#: field:anytracker.ticket,kanban_description:0
 #: field:anytracker.ticket,shortened_description:0
 msgid "Description"
 msgstr ""
 
 #. module: anytracker
-#: field:anytracker.ticket,create_date:0
-msgid "Creation Time"
+#: model:anytracker.complexity,name:0
+msgid "1 jour"
 msgstr ""
 
 #. module: anytracker
-#: field:anytracker.ticket,write_date:0
-msgid "Modification Time"
+#: code:addons/anytracker/history/history.py:52
+#, python-format
+msgid "Modify value %s"
 msgstr ""
 
 #. module: anytracker
-#: view:anytracker.ticket:0
-msgid "Tickets hierarchy"
+#: field:anytracker.ticket,constant_one:0
+msgid "Constant one"
 msgstr ""
 
 #. module: anytracker
-#: model:anytracker.complexity,name:anytracker.complexity_maintenance_unfixable
-msgid "Unfixable"
+#: field:anytracker.ticket,parent_right:0
+msgid "Parent Right"
 msgstr ""
 
 #. module: anytracker
-#: view:anytracker.ticket:0
-msgid "Group tasks"
+#: model:anytracker.stage,name:0
+msgid "Livré"
 msgstr ""
 
 #. module: anytracker
-#: help:anytracker.importance,active:0
-msgid "if check, this object is always available"
+#: code:addons/anytracker/history/history.py:67
+#, python-format
+msgid "Unlink all value  and add:"
 msgstr ""
 
 #. module: anytracker
@@ -1001,11 +1331,6 @@ msgstr ""
 #. module: anytracker
 #: model:anytracker.importance,name:anytracker.importance_gtd_important
 msgid "Important"
-msgstr ""
-
-#. module: anytracker
-#: model:anytracker.complexity,name:anytracker.complexity_scrum_5
-msgid "5"
 msgstr ""
 
 #. module: anytracker
@@ -1034,8 +1359,14 @@ msgid "Customer"
 msgstr ""
 
 #. module: anytracker
-#: field:anytracker.ticket,assigned_user_id:0
-msgid "Assignee"
+#: view:anytracker.ticket:0
+#: field:anytracker.ticket,permalink:0
+msgid "Permalink"
+msgstr ""
+
+#. module: anytracker
+#: model:ir.model,name:anytracker.model_anytracker_ticket
+msgid "Anytracker tickets"
 msgstr ""
 
 #. module: anytracker
@@ -1044,19 +1375,13 @@ msgid "I don't really know, it might be harder than it seems"
 msgstr ""
 
 #. module: anytracker
-#: model:ir.actions.act_window,name:anytracker.action_import_freemind_view
-#: model:ir.ui.menu,name:anytracker.menu_import_freemind_wizard
-msgid "Import freemind data"
+#: model:anytracker.complexity,name:0
+msgid "4h"
 msgstr ""
 
 #. module: anytracker
 #: view:export.freemind.wizard:0
 msgid "export file"
-msgstr ""
-
-#. module: anytracker
-#: view:anytracker.ticket:0
-msgid "Edit"
 msgstr ""
 
 #. module: anytracker
@@ -1070,19 +1395,34 @@ msgid "anytracker.quickrating"
 msgstr ""
 
 #. module: anytracker
-#: field:anytracker.complexity,value:0
-msgid "Value"
+#: model:anytracker.complexity,description:anytracker.complexity_maintenance_trivial
+msgid "Trivial bug, I can fix it immediately"
 msgstr ""
 
 #. module: anytracker
-#: view:anytracker.ticket:0
-msgid "Ticket treeview"
+#: model:anytracker.complexity,name:anytracker.complexity_maintenance_unfixable
+msgid "Unfixable"
+msgstr ""
+
+#. module: anytracker
+#: model:ir.model,name:anytracker.model_anytracker_complexity
+msgid "anytracker.complexity"
+msgstr ""
+
+#. module: anytracker
+#: model:anytracker.stage,name:0
+msgid "Clôturé"
 msgstr ""
 
 #. module: anytracker
 #: model:anytracker.complexity,description:anytracker.complexity_implementation_red
 #: model:anytracker.complexity,name:anytracker.complexity_implementation_red
 msgid "Red (More than 0.5 day or I don't know)"
+msgstr ""
+
+#. module: anytracker
+#: help:anytracker.ticket,message_ids:0
+msgid "Messages and communication history"
 msgstr ""
 
 #. module: anytracker
@@ -1113,13 +1453,8 @@ msgstr ""
 #. module: anytracker
 #: view:anytracker.assignment:0
 #: view:anytracker.ticket:0
-msgid "Assignments"
-msgstr ""
-
-#. module: anytracker
-#: field:anytracker.ticket,assignment_ids:0
 #: model:ir.model,name:anytracker.model_anytracker_assignment
-msgid "Stage assignments"
+msgid "Assignments"
 msgstr ""
 
 #. module: anytracker
@@ -1140,7 +1475,18 @@ msgstr ""
 
 #. module: anytracker
 #: view:anytracker.ticket:0
-msgid "Rate subtickets"
+msgid "Tickets hierarchy"
+msgstr ""
+
+#. module: anytracker
+#: model:anytracker.stage,name:0
+msgid "Poubelle"
+msgstr ""
+
+#. module: anytracker
+#: view:anytracker.complexity:0
+#: field:anytracker.rating,complexity_id:0
+msgid "Complexity"
 msgstr ""
 
 #. module: anytracker
@@ -1171,13 +1517,15 @@ msgid "Inbox"
 msgstr ""
 
 #. module: anytracker
+#: code:addons/anytracker/mindmap/wizard/import_freemind.py:25
 #: field:import.freemind.wizard,mindmap_content:0
+#, python-format
 msgid "File"
 msgstr ""
 
 #. module: anytracker
-#: model:ir.model,name:anytracker.model_anytracker_complexity
-msgid "anytracker.complexity"
+#: field:anytracker.ticket,assigned_user_id:0
+msgid "Assigned user"
 msgstr ""
 
 #. module: anytracker
@@ -1186,7 +1534,7 @@ msgid "Trivial"
 msgstr ""
 
 #. module: anytracker
-#: model:ir.model,name:anytracker.model_anytracker_importance
-msgid "Importance of Ticket by methode"
+#: field:anytracker.stage,notify:0
+msgid "Notify project members"
 msgstr ""
 
