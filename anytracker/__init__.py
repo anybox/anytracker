@@ -8,6 +8,5 @@ from . import complexity
 from . import importance
 from . import mindmap
 from . import assignment
-from . import comment
 from . import notify
 from . import priority

@@ -47,7 +47,7 @@
 - Complexity/evaluation management
 - Importance management
 - Priority mangement
-- Simple commenting
+- Commenting through OpenChatter
 - Assignment
 - Kanban view
 - Modifications history tracking
@@ -84,8 +84,6 @@ http://www.famfamfam.com/lab/icons/silk/
         'assignment/action.xml',
         'assignment/view.xml',
         'assignment/ir.model.access.csv',
-        'comment/view.xml',
-        'comment/ir.model.access.csv',
         'notify/view.xml',
         'notify/data.xml',
         'notify/ir.model.access.csv',

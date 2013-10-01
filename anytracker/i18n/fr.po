@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-09-26 18:13+0000\n"
+"POT-Creation-Date: 2013-10-01 06:39+0000\n"
 "PO-Revision-Date: \n"
 "Last-Translator: pierre verkest <pverkest@anybox.fr>\n"
 "Language-Team: \n"
@@ -55,15 +55,10 @@ msgid "Assignment date"
 msgstr "Date d'affectation"
 
 #. module: anytracker
-#: view:anytracker.ticket:0 field:anytracker.ticket,comment_ids:0
-msgid "Comments"
-msgstr "Commentaires"
-
-#. module: anytracker
 #: code:addons/anytracker/history/history.py:42
 #, python-format
 msgid "Modify field %s\n"
-msgstr "Modify field %s\n"
+msgstr "Champ modifié %s\n"
 
 #. module: anytracker
 #: field:anytracker.history,modification:0
@@ -296,7 +291,7 @@ msgstr "Grouper par méthode"
 #. module: anytracker
 #: help:anytracker.ticket,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr "If checked new messages require your attention."
+msgstr "Si coché, les nouveaux messages attire votre attention."
 
 #. module: anytracker
 #: model:anytracker.complexity,name:anytracker.complexity_gtd_delegate
@@ -332,7 +327,8 @@ msgstr "Méthodes"
 #: code:addons/anytracker/notify/notify.py:41
 #, python-format
 msgid "No email template selected in the \"%s\" stage of the \"%s\" method"
-msgstr "No email template selected in the \"%s\" stage of the \"%s\" method"
+msgstr ""
+"Aucun modèle de courriel sélectionné  à l'étape \"%s\" de la méthode \"%s\""
 
 #. module: anytracker
 #: field:export.freemind.wizard,mindmap_file:0
@@ -611,7 +607,7 @@ msgstr "Group tickets by project"
 msgid ""
 "[${object.project_id.name}] ${user.name} created a ticket #${object.number}"
 msgstr ""
-"[${object.project_id.name}] ${user.name} created a ticket #${object.number}"
+"[${object.project_id.name}] ${user.name} a créé un ticket #${object.number}"
 
 #. module: anytracker
 #: help:anytracker.stage,notify_sms:0
@@ -722,14 +718,9 @@ msgid "Assign to me"
 msgstr "Affectation"
 
 #. module: anytracker
-#: model:ir.model,name:anytracker.model_anytracker_comment
-msgid "A comment attached to a ticket"
-msgstr "Un commentaire attaché à un ticket"
-
-#. module: anytracker
-#: view:anytracker.comment:0 field:anytracker.comment,text:0
-msgid "Comment"
-msgstr "Commentaire"
+#: model:ir.model,name:anytracker.model_export_freemind_wizard
+msgid "export freemind .mm file for generate by anytracker tree"
+msgstr "Export d'un fichier Freemind .mm pour un arbre Anytracker"
 
 #. module: anytracker
 #: model:anytracker.stage,name:anytracker.stage_gtd_doing
@@ -744,7 +735,7 @@ msgstr "Tâches"
 #. module: anytracker
 #: field:anytracker.priority,name:0
 msgid "Priority name"
-msgstr "Priority name"
+msgstr "Nom de la priorité"
 
 #. module: anytracker
 #: field:anytracker.ticket,created_mindmap:0
@@ -767,7 +758,7 @@ msgstr "Bloquant"
 #: code:addons/anytracker/history/history.py:37
 #, python-format
 msgid "Update from Import MindMap\n"
-msgstr "Update from Import MindMap\n"
+msgstr "Mise à jour depuis l'import MindMap\n"
 
 #. module: anytracker
 #: model:anytracker.priority,name:anytracker.priority_implementation_start
@@ -984,7 +975,7 @@ msgid ""
 "${object.description or ''}\n"
 "            "
 msgstr ""
-"Ticket #${object.number} is now in stage ${object.stage_id.name}\n"
+"Le ticket #${object.number} est à l'étape ${object.stage_id.name}\n"
 "\n"
 "\n"
 "${object.name}\n"
@@ -1009,8 +1000,8 @@ msgid "Link value %s"
 msgstr "Link value %s"
 
 #. module: anytracker
-#: field:anytracker.assignment,user_id:0 field:anytracker.comment,user_id:0
-#: field:anytracker.history,create_uid:0 field:anytracker.rating,user_id:0
+#: field:anytracker.assignment,user_id:0 field:anytracker.history,create_uid:0
+#: field:anytracker.rating,user_id:0
 msgid "User"
 msgstr "Utilisateur"
 
@@ -1100,11 +1091,6 @@ msgstr "Montrer seulement les tâches (les tickets feuilles)"
 #, python-format
 msgid "Error"
 msgstr "Erreur"
-
-#. module: anytracker
-#: model:ir.model,name:anytracker.model_export_freemind_wizard
-msgid "export freemind .mm file for generate by anytracker tree"
-msgstr "Export d'un fichier Freemind .mm pour un arbre Anytracker"
 
 #. module: anytracker
 #: model:anytracker.complexity,description:anytracker.complexity_gtd_action
@@ -1417,7 +1403,6 @@ msgstr "Demandeur"
 
 #. module: anytracker
 #: field:anytracker.assignment,ticket_id:0
-#: field:anytracker.comment,ticket_id:0
 #: field:anytracker.quickrating,ticket_id:0
 #: field:anytracker.rating,ticket_id:0
 #: field:export.freemind.wizard,ticket_id:0
@@ -1567,8 +1552,7 @@ msgid "Complexity"
 msgstr "Complexité"
 
 #. module: anytracker
-#: field:anytracker.assignment,date:0 field:anytracker.comment,date:0
-#: field:anytracker.rating,time:0
+#: field:anytracker.assignment,date:0 field:anytracker.rating,time:0
 msgid "Date"
 msgstr "Date"
 
@@ -1618,6 +1602,15 @@ msgstr "Trivial"
 #: field:anytracker.stage,notify:0
 msgid "Notify project members"
 msgstr "Notifier les menbre du projet"
+
+#~ msgid "Comments"
+#~ msgstr "Commentaires"
+
+#~ msgid "A comment attached to a ticket"
+#~ msgstr "Un commentaire attaché à un ticket"
+
+#~ msgid "Comment"
+#~ msgstr "Commentaire"
 
 #~ msgid "My tasks"
 #~ msgstr "Mes tâches"
