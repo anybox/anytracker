@@ -1,6 +1,7 @@
 # coding: utf-8
 from osv import fields, osv
 from tools.translate import _
+from openerp import SUPERUSER_ID
 
 
 class Ticket(osv.Model):
@@ -278,3 +279,12 @@ class Ticket(osv.Model):
     }
 
     _sql_constraints = [('number_uniq', 'unique(number)', 'Number must be unique!')]
+
+
+class User(osv.Model):
+    """ Allow access to the name of res.users, even if we don't have access to res.partner
+    """
+    _inherit = 'res.users'
+
+    def name_get(self, cr, uid, ids, context=None):
+        return super(User, self).name_get(cr, SUPERUSER_ID, ids, context)
