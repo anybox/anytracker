@@ -113,7 +113,7 @@
             <field name="priority" eval="16"/>
             <field name="arch" type="xml">
                 <xpath expr="//group[@id='extend']" position="inside">
-                    <field name="importance_id" domain="[('method_id', '=', method_id)]"/>
+                    <field name="importance_id" domain="[('method_id', '=', method_id)]" attrs="{'invisible': [('parent_id','=',False)]}" />
                 </xpath>
             </field>
         </record>
