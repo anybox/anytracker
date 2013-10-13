@@ -21,6 +21,7 @@ class Priority(osv.Model):
         #'ticket_id': fields.many2one('anytracker.ticket', 'Project',
         #                             domain="[('parent_id','=',False)]"),
         'deadline': fields.boolean('Force to choose a deadline on the ticket?'),
+        'date': fields.date('Milestone'),
     }
 
     _defaults = {

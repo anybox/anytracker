@@ -115,7 +115,7 @@
                 <xpath expr="//group[@id='extend']" position="inside">
                     <field name="priority_id" domain="[('method_id', '=', method_id)]" on_change="onchange_priority(priority_id)"/>
                     <field name="has_deadline" invisible="1"/>
-                    <field name="deadline" attrs="{'invisible': [('has_deadline','=',False)], 'required': [('has_deadline','=',False)]}"/>
+                    <field name="deadline" attrs="{'invisible': [('has_deadline','=',False)], 'required': [('has_deadline','=',True)]}"/>
                 </xpath>
             </field>
         </record>
