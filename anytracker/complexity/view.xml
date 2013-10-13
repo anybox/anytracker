@@ -63,7 +63,7 @@
     <field name="inherit_id" ref="ticket_view_form" />
     <field name="arch" type="xml">
         <xpath expr="//notebook/page[@string='Participants']" position="after">
-            <page string="Ratings">
+            <page string="Ratings" groups="anytracker.group_member">
             <group col="6" colspan="4">
                 <field name="my_rating" attrs="{'invisible': [('child_ids', '!=', False)]}" groups="anytracker.group_member" options='{"quick_create": false}' domain="[('method_id','=',method_id)]"/>
                 <button string="Rate subtickets..." icon="gtk-execute" type="action" name="%(action_quickrating)d" attrs="{'invisible': [('child_ids', '=', False)]}" groups="anytracker.group_member"/>
