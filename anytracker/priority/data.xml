@@ -2,98 +2,100 @@
 <openerp>
   <data noupdate="1">
     <!-- gtd method -->
-    <record model="anytracker.priority" id="priority_gtd_should_be_done">
+    <record model="anytracker.priority" id="priority_gtd_asap">
       <field name="active" eval="1"/>
       <field name="method_id" ref="method_gtd"/>
-      <field name="name">Should be already done</field>
+      <field name="name">ASAP</field>
       <field name="seq" eval="20"/>
     </record>
-    <record model="anytracker.priority" id="priority_gtd_for_yesterday">
+    <record model="anytracker.priority" id="priority_gtd_today">
       <field name="active" eval="1"/>
       <field name="method_id" ref="method_gtd"/>
-      <field name="name">For yesterday</field>
+      <field name="name">Today</field>
       <field name="seq" eval="40"/>
-    </record> 
-    <record model="anytracker.priority" id="priority_gtd_normal">
+    </record>
+    <record model="anytracker.priority" id="priority_gtd_week">
       <field name="active" eval="1"/>
       <field name="method_id" ref="method_gtd"/>
-      <field name="name">Normal</field>
+      <field name="name">This week</field>
       <field name="seq" eval="60"/>
-    </record> 
+    </record>
+    <record model="anytracker.priority" id="priority_gtd_month">
+      <field name="active" eval="1"/>
+      <field name="method_id" ref="method_gtd"/>
+      <field name="name">This month</field>
+      <field name="seq" eval="60"/>
+    </record>
     <record model="anytracker.priority" id="priority_gtd_if_time">
       <field name="active" eval="1"/>
       <field name="method_id" ref="method_gtd"/>
-      <field name="name">If time</field>
+      <field name="name">Maybe one day</field>
       <field name="seq" eval="80"/>
-    </record> 
+    </record>
 
     <!-- maintenance -->
-    <record model="anytracker.priority" id="priority_maintenance_emergence">
+    <record model="anytracker.priority" id="priority_maintenance_asap">
       <field name="active" eval="1"/>
       <field name="method_id" ref="method_maintenance"/>
-      <field name="name">Emergence</field>
-      <field name="seq" eval="25"/>
+      <field name="name">ASAP!!!</field>
+      <field name="seq" eval="10"/>
     </record>
-    <record model="anytracker.priority" id="priority_maintenance_normal">
+    <record model="anytracker.priority" id="priority_maintenance_deadline">
       <field name="active" eval="1"/>
       <field name="method_id" ref="method_maintenance"/>
-      <field name="name">Normal</field>
-      <field name="seq" eval="50"/>
-    </record> 
-    <record model="anytracker.priority" id="priority_maintenance_dont_worry">
-      <field name="active" eval="1"/>
-      <field name="method_id" ref="method_maintenance"/>
-      <field name="name">Don't worry you can do it tomorrow !</field>
-      <field name="seq" eval="75"/>
-    </record> 
-
-
-    <!-- Scrum -->
-    <record model="anytracker.priority" id="priority_scrum_0">
-      <field name="name">0</field>
-      <field name="description">Zero is the priority, you must start here !</field>
-      <field name="seq" eval="25"/>
-      <field name="active" eval="1"/>
-      <field name="method_id" ref="method_scrum"/>
+      <field name="name">Before deadline</field>
+      <field name="deadline" eval="1"/>
+      <field name="seq" eval="20"/>
     </record>
-    <record model="anytracker.priority" id="priority_scrum_1">
-      <field name="name">1</field>
-      <field name="description">Do it right after 0 priorities tasks !</field>
-      <field name="seq" eval="50"/>
+    <record model="anytracker.priority" id="priority_maintenance_next">
       <field name="active" eval="1"/>
-      <field name="method_id" ref="method_scrum"/>
-    </record> 
-    <record model="anytracker.priority" id="priority_scrum_2">
-      <field name="name">2</field>
-      <field name="description">do it when you can't do any more 1 priority tasks !</field>
-      <field name="seq" eval="75"/>
+      <field name="method_id" ref="method_maintenance"/>
+      <field name="name">Next to do</field>
+      <field name="seq" eval="30"/>
+    </record>
+    <record model="anytracker.priority" id="priority_maintenance_nodeadline">
       <field name="active" eval="1"/>
-      <field name="method_id" ref="method_scrum"/>
-    </record> 
+      <field name="method_id" ref="method_maintenance"/>
+      <field name="name">No deadline</field>
+      <field name="seq" eval="30"/>
+    </record>
 
 
     <!-- Implementation -->
-    <record model="anytracker.priority" id="priority_implementation_start">
-      <field name="name">Start here</field>
-      <field name="description">Start the project here.</field>
-      <field name="seq" eval="25"/>
+    <record model="anytracker.priority" id="priority_implementation_asap">
+      <field name="name">ASAP!!!</field>
+      <field name="description">As soon as possible</field>
+      <field name="seq" eval="10"/>
       <field name="active" eval="1"/>
       <field name="method_id" ref="method_implementation"/>
     </record>
-    <record model="anytracker.priority" id="priority_implementation_continue">
-      <field name="name">Continue here</field>
-      <field name="seq" eval="50"/>
+    <record model="anytracker.priority" id="priority_implementation_deadline">
+      <field name="name">Before deadline</field>
+      <field name="deadline" eval="1"/>
+      <field name="seq" eval="20"/>
       <field name="active" eval="1"/>
       <field name="method_id" ref="method_implementation"/>
-    </record> 
-    <record model="anytracker.priority" id="priority_implementation_end">
-      <field name="name">Last things to do</field>
-      <field name="description">It's sound's end of project !</field>
-      <field name="seq" eval="75"/>
+    </record>
+    <record model="anytracker.priority" id="priority_implementation_milestone">
+      <field name="name">Before milestone</field>
+      <field name="deadline" eval="1"/>
+      <field name="seq" eval="30"/>
       <field name="active" eval="1"/>
       <field name="method_id" ref="method_implementation"/>
-    </record> 
-    
+    </record>
+    <record model="anytracker.priority" id="priority_implementation_next">
+      <field name="name">Next to do</field>
+      <field name="seq" eval="40"/>
+      <field name="active" eval="1"/>
+      <field name="method_id" ref="method_implementation"/>
+    </record>
+    <record model="anytracker.priority" id="priority_implementation_nodeadline">
+      <field name="active" eval="1"/>
+      <field name="method_id" ref="method_implementation"/>
+      <field name="name">No deadline</field>
+      <field name="seq" eval="30"/>
+    </record>
+
   </data>
 </openerp>
 

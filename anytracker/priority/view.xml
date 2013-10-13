@@ -26,6 +26,7 @@
                     <field name="seq"/>
                     <field name="name"/>
                     <field name="method_id" widget="selection"/>
+                    <field name="deadline"/>
                     <field name="active"/>
                 </form>
             </field>
@@ -99,12 +100,11 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='shortened_description']" position="after">
                     <field name="priority_id"/>
-                    <field name="priority_seq" invisible="1"/>
+                    <field name="priority" invisible="1"/>
                 </xpath>
             </field>
         </record>
 
-        <!-- ADD A TAB IN TICKET FORM -->
         <record id="priority_ticket_view_form" model="ir.ui.view">
             <field name="name">ticket.form</field>
             <field name="model">anytracker.ticket</field>
@@ -112,11 +112,10 @@
             <field name="inherit_id" ref="anytracker.ticket_view_form"/>
             <field name="priority" eval="16"/>
             <field name="arch" type="xml">
-                <xpath expr="//notebook/page[@string='Participants']" position="after">
-                    <page string="Priority">
-                        <field name="priority_id" domain="[('method_id', '=', method_id)]"/>
-                        <field name="priority_seq"/>
-                    </page>
+                <xpath expr="//group[@id='extend']" position="inside">
+                    <field name="priority_id" domain="[('method_id', '=', method_id)]" on_change="onchange_priority(priority_id)"/>
+                    <field name="has_deadline" invisible="1"/>
+                    <field name="deadline" attrs="{'invisible': [('has_deadline','=',False)], 'required': [('has_deadline','=',False)]}"/>
                 </xpath>
             </field>
         </record>
