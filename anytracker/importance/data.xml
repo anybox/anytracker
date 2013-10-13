@@ -2,23 +2,23 @@
 <openerp>
   <data noupdate="1">
     <!-- gtd method -->
-    <record model="anytracker.importance" id="importance_gtd_notimportant">
-      <field name="active" eval="1"/>
-      <field name="method_id" ref="method_gtd"/>
-      <field name="name">Not important</field>
-      <field name="seq" eval="100"/>
-    </record>
     <record model="anytracker.importance" id="importance_gtd_important">
       <field name="active" eval="1"/>
       <field name="method_id" ref="method_gtd"/>
       <field name="name">Important</field>
-      <field name="seq" eval="20"/>
+      <field name="seq" eval="60"/>
+    </record>
+    <record model="anytracker.importance" id="importance_gtd_notimportant">
+      <field name="active" eval="1"/>
+      <field name="method_id" ref="method_gtd"/>
+      <field name="name">Not important</field>
+      <field name="seq" eval="40"/>
     </record>
     <record model="anytracker.importance" id="importance_gtd_wishlist">
       <field name="active" eval="1"/>
       <field name="method_id" ref="method_gtd"/>
       <field name="name">Future wishlist</field>
-      <field name="seq" eval="10"/>
+      <field name="seq" eval="20"/>
     </record>
 
     <!-- maintenance -->
@@ -113,7 +113,7 @@
       <field name="seq" eval="10"/>
     </record>
 
-    
+
   </data>
 </openerp>
 
