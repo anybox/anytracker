@@ -5,9 +5,9 @@ from osv import fields
 
 
 class Priority(osv.Model):
-    """Priority to perform tasks/projects/issues,
-    priorities are set by methods.
-    TODO : define by project, add deadline and milestone
+    """Priorities represent the timeframe to do tasks.
+    It can represent timeboxes, deadlines, milestones
+    TODO : define by project, add milestone
     """
     _name = 'anytracker.priority'
     _description = 'Priority of Ticket by method'
