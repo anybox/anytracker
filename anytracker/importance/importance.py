@@ -38,6 +38,6 @@ class Ticket(osv.Model):
     _columns = {
         'importance_id': fields.many2one('anytracker.importance', 'Importance', required=False),
         'importance': fields.function(
-            _get_importance, method=True, string='Importance (Number)',
+            _get_importance, method=True, string='Importance',
             type='integer', store=True),
     }

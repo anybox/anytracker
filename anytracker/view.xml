@@ -76,7 +76,7 @@
             </group>
             <group id="extend">
                 <field name="number" readonly="1" class="oe_inline"/>
-                <field name="method_id" widget="selection" attrs="{'readonly': [('parent_id', '!=', False)]}"/>
+                <field name="method_id" widget="selection" attrs="{'invisible': [('parent_id', '!=', False)]}"/>
                 <field name="project_method_id" invisible="1"/>
             </group>
         </group>
@@ -87,7 +87,17 @@
             <field name="description" colspan="4" widget="html" nolabel="1" style="width: 800px; margin-left:0;"/>
         </page>
         <page string="Sub-tickets">
-          <field name="child_ids" nolabel="1" context="{'default_parent_id': active_id}"/>
+          <field name="child_ids" nolabel="1" context="{'default_parent_id': active_id}">
+            <tree>
+                <field name="number"/>
+                <field name="name"/>
+                <field name="stage_id"/>
+                <field name="progress"/>
+                <field name="risk"/>
+                <field name="importance_id"/>
+                <field name="priority_id"/>
+            </tree>
+          </field>
         </page>
         <page string="Participants" attrs="{'invisible': [('parent_id', '!=', False)]}">
           <field name="participant_ids" colspan="4" widget="many2many_kanban">
