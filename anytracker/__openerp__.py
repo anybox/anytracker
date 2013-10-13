@@ -45,8 +45,8 @@
 - Hierarchical Risk management
 - Hierarchical progress management
 - Complexity/evaluation management
-- Importance management
-- Priority mangement
+- Impact/Importance management
+- Priority management (timebox, deadline, milestone)
 - Commenting through OpenChatter
 - Assignment
 - Kanban view
