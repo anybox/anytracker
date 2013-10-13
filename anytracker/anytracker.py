@@ -13,18 +13,6 @@ class Ticket(osv.Model):
     _parent_store = True
     _inherit = ['mail.thread']
 
-    def _get_siblings(self, cr, uid, ids, field_name, args, context=None):
-        """ get tickets at the same hierachical level
-        """
-        res = {}
-        for ticket in self.browse(cr, uid, ids, context):
-            domain = [
-                ('parent_id', '=', ticket.parent_id.id),  # the same parent
-                ('id', '!=', ticket.id),  # not me
-            ]
-            res[ticket.id] = self.search(cr, uid, domain, context=context)
-        return res
-
     def _shortened_description(self, cr, uid, ids, field_name, args, context=None):
         """shortened description
         """
@@ -220,12 +208,6 @@ class Ticket(osv.Model):
             type='char',
             obj='anytracker.ticket',
             string='Location'),
-        'siblings_ids': fields.function(
-            _get_siblings,
-            type='many2many',
-            obj='anytracker.ticket',
-            string='Siblings',
-            method=True),
         'duration': fields.selection(
             [(0, '< half a day'), (None, 'Will be computed'), (1, 'Half a day')],
             'duration'),

@@ -155,8 +155,6 @@
       <field name="description"/>
       <field name="shortened_description"/>
       <field name="kanban_description"/>
-      <field name="siblings_ids"/>
-      <field name="child_ids"/>
       <templates>
         <t t-name="ticket_details">
             <div><i><b><field name="breadcrumb"/></b><span> </span>(#<b><field name="number"/></b>)</i></div>
