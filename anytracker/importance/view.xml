@@ -99,7 +99,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='shortened_description']" position="after">
                     <field name="importance_id"/>
-                    <field name="seq" invisible="1"/>
+                    <field name="importance" invisible="1"/>
                 </xpath>
             </field>
         </record>
@@ -112,11 +112,8 @@
             <field name="inherit_id" ref="anytracker.ticket_view_form"/>
             <field name="priority" eval="16"/>
             <field name="arch" type="xml">
-                <xpath expr="//notebook/page[@string='Participants']" position="after">
-                    <page string="Importance">
-                        <field name="importance_id" domain="[('method_id', '=', method_id)]"/>
-                        <field name="seq"/>
-                    </page>
+                <xpath expr="//group[@id='extend']" position="inside">
+                    <field name="importance_id" domain="[('method_id', '=', method_id)]"/>
                 </xpath>
             </field>
         </record>
