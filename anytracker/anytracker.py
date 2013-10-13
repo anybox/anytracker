@@ -9,7 +9,7 @@ class Ticket(osv.Model):
     _name = 'anytracker.ticket'
     _description = "Anytracker tickets"
     _rec_name = 'breadcrumb'
-    _order = 'create_date DESC'
+    _order = 'priority, importance, sequence, create_date DESC'
     _parent_store = True
     _inherit = ['mail.thread']
 
@@ -263,6 +263,7 @@ class Ticket(osv.Model):
             'Requester'),
         'parent_left': fields.integer('Parent Left', select=1),
         'parent_right': fields.integer('Parent Right', select=1),
+        'sequence': fields.integer('sequence'),
 
         #'active': fields.boolean(
         #    'Active',

@@ -66,24 +66,26 @@
       </header>
 
     <sheet string="ticket">
-        <group col="2" colspan="4">
-            <group col="8" colspan="2">
-                <field name="parent_id" colspan="4"
-                       on_change="onchange_parent(parent_id)"/>
+        <group>
+            <group>
+                    <field name="parent_id" colspan="4" nolabel="1" placeholder="Parent ticket"
+                           on_change="onchange_parent(parent_id)"/>
+                <h1>
+                    <field name="name" default_focus="1"/>
+                </h1>
+            </group>
+            <group id="extend">
+                <field name="number" readonly="1" class="oe_inline"/>
                 <field name="method_id" widget="selection" attrs="{'readonly': [('parent_id', '!=', False)]}"/>
                 <field name="project_method_id" invisible="1"/>
             </group>
-            <group col="8" colspan="2">
-                <h1>
-                    [<field name="number" readonly="1" class="oe_inline"/>]
-                    <field name="name" colspan="6" default_focus="1" class="oe_inline"/>
-                </h1>
-            </group>
-            <field name="description" colspan="4" widget="html"/>
         </group>
 
       <notebook colspan="4">
 
+        <page string="Description">
+            <field name="description" colspan="4" widget="html" nolabel="1" style="width: 800px; margin-left:0;"/>
+        </page>
         <page string="Sub-tickets">
           <field name="child_ids" nolabel="1" context="{'default_parent_id': active_id}"/>
         </page>
@@ -139,6 +141,7 @@
       <field name="number"/>
       <field name="permalink"/>
       <field name="name"/>
+      <field name="sequence"/>
       <field name="description"/>
       <field name="shortened_description"/>
       <field name="kanban_description"/>
