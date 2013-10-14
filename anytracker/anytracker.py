@@ -1,7 +1,6 @@
 # coding: utf-8
 from osv import fields, osv
 from tools.translate import _
-from openerp import SUPERUSER_ID
 
 
 class Ticket(osv.Model):
@@ -9,7 +8,8 @@ class Ticket(osv.Model):
     _name = 'anytracker.ticket'
     _description = "Anytracker tickets"
     _rec_name = 'breadcrumb'
-    _order = 'priority,importance,sequence,create_date DESC'
+    #_order = 'priority,importance,sequence,create_date DESC'  # makes kanban sortable
+    _order = 'priority ASC, importance DESC, sequence ASC, create_date DESC'  # more logical now
     _parent_store = True
     _inherit = ['mail.thread']
 
