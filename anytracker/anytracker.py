@@ -64,9 +64,9 @@ class Ticket(osv.Model):
         return res
 
     def _get_admin_id(self, cr, uid, context=None):
-        xml_pool = self.pool.get('ir.model.data')
+        xml_obj = self.pool.get('ir.model.data')
         res_users = self.pool.get('res.users')
-        admin_group_id = xml_pool.get_object_reference(cr, uid, 'base', 'group_erp_manager')[1]
+        admin_group_id = xml_obj.get_object_reference(cr, uid, 'base', 'group_erp_manager')[1]
         domain = [
             ('groups_id', "in", [admin_group_id]),
         ]
@@ -134,11 +134,11 @@ class Ticket(osv.Model):
     def _default_parent_id(self, cr, uid, context=None):
         """Return the current ticket of the parent if this is a leaf
         """
-        ticket_pool = self.pool.get('anytracker.ticket')
+        ticket_obj = self.pool.get('anytracker.ticket')
         active_id = context.get('active_id')
         if not active_id:
             return False
-        ticket = ticket_pool.browse(cr, uid, active_id)
+        ticket = ticket_obj.browse(cr, uid, active_id)
         if not ticket.parent_id:
             return active_id
         elif not ticket.child_ids:
@@ -149,11 +149,11 @@ class Ticket(osv.Model):
     def _default_project_id(self, cr, uid, context=None):
         """Return the same project as the active_id
         """
-        ticket_pool = self.pool.get('anytracker.ticket')
+        ticket_obj = self.pool.get('anytracker.ticket')
         active_id = context.get('active_id')
         if not active_id:
             return False
-        ticket = ticket_pool.browse(cr, uid, active_id)
+        ticket = ticket_obj.browse(cr, uid, active_id)
         if not ticket.parent_id:
             return active_id
         else:
@@ -161,10 +161,10 @@ class Ticket(osv.Model):
 
     def _subnode_ids(self, cr, uid, ids, field_name, args, context=None):
         """Return the list of children that are themselves nodes."""
-        ticket_pool = self.pool.get('anytracker.ticket')
+        ticket_obj = self.pool.get('anytracker.ticket')
         # GR: I suppose we don't use self directly because it may be overridden ?
-        return {i: ticket_pool.search(cr, uid, [('parent_id', '=', i), ('child_ids', '!=', False)],
-                                      context=context)
+        return {i: ticket_obj.search(cr, uid, [('parent_id', '=', i), ('child_ids', '!=', False)],
+                                     context=context)
                 for i in ids}
 
     def _nb_children(self, cr, uid, ids, field_name, args, context=None):
