@@ -159,6 +159,14 @@ class Ticket(osv.Model):
         else:
             return ticket.project_id.id
 
+    def _subnode_ids(self, cr, uid, ids, field_name, args, context=None):
+        """Return the list of children that are themselves nodes."""
+        ticket_pool = self.pool.get('anytracker.ticket')
+        # GR: I suppose we don't use self directly because it may be overridden ?
+        return {i: ticket_pool.search(cr, uid, [('parent_id', '=', i), ('child_ids', '!=', False)],
+                                      context=context)
+                for i in ids}
+
     def _nb_children(self, cr, uid, ids, field_name, args, context=None):
         res = {}
         for i in ids:
@@ -192,6 +200,12 @@ class Ticket(osv.Model):
         'description': fields.text('Description', required=False),
         'create_date': fields.datetime('Creation Time'),
         'write_date': fields.datetime('Modification Time'),
+        'subnode_ids': fields.function(_subnode_ids,
+                                       type='one2many',
+                                       relation='anytracker.ticket',
+                                       method=True,
+                                       readonly=True,
+                                       string='Sub-nodes'),
         'shortened_description': fields.function(
             _shortened_description,
             type='text',

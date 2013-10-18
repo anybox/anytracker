@@ -195,7 +195,7 @@
   <field name="name">anytracker.ticket.hierarchy</field>
   <field name="model">anytracker.ticket</field>
   <field name="type">tree</field>
-  <field name="field_parent">child_ids</field>
+  <field name="field_parent">subnode_ids</field>
   <field name="arch" type="xml">
     <tree string="Tickets hierarchy">
       <field name="name"/>
