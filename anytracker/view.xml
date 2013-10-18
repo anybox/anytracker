@@ -23,7 +23,7 @@
             help="Show only leaf tickets. They correspond to tasks"/>
     <separator orientation="vertical"/>
     <group string="Group by...">
-    <filter name="tickets_by_project"
+      <filter name="tickets_by_project"
             string="Project"
             context="{'group_by': ['project_id', 'parent_id']}"
             help="Group tickets by project"/>

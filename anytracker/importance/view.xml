@@ -87,6 +87,13 @@
                 <xpath expr="//field[@name='id']" position="after">
                     <field name="importance_id" widget="selection"/>
                 </xpath>
+                <xpath expr="//search/group[1]" postion="inside">
+                    <filter name="tickets_by_importance"
+                            string="Importance"
+                            context="{'group_by': ['importance_id']}"
+                            help="Group tickets by importance"/>
+                </xpath>
+
             </field>
         </record>
 

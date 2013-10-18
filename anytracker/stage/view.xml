@@ -54,6 +54,34 @@
     </field>
 </record>
 
+<record id="stage_ticket_view_search" model="ir.ui.view">
+    <field name="name">anytracker.ticket.search</field>
+    <field name="model">anytracker.ticket</field>
+    <field name="type">search</field>
+    <field name="inherit_id" ref="anytracker.ticket_view_search"/>
+    <field name="priority" eval="16"/>
+    <field name="arch" type="xml">
+        <xpath expr="//field[@name='id']" position="after">
+            <field name="stage_id" widget="selection"/>
+        </xpath>
+        <xpath expr="//filter[@name='filter_tasks']" position="after">
+            <separator/>
+            <filter name="filter_progress"
+                    string="Progress &lt; 50"
+                    domain="[('progress','&lt;',50.0)]"
+                    icon="terp-personal"
+                    help="Show tickets progress between 0 to 50"/>
+        </xpath>
+
+        <xpath expr="//search/group[1]" postion="inside">
+                <filter name="tickets_by_stage"
+                        string="Stage"
+                        context="{'group_by': ['stage_id']}"
+                        help="Group tickets by stage"/>
+        </xpath>
+    </field>
+</record>
+
 <!-- ADD A TAB IN TICKET FORM -->
 <record id="view_ticket_form_with_progress" model="ir.ui.view">
     <field name="name">Ticket</field>
@@ -126,6 +154,7 @@
     <field name="res_model">anytracker.stage</field>
     <field name="view_type">form</field>
     <field name="view_mode">tree,form</field>
+    <field name="search_view_id" ref="view_stage_search"/>
     <field name="domain">[]</field>
     <field name="context">{'search_default_stages_by_method': 1}</field>
 </record>
