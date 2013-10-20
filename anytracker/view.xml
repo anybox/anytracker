@@ -55,6 +55,21 @@
   </field>
 </record>
 
+<record id="just_names" model="ir.ui.view">
+  <field name="name">Tickets</field>
+  <field name="model">anytracker.ticket</field>
+  <field name="type">tree</field>
+  <field name="priority" eval="20"/>
+  <field name="arch" type="xml">
+    <tree string="Ticket treeview">
+      <field name="number"/>
+      <field name="breadcrumb"/>
+      <field name="project_id" invisible="1"/>
+      <field name="parent_id" invisible="1"/>
+    </tree>
+  </field>
+</record>
+
 <record id="ticket_view_form" model="ir.ui.view">
   <field name="name">ticket.form</field>
   <field name="model">anytracker.ticket</field>
@@ -68,10 +83,12 @@
     <sheet string="ticket">
         <group>
             <group>
-                    <field name="parent_id" colspan="4" nolabel="1" placeholder="Parent ticket"
-                           on_change="onchange_parent(parent_id)"/>
+                    <field name="parent_id" colspan="4" nolabel="1" placeholder="Project (or parent ticket)"
+                           on_change="onchange_parent(parent_id)" domain="[('child_ids', '!=', False)]"
+                           context="{'tree_view_ref': 'anytracker.just_names'}">
+                    </field>
                 <h1>
-                    <field name="name" default_focus="1"/>
+                    <field name="name" default_focus="1" placeholder="Ticket title"/>
                 </h1>
             </group>
             <group id="extend">

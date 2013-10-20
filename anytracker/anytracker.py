@@ -1,6 +1,8 @@
 # coding: utf-8
 from osv import fields, osv
 from tools.translate import _
+from lxml import etree
+from openerp.osv.orm import transfer_modifiers_to_node
 
 
 class Ticket(osv.Model):
@@ -191,6 +193,22 @@ class Ticket(osv.Model):
         method_id = self.read(cr, uid, parent_id, ['method_id'],
                               context, load='_classic_write')['method_id']
         return {'value': {'method_id': method_id}}
+
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form',
+                        context=None, toolbar=False, submenu=False):
+        """ Allow managers to set an empy parent_id (a project)
+        """
+        fvg = super(Ticket, self).fields_view_get(
+            cr, uid, view_id=view_id, view_type=view_type,
+            context=context, toolbar=toolbar, submenu=submenu)
+        if view_type == 'form':
+            access_obj = self.pool.get('ir.model.access')
+            allow = access_obj.check_groups(cr, uid, "anytracker.group_manager")
+            doc = etree.fromstring(fvg['arch'])
+            node = doc.xpath("//field[@name='parent_id']")[0]
+            transfer_modifiers_to_node({'required': not allow}, node)
+            fvg['arch'] = etree.tostring(doc)
+        return fvg
 
     _columns = {
         'name': fields.char('Title', 255, required=True),
