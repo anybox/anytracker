@@ -86,6 +86,7 @@
                     <field name="parent_id" colspan="4" nolabel="1"
                            widget="m2o_dynatree"
                            first_node_domain="[('parent_id', '=', False)]"
+                           placeholder="Project or parent ticket"
                            child_field="child_ids"
                            on_change="onchange_parent(parent_id)" 
                            context="{'tree_view_ref': 'anytracker.just_names'}">
