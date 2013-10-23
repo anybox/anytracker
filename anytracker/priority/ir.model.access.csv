@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+"acc_anytracker_priority_customer","Priority access for customer","model_anytracker_priority","group_customer",1,0,0,0
+"acc_anytracker_priority_manager","Priority access for manager","model_anytracker_priority","group_manager",1,1,1,1

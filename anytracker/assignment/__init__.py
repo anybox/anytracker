@@ -1,2 +1,2 @@
 # flake8: noqa
-import assignment
+from . import assignment

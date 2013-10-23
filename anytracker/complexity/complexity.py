@@ -136,7 +136,6 @@ class Ticket(osv.Model):
                                                      ('child_ids', '=', False),
                                                      ('id', '!=', node_id)])
                     risks = [i['risk'] for i in self.read(cr, uid, leaf_ids, ['risk'], context)]
-                    print risks
                     risk = sum([(r is False and 100.0 or r) for r in risks]) / float(len(risks))
                     self.write(cr, uid, node_id, {'risk': risk}, context)
         return True

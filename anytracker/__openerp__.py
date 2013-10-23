@@ -1,7 +1,7 @@
 ##############################################################################
 #
 #    anytracker module for OpenERP, Ticket module
-#    Copyright (C) 2012 Anybox (<http://www.anybox.fr>)
+#    Copyright (C) 2012-2013 Anybox (<http://www.anybox.fr>)
 #                Colin GOUTTE <cgoute@anybox.fr>
 #                Christophe COMBELLES <ccomb@anybox.fr>
 #                Simon ANDRE <sandre@anybox.fr>
@@ -28,7 +28,7 @@
 
 {
     'name': 'Anytracker',
-    'version': '0.1',
+    'version': '0.2',
     'author': 'Anybox',
     'website': 'http://anybox.fr',
     'category': 'Project Management',
@@ -45,22 +45,21 @@
 - Hierarchical Risk management
 - Hierarchical progress management
 - Complexity/evaluation management
-- Importance management
-- Simple commenting
+- Impact/Importance management
+- Priority management (timebox, deadline, milestone)
+- Commenting through OpenChatter
 - Assignment
 - Kanban view
 - Modifications history tracking
 
-Anytracker depends on a specific hierarchical search widget : web_dynatree,
+Anytracker depends on a specific many2one widget : web_dynatree,
 which is available at https://bitbucket.org/anybox/web_dynatree
 
 Anytracker includes some icons from the "fam fam fam silk" set,
 provided under the terms of the Creative Commons Attribution 2.5 license at
 http://www.famfamfam.com/lab/icons/silk/
 ''',
-    'init_xml': [],
-    'demo_xml': [],
-    'update_xml': [
+    'data': [
         'security/groups.xml',
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
@@ -85,19 +84,21 @@ http://www.famfamfam.com/lab/icons/silk/
         'assignment/action.xml',
         'assignment/view.xml',
         'assignment/ir.model.access.csv',
-        'comment/view.xml',
-        'comment/ir.model.access.csv',
         'notify/view.xml',
         'notify/data.xml',
         'notify/ir.model.access.csv',
+        'priority/data.xml',
+        'priority/view.xml',
+        'priority/ir.model.access.csv',
     ],
+    'test': [],
+    'demo': [],
     "js": ["static/*/*.js", "static/*/js/*.js"],
     "css": ["static/*/css/*.css"],
+    "qweb": [],
     'active': False,
     'installable': True,
     'application': True,
     'web_preload': True,
 
 }
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -1,6 +1,8 @@
 # coding: utf-8
 from osv import fields, osv
 from tools.translate import _
+from lxml import etree
+from openerp.osv.orm import transfer_modifiers_to_node
 
 
 class Ticket(osv.Model):
@@ -8,40 +10,31 @@ class Ticket(osv.Model):
     _name = 'anytracker.ticket'
     _description = "Anytracker tickets"
     _rec_name = 'breadcrumb'
-    _order = 'create_date DESC'
+    #_order = 'priority,importance,sequence,create_date DESC'  # makes kanban sortable
+    _order = 'priority ASC, importance DESC, sequence ASC, create_date DESC'  # more logical now
     _parent_store = True
+    _inherit = ['mail.thread']
 
-    def _get_siblings(self, cr, uid, ids, field_name, args, context=None):
-        """ get tickets at the same hierachical level
-        """
-        res = {}
-        for ticket in self.browse(cr, uid, ids, context):
-            domain = [
-                ('parent_id', '=', ticket.parent_id.id),  # the same parent
-                ('id', '!=', ticket.id),  # not me
-            ]
-            res[ticket.id] = self.search(cr, uid, domain, context=context)
-        return res
-
-    def _shorten_description(self, cr, uid, ids, field_name, args, context=None):
+    def _shortened_description(self, cr, uid, ids, field_name, args, context=None):
         """shortened description
         """
         res = {}
-        for ticket in self.browse(cr, uid, ids, context):
-            descr = ticket.description or ''
-            res[ticket.id] = descr[:200] + u'(…)' if len(descr) > 200 else descr
+        limit = 150
+        for ticket in self.read(cr, uid, ids, ['id', 'description'], context):
+            descr = ticket['description'] or ''
+            res[ticket['id']] = descr[:limit] + u'(…)' if len(descr) > limit else descr
         return res
 
     def _kanban_description(self, cr, uid, ids, field_name, args, context=None):
         """shortened description for the kanban
         """
         res = {}
-        for ticket in self.browse(cr, uid, ids, context):
-            lines = (ticket.description or '').splitlines()
+        for ticket in self.read(cr, uid, ids, ['id', 'description'], context):
+            lines = (ticket['description'] or '').splitlines()
             if len(lines) > 5:
                 lines = lines[:5]
                 lines.append(u'(…)')
-            res[ticket.id] = '<br/>'.join(lines)
+            res[ticket['id']] = '<br/>'.join(lines)
         return res
 
     def _breadcrumb(self, cr, uid, ids, context=None):
@@ -73,9 +66,9 @@ class Ticket(osv.Model):
         return res
 
     def _get_admin_id(self, cr, uid, context=None):
-        xml_pool = self.pool.get('ir.model.data')
+        xml_obj = self.pool.get('ir.model.data')
         res_users = self.pool.get('res.users')
-        admin_group_id = xml_pool.get_object_reference(cr, uid, 'base', 'group_erp_manager')[1]
+        admin_group_id = xml_obj.get_object_reference(cr, uid, 'base', 'group_erp_manager')[1]
         domain = [
             ('groups_id', "in", [admin_group_id]),
         ]
@@ -143,11 +136,11 @@ class Ticket(osv.Model):
     def _default_parent_id(self, cr, uid, context=None):
         """Return the current ticket of the parent if this is a leaf
         """
-        ticket_pool = self.pool.get('anytracker.ticket')
+        ticket_obj = self.pool.get('anytracker.ticket')
         active_id = context.get('active_id')
         if not active_id:
             return False
-        ticket = ticket_pool.browse(cr, uid, active_id)
+        ticket = ticket_obj.browse(cr, uid, active_id)
         if not ticket.parent_id:
             return active_id
         elif not ticket.child_ids:
@@ -158,15 +151,23 @@ class Ticket(osv.Model):
     def _default_project_id(self, cr, uid, context=None):
         """Return the same project as the active_id
         """
-        ticket_pool = self.pool.get('anytracker.ticket')
+        ticket_obj = self.pool.get('anytracker.ticket')
         active_id = context.get('active_id')
         if not active_id:
             return False
-        ticket = ticket_pool.browse(cr, uid, active_id)
+        ticket = ticket_obj.browse(cr, uid, active_id)
         if not ticket.parent_id:
             return active_id
         else:
             return ticket.project_id.id
+
+    def _subnode_ids(self, cr, uid, ids, field_name, args, context=None):
+        """Return the list of children that are themselves nodes."""
+        ticket_obj = self.pool.get('anytracker.ticket')
+        # GR: I suppose we don't use self directly because it may be overridden ?
+        return {i: ticket_obj.search(cr, uid, [('parent_id', '=', i), ('child_ids', '!=', False)],
+                                     context=context)
+                for i in ids}
 
     def _nb_children(self, cr, uid, ids, field_name, args, context=None):
         res = {}
@@ -193,6 +194,22 @@ class Ticket(osv.Model):
                               context, load='_classic_write')['method_id']
         return {'value': {'method_id': method_id}}
 
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form',
+                        context=None, toolbar=False, submenu=False):
+        """ Allow managers to set an empy parent_id (a project)
+        """
+        fvg = super(Ticket, self).fields_view_get(
+            cr, uid, view_id=view_id, view_type=view_type,
+            context=context, toolbar=toolbar, submenu=submenu)
+        if view_type == 'form':
+            access_obj = self.pool.get('ir.model.access')
+            allow = access_obj.check_groups(cr, uid, "anytracker.group_manager")
+            doc = etree.fromstring(fvg['arch'])
+            node = doc.xpath("//field[@name='parent_id']")[0]
+            transfer_modifiers_to_node({'required': not allow}, node)
+            fvg['arch'] = etree.tostring(doc)
+        return fvg
+
     _columns = {
         'name': fields.char('Title', 255, required=True),
         'number': fields.integer('Number'),
@@ -201,8 +218,14 @@ class Ticket(osv.Model):
         'description': fields.text('Description', required=False),
         'create_date': fields.datetime('Creation Time'),
         'write_date': fields.datetime('Modification Time'),
+        'subnode_ids': fields.function(_subnode_ids,
+                                       type='one2many',
+                                       relation='anytracker.ticket',
+                                       method=True,
+                                       readonly=True,
+                                       string='Sub-nodes'),
         'shortened_description': fields.function(
-            _shorten_description,
+            _shortened_description,
             type='text',
             obj='anytracker.ticket',
             string='Description'),
@@ -217,12 +240,6 @@ class Ticket(osv.Model):
             type='char',
             obj='anytracker.ticket',
             string='Location'),
-        'siblings_ids': fields.function(
-            _get_siblings,
-            type='many2many',
-            obj='anytracker.ticket',
-            string='Siblings',
-            method=True),
         'duration': fields.selection(
             [(0, '< half a day'), (None, 'Will be computed'), (1, 'Half a day')],
             'duration'),
@@ -239,7 +256,7 @@ class Ticket(osv.Model):
             store=False, help='Number of children'),
         'participant_ids': fields.many2many(
             'res.users',
-            'ticket_assignement_rel',
+            'anytracker_ticket_assignment_rel',
             'ticket_id',
             'user_id',
             required=False),
@@ -260,6 +277,7 @@ class Ticket(osv.Model):
             'Requester'),
         'parent_left': fields.integer('Parent Left', select=1),
         'parent_right': fields.integer('Parent Right', select=1),
+        'sequence': fields.integer('sequence'),
 
         #'active': fields.boolean(
         #    'Active',

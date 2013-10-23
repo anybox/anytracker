@@ -1,2 +1,2 @@
 # flake8: noqa
-import history 
+from . import history

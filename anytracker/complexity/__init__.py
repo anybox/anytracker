@@ -1,3 +1,3 @@
 # flake8: noqa
-import complexity
-import wizard
+from . import complexity
+from . import wizard

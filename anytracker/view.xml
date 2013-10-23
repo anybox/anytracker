@@ -12,31 +12,26 @@
     <filter name="filter_projects"
             string="Projects"
             domain="[('parent_id','=',False)]"
-            icon="terp-go-home"
             help="Show only toplevel tickets. They correspond to projects"/>
     <filter name="filter_nodes"
             string="Nodes"
             domain="[('child_ids','!=',False)]"
-            icon="terp-folder-green"
             help="Show only tickets which have sub-tickets. They are used to gather tickets by nodes"/>
     <filter name="filter_tasks"
             string="Tasks"
             domain="[('child_ids','=',False)]"
-            icon="terp-check"
             help="Show only leaf tickets. They correspond to tasks"/>
     <separator orientation="vertical"/>
-    <filter name="tickets_by_project"
-            string="By project"
+    <group string="Group by...">
+      <filter name="tickets_by_project"
+            string="Project"
             context="{'group_by': ['project_id', 'parent_id']}"
-            icon="gtk-indent"
-            help="Group tasks"/>
-    <field name="parent_id" widget="dynatree_selection"
-           operator="child_of"
-           options='{"child_field": "child_ids"}'
-           string="Nodes"/>
+            help="Group tickets by project"/>
+    </group>
     <field name="number" select="True"/>
     <field name="name" select="True"/>
     <field name="description"/>
+    <field name="project_id"/>
     <field name="id" invisible="1"/>
   </search>
   </field>
@@ -60,33 +55,85 @@
   </field>
 </record>
 
+<record id="just_names" model="ir.ui.view">
+  <field name="name">Tickets</field>
+  <field name="model">anytracker.ticket</field>
+  <field name="type">tree</field>
+  <field name="priority" eval="20"/>
+  <field name="arch" type="xml">
+    <tree string="Ticket treeview">
+      <field name="number"/>
+      <field name="breadcrumb"/>
+      <field name="project_id" invisible="1"/>
+      <field name="parent_id" invisible="1"/>
+    </tree>
+  </field>
+</record>
+
 <record id="ticket_view_form" model="ir.ui.view">
   <field name="name">ticket.form</field>
   <field name="model">anytracker.ticket</field>
   <field name="type">form</field>
   <field name="priority" eval="10"/>
   <field name="arch" type="xml">
-    <form string="ticket form">
-        <group col="2" colspan="4">
-            <group col="8" colspan="2">
-                <field name="parent_id" colspan="4"
-                       on_change="onchange_parent(parent_id)"/>
-                <field name="method_id" widget="selection" attrs="{'readonly': [('parent_id', '!=', False)]}"/>
+    <form version="7.0" string="ticket form">
+      <header>
+      </header>
+
+    <sheet string="ticket">
+        <group>
+            <group>
+                    <field name="parent_id" colspan="4" nolabel="1" placeholder="Project (or parent ticket)"
+                           on_change="onchange_parent(parent_id)" domain="[('child_ids', '!=', False)]"
+                           context="{'tree_view_ref': 'anytracker.just_names'}">
+                    </field>
+                <h1>
+                    <field name="name" default_focus="1" placeholder="Ticket title"/>
+                </h1>
             </group>
-            <group col="8" colspan="2">
-                <field name="name" colspan="6" select="1"/>
-                <field name="number" readonly="1"/>
+            <group id="extend">
+                <field name="number" readonly="1" class="oe_inline"/>
+                <field name="method_id" widget="selection" attrs="{'invisible': [('parent_id', '!=', False)]}"/>
+                <field name="project_method_id" invisible="1"/>
             </group>
-            <field name="description" colspan="2"/>
         </group>
 
       <notebook colspan="4">
 
-        <page string="Sub-tickets">
-          <field name="child_ids" nolabel="1" context="{'default_parent_id': active_id}"/>
+        <page string="Description">
+            <field name="description" colspan="4" widget="html" nolabel="1" style="width: 800px; margin-left:0;"/>
         </page>
-        <page string="Participants" attrs="{'invisible': [('parent_id', '!=', False)]}">
-          <field name="participant_ids"/>
+        <page string="Sub-tickets">
+          <field name="child_ids" nolabel="1" context="{'default_parent_id': active_id}">
+            <tree>
+                <field name="number"/>
+                <field name="name"/>
+                <field name="stage_id"/>
+                <field name="progress"/>
+                <field name="risk"/>
+                <field name="importance_id"/>
+                <field name="priority_id"/>
+            </tree>
+          </field>
+        </page>
+        <page string="Participants" attrs="{'invisible': [('parent_id', '!=', False)]}" groups="anytracker.group_member">
+          <field name="participant_ids" colspan="4" widget="many2many_kanban">
+            <kanban quick_create="false" create="true">
+                <field name="name"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div style="position: relative">
+                            <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
+                            <div class="oe_module_vignette">
+                                <div class="oe_module_desc">
+                                    <field name="name"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+          </field>
         </page>
 
         <page string="History" groups="anytracker.group_member">
@@ -101,6 +148,11 @@
         </group>
         </page>
       </notebook>
+      </sheet>
+      <div class="oe_chatter">
+          <field name="message_follower_ids" widget="mail_followers" help="Follow this project to automatically track the events associated to tasks and issues of this project." groups="base.group_user"/>
+          <field name="message_ids" widget="mail_thread"/>
+      </div>
     </form>
   </field>
 </record>
@@ -111,45 +163,42 @@
   <field name="model">anytracker.ticket</field>
   <field name="type">kanban</field>
   <field name="arch" type="xml">
-    <kanban default_group_by="stage_id">
+    <kanban version="7.0" class="oe_background_grey">
       <field name="color"/>
       <field name="number"/>
       <field name="permalink"/>
       <field name="name"/>
+      <field name="sequence"/>
       <field name="description"/>
+      <field name="shortened_description"/>
       <field name="kanban_description"/>
-      <field name="siblings_ids"/>
-      <field name="child_ids"/>
       <templates>
         <t t-name="ticket_details">
             <div><i><b><field name="breadcrumb"/></b><span> </span>(#<b><field name="number"/></b>)</i></div>
             <div><t t-raw="record.kanban_description.raw_value"/></div>
         </t>
         <t t-name="kanban-box">
-          <div t-attf-class="#{kanban_color(record.color.raw_value)} #{border || ''}">
-            <div class="oe_kanban_box oe_kanban_color_border">
-              <table class="oe_kanban_table oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle">
-                <tr>
-                  <td align="left" valign="middle" class="oe_kanban_title" tooltip="ticket_details">
-                    <field name="name"/>
-                  </td>
-                </tr>
-              </table>
-              <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger at_kanban_box_content">
+          <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_card oe_kanban_project oe_kanban_global_click">
+            <div class="oe_dropdown_toggle oe_dropdown_kanban" groups="anytracker.group_customer">
+               <span class="oe_e">í</span>
+               <ul class="oe_dropdown_menu">
+                   <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">Edit ticket</a></li></t>
+               </ul>
+            </div>
+
+            <div class="oe_kanban_content">
+              <h4><field name="name"/></h4>
                 <div>
-                  <t t-raw="record.kanban_description.raw_value"/>
+                  <t t-raw="record.shortened_description.raw_value"/>
                 </div>
-                <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
-                    <div class="oe_kanban_left">
-                        <a string="Edit" icon="gtk-edit" type="edit"/>
-                    </div>
-                    <div class="oe_kanban_right">
-                        <a title="Permalink"
-                           t-attf-href="#{record.permalink.value}">¶</a>
-                    </div>
-                    <br class="oe_kanban_clear"/>
+
+                <div class="oe_kanban_bottom_left">
+                <t groups="anytracker.group_customer">
+                   <a t-attf-href="#{record.permalink.value}" string="Permalink">¶</a>
+                </t>
                 </div>
-              </div>
+
+
             </div>
           </div>
         </t>
@@ -163,7 +212,7 @@
   <field name="name">anytracker.ticket.hierarchy</field>
   <field name="model">anytracker.ticket</field>
   <field name="type">tree</field>
-  <field name="field_parent">child_ids</field>
+  <field name="field_parent">subnode_ids</field>
   <field name="arch" type="xml">
     <tree string="Tickets hierarchy">
       <field name="name"/>
@@ -180,9 +229,8 @@
     <field name="view_type">form</field>
     <field name="view_mode">kanban,tree,form</field>
     <field name="view_id" ref="tickets_view_kanban"/>
-    <!-- The reload bug on the kanban view comes from the line below -->
     <field name="domain">[('id', 'child_of', active_id), ('progress', '&lt;', 100.0)]</field>
-    <field name="context">{'search_default_filter_tasks': 1}</field>
+    <field name="context">{'search_default_filter_tasks': 1, 'group_by': 'stage_id'}</field>
 </record>
 <record id="ir_value_hierarchy_line_select" model="ir.values">
     <field name="key2">tree_but_open</field>
@@ -193,7 +241,7 @@
 
 <!-- ACTIONS -->
 <record model="ir.actions.act_window" id="action_kanbans">
-  <field name="name">Anytracker - Projects</field>
+  <field name="name">Hierarchy</field>
   <field name="res_model">anytracker.ticket</field>
   <field name="view_type">tree</field>
   <field name="view_id" ref="tickets_hierarchy"/>
@@ -210,15 +258,15 @@
 </record>
 
 <record model="ir.actions.act_window" id="act_all_projects">
-  <field name="name">All projects</field>
+  <field name="name">Projects</field>
   <field name="res_model">anytracker.ticket</field>
-  <field name="view_mode">tree,form</field>
+  <field name="view_mode">kanban,tree,form</field>
   <field name="view_type">form</field>
-  <field name="view_id" ref="ticket_view_tree"/>
+  <field name="view_id" ref="tickets_view_kanban"/>
   <field name="context">{'search_default_filter_projects': 1}</field>
 </record>
 <record model="ir.actions.act_window" id="act_all_nodes">
-  <field name="name">All nodes</field>
+  <field name="name">Nodes</field>
   <field name="res_model">anytracker.ticket</field>
   <field name="view_mode">tree,form</field>
   <field name="view_type">form</field>
@@ -226,7 +274,7 @@
   <field name="context">{'search_default_filter_nodes': 1}</field>
 </record>
 <record model="ir.actions.act_window" id="act_all_tasks">
-  <field name="name">All tasks</field>
+  <field name="name">Tickets</field>
   <field name="res_model">anytracker.ticket</field>
   <field name="view_mode">tree,form</field>
   <field name="view_type">form</field>
@@ -235,44 +283,34 @@
 </record>
 
 <!-- MENUITEMS -->
-<menuitem id="anytracker"
+<menuitem id="tabmenu_anytracker"
   name="Anytracker"
-  sequence="-1"
-  web_icon="images/iconbw.png"
-  web_icon_hover="images/icon.png" />
-<menuitem id="menu_kanbans"
-  name="Kanbans"
-  parent="anytracker"
-  sequence="0"
-  action="action_kanbans" />
-<menuitem id="projects"
-  name="Projects"
-  sequence="10"
-  parent="anytracker"/>
-<menuitem id="tickets"
-  name="Tickets"
-  sequence="20"
-  parent="anytracker"/>
-    <menuitem id="menu_all_tasks"
-      name="All tasks"
-      parent="tickets"
+  sequence="11"/>
+<menuitem id="menu_anytracker"
+  name="Anytracker"
+  parent="tabmenu_anytracker"
+  sequence="0"/>
+    <menuitem id="menu_hierarchy"
+      parent="menu_anytracker"
       sequence="10"
-      action="act_all_tasks" />
-    <menuitem id="menu_all_nodes"
-      name="All nodes"
-      parent="tickets"
-      sequence="20"
-      action="act_all_nodes" />
+      action="action_kanbans" />
     <menuitem id="menu_all_projects"
-      name="All projects"
-      parent="tickets"
-      sequence="30"
+      parent="menu_anytracker"
+      sequence="20"
       action="act_all_projects" />
-<menuitem id="configuration"
+    <menuitem id="menu_all_nodes"
+      parent="menu_anytracker"
+      sequence="30"
+      action="act_all_nodes" />
+    <menuitem id="menu_all_tasks"
+      parent="menu_anytracker"
+      sequence="40"
+      action="act_all_tasks" />
+<menuitem id="menu_configuration"
   name="Configuration"
   sequence="200"
   groups="group_manager"
-  parent="anytracker"/>
+  parent="tabmenu_anytracker"/>
 
 </data> </openerp>
 

@@ -22,7 +22,11 @@ class Ticket(osv.Model):
 
     _columns = {
         'history_ids': fields.many2many(
-            'anytracker.history', 'ticket_history_rel', 'ticket_id', 'history_id', 'History'),
+            'anytracker.history',
+            'anytracker_ticket_history_rel',
+            'ticket_id',
+            'history_id',
+            'History'),
     }
 
     def _add_history(self, cr, uid, values, context=None):

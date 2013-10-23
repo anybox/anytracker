@@ -62,8 +62,8 @@
     <field name="model">anytracker.ticket</field>
     <field name="inherit_id" ref="ticket_view_form" />
     <field name="arch" type="xml">
-        <xpath expr="/form/notebook/page[@string='Participants']" position="after">
-            <page string="Ratings">
+        <xpath expr="//notebook/page[@string='Participants']" position="after">
+            <page string="Ratings" groups="anytracker.group_member">
             <group col="6" colspan="4">
                 <field name="my_rating" attrs="{'invisible': [('child_ids', '!=', False)]}" groups="anytracker.group_member" options='{"quick_create": false}' domain="[('method_id','=',method_id)]"/>
                 <button string="Rate subtickets..." icon="gtk-execute" type="action" name="%(action_quickrating)d" attrs="{'invisible': [('child_ids', '=', False)]}" groups="anytracker.group_member"/>
@@ -73,7 +73,7 @@
 
             </group>
             <group col="6" colspan="4" attrs="{'invisible': [('child_ids', '!=', False)]}">
-              <label>Here are all the ratings made for this ticket:</label>
+              <label for="rating_ids">Here are all the ratings made for this ticket:</label>
               <field name="rating_ids" nolabel="1" colspan="4" readonly="1">
                 <tree string="Ratings">
                   <field name="user_id"/>
@@ -137,7 +137,7 @@
 </record>
 
 <menuitem id="menu_complexity"
-    parent="configuration"
+    parent="menu_configuration"
     sequence="20"
     groups="group_manager"
     action="act_open_complexity_view"/>

@@ -1,2 +1,2 @@
 # flake8: noqa
-import notify
+from . import notify

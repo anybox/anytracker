@@ -23,13 +23,13 @@ class Importance(osv.Model):
         'active': True,
     }
 
-    _order = 'method_id,seq'
+    _order = 'method_id, seq'
 
 
 class Ticket(osv.Model):
     _inherit = 'anytracker.ticket'
 
-    def _get_importance_seq(self, cr, uid, ids, fname, args, context=None):
+    def _get_importance(self, cr, uid, ids, fname, args, context=None):
         res = {}
         for ticket in self.browse(cr, uid, ids, context=context):
             res[ticket.id] = ticket.importance_id.seq if ticket.importance_id else 0
@@ -37,9 +37,7 @@ class Ticket(osv.Model):
 
     _columns = {
         'importance_id': fields.many2one('anytracker.importance', 'Importance', required=False),
-        'seq': fields.function(
-            _get_importance_seq, method=True, string='Importance (Number)',
+        'importance': fields.function(
+            _get_importance, method=True, string='Importance',
             type='integer', store=True),
     }
-
-    _order = 'seq desc,create_date desc'
