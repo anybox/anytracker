@@ -52,7 +52,7 @@
 - Kanban view
 - Modifications history tracking
 
-Anytracker depends on a specific hierarchical search widget : web_dynatree,
+Anytracker depends on a specific many2one widget : web_dynatree,
 which is available at https://bitbucket.org/anybox/web_dynatree
 
 Anytracker includes some icons from the "fam fam fam silk" set,
