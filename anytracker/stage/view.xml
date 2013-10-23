@@ -91,15 +91,6 @@
       <xpath expr="/form/header" position='inside'>
         <field name="stage_id" widget="statusbar" clickable="True" attrs="{'invisible': [('child_ids', '!=', ())]}"/>
       </xpath>
-      <xpath expr="//field[@name='parent_id']" position="replace">
-            <field name="parent_id" colspan="4" nolabel="1"
-                   widget="m2o_dynatree"
-                   first_node_domain="[('parent_id', '=', False)]"
-                   child_field="child_ids"
-                   on_change="onchange_parent(parent_id)" 
-                   domain="[('progress', '&lt;', 100)]"
-                   context="{'tree_view_ref': 'anytracker.just_names'}"/>
-      </xpath>
       <xpath expr="//notebook/page[@string='Participants']" position="after">
         <page string="Progress">
         <group col="9" colspan="2">
