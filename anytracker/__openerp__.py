@@ -34,7 +34,7 @@
     'category': 'Project Management',
     'depends': [
         'base',
-        'web_dynatree',
+        #'web_dynatree',
         'email_template',
     ],
     'description': '''Project management application, which provides:
