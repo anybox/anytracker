@@ -43,7 +43,7 @@
             <field name="name">Delivered</field>
             <field name="state">delivered</field>
             <field name="method_id" ref="method_implementation"/>
-            <field name="sequence">60</field>
+            <field name="sequence">65</field>
             <field name="progress">70.0</field>
         </record>
         <record id="stage_implementation_checked" model="anytracker.stage">
