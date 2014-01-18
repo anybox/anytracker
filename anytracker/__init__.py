@@ -10,3 +10,4 @@ from . import mindmap
 from . import assignment
 from . import notify
 from . import priority
+from . import bouquet

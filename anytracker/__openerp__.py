@@ -90,6 +90,7 @@ http://www.famfamfam.com/lab/icons/silk/
         'priority/data.xml',
         'priority/view.xml',
         'priority/ir.model.access.csv',
+        'bouquet/ir.model.access.csv',
     ],
     'test': [],
     'demo': [],
