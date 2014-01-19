@@ -92,6 +92,7 @@ http://www.famfamfam.com/lab/icons/silk/
         'priority/ir.model.access.csv',
         'bouquet/ir.model.access.csv',
         'bouquet/view.xml',
+        'bouquet/ir_rule.xml',
     ],
     'test': [],
     'demo': [],
