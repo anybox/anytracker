@@ -4,6 +4,9 @@ from openerp.osv import osv, fields
 logger = logging.getLogger(__file__)
 
 
+BOUQUET_TYPES = (('changelog', u"Change log",),
+                 )
+
 class Bouquet(osv.Model):
 
     _name = 'anytracker.bouquet'
@@ -21,8 +24,10 @@ class Bouquet(osv.Model):
         description=fields.char(u'Description'),
         ticket_ids=fields.many2many('anytracker.ticket', 'anytracker_ticket_bouquet_rel',
                                     'bouquet_id', 'ticket_id', u"Tickets"),
-        type=fields.selection(('changelog', u"Change log",)),
+        type=fields.selection(BOUQUET_TYPES, u"Type"),
         nb_tickets=fields.function(_nb_tickets, method=True, string=u'Number of tickets',
                                    type='integer',
                                    store=False, help='Full number of tickets in this bouquet'),
+        create_date=fields.datetime('Creation Time'),
+        write_date=fields.datetime('Modification Time'),
     )

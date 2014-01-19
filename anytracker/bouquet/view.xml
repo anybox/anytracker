@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp><data>
+
+<record id="bouquet_view_form" model="ir.ui.view">
+  <field name="name">bouquet.form</field>
+  <field name="model">anytracker.bouquet</field>
+  <field name="type">form</field>
+  <field name="priority" eval="10"/>
+  <field name="arch" type="xml">
+    <form version="7.0" string="bouquet form">
+      <header>
+      </header>
+
+    <sheet string="bouquet">
+      <group>
+        <h1>
+          <field name="name" default_focus="1" placeholder="Bouquet title"/>
+        </h1>
+        <field name="create_date" nolabel="1"/>
+      </group>
+      <field name="description" colspan="4" widget="html"
+             style="width: 800px; margin-left:0;"/>
+      <field name="ticket_ids" nolabel="1">
+        <tree>
+          <field name="number"/>
+          <field name="name"/>
+          <field name="importance_id"/>
+          <field name="stage_id"/>
+          <button name="stage_previous" string="" type="object" icon="gtk-go-back" />
+          <button name="stage_next" string="" type="object" icon="gtk-go-forward" />
+          <field name="progress" widget="progressbar"/>
+          <field name="priority_id"/>
+        </tree>
+      </field>
+    </sheet>
+    </form>
+  </field>
+</record>
+
+<record id="bouquet_view_search" model="ir.ui.view">
+  <field name="name">Search bouquets</field>
+  <field name="model">anytracker.bouquet</field>
+  <field name="type">search</field>
+  <field name="priority" eval="8"/>
+  <field name="arch" type="xml">
+  <search string="Search bouquets">
+    <field name="name" select="True"/>
+    <field name="description"/>
+  </search>
+  </field>
+</record>
+
+<record id="bouquet_view_tree" model="ir.ui.view">
+  <field name="name">Bouquets</field>
+  <field name="model">anytracker.bouquet</field>
+  <field name="type">tree</field>
+  <field name="priority" eval="10"/>
+  <field name="arch" type="xml">
+    <tree string="Bouquet treeview">
+      <field name="name"/>
+      <field name="create_date"/>
+      <field name="write_date"/>
+    </tree>
+  </field>
+</record>
+
+<record model="ir.actions.act_window" id="act_bouquets">
+  <field name="name">Bouquets</field>
+  <field name="res_model">anytracker.bouquet</field>
+  <field name="view_mode">tree,form</field>
+  <field name="view_type">form</field>
+  <field name="view_id" ref="bouquet_view_tree"/>
+  <field name="context">{}</field>
+</record>
+
+<menuitem id="menu_bouquets"
+          parent="menu_anytracker"
+          sequence="50"
+          action="act_bouquets" />
+
+</data>
+</openerp>
