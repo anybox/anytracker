@@ -24,6 +24,7 @@
       <field name="ticket_ids" nolabel="1">
         <tree>
           <field name="number"/>
+          <field name="project_id"/>
           <field name="name"/>
           <field name="importance_id"/>
           <field name="stage_id"/>
@@ -58,6 +59,7 @@
   <field name="priority" eval="10"/>
   <field name="arch" type="xml">
     <tree string="Bouquet treeview">
+      <field name="project_ids" widget="many2many_tags"/>
       <field name="name"/>
       <field name="create_date"/>
       <field name="write_date"/>
