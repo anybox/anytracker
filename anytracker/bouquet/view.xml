@@ -13,6 +13,7 @@
 
     <sheet string="bouquet">
       <group>
+        <field name="project_ids" widget="many2many_tags"/>
         <h1>
           <field name="name" default_focus="1" placeholder="Bouquet title"/>
         </h1>

@@ -54,7 +54,9 @@ class TestBouquets(SharedSetupTransactionCase):
     def test_create_read(self):
         tids = self.ticket_ids
         self.assertRecord(self.bouquet, self.bouquet_id,
-                          dict(ticket_ids=set(tids), nb_tickets=len(tids)),
+                          dict(ticket_ids=set(tids),
+                               nb_tickets=len(tids),
+                               project_ids=set([self.project_id])),
                           list_to_set=True)
 
     def test_create_read_perm(self):
@@ -81,6 +83,12 @@ class TestBouquets(SharedSetupTransactionCase):
         """A user participating in any project related to the bouquet must have right perm."""
         p2id = self.create_project([], name="Another Project")  # no participant
         self.ticket.write(self.cr, self.admin_id, self.ticket_ids[0], dict(parent_id=p2id))
+
+        # testing the project_ids function field while we're at it
+        self.assertRecord(self.bouquet, self.bouquet_id,
+                          dict(project_ids=set([self.project_id, p2id])),
+                          list_to_set=True)
+
         for tested_uid in (self.at_member_id, self.at_cust_id):
             self.uid = tested_uid
 

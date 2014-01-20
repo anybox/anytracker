@@ -20,6 +20,21 @@ class Bouquet(osv.Model):
                    "WHERE bouquet_id IN %s GROUP BY bouquet_id", (tuple(ids),))
         return dict(cr.fetchall())
 
+    def _project_ids(self, cr, uid, ids, field_name, args, context=None):
+        if isinstance(ids, (int, long)):
+            ids = (ids,)
+        bouquet_reads = self.read(cr, uid, ids, ['ticket_ids'], context=context)
+        all_tickets = set(tid for br in bouquet_reads for tid in br['ticket_ids'])
+        # GR py 2.6 valid dict comprehension
+        ticket = self.pool.get('anytracker.ticket')
+        ticket_projects = dict(
+            (tr['id'], tr['project_id'])
+            for tr in ticket.read(cr, uid, list(all_tickets), ['project_id'],
+                                  load='_classic_write', context=context))
+
+        return dict((br['id'], list(set(ticket_projects[tid] for tid in br['ticket_ids'])))
+                    for br in bouquet_reads)
+
     def _participant_ids(self, cr, uid, ids, field_name, args, context=None):
         if isinstance(ids, (int, long)):
             ids = (ids,)
@@ -73,5 +88,8 @@ class Bouquet(osv.Model):
         participant_ids=fields.function(_participant_ids, method=True,
                                         string=u'All participating users', type='many2many',
                                         fnct_search=_search_participants,
-                                        relation='res.users')
+                                        relation='res.users'),
+        project_ids=fields.function(_project_ids, method=True,
+                                    string=u"Projects", type='many2many',
+                                    relation='anytracker.ticket')
     )
