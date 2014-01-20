@@ -80,14 +80,21 @@ class TestBouquets(SharedSetupTransactionCase):
     def test_read_perm_participating_mixed(self):
         """A user participating in any project related to the bouquet must have right perm."""
         p2id = self.create_project([], name="Another Project")  # no participant
-        self.ticket.write(self.cr, self.uid, self.ticket_ids[0], dict(parent_id=p2id))
+        self.ticket.write(self.cr, self.admin_id, self.ticket_ids[0], dict(parent_id=p2id))
+        for tested_uid in (self.at_member_id, self.at_cust_id):
+            self.uid = tested_uid
 
-        self.uid = self.at_cust_id
-        # bouquet is still visible by user, although one of its tickets is not
-        self.assertEqual(self.searchUnique(self.bouquet, []), self.bouquet_id)
-        self.assertNoRecord(self.ticket, [('id', '=', self.ticket_ids[0])])
+            # bouquet is still visible by user, although one of its tickets is not
+            self.assertEqual(self.searchUnique(self.bouquet, []), self.bouquet_id)
+            self.assertNoRecord(self.ticket, [('id', '=', self.ticket_ids[0])])
 
     def test_participant_ids(self):
         # just a very simple case, but better than nothing
         self.assertRecord(self.bouquet, self.bouquet_id,
                           dict(participant_ids=[self.at_member_id, self.at_cust_id]))
+
+    def test_create_member(self):
+        """Any member can create a bouquet."""
+        self.bouquet.create(self.cr, self.at_member_id, dict(name='member bouquet'))
+        self.bouquet.create(self.cr, self.at_member_id, dict(name='member bouquet',
+                                                             ticket_ids=self.ticket_ids))

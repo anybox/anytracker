@@ -4,7 +4,7 @@
 <record id="property_rule_bouquets_participants" model="ir.rule">
     <field name="name">Bouquet only for participant in one of the tickets</field>
     <field model="ir.model" name="model_id" ref="model_anytracker_bouquet"/>
-    <field name="domain_force">[('participant_ids', 'in', user.id)]</field>
+    <field name="domain_force">['|', ('ticket_ids', '=', False), ('participant_ids', 'in', user.id)]</field> <!-- ticket_ids=False is to allow creation (but makes sense also in general) -->
     <field name="groups" eval="[(6, 0, [ref('anytracker.group_customer'), ref('anytracker.group_member')])]"/>
     <field name="perm_create" eval="True"/>
     <field name="perm_write" eval="True"/>
