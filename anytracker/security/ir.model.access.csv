@@ -1,6 +1,7 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 acc_anytracker_ticket_access,Ticket access for customers,model_anytracker_ticket,group_customer,1,1,1,0
 acc_anytracker_ticket_access_member,Ticket access for members,model_anytracker_ticket,group_member,1,1,1,1
-acc_anytracker_mail_message_customer,Message creation for customer,mail.model_mail_message,group_customer,1,0,1,0
+acc_anytracker_mail_message_customer,Message creation for customer,mail.model_mail_message,group_customer,1,1,1,0
+acc_anytracker_mail_notification_customer,Mail notification for customer,mail.model_mail_notification,group_customer,1,1,1,0
 acc_anytracker_mail_mail_customer,Mail creation for customer,mail.model_mail_mail,group_customer,1,1,1,0
 acc_anytracker_res_partner_member,Read partner for customer,base.model_res_partner,group_customer,1,0,0,0
