@@ -572,6 +572,13 @@ msgid "Risk"
 msgstr "Risque"
 
 #. module: anytracker
+#: field:anytracker.complexity,rating:0
+#: view:anytracker.ticket:0
+#: field:anytracker.ticket,rating:0
+msgid "Rating"
+msgstr "Chiffrage"
+
+#. module: anytracker
 #: field:anytracker.stage,notify_template_id:0
 msgid "Email template"
 msgstr "Email template"

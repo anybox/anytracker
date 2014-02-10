@@ -108,6 +108,7 @@
     <field name="arch" type="xml">
         <xpath expr="/tree/field[@name='nb_children']" position="after">
             <field name="risk" string="Risk"/>
+            <field name="rating" string="Rating"/>
         </xpath>
     </field>
 </record>

@@ -89,28 +89,41 @@ class Ticket(osv.Model):
             tickets[ticket.id] = getattr(complexity, 'color', False)
         return tickets
 
-    def compute_risk(self, cr, uid, ids, context=None):
+    def compute_risk_and_rating(self, cr, uid, ids, context=None):
         """compute the risk of a leaf ticket, given its ratings
         """
-        res = {}
+        res_risk, res_rating = {}, {}
         if type(ids) is int:
             ids = [ids]
         for ticket in self.browse(cr, uid, ids, context):
             if ticket.child_ids:  # not a leaf
-                res[ticket.id] = ticket.risk
+                import pdb
+                pdb.set_trace()
+                res_risk[ticket.id] = ticket.risk
+                res_rating[ticket.id] = ticket.rating
                 continue
-            latest_person_ratings = {}
+            latest_person_ratings_risk, latest_person_ratings_values = {}, {}
             # find latest rating for each person
-            relevant_ratings = sorted([(r.time, r.user_id, r.complexity_id.risk)
-                                       for r in ticket.rating_ids])
-            for rating in relevant_ratings:
-                latest_person_ratings[rating[1]] = rating[2]
+            relevant_ratings_risk = sorted([(r.time, r.user_id, r.complexity_id.risk)
+                                            for r in ticket.rating_ids])
+            relevant_ratings_values = sorted([(r.time, r.user_id, r.complexity_id.value)
+                                             for r in ticket.rating_ids])
+            for rating in relevant_ratings_risk:
+                latest_person_ratings_risk[rating[1]] = rating[2]
+            for rating in relevant_ratings_values:
+                latest_person_ratings_values[rating[1]] = rating[2]
             # compute the mean of all latest ratings
-            risk_mean = sum([r or 100.0
-                             for r in latest_person_ratings.values()]
-                            )/len(latest_person_ratings) if latest_person_ratings else 100.0
-            res[ticket.id] = risk_mean
-        return res
+            risk_mean = (sum([r or 100.0
+                             for r in latest_person_ratings_risk.values()]
+                             )/len(latest_person_ratings_risk)
+                         if latest_person_ratings_risk else 100.0)
+            rating_mean = (sum([r for r in
+                               latest_person_ratings_values.values()]
+                               )/len(latest_person_ratings_values)
+                           if latest_person_ratings_values else 0)
+            res_risk[ticket.id] = risk_mean
+            res_rating[ticket.id] = rating_mean
+        return res_risk, res_rating
 
     def recompute_risk(self, cr, uid, ids, context=None):
         """recompute the overall risk of the node, based on subtickets.
@@ -148,15 +161,16 @@ class Ticket(osv.Model):
         if type(ids) is int:
             ids = [ids]
         if 'my_rating' in values:
-            old_risk = self.compute_risk(cr, uid, ids, context)
-
+            old_risk, old_rating = self.compute_risk_and_rating(cr, uid, ids, context)
         res = super(Ticket, self).write(cr, uid, ids, values, context)
-
         if 'my_rating' not in values:
             return res
         for ticket in self.browse(cr, uid, ids, context):
-            new_risk = self.compute_risk(cr, uid, [ticket.id], context)[ticket.id]
-            ticket.write({'risk': new_risk})
+            new_risk, new_rating = self.compute_risk_and_rating(cr, uid,
+                                                                [ticket.id], context)
+            new_risk, new_rating = new_risk[ticket.id], new_rating[ticket.id]
+            ticket.write({'risk': new_risk,
+                          'rating': new_rating})
             parent = ticket.parent_id
             #loop up to the root
             while parent:
@@ -164,10 +178,13 @@ class Ticket(osv.Model):
                                                   ('child_ids', '=', False),
                                                   ('id', '!=', parent.id)])
                 risk_increase = (ticket.risk - old_risk[ticket.id])/len(child_ids)
+                rating_diff = (ticket.rating - old_rating[ticket.id])
                 new_risk = parent.risk + risk_increase
                 new_risk = 100.0 if new_risk > 100.0 else new_risk
                 new_risk = 0.0 if new_risk < 0.0 else new_risk
+                new_rating = parent.rating + rating_diff
                 parent.write({'risk': new_risk})
+                parent.write({'rating': new_rating})
                 parent = parent.parent_id
         return res
 
@@ -182,6 +199,7 @@ class Ticket(osv.Model):
             _get_color, type='integer',
             relation='anytracker.complexity',
             string='Color'),
+        'rating': fields.float('Rating', group_operator="sum",),
     }
 
     _defaults = {
