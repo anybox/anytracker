@@ -97,8 +97,6 @@ class Ticket(osv.Model):
             ids = [ids]
         for ticket in self.browse(cr, uid, ids, context):
             if ticket.child_ids:  # not a leaf
-                import pdb
-                pdb.set_trace()
                 res_risk[ticket.id] = ticket.risk
                 res_rating[ticket.id] = ticket.rating
                 continue
@@ -117,7 +115,7 @@ class Ticket(osv.Model):
                              for r in latest_person_ratings_risk.values()]
                              )/len(latest_person_ratings_risk)
                          if latest_person_ratings_risk else 100.0)
-            rating_mean = (sum([r for r in
+            rating_mean = (sum([r or 0.00 for r in
                                latest_person_ratings_values.values()]
                                )/len(latest_person_ratings_values)
                            if latest_person_ratings_values else 0)
