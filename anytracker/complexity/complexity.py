@@ -126,6 +126,8 @@ class Ticket(osv.Model):
     def recompute_risk(self, cr, uid, ids, context=None):
         """recompute the overall risk of the node, based on subtickets.
         And recompute sub-nodes as well
+        This method is only used to be able to recompute all risks with a button in the form,
+        in case the risks are erroneous.
         """
         if not context:
             context = {}
