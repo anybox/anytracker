@@ -131,8 +131,9 @@ class Ticket(osv.Model):
             context = {}
         for ticket in self.browse(cr, uid, ids, context):
             if not ticket.child_ids:
-                risk = self.compute_risk(cr, uid, ticket.id, context)[ticket.id]
-                self.write(cr, uid, ticket.id, {'risk': risk}, context)
+                risk, rating = self.compute_risk_and_rating(cr, uid, ticket.id, context)
+                self.write(cr, uid, ticket.id, {'risk': risk[ticket.id],
+                                                'rating': rating[ticket.id]}, context)
             else:
                 leaf_ids = self.search(cr, uid, [('id', 'child_of', ticket.id),
                                                  ('child_ids', '=', False),
