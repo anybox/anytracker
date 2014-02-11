@@ -114,6 +114,7 @@
                 <field name="name"/>
                 <field name="stage_id"/>
                 <field name="progress"/>
+                <field name="rating"/>
                 <field name="risk"/>
                 <field name="importance_id"/>
                 <field name="priority_id"/>
