@@ -99,11 +99,11 @@
                 <field name="number" readonly="1" class="oe_inline"/>
                 <field name="method_id" widget="selection" attrs="{'invisible': [('parent_id', '!=', False)]}"/>
                 <field name="project_method_id" invisible="1"/>
+                <field name="rating" readonly="True"/>
             </group>
         </group>
 
       <notebook colspan="4">
-
         <page string="Description">
             <field name="description" colspan="4" widget="html" nolabel="1" style="width: 800px; margin-left:0;"/>
         </page>
