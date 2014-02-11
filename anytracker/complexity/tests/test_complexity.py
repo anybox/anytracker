@@ -10,11 +10,17 @@ class TestComplexity(SharedSetupTransactionCase):
     @classmethod
     def initTestData(self):
         super(TestComplexity, self).initTestData()
+        cr, uid = self.cr, self.uid
         self.ticket_mdl = self.registry('anytracker.ticket')
         self.complexity_mdl = self.registry('anytracker.complexity')
         self.method_mdl = self.registry('anytracker.method')
-        self.user_mdl = self.registry('res.users')
+        self.user = self.registry('res.users')
         self.rating_mdl = self.registry('anytracker.rating')
+        self.member_id = self.user.create(cr, uid,
+                                          {'name': 'test member',
+                                           'login': 'test',
+                                           'groups_id': [(6, 0,
+                                                          [self.ref('anytracker.group_member')])]})
 
     def createQuickstartProject(self, participant_ids):
         cr, uid = self.cr, self.uid
@@ -34,17 +40,33 @@ class TestComplexity(SharedSetupTransactionCase):
                                             'parent_id': parent_id, })
         return ticket_id
 
+    def test_none_rating(self):
+        cr, uid = self.cr, self.uid
+        complexity_2h = self.ref('anytracker.anytracker_complexity-2h')
+        project_id = self.createQuickstartProject(self.member_id)
+        ticket1_id = self.createLeafTicket('Test ticket 1',
+                                           project_id)
+        self.ticket_mdl.write(cr, uid, [ticket1_id],
+                              {'rating_ids': [(0, 0,
+                                               {'user_id': 1,
+                                                'time': datetime.now(),
+                                                'complexity_id': complexity_2h})],
+                               'my_rating': complexity_2h})
+        self.assertEquals(self.ticket_mdl.browse(cr, uid, ticket1_id).rating, 2)
+        rating_ids = [r.id for r in self.ticket_mdl.browse(cr, uid, ticket1_id).rating_ids if r]
+        for rating_id in rating_ids:
+            self.ticket_mdl.write(cr, uid, [ticket1_id],
+                                  {'my_rating': None,
+                                   'rating_ids': [(2, rating_id)]})
+        self.assertFalse(self.ticket_mdl.browse(cr, uid, ticket1_id).my_rating)
+        self.assertEquals(self.ticket_mdl.browse(cr, uid, ticket1_id).rating, 0.0)
+
     def test_compute_rating(self):
         cr, uid = self.cr, self.uid
         complexity_2h = self.ref('anytracker.anytracker_complexity-2h')
         complexity_4h = self.ref('anytracker.anytracker_complexity-4h')
         complexity_1j = self.ref('anytracker.anytracker_complexity-1_jour')
-        member_id = self.user_mdl.create(cr, uid,
-                                         {'name': 'test member',
-                                          'login': 'test',
-                                          'groups_id': [(6, 0,
-                                                         [self.ref('anytracker.group_member')])]})
-        project_id = self.createQuickstartProject(member_id)
+        project_id = self.createQuickstartProject(self.member_id)
         ticket1_id = self.createLeafTicket('Test ticket 1',
                                            project_id)
         self.ticket_mdl.write(cr, uid, [ticket1_id],

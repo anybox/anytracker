@@ -152,7 +152,13 @@ class Ticket(osv.Model):
         return True
 
     def unlink(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'my_rating': None}, context)
+        for ticket in self.browse(cr, uid, ids):
+            rating_ids = [r.id for r in ticket.rating_ids if ticket.rating_ids]
+            if rating_ids:
+                for rating_id in rating_ids:
+                    self.write(cr, uid, [ticket.id],
+                               {'my_rating': None,
+                                'rating_ids': [(2, rating_id)]})
         super(Ticket, self).unlink(cr, uid, ids, context)
 
     def write(self, cr, uid, ids, values, context=None):
