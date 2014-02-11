@@ -115,7 +115,7 @@ class Ticket(osv.Model):
                              for r in latest_person_ratings_risk.values()]
                              )/len(latest_person_ratings_risk)
                          if latest_person_ratings_risk else 100.0)
-            rating_mean = (sum([r or 0.00 for r in
+            rating_mean = (sum([r or 0.0 for r in
                                latest_person_ratings_values.values()]
                                )/len(latest_person_ratings_values)
                            if latest_person_ratings_values else 0)
@@ -151,10 +151,14 @@ class Ticket(osv.Model):
                     self.write(cr, uid, node_id, {'risk': risk}, context)
         return True
 
+    def unlink(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'my_rating': None}, context)
+        super(Ticket, self).unlink(cr, uid, ids, context)
+
     def write(self, cr, uid, ids, values, context=None):
         """Climb the tree from the ticket to the root
         and recompute the risk of parents
-        Unrated tickets have a risk of 100.0!!
+        Unrated tickets have a risk of 100.0 and rating of 0.0!!
         """
         if type(ids) is int:
             ids = [ids]
