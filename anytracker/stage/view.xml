@@ -96,14 +96,14 @@
       </xpath>
       <xpath expr="/form/sheet/group" position="before">
         <div class="oe_right oe_button_box" name="buttons">
-            <button name="validate_rating"
+            <button name="accept_rating"
                 string="Accepter le chiffrage" type="object"
                 icon="gtk-apply"
-                attrs="{'invisible': [('is_ratable', '=', False)]}"/>
-             <button name="deny_rating"
+                attrs="{'invisible': [('is_ratable', '=', False)]}" groups="anytracker.group_customer"/>
+             <button name="decline_rating"
                 string="Refuser le chiffrage" type="object"
                 icon="gtk-cancel"
-                attrs="{'invisible': [('is_ratable', '=', False)]}"/>
+                attrs="{'invisible': [('is_ratable', '=', False)]}" groups="anytracker.group_customer"/>
         </div>
       </xpath>
       <xpath expr="//notebook/page[@string='Participants']" position="after">

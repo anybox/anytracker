@@ -23,7 +23,7 @@ class Stage(osv.Model):
             'Forbidden complexities', help='complexities forbidden for this stage'),
         'progress': fields.float(
             'Progress', help='Progress value of the ticket reaching this stage'),
-        'is_ratable': fields.boolean('Does stage need rating ?')
+        'is_ratable': fields.boolean('Does this stage allow to accept/decline tickets rating')
     }
 
     _defaults = {'is_ratable': False, }
@@ -46,11 +46,11 @@ class Ticket(osv.Model):
         self.write(cr, uid, ids, {'stage_id': valid_stage[0]}, context)
         return True
 
-    def validate_rating(self, cr, uid, ids, context=None):
+    def accept_rating(self, cr, uid, ids, context=None):
         targeted_stage = u'À faire'
         self.move_to_stage(cr, uid, ids, targeted_stage)
 
-    def deny_rating(self, cr, uid, ids, context=None):
+    def decline_rating(self, cr, uid, ids, context=None):
         targeted_stage = u'À évaluer'
         self.move_to_stage(cr, uid, ids, targeted_stage)
 
