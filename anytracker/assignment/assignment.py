@@ -66,11 +66,12 @@ class Ticket(osv.Model):
         """
         if value is not False:
             ticket = self.browse(cr, uid, ticket_id, context)
-            self.pool.get('anytracker.assignment').create(
-                cr, uid, {
-                    'stage_id': ticket.stage_id.id or self._default_stage(cr, uid, context={'active_id': ticket_id}),
-                    'ticket_id': ticket_id,
-                    'user_id': value,
+            stage_id = (ticket.stage_id.id
+                        or self._default_stage(cr, uid, context={'active_id': ticket_id}))
+            self.pool.get('anytracker.assignment').create(cr, uid, {
+                'stage_id': stage_id,
+                'ticket_id': ticket_id,
+                'user_id': value,
                 })
 
     def _search_assignment(self, cr, uid, obj, field, domain, context=None):
