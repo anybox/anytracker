@@ -18,6 +18,7 @@
           <field name="name" default_focus="1" placeholder="Bouquet title"/>
         </h1>
         <field name="create_date" nolabel="1"/>
+        <field name="bouquet_rating" readonly="True"/>
       </group>
       <field name="description" colspan="4" widget="html"
              style="width: 800px; margin-left:0;"/>

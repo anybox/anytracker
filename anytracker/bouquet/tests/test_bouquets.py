@@ -101,6 +101,11 @@ class TestBouquets(SharedSetupTransactionCase):
         self.assertRecord(self.bouquet, self.bouquet_id,
                           dict(participant_ids=[self.at_member_id, self.at_cust_id]))
 
+    def test_get_rating(self):
+        self.ticket.write(self.cr, self.uid, self.ticket_ids, {'rating': '2.0'})
+        self.assertEquals(self.bouquet.browse(self.cr, self.uid, self.bouquet_id).bouquet_rating,
+                          4.0)
+
     def test_create_member(self):
         """Any member can create a bouquet."""
         self.bouquet.create(self.cr, self.at_member_id, dict(name='member bouquet'))

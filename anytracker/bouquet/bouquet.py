@@ -13,6 +13,16 @@ class Bouquet(osv.Model):
     _name = 'anytracker.bouquet'
     _description = u"Ticket Bouquet"
 
+    def _get_rating(self, cr, uid, ids, field_name, args, context=None):
+        res = {}
+        for bouquet in self.browse(cr, uid, ids):
+            total = 0
+            for ticket in bouquet.ticket_ids:
+                if ticket.rating:
+                    total = total+ticket.rating
+            res[bouquet.id] = total
+        return res
+
     def _nb_tickets(self, cr, uid, ids, field_name, args, context=None):
         if isinstance(ids, (int, long)):
             ids = (ids,)
@@ -91,5 +101,10 @@ class Bouquet(osv.Model):
                                         relation='res.users'),
         project_ids=fields.function(_project_ids, method=True,
                                     string=u"Projects", type='many2many',
-                                    relation='anytracker.ticket')
+                                    relation='anytracker.ticket'),
+        bouquet_rating=fields.function(_get_rating, method=True,
+                                       store=False,
+                                       string=u"Rating", type='float'),
     )
+
+    _defaults = {'bouquet_rating': 0}
