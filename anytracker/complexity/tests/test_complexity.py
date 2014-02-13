@@ -16,16 +16,20 @@ class TestComplexity(SharedSetupTransactionCase):
         self.method_mdl = self.registry('anytracker.method')
         self.user = self.registry('res.users')
         self.rating_mdl = self.registry('anytracker.rating')
-        self.member_id = self.user.create(cr, uid,
-                                          {'name': 'test member',
-                                           'login': 'test',
-                                           'groups_id': [(6, 0,
-                                                          [self.ref('anytracker.group_member')])]})
-        self.member2_id = self.user.create(cr, uid,
-                                           {'name': 'test member 2',
-                                            'login': 'test2',
-                                            'groups_id': [(6, 0,
-                                                           [self.ref('anytracker.group_member')])]})
+        self.user_id = self.user.create(cr, uid,
+                                        {'name': 'test member',
+                                         'login': 'test',
+                                         'groups_id': [(6, 0,
+                                                        [self.ref('anytracker.group_member'),
+                                                         self.ref('base.group_user'),
+                                                         self.ref('anytracker.group_manager')])]})
+        self.user2_id = self.user.create(cr, uid,
+                                         {'name': 'test member 2',
+                                          'login': 'test2',
+                                          'groups_id': [(6, 0,
+                                                         [self.ref('anytracker.group_member'),
+                                                          self.ref('base.group_user'),
+                                                          self.ref('anytracker.group_manager')])]})
 
     def createQuickstartProject(self, participant_ids):
         cr, uid = self.cr, self.uid
@@ -48,7 +52,7 @@ class TestComplexity(SharedSetupTransactionCase):
     def test_none_rating(self):
         cr, uid = self.cr, self.uid
         complexity_2h = self.ref('anytracker.anytracker_complexity-2h')
-        project_id = self.createQuickstartProject(self.member_id)
+        project_id = self.createQuickstartProject(self.user_id)
         ticket1_id = self.createLeafTicket('Test ticket 1',
                                            project_id)
         self.ticket_mdl.write(cr, uid, [ticket1_id],
@@ -71,12 +75,13 @@ class TestComplexity(SharedSetupTransactionCase):
         complexity_2h = self.ref('anytracker.anytracker_complexity-2h')
         complexity_4h = self.ref('anytracker.anytracker_complexity-4h')
         complexity_1j = self.ref('anytracker.anytracker_complexity-1_jour')
-        project_id = self.createQuickstartProject(self.member_id)
+        project_id = self.createQuickstartProject(self.user_id)
         ticket1_id = self.createLeafTicket('Test ticket 1',
                                            project_id)
+        uid = self.user_id
         self.ticket_mdl.write(cr, uid, [ticket1_id],
                               {'rating_ids': [(0, 0,
-                                               {'user_id': self.member_id,
+                                               {'user_id': self.user_id,
                                                 'time': datetime.now(),
                                                 'complexity_id': complexity_2h})],
                                'my_rating': complexity_2h})
@@ -86,14 +91,14 @@ class TestComplexity(SharedSetupTransactionCase):
                                            project_id)
         self.ticket_mdl.write(cr, uid, [ticket2_id],
                               {'rating_ids': [(0, 0,
-                                               {'user_id': self.member_id,
+                                               {'user_id': self.user_id,
                                                 'time': datetime.now(),
                                                 'complexity_id': complexity_4h})],
                                'my_rating': complexity_4h})
         self.assertEquals(self.ticket_mdl.browse(cr, uid, project_id).rating, 6)
         self.ticket_mdl.write(cr, uid, [ticket2_id],
                               {'rating_ids': [(0, 0,
-                                               {'user_id': self.member_id,
+                                               {'user_id': self.user_id,
                                                 'time': datetime.now(),
                                                 'complexity_id': complexity_2h})],
                                'my_rating': complexity_2h})
@@ -102,7 +107,7 @@ class TestComplexity(SharedSetupTransactionCase):
                                            ticket2_id)
         self.ticket_mdl.write(cr, uid, [ticket3_id],
                               {'rating_ids': [(0, 0,
-                                               {'user_id': self.member_id,
+                                               {'user_id': self.user_id,
                                                 'time': datetime.now(),
                                                 'complexity_id': complexity_1j})],
                                'my_rating': complexity_1j})
@@ -111,11 +116,12 @@ class TestComplexity(SharedSetupTransactionCase):
         self.ticket_mdl.unlink(cr, uid, [ticket3_id])
         self.assertEquals(self.ticket_mdl.browse(cr, uid, project_id).rating, 4)
         self.assertEquals(self.ticket_mdl.browse(cr, uid, ticket2_id).rating, 2)
+        uid = self.user2_id
         self.ticket_mdl.write(cr, uid, [ticket2_id],
                               {'rating_ids': [(0, 0,
-                                               {'user_id': self.member2_id,
+                                               {'user_id': self.user2_id,
                                                 'time': datetime.now(),
                                                 'complexity_id': complexity_1j})],
                                'my_rating': complexity_1j})
-        self.assertEquals(self.ticket_mdl.browse(cr, uid, project_id).rating, 8.50)
+        self.assertEquals(self.ticket_mdl.browse(cr, uid, project_id).rating, 6.50)
         self.assertEquals(self.ticket_mdl.browse(cr, uid, ticket2_id).rating, 4.50)
