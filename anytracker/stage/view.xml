@@ -16,6 +16,7 @@
         <field name="method_id"/>
         <field name="sequence"/>
         <field name="force_rating"/>
+        <field name="is_ratable" string="Rating"/>
     </tree>
     </field>
 </record>
@@ -49,6 +50,7 @@
         <field name="method_id"/>
         <field name="force_rating"/>
         <field name="sequence"/>
+        <field name="is_ratable" string="Rating validation"/>
         <field name="forbidden_complexity_ids"/>
     </form>
     </field>
@@ -90,6 +92,19 @@
     <field name="arch" type="xml">
       <xpath expr="/form/header" position='inside'>
         <field name="stage_id" widget="statusbar" clickable="True" attrs="{'invisible': [('child_ids', '!=', ())]}"/>
+        <field name="is_ratable" attrs="{'invisible': True}"/>
+      </xpath>
+      <xpath expr="/form/sheet/group" position="before">
+        <div class="oe_right oe_button_box" name="buttons">
+            <button name="validate_rating"
+                string="Accepter le chiffrage" type="object"
+                icon="gtk-apply"
+                attrs="{'invisible': [('is_ratable', '=', False)]}"/>
+             <button name="deny_rating"
+                string="Refuser le chiffrage" type="object"
+                icon="gtk-cancel"
+                attrs="{'invisible': [('is_ratable', '=', False)]}"/>
+        </div>
       </xpath>
       <xpath expr="//notebook/page[@string='Participants']" position="after">
         <page string="Progress">

@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <!-- fibonacci SCRUM complexities -->
+        <record id="complexity_scrum_0" model="anytracker.complexity">
+            <field name="name">0</field>
+            <field name="value">0</field>
+            <field name="risk" eval="0.0*100/21"/>
+            <field name="method_id" ref="method_scrum"/>
+        </record>
+        <record id="complexity_scrum_1" model="anytracker.complexity">
+            <field name="name">1</field>
+            <field name="value">1</field>
+            <field name="risk" eval="1.0*100/21"/>
+            <field name="method_id" ref="method_scrum"/>
+        </record>
+
+        <record id="complexity_scrum_2" model="anytracker.complexity">
+            <field name="name">2</field>
+            <field name="value">2</field>
+            <field name="risk" eval="2.0*100/21"/>
+            <field name="method_id" ref="method_scrum"/>
+        </record>
+
+        <record id="complexity_scrum_3" model="anytracker.complexity">
+            <field name="name">3</field>
+            <field name="value">3</field>
+            <field name="risk" eval="3.0*100/21"/>
+            <field name="method_id" ref="method_scrum"/>
+        </record>
+
+        <record id="complexity_scrum_5" model="anytracker.complexity">
+            <field name="name">5</field>
+            <field name="value">5</field>
+            <field name="risk" eval="5.0*100/21"/>
+            <field name="method_id" ref="method_scrum"/>
+        </record>
+
+        <record id="complexity_scrum_8" model="anytracker.complexity">
+            <field name="name">8</field>
+            <field name="value">8</field>
+            <field name="risk" eval="8.0*100/21"/>
+            <field name="method_id" ref="method_scrum"/>
+        </record>
+
+        <record id="complexity_scrum_13" model="anytracker.complexity">
+            <field name="name">13</field>
+            <field name="value">13</field>
+            <field name="risk" eval="13.0*100/21"/>
+            <field name="method_id" ref="method_scrum"/>
+        </record>
+
+        <record id="complexity_scrum_21" model="anytracker.complexity">
+            <field name="name">21</field>
+            <field name="value">21</field>
+            <field name="risk" eval="21.0*100/21"/>
+            <field name="method_id" ref="method_scrum"/>
+        </record>
+
+        <!-- Anybox implementation complexities -->
+        <record id="complexity_implementation_red" model="anytracker.complexity">
+            <field name="name">Red (More than 0.5 day or I don't know)</field>
+            <field name="description">Red (More than 0.5 day or I don't know)</field>
+            <field name="value">3</field>
+            <field name="risk" eval="100.0"/>
+            <field name="color">2</field>
+            <field name="method_id" ref="method_implementation"/>
+        </record>
+
+        <record id="complexity_implementation_orange" model="anytracker.complexity">
+            <field name="name">Orange (should be less than 0.5 day but I'm not sure)</field>
+            <field name="description">Orange (should be less than 0.5 day but I'm not sure)</field>
+            <field name="value">2</field>
+            <field name="risk" eval="60.0"/>
+            <field name="color">3</field>
+            <field name="method_id" ref="method_implementation"/>
+        </record>
+
+        <record id="complexity_implementation_green" model="anytracker.complexity">
+            <field name="name">Green (less than 0.5 day. I've already done it)</field>
+            <field name="description">Green (less than 0.5 day. I've already done it)</field>
+            <field name="value">1</field>
+            <field name="risk" eval="20.0"/>
+            <field name="color">4</field>
+            <field name="method_id" ref="method_implementation"/>
+        </record>
+
+        <!-- Complexities for gtd method -->
+        <!-- (There is a confusion between complexity and action) -->
+        <record id="complexity_gtd_project" model="anytracker.complexity">
+            <field name="name">I can split it</field>
+            <field name="description">Complex project that should be split</field>
+            <field name="value">4</field>
+            <field name="risk" eval="100.0"/>
+            <field name="color">2</field>
+            <field name="method_id" ref="method_gtd"/>
+        </record>
+        <record id="complexity_gtd_delegate" model="anytracker.complexity">
+            <field name="name">I cannot do it</field>
+            <field name="description">Someone else can do this</field>
+            <field name="value">4</field>
+            <field name="risk" eval="0.0"/>
+            <field name="color">2</field>
+            <field name="method_id" ref="method_gtd"/>
+        </record>
+        <record id="complexity_gtd_action" model="anytracker.complexity">
+            <field name="name">I can do it today</field>
+            <field name="description">It's a simple action I can do today</field>
+            <field name="value">4</field>
+            <field name="risk" eval="50.0"/>
+            <field name="color">2</field>
+            <field name="method_id" ref="method_gtd"/>
+        </record>
+        <record id="complexity_gtd_schedule" model="anytracker.complexity">
+            <field name="name">I can do it later</field>
+            <field name="description">Simple task I can schedule</field>
+            <field name="value">2</field>
+            <field name="risk" eval="60.0"/>
+            <field name="color">3</field>
+            <field name="method_id" ref="method_gtd"/>
+        </record>
+        <record id="complexity_gtd_now" model="anytracker.complexity">
+            <field name="name">2 minutes: I do it now!</field>
+            <field name="description">Less than 2 min (I do it now!)</field>
+            <field name="value">1</field>
+            <field name="risk" eval="5.0"/>
+            <field name="color">4</field>
+            <field name="method_id" ref="method_gtd"/>
+        </record>
+
+        <!-- Complexities for maintenance -->
+        <record id="complexity_maintenance_unfixable" model="anytracker.complexity">
+            <field name="name">Unfixable</field>
+            <field name="description">I know this issue cannot be solved</field>
+            <field name="value">50</field>
+            <field name="risk" eval="100.0"/>
+            <field name="color">2</field>
+            <field name="method_id" ref="method_maintenance"/>
+        </record>
+
+        <record id="complexity_maintenance_complex" model="anytracker.complexity">
+            <field name="name">Complex</field>
+            <field name="description">I know this issue is complex</field>
+            <field name="value">40</field>
+            <field name="risk" eval="90.0"/>
+            <field name="color">2</field>
+            <field name="method_id" ref="method_maintenance"/>
+        </record>
+
+        <record id="complexity_maintenance_normal" model="anytracker.complexity">
+            <field name="name">Needs investigation</field>
+            <field name="description">I don't really know, it might be harder than it seems</field>
+            <field name="value">30</field>
+            <field name="risk" eval="50.0"/>
+            <field name="color">3</field>
+            <field name="method_id" ref="method_maintenance"/>
+        </record>
+
+        <record id="complexity_maintenance_easy" model="anytracker.complexity">
+            <field name="name">Easy</field>
+            <field name="description">Easy bug, I can fix it quickly</field>
+            <field name="value">20</field>
+            <field name="risk" eval="30.0"/>
+            <field name="color">4</field>
+            <field name="method_id" ref="method_maintenance"/>
+        </record>
+
+        <record id="complexity_maintenance_trivial" model="anytracker.complexity">
+            <field name="name">Trivial</field>
+            <field name="description">Trivial bug, I can fix it immediately</field>
+            <field name="value">10</field>
+            <field name="risk" eval="10.0"/>
+            <field name="color">4</field>
+            <field name="method_id" ref="method_maintenance"/>
+        </record>
+        
+    </data>
+</openerp>

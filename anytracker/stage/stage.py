@@ -23,7 +23,10 @@ class Stage(osv.Model):
             'Forbidden complexities', help='complexities forbidden for this stage'),
         'progress': fields.float(
             'Progress', help='Progress value of the ticket reaching this stage'),
+        'is_ratable': fields.boolean('Does stage need rating ?')
     }
+
+    _defaults = {'is_ratable': False, }
 
 
 class Ticket(osv.Model):
@@ -33,6 +36,23 @@ class Ticket(osv.Model):
     """
 
     _inherit = 'anytracker.ticket'
+
+    def move_to_stage(self, cr, uid, ids, targeted_stage, context=None):
+        valid_stage = self.pool.get('anytracker.stage').search(cr, uid, [('name', '=',
+                                                                          targeted_stage)])
+        if not valid_stage:
+            raise osv.except_osv('Ticket cannot be moved',
+                                 'Targeted stage %s not found' % targeted_stage)
+        self.write(cr, uid, ids, {'stage_id': valid_stage[0]}, context)
+        return True
+
+    def validate_rating(self, cr, uid, ids, context=None):
+        targeted_stage = u'À faire'
+        self.move_to_stage(cr, uid, ids, targeted_stage)
+
+    def deny_rating(self, cr, uid, ids, context=None):
+        targeted_stage = u'À évaluer'
+        self.move_to_stage(cr, uid, ids, targeted_stage)
 
     def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None,
                               access_rights_uid=None, context=None):
@@ -213,7 +233,13 @@ class Ticket(osv.Model):
             string='Constant one',
             store=True,
             invisible=True),
+        'is_ratable': fields.related('stage_id', 'is_ratable',
+                                     type='boolean',
+                                     relation='anytracker.stage',
+                                     store=False)
     }
+
+    _defaults = {'is_ratable': False}
 
     _group_by_full = {
         'stage_id': _read_group_stage_ids,
