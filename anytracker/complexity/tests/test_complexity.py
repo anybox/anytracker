@@ -21,6 +21,11 @@ class TestComplexity(SharedSetupTransactionCase):
                                            'login': 'test',
                                            'groups_id': [(6, 0,
                                                           [self.ref('anytracker.group_member')])]})
+        self.member2_id = self.user.create(cr, uid,
+                                           {'name': 'test member 2',
+                                            'login': 'test2',
+                                            'groups_id': [(6, 0,
+                                                           [self.ref('anytracker.group_member')])]})
 
     def createQuickstartProject(self, participant_ids):
         cr, uid = self.cr, self.uid
@@ -71,7 +76,7 @@ class TestComplexity(SharedSetupTransactionCase):
                                            project_id)
         self.ticket_mdl.write(cr, uid, [ticket1_id],
                               {'rating_ids': [(0, 0,
-                                               {'user_id': 1,
+                                               {'user_id': self.member_id,
                                                 'time': datetime.now(),
                                                 'complexity_id': complexity_2h})],
                                'my_rating': complexity_2h})
@@ -81,14 +86,14 @@ class TestComplexity(SharedSetupTransactionCase):
                                            project_id)
         self.ticket_mdl.write(cr, uid, [ticket2_id],
                               {'rating_ids': [(0, 0,
-                                               {'user_id': 1,
+                                               {'user_id': self.member_id,
                                                 'time': datetime.now(),
                                                 'complexity_id': complexity_4h})],
                                'my_rating': complexity_4h})
         self.assertEquals(self.ticket_mdl.browse(cr, uid, project_id).rating, 6)
         self.ticket_mdl.write(cr, uid, [ticket2_id],
                               {'rating_ids': [(0, 0,
-                                               {'user_id': 1,
+                                               {'user_id': self.member_id,
                                                 'time': datetime.now(),
                                                 'complexity_id': complexity_2h})],
                                'my_rating': complexity_2h})
@@ -97,7 +102,7 @@ class TestComplexity(SharedSetupTransactionCase):
                                            ticket2_id)
         self.ticket_mdl.write(cr, uid, [ticket3_id],
                               {'rating_ids': [(0, 0,
-                                               {'user_id': 1,
+                                               {'user_id': self.member_id,
                                                 'time': datetime.now(),
                                                 'complexity_id': complexity_1j})],
                                'my_rating': complexity_1j})
@@ -106,3 +111,11 @@ class TestComplexity(SharedSetupTransactionCase):
         self.ticket_mdl.unlink(cr, uid, [ticket3_id])
         self.assertEquals(self.ticket_mdl.browse(cr, uid, project_id).rating, 4)
         self.assertEquals(self.ticket_mdl.browse(cr, uid, ticket2_id).rating, 2)
+        self.ticket_mdl.write(cr, uid, [ticket2_id],
+                              {'rating_ids': [(0, 0,
+                                               {'user_id': self.member2_id,
+                                                'time': datetime.now(),
+                                                'complexity_id': complexity_1j})],
+                               'my_rating': complexity_1j})
+        self.assertEquals(self.ticket_mdl.browse(cr, uid, project_id).rating, 8.50)
+        self.assertEquals(self.ticket_mdl.browse(cr, uid, ticket2_id).rating, 4.50)
