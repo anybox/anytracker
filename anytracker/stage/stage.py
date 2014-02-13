@@ -38,12 +38,18 @@ class Ticket(osv.Model):
     _inherit = 'anytracker.ticket'
 
     def move_to_stage(self, cr, uid, ids, targeted_stage, context=None):
-        valid_stage = self.pool.get('anytracker.stage').search(cr, uid, [('name', '=',
-                                                                          targeted_stage)])
-        if not valid_stage:
-            raise osv.except_osv('Ticket cannot be moved',
-                                 'Targeted stage %s not found' % targeted_stage)
-        self.write(cr, uid, ids, {'stage_id': valid_stage[0]}, context)
+        for ticket in self.browse(cr, uid, ids):
+            valid_stage = self.pool.get('anytracker.stage').search(cr, uid,
+                                                                   ['&',
+                                                                    ('name', '=',
+                                                                     targeted_stage),
+                                                                    ('method_id', '=',
+                                                                     ticket.method_id.id)])
+            if not valid_stage:
+                raise osv.except_osv('Ticket cannot be moved',
+                                     'Stage \'%s\' does not exist for the current project method'
+                                     % targeted_stage)
+            self.write(cr, uid, ids, {'stage_id': valid_stage[0]}, context)
         return True
 
     def accept_rating(self, cr, uid, ids, context=None):
