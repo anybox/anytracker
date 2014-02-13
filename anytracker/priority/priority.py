@@ -41,13 +41,11 @@ class Ticket(osv.Model):
         return res
 
     def onchange_priority(self, cr, uid, ids, prio_id=None, context=None):
-        value = {}
         priority_obj = self.pool.get('anytracker.priority')
         priority = priority_obj.read(cr, uid, prio_id, ['deadline'])
         if priority['deadline']:
             return {'value': {'has_deadline': True}}
         return {'value': {'has_deadline': False}}
-
 
     _columns = {
         'has_deadline': fields.related('priority_id', 'deadline', type="boolean"),
