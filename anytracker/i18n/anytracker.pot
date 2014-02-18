@@ -16,6 +16,36 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: anytracker
+#: field:anytracker.bouquet,write_date:0
+msgid "Modification Time"
+msgstr "Date de dernière modification"
+
+#. module: anytracker
+#: field:anytracker.bouquet,create_date:0
+msgid "Creation Time"
+msgstr "Date de création"
+
+#. module: anytracker
+#: field:anytracker.bouquet,name:0
+msgid "Name"
+msgstr "Nom"
+
+#. module: anytracker
+#: field:anytracker.bouquet,project_ids:0
+msgid "Projects"
+msgstr "Projets"
+
+#. module: anytracker
+#: field:anytracker.bouquet,project_ids:0
+msgid "Projects"
+msgstr "Projets"
+
+#. module: anytracker
+#: field:anytracker.bouquet,bouquet_rating:0
+msgid "Rating"
+msgstr "Évaluation"
+
+#. module: anytracker
 #: model:ir.model,name:anytracker.model_anytracker_history
 msgid "History of ticket"
 msgstr "Historique des tickets"
