@@ -23,6 +23,9 @@ class Stage(osv.Model):
             'Forbidden complexities', help='complexities forbidden for this stage'),
         'progress': fields.float(
             'Progress', help='Progress value of the ticket reaching this stage'),
+        'stage_action_ids': fields.many2many('anytracker.stage.action',
+                                             id1='stage_action_id',
+                                             id2='stage_id'),
         'is_ratable': fields.boolean('Does this stage allow to accept/decline tickets rating')
     }
 
