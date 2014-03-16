@@ -33,16 +33,16 @@ class TestBouquets(SharedSetupTransactionCase):
         ticket = cls.ticket = cls.registry('anytracker.ticket')
         cls.bouquet = cls.registry('anytracker.bouquet')
 
-        cls.at_member_id = cls.registry('res.users').create(
+        cls.member_id = cls.registry('res.users').create(
             cr, uid, dict(name="anytracker member",
                           login='at.user',
                           groups_id=[(6, 0, [cls.ref('anytracker.group_member')])]))
-        cls.at_cust_id = cls.registry('res.users').create(
+        cls.customer_id = cls.registry('res.users').create(
             cr, uid, dict(name="anytracker customer",
                           login='at.cust',
                           groups_id=[(6, 0, [cls.ref('anytracker.group_customer')])]))
 
-        pid = cls.project_id = cls.create_project([cls.at_member_id, cls.at_cust_id],
+        pid = cls.project_id = cls.create_project([cls.member_id, cls.customer_id],
                                                   name="Main test project")
         t1_id = ticket.create(cr, uid, dict(name="First ticket", parent_id=pid))
         t2_id = ticket.create(cr, uid, dict(name="Second ticket", parent_id=pid))
@@ -61,7 +61,7 @@ class TestBouquets(SharedSetupTransactionCase):
 
     def test_create_read_perm(self):
         """Switch to non-privileged user to check access."""
-        for tested_uid in (self.at_member_id, self.at_cust_id):
+        for tested_uid in (self.member_id, self.customer_id):
             self.uid = tested_uid
             # if this fails, fix the main part of Anytracker first (no other unit tests at this
             # time of writing):
@@ -76,7 +76,7 @@ class TestBouquets(SharedSetupTransactionCase):
         self.ticket.write(self.cr, self.admin_id, self.project_id,
                           dict(participant_ids=[(6, 0, [])]))
 
-        self.uid = self.at_member_id
+        self.uid = self.member_id
         self.assertNoRecord(self.bouquet, [])
 
     def test_read_perm_participating_mixed(self):
@@ -89,7 +89,7 @@ class TestBouquets(SharedSetupTransactionCase):
                           dict(project_ids=set([self.project_id, p2id])),
                           list_to_set=True)
 
-        for tested_uid in (self.at_member_id, self.at_cust_id):
+        for tested_uid in (self.member_id, self.customer_id):
             self.uid = tested_uid
 
             # bouquet is still visible by user, although one of its tickets is not
@@ -99,7 +99,7 @@ class TestBouquets(SharedSetupTransactionCase):
     def test_participant_ids(self):
         # just a very simple case, but better than nothing
         self.assertRecord(self.bouquet, self.bouquet_id,
-                          dict(participant_ids=[self.at_member_id, self.at_cust_id]))
+                          dict(participant_ids=[self.member_id, self.customer_id]))
 
     def test_get_rating(self):
         self.ticket.write(self.cr, self.uid, self.ticket_ids, {'rating': '2.0'})
@@ -108,6 +108,6 @@ class TestBouquets(SharedSetupTransactionCase):
 
     def test_create_member(self):
         """Any member can create a bouquet."""
-        self.bouquet.create(self.cr, self.at_member_id, dict(name='member bouquet'))
-        self.bouquet.create(self.cr, self.at_member_id, dict(name='member bouquet',
-                                                             ticket_ids=self.ticket_ids))
+        self.bouquet.create(self.cr, self.member_id, dict(name='member bouquet'))
+        self.bouquet.create(self.cr, self.member_id, dict(name='member bouquet',
+                                                          ticket_ids=self.ticket_ids))

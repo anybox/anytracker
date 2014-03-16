@@ -4,7 +4,6 @@ from datetime import datetime
 
 class TestComplexity(SharedSetupTransactionCase):
 
-    _data_files = ('data.xml', )
     _module_ns = 'anytracker'
 
     @classmethod
@@ -33,7 +32,7 @@ class TestComplexity(SharedSetupTransactionCase):
 
     def createQuickstartProject(self, participant_ids):
         cr, uid = self.cr, self.uid
-        quickstart_method = self.ref('anytracker.anytracker_method-quickstart++')
+        quickstart_method = self.ref('anytracker.anytracker_method-quickstart')
         if isinstance(participant_ids, int) or isinstance(participant_ids, long):
             participant_ids = [participant_ids]
         project_id = self.ticket_mdl.create(cr, uid,

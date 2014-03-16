@@ -23,13 +23,7 @@ class Stage(osv.Model):
             'Forbidden complexities', help='complexities forbidden for this stage'),
         'progress': fields.float(
             'Progress', help='Progress value of the ticket reaching this stage'),
-        'stage_action_ids': fields.many2many('anytracker.stage.action',
-                                             id1='stage_action_id',
-                                             id2='stage_id'),
-        'is_ratable': fields.boolean('Does this stage allow to accept/decline tickets rating')
     }
-
-    _defaults = {'is_ratable': False, }
 
 
 class Ticket(osv.Model):
@@ -39,29 +33,6 @@ class Ticket(osv.Model):
     """
 
     _inherit = 'anytracker.ticket'
-
-    def move_to_stage(self, cr, uid, ids, targeted_stage, context=None):
-        for ticket in self.browse(cr, uid, ids):
-            valid_stage = self.pool.get('anytracker.stage').search(cr, uid,
-                                                                   ['&',
-                                                                    ('name', '=',
-                                                                     targeted_stage),
-                                                                    ('method_id', '=',
-                                                                     ticket.method_id.id)])
-            if not valid_stage:
-                raise osv.except_osv('Ticket cannot be moved',
-                                     'Stage \'%s\' does not exist for the current project method'
-                                     % targeted_stage)
-            self.write(cr, uid, ids, {'stage_id': valid_stage[0]}, context)
-        return True
-
-    def accept_rating(self, cr, uid, ids, context=None):
-        targeted_stage = u'À faire'
-        self.move_to_stage(cr, uid, ids, targeted_stage)
-
-    def decline_rating(self, cr, uid, ids, context=None):
-        targeted_stage = u'À évaluer'
-        self.move_to_stage(cr, uid, ids, targeted_stage)
 
     def _read_group_stage_ids(self, cr, uid, ids, domain, read_group_order=None,
                               access_rights_uid=None, context=None):
@@ -242,13 +213,7 @@ class Ticket(osv.Model):
             string='Constant one',
             store=True,
             invisible=True),
-        'is_ratable': fields.related('stage_id', 'is_ratable',
-                                     type='boolean',
-                                     relation='anytracker.stage',
-                                     store=False)
     }
-
-    _defaults = {'is_ratable': False}
 
     _group_by_full = {
         'stage_id': _read_group_stage_ids,

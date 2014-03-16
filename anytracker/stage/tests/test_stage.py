@@ -5,7 +5,6 @@ from anybox.testing.openerp import SharedSetupTransactionCase
 
 class TestStage(SharedSetupTransactionCase):
 
-    _data_files = ('data.xml', )
     _module_ns = 'anytracker'
 
     @classmethod
@@ -25,7 +24,7 @@ class TestStage(SharedSetupTransactionCase):
 
     def createProject(self, participant_ids):
         cr, uid = self.cr, self.uid
-        quickstart_method = self.ref('anytracker.anytracker_method-quickstart++')
+        quickstart_method = self.ref('anytracker.anytracker_method-quickstart')
         if isinstance(participant_ids, int) or isinstance(participant_ids, long):
             participant_ids = [participant_ids]
         project_id = self.ticket_mdl.create(cr, uid,
@@ -41,13 +40,3 @@ class TestStage(SharedSetupTransactionCase):
                                             'parent_id': parent_id, })
         return ticket_id
 
-    def test_move_to_stage(self):
-        cr, uid = self.cr, self.uid
-        to_do_stage = self.stage_mdl.search(cr, uid, [('name', '=', u'À faire')])
-        rating_stage = self.stage_mdl.search(cr, uid, [('name', '=', u'À évaluer')])
-        project_id = self.createProject(self.member_id)
-        t1_id = self.createLeafTicket('ticket 1', project_id)
-        self.ticket_mdl.write(cr, uid, [t1_id], {'stage_id': to_do_stage[0]})
-        self.assertTrue(self.ticket_mdl.browse(cr, uid, t1_id).stage_id, to_do_stage[0])
-        self.ticket_mdl.move_to_stage(cr, uid, [t1_id], 'À évaluer')
-        self.assertTrue(self.ticket_mdl.browse(cr, uid, t1_id).stage_id, rating_stage[0])

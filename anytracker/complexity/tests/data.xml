@@ -1,13 +1,13 @@
 <openerp>
   <data>
-    <record model="anytracker.method" id="anytracker_method-quickstart++">
-      <field name="code">Quick</field>
-      <field name="name">Quickstart++</field>
+    <record model="anytracker.method" id="anytracker_method-quickstart">
+      <field name="code">qs</field>
+      <field name="name">Quickstart</field>
     </record>
     <record model="anytracker.complexity" id="anytracker_complexity-1h">
       <field name="color" eval="0"/>
       <field name="description">Une heure max</field>
-      <field name="method_id" ref="anytracker.anytracker_method-quickstart++"/>
+      <field name="method_id" ref="anytracker.anytracker_method-quickstart"/>
       <field name="name">1h</field>
       <field name="risk" eval="10.0"/>
       <field name="value" eval="1.0"/>
@@ -15,7 +15,7 @@
     <record model="anytracker.complexity" id="anytracker_complexity-2h">
       <field name="color" eval="0"/>
       <field name="description">2h max</field>
-      <field name="method_id" ref="anytracker.anytracker_method-quickstart++"/>
+      <field name="method_id" ref="anytracker.anytracker_method-quickstart"/>
       <field name="name">2h</field>
       <field name="risk" eval="20.0"/>
       <field name="value" eval="2.0"/>
@@ -23,7 +23,7 @@
     <record model="anytracker.complexity" id="anytracker_complexity-4h">
       <field name="color" eval="0"/>
       <field name="description">4h max</field>
-      <field name="method_id" ref="anytracker.anytracker_method-quickstart++"/>
+      <field name="method_id" ref="anytracker.anytracker_method-quickstart"/>
       <field name="name">4h</field>
       <field name="risk" eval="40.0"/>
       <field name="value" eval="4.0"/>
@@ -31,7 +31,7 @@
     <record model="anytracker.complexity" id="anytracker_complexity-1_jour">
       <field name="color" eval="0"/>
       <field name="description">1 jour max</field>
-      <field name="method_id" ref="anytracker.anytracker_method-quickstart++"/>
+      <field name="method_id" ref="anytracker.anytracker_method-quickstart"/>
       <field name="name">1 jour</field>
       <field name="risk" eval="50.0"/>
       <field name="value" eval="7.0"/>
