@@ -113,6 +113,21 @@
     </field>
 </record>
 
+<record id="view_complexity_kanban" model="ir.ui.view">
+    <field name="name">anytracker.assignment.kanban</field>
+    <field name="model">anytracker.ticket</field>
+    <field name="type">kanban</field>
+    <field name="priority" eval="8"/>
+    <field name="inherit_id" ref="anytracker.tickets_view_kanban"/>
+    <field name="arch" type="xml">
+      <xpath expr="/kanban/field[@name='kanban_description']" position="after">
+        <field name="rating"/>
+      </xpath>
+      <xpath expr="//a[@string='Permalink']" position="after">
+          <t t-if="record.rating.raw_value != 0"><span style="margin: 0 0.5em"><field name="rating"/></span></t>
+      </xpath>
+    </field>
+</record>
 
 <record model="ir.actions.act_window" id="act_open_complexity_view">
     <field name="name">Complexities</field>
