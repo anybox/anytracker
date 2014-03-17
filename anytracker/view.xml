@@ -246,7 +246,7 @@
     <field name="view_type">form</field>
     <field name="view_mode">kanban,tree,form</field>
     <field name="view_id" ref="tickets_view_kanban"/>
-    <field name="domain">[('id', 'child_of', active_id), ('progress', '&lt;', 100.0)]</field>
+    <field name="domain">[('id', 'child_of', active_id), ('progress', '&lt;', 100.0), ('id', '!=', active_id)]</field>
     <field name="context">{'search_default_filter_tasks': 1, 'group_by': 'stage_id'}</field>
 </record>
 <record id="ir_value_hierarchy_line_select" model="ir.values">

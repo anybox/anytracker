@@ -16,7 +16,7 @@ class Ticket(osv.Model):
     _inherit = ['mail.thread']
 
     def _shortened_description(self, cr, uid, ids, field_name, args, context=None):
-        """shortened description
+        """shortened description used in the list view and kanban view
         """
         res = {}
         limit = 150
@@ -26,7 +26,7 @@ class Ticket(osv.Model):
         return res
 
     def _kanban_description(self, cr, uid, ids, field_name, args, context=None):
-        """shortened description for the kanban
+        """shortened description when hovering a ticket in the kanban
         """
         res = {}
         for ticket in self.read(cr, uid, ids, ['id', 'description'], context):
