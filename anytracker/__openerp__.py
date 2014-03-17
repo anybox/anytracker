@@ -37,6 +37,11 @@
         #'web_dynatree',
         'email_template',
     ],
+    'images': [
+        'images/anytracker.png',
+        'images/ticket.png',
+        'images/bouquet.png',
+    ],
     'description': '''Project management application, which provides:
 
 - Hierarchical ticket management
