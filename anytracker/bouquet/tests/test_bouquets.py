@@ -99,7 +99,8 @@ class TestBouquets(SharedSetupTransactionCase):
     def test_participant_ids(self):
         # just a very simple case, but better than nothing
         self.assertRecord(self.bouquet, self.bouquet_id,
-                          dict(participant_ids=[self.member_id, self.customer_id]))
+                          dict(participant_ids=set([self.member_id, self.customer_id])),
+                          list_to_set=True)
 
     def test_get_rating(self):
         self.ticket.write(self.cr, self.uid, self.ticket_ids, {'rating': '2.0'})
