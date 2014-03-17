@@ -64,15 +64,6 @@
         <xpath expr="//field[@name='id']" position="after">
             <field name="stage_id" widget="selection"/>
         </xpath>
-        <xpath expr="//filter[@name='filter_tasks']" position="after">
-            <separator/>
-            <filter name="filter_progress"
-                    string="Progress &lt; 50"
-                    domain="[('progress','&lt;',50.0)]"
-                    icon="terp-personal"
-                    help="Show tickets progress between 0 to 50"/>
-        </xpath>
-
         <xpath expr="//search/group[1]" postion="inside">
                 <filter name="tickets_by_stage"
                         string="Stage"

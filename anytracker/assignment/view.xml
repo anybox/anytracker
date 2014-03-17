@@ -15,11 +15,22 @@
         </xpath>
         <xpath expr="//filter[@name='filter_tasks']" position="after">
             <separator orientation="vertical"/>
-            <filter name="filter_my_tasks"
-                    string="My tickets"
+            <filter name="assigned_to_me"
+                    string="Assigned to me"
                     domain="[('assigned_user_id','=',uid)]"
                     icon="terp-personal"
                     help="Show only tickets where I have an assignment"/>
+            <filter name="created_by_me"
+                    string="Created by me"
+                    domain="[('create_uid', '=', uid)]"
+                    icon="terp-personal"
+                    help="Show tickets created by me"/>
+            <separator/>
+            <filter name="unfinished"
+                    string="Unfinished"
+                    domain="[('progress', '&lt;', 100.0)]"
+                    icon="terp-personal"
+                    help="Show unfinished tickets"/>
         </xpath>
     </field>
 </record>
@@ -112,14 +123,17 @@
     </field>
 </record>
 
-<!-- MY ASSIGNED TICKETS -->
+<!-- MY TICKETS -->
 <record model="ir.actions.act_window" id="act_open_my_tickets_view">
     <field name="name">My tickets</field>
     <field name="type">ir.actions.act_window</field>
     <field name="res_model">anytracker.ticket</field>
     <field name="view_type">form</field>
     <field name="view_mode">tree,form</field>
-    <field name="context">{'search_default_filter_my_tasks': 1,'search_default_filter_progress':1}</field>
+    <field name="context">{'search_default_assigned_to_me': 1,
+                           'search_default_created_by_me': 1,
+                           'search_default_unfinished': 1}
+    </field>
     <field name="domain">[]</field>
 </record>
 <menuitem id="menu_my_tickets"
