@@ -16,7 +16,8 @@ class Assignment(osv.Model):
 
     _columns = {
         'user_id': fields.many2one('res.users', 'User', required=True),
-        'ticket_id': fields.many2one('anytracker.ticket', 'Ticket', required=True),
+        'ticket_id': fields.many2one('anytracker.ticket', 'Ticket',
+                                     required=True, ondelete='cascade'),
         'stage_id': fields.many2one('anytracker.stage', 'Stage'),
         'date': fields.datetime('Date', help='Assignment date', required=True),
     }
