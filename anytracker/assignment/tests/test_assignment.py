@@ -50,3 +50,19 @@ class TestStage(SharedSetupTransactionCase):
         self.assertEquals(assigned_user_id, self.member_id)
         # Check we can delete the ticket
         self.tickets.unlink(cr, uid, [ticket_id])
+
+    def test_unassign(self):
+        """ Check we can unassign a ticket
+        """
+        cr, uid = self.cr, self.uid
+        # create a project and a ticket
+        ticket_id = self.createLeafTicket('test assign', self.createProject([self.member_id]))
+        # assign the ticket to the user
+        self.tickets.write(cr, uid, ticket_id, {'assigned_user_id': self.member_id})
+        # check the user is assigned
+        assigned_user_id = self.tickets.browse(cr, uid, ticket_id).assigned_user_id.id
+        self.assertEquals(assigned_user_id, self.member_id)
+        # check we can unassign
+        self.tickets.write(cr, uid, ticket_id, {'assigned_user_id': False})
+        assigned_user_id = self.tickets.browse(cr, uid, ticket_id).assigned_user_id.id
+        self.assertEquals(assigned_user_id, False)

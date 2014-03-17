@@ -15,7 +15,7 @@ class Assignment(osv.Model):
     _order = 'date DESC'
 
     _columns = {
-        'user_id': fields.many2one('res.users', 'User', required=True),
+        'user_id': fields.many2one('res.users', 'User'),
         'ticket_id': fields.many2one('anytracker.ticket', 'Ticket',
                                      required=True, ondelete='cascade'),
         'stage_id': fields.many2one('anytracker.stage', 'Stage'),
@@ -65,15 +65,14 @@ class Ticket(osv.Model):
     def _set_assignment(self, cr, uid, ticket_id, name, value, fnct_inv_arg, context):
         """assign a ticket to a user for the current stage
         """
-        if value is not False:
-            ticket = self.browse(cr, uid, ticket_id, context)
-            stage_id = (ticket.stage_id.id
-                        or self._default_stage(cr, uid, context={'active_id': ticket_id}))
-            self.pool.get('anytracker.assignment').create(cr, uid, {
-                'stage_id': stage_id,
-                'ticket_id': ticket_id,
-                'user_id': value,
-                })
+        ticket = self.browse(cr, uid, ticket_id, context)
+        stage_id = (ticket.stage_id.id
+                    or self._default_stage(cr, uid, context={'active_id': ticket_id}))
+        self.pool.get('anytracker.assignment').create(cr, uid, {
+            'stage_id': stage_id,
+            'ticket_id': ticket_id,
+            'user_id': value,
+            })
 
     def _search_assignment(self, cr, uid, obj, field, domain, context=None):
         """search on assigned_user_id.
