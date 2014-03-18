@@ -219,23 +219,17 @@ class Ticket(osv.Model):
             args = []
         if name and operator in ('=', 'ilike', '=ilike', 'like', '=like'):
             search_name = name
-            search_number = 0
             if operator in ('ilike', 'like'):
                 search_name = '%%%s%%' % name
             if operator in ('=ilike', '=like'):
                 operator = operator[1:]
-            try:
-                search_number = int(name)
-            except:
-                pass
             query_args = {'name': search_name}
             if limit:
                 query_args['limit'] = limit
-            if search_number != 0:
-                query_args = {'name': search_name, 'number': search_number}
+            if name.isdigit():
+                query_args = {'number': int(name)}
                 query = '''SELECT ticket.id FROM anytracker_ticket ticket
-                          WHERE ticket.name ''' + operator + ''' %(name)s OR
-                             ticket.number ''' + '=' + ''' number '''
+                           WHERE ticket.number = number '''
             else:
                 query = '''SELECT ticket.id FROM anytracker_ticket ticket
                           WHERE ticket.name ''' + operator + ''' %(name)s'''
