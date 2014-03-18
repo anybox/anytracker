@@ -210,6 +210,44 @@ class Ticket(osv.Model):
             fvg['arch'] = etree.tostring(doc)
         return fvg
 
+    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
+        """
+            Overwrite the name_search function to search a ticket
+            with their name or thier number
+        """
+        if not args:
+            args = []
+        if name and operator in ('=', 'ilike', '=ilike', 'like', '=like'):
+            search_name = name
+            search_number = 0
+            if operator in ('ilike', 'like'):
+                search_name = '%%%s%%' % name
+            if operator in ('=ilike', '=like'):
+                operator = operator[1:]
+            try:
+                search_number = int(name)
+            except:
+                pass
+            query_args = {'name': search_name}
+            if limit:
+                query_args['limit'] = limit
+            if search_number != 0:
+                query_args = {'name': search_name, 'number': search_number}
+                query = '''SELECT ticket.id FROM anytracker_ticket ticket
+                          WHERE ticket.name ''' + operator + ''' %(name)s OR
+                             ticket.number ''' + '=' + ''' number '''
+            else:
+                query = '''SELECT ticket.id FROM anytracker_ticket ticket
+                          WHERE ticket.name ''' + operator + ''' %(name)s'''
+            cr.execute(query, query_args)
+
+            ids = map(lambda x: x[0], cr.fetchall())
+            ids = self.search(cr, uid, [('id', 'in', ids)] + args, limit=limit, context=context)
+            if ids:
+                return self.name_get(cr, uid, ids, context)
+        return super(Ticket, self).name_search(cr, uid, name, args, operator=operator,
+                                               context=context, limit=limit)
+
     _columns = {
         'name': fields.char('Title', 255, required=True),
         'number': fields.integer('Number'),
