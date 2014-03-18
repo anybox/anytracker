@@ -1,5 +1,4 @@
 from anybox.testing.openerp import SharedSetupTransactionCase
-from datetime import datetime
 from openerp.osv.orm import except_orm
 
 
@@ -19,21 +18,6 @@ class TestComplexity(SharedSetupTransactionCase):
         self.complexity_2h = self.ref('anytracker.anytracker_complexity-2h')
         self.complexity_4h = self.ref('anytracker.anytracker_complexity-4h')
         self.complexity_1j = self.ref('anytracker.anytracker_complexity-1_jour')
-
-        self.user_id = self.user.create(cr, uid,
-                                        {'name': 'test member',
-                                         'login': 'test',  # FIXME: choose a more explicit login
-                                         'groups_id': [(6, 0,  # FIXME: manager or member?
-                                                        [self.ref('anytracker.group_member'),
-                                                         self.ref('base.group_user'),
-                                                         self.ref('anytracker.group_manager')])]})
-        self.user2_id = self.user.create(cr, uid,
-                                         {'name': 'test member 2',
-                                          'login': 'test2',
-                                          'groups_id': [(6, 0,  # FIXME: manager or member?
-                                                         [self.ref('anytracker.group_member'),
-                                                          self.ref('base.group_user'),
-                                                          self.ref('anytracker.group_manager')])]})
         self.member_id = self.user.create(
             cr, uid,
             {'name': 'Member',
@@ -91,17 +75,13 @@ class TestComplexity(SharedSetupTransactionCase):
                           cr, self.customer_id, [ticket_id], {'my_rating': 3})
 
     def test_none_rating(self):
-        # FIXME: docstring + comments
+        """ Removing ratings linked to a ticket and ensure that this ticket has 0.0 value """
         cr, uid = self.cr, self.uid
-        project_id = self.createProject(self.user_id)
+        project_id = self.createProject(self.member_id)
         ticket1_id = self.createLeafTicket('Test ticket 1',
                                            project_id)
-        self.ticket_mdl.write(cr, uid, [ticket1_id],  # FIXME: no need to write 'rating_ids'
-                              {'rating_ids': [(0, 0,
-                                               {'user_id': 1,
-                                                'time': datetime.now(),
-                                                'complexity_id': self.complexity_2h})],
-                               'my_rating': self.complexity_2h})
+        self.ticket_mdl.write(cr, uid, [ticket1_id],
+                              {'my_rating': self.complexity_2h})
         self.assertEquals(self.ticket_mdl.browse(cr, uid, ticket1_id).rating, 2)
         rating_ids = [r.id for r in self.ticket_mdl.browse(cr, uid, ticket1_id).rating_ids if r]
         for rating_id in rating_ids:
@@ -112,55 +92,37 @@ class TestComplexity(SharedSetupTransactionCase):
         self.assertEquals(self.ticket_mdl.browse(cr, uid, ticket1_id).rating, 0.0)
 
     def test_compute_rating(self):
-        # FIXME: docstring + comments
+        """ Create several tickets for one project. Rate tickets, remove one and
+        finaly rate ticket with different user.
+        Ensure that project's rating and tickets ratings are equal to what we expect"""
         cr, uid = self.cr, self.uid
-        project_id = self.createProject(self.user_id)
+        project_id = self.createProject(self.member_id)
         ticket1_id = self.createLeafTicket('Test ticket 1',
                                            project_id)
-        uid = self.user_id
-        self.ticket_mdl.write(cr, uid, [ticket1_id],  # FIXME: no need to write 'rating_ids'
-                              {'rating_ids': [(0, 0,
-                                               {'user_id': self.user_id,
-                                                'time': datetime.now(),
-                                                'complexity_id': self.complexity_2h})],
-                               'my_rating': self.complexity_2h})
+        uid = self.member_id
+        self.ticket_mdl.write(cr, uid, [ticket1_id],
+                              {'my_rating': self.complexity_2h})
         self.assertEquals(self.ticket_mdl.browse(cr, uid, ticket1_id).rating, 2)
         self.assertEquals(self.ticket_mdl.browse(cr, uid, project_id).rating, 2)
         ticket2_id = self.createLeafTicket('Test ticket 2',
                                            project_id)
-        self.ticket_mdl.write(cr, uid, [ticket2_id],  # FIXME: no need to write 'rating_ids'
-                              {'rating_ids': [(0, 0,
-                                               {'user_id': self.user_id,
-                                                'time': datetime.now(),
-                                                'complexity_id': self.complexity_4h})],
-                               'my_rating': self.complexity_4h})
+        self.ticket_mdl.write(cr, uid, [ticket2_id],
+                              {'my_rating': self.complexity_4h})
         self.assertEquals(self.ticket_mdl.browse(cr, uid, project_id).rating, 6)
-        self.ticket_mdl.write(cr, uid, [ticket2_id],  # FIXME: no need to write 'rating_ids'
-                              {'rating_ids': [(0, 0,
-                                               {'user_id': self.user_id,
-                                                'time': datetime.now(),
-                                                'complexity_id': self.complexity_2h})],
-                               'my_rating': self.complexity_2h})
+        self.ticket_mdl.write(cr, uid, [ticket2_id],
+                              {'my_rating': self.complexity_2h})
         self.assertEquals(self.ticket_mdl.browse(cr, uid, project_id).rating, 4)
         ticket3_id = self.createLeafTicket('Test ticket 3',
                                            ticket2_id)
-        self.ticket_mdl.write(cr, uid, [ticket3_id],  # FIXME: no need to write 'rating_ids'
-                              {'rating_ids': [(0, 0,
-                                               {'user_id': self.user_id,
-                                                'time': datetime.now(),
-                                                'complexity_id': self.complexity_1j})],
-                               'my_rating': self.complexity_1j})
+        self.ticket_mdl.write(cr, uid, [ticket3_id],
+                              {'my_rating': self.complexity_1j})
         self.assertEquals(self.ticket_mdl.browse(cr, uid, project_id).rating, 11)
         self.assertEquals(self.ticket_mdl.browse(cr, uid, ticket2_id).rating, 9)
-        self.ticket_mdl.unlink(cr, uid, [ticket3_id])
+        self.ticket_mdl.unlink(cr, self.manager_id, [ticket3_id])
         self.assertEquals(self.ticket_mdl.browse(cr, uid, project_id).rating, 4)
         self.assertEquals(self.ticket_mdl.browse(cr, uid, ticket2_id).rating, 2)
-        uid = self.user2_id
-        self.ticket_mdl.write(cr, uid, [ticket2_id],  # FIXME: no need to write 'rating_ids'
-                              {'rating_ids': [(0, 0,
-                                               {'user_id': self.user2_id,
-                                                'time': datetime.now(),
-                                                'complexity_id': self.complexity_1j})],
-                               'my_rating': self.complexity_1j})
+        uid = self.manager_id
+        self.ticket_mdl.write(cr, uid, [ticket2_id],
+                              {'my_rating': self.complexity_1j})
         self.assertEquals(self.ticket_mdl.browse(cr, uid, project_id).rating, 6.50)
         self.assertEquals(self.ticket_mdl.browse(cr, uid, ticket2_id).rating, 4.50)
