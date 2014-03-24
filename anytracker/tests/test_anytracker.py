@@ -10,13 +10,8 @@ class TestAnytracker(SharedSetupTransactionCase):
         super(TestAnytracker, self).initTestData()
         cr, uid = self.cr, self.uid
         self.ticket_mdl = self.registry('anytracker.ticket')
-        self.complexity_mdl = self.registry('anytracker.complexity')
         self.user = self.registry('res.users')
-        self.rating_mdl = self.registry('anytracker.rating')
 
-        self.complexity_2h = self.ref('anytracker.anytracker_complexity-2h')
-        self.complexity_4h = self.ref('anytracker.anytracker_complexity-4h')
-        self.complexity_1j = self.ref('anytracker.anytracker_complexity-1_jour')
         self.member_id = self.user.create(
             cr, uid,
             {'name': 'Member',
