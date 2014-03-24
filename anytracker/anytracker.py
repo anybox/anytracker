@@ -235,7 +235,8 @@ class Ticket(osv.Model):
                           WHERE ticket.name ''' + operator + ''' %(name)s'''
             cr.execute(query, query_args)
 
-            ids = map(lambda x: x[0], cr.fetchall())
+            #ids = map(lambda x: x[0], cr.fetchall())
+            ids = [x[0] for x in cr.fetchall()]
             ids = self.search(cr, uid, [('id', 'in', ids)] + args, limit=limit, context=context)
             if ids:
                 return self.name_get(cr, uid, ids, context)
