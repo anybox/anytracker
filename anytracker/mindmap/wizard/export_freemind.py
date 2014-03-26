@@ -4,7 +4,7 @@ import time
 from xml.sax.saxutils import XMLGenerator
 
 
-#TODO complexity icon, mindmapfile to binary?, richtext content generation
+# TODO complexity icon, mindmapfile to binary?, richtext content generation
 class export_freemind_wizard(osv.TransientModel):
     _name = 'export.freemind.wizard'
     _description = 'export freemind .mm file for generate by anytracker tree'
@@ -84,7 +84,6 @@ class FreemindWriterHandler(XMLGenerator):
         self.pool = pool
         self.padding = 0
         XMLGenerator.__init__(self, fp, 'UTF-8')
-        #super(FreemindWriterHandler, self).__init__(fp)
 
     def startDocument(self):
         startElement = '''<map version="0.9.0">
@@ -104,7 +103,6 @@ class FreemindWriterHandler(XMLGenerator):
                        'TEXT': attrs['name'],
                        }
         XMLGenerator.startElement(self, tag, attrs_write)
-        #super(FreemindWriterHandler, self).startElement(tag, attrs_write)
 
     def endElement(self, tag):
         XMLGenerator.endElement(self, tag)

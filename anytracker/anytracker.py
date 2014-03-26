@@ -10,7 +10,6 @@ class Ticket(osv.Model):
     _name = 'anytracker.ticket'
     _description = "Anytracker tickets"
     _rec_name = 'breadcrumb'
-    #_order = 'priority,importance,sequence,create_date DESC'  # makes kanban sortable
     _order = 'priority ASC, importance DESC, sequence ASC, create_date DESC'  # more logical now
     _parent_store = True
     _inherit = ['mail.thread']
@@ -47,8 +46,8 @@ class Ticket(osv.Model):
                        " FROM parent p, anytracker_ticket t WHERE t.id=p.parent_id) "
                        "SELECT id, parent_id, name FROM parent WHERE id!=0", (ticket_id,))
 
-            # The same when using parent_store. Actually slower for our typical trees
-            #cr.execute("select b.id, b.parent_id, b.name "
+            # The same when using parent_store. Actually slower for our typical trees:
+            # cr.execute("select b.id, b.parent_id, b.name "
             #           "from anytracker_ticket a join anytracker_ticket b "
             #           "on a.parent_left >= b.parent_left and a.parent_right<=b.parent_right "
             #           "and a.id=%s order by b.parent_left", (ticket_id,))
@@ -235,7 +234,6 @@ class Ticket(osv.Model):
                           WHERE ticket.name ''' + operator + ''' %(name)s'''
             cr.execute(query, query_args)
 
-            #ids = map(lambda x: x[0], cr.fetchall())
             ids = [x[0] for x in cr.fetchall()]
             ids = self.search(cr, uid, [('id', 'in', ids)] + args, limit=limit, context=context)
             if ids:
@@ -311,12 +309,6 @@ class Ticket(osv.Model):
         'parent_left': fields.integer('Parent Left', select=1),
         'parent_right': fields.integer('Parent Right', select=1),
         'sequence': fields.integer('sequence'),
-
-        #'active': fields.boolean(
-        #    'Active',
-        #    help=("If the active field is set to False, "
-        #          "it will allow you to hide the ticket without removing it.")),
-
     }
 
     _defaults = {

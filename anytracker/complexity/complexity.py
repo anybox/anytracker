@@ -183,7 +183,7 @@ class Ticket(osv.Model):
             ticket.write({'risk': new_risk,
                           'rating': new_rating})
             parent = ticket.parent_id
-            #loop up to the root
+            # loop up to the root
             while parent:
                 child_ids = self.search(cr, uid, [('id', 'child_of', parent.id),
                                                   ('child_ids', '=', False),

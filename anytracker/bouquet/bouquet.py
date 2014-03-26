@@ -57,7 +57,7 @@ class Bouquet(osv.Model):
                 for t in tlist)
             res[bouquet_read['id']] = list(set(
                 pid for t_read in ticket.read(cr, uid, list(all_parents_ids),
-                                             ('participant_ids',), context=context)
+                                              ('participant_ids',), context=context)
                 for pid in t_read['participant_ids']))
 
         return res

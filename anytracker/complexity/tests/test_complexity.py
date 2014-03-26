@@ -30,8 +30,8 @@ class TestComplexity(SharedSetupTransactionCase):
             {'name': 'Manager',
              'login': 'manager',
              'groups_id': [(6, 0,
-                          [self.ref('base.group_user'),
-                           self.ref('anytracker.group_manager')])]})
+                           [self.ref('base.group_user'),
+                            self.ref('anytracker.group_manager')])]})
         self.customer_id = self.user.create(
             cr, uid,
             {'name': 'Customer',

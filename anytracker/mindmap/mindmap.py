@@ -26,7 +26,7 @@ class Ticket(osv.Model):
         def makeRecursTree(ticket_branch):
             ticket_ids = self.search(cr, uid, [('parent_id', '=', ticket_branch['id'])])
             for ticket_id in ticket_ids:
-                if not 'child' in ticket_branch:
+                if 'child' not in ticket_branch:
                     ticket_branch['child'] = []
                 ticket_branch['child'].append(
                     self.read(cr, uid, ticket_id, data_to_retrieve, context)

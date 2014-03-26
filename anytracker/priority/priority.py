@@ -18,8 +18,6 @@ class Priority(osv.Model):
         'seq': fields.integer('Priority', help='a low value is higher priority'),
         'active': fields.boolean('Active', help='if check, this object is always available'),
         'method_id': fields.many2one('anytracker.method', 'Method', required=True),
-        #'ticket_id': fields.many2one('anytracker.ticket', 'Project',
-        #                             domain="[('parent_id','=',False)]"),
         'deadline': fields.boolean('Force to choose a deadline on the ticket?'),
         'date': fields.date('Milestone'),
     }
