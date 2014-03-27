@@ -1,5 +1,6 @@
 from anybox.testing.openerp import SharedSetupTransactionCase
 from openerp.osv.orm import except_orm
+from datetime import datetime
 
 
 class TestComplexity(SharedSetupTransactionCase):
@@ -93,7 +94,7 @@ class TestComplexity(SharedSetupTransactionCase):
 
     def test_compute_rating(self):
         """ Create several tickets for one project. Rate tickets, remove one and
-        finaly rate ticket with different user.
+        finally rate ticket with different user.
         Ensure that project's rating and tickets ratings are equal to what we expect"""
         cr, uid = self.cr, self.uid
         project_id = self.createProject(self.member_id)
@@ -110,7 +111,11 @@ class TestComplexity(SharedSetupTransactionCase):
                               {'my_rating': self.complexity_4h})
         self.assertEquals(self.ticket_mdl.browse(cr, uid, project_id).rating, 6)
         self.ticket_mdl.write(cr, uid, [ticket2_id],
-                              {'my_rating': self.complexity_2h})
+                              {'rating_ids': [(0, 0,
+                                               {'user_id': uid,
+                                                'time': datetime.now(),
+                                                'complexity_id': self.complexity_2h})],
+                               'my_rating': self.complexity_2h})
         self.assertEquals(self.ticket_mdl.browse(cr, uid, project_id).rating, 4)
         ticket3_id = self.createLeafTicket('Test ticket 3',
                                            ticket2_id)
