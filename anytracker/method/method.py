@@ -38,7 +38,8 @@ class Ticket(osv.Model):
         return super(Ticket, self).write(cr, uid, ids, data, context)
 
     _columns = {
-        'method_id': fields.many2one('anytracker.method', 'Method', help='Project method'),
+        'method_id': fields.many2one('anytracker.method', 'Method', help='Project method',
+                                     ondelete="restrict"),
         'project_method_id': fields.related(
             'project_id', 'method_id', readonly=True, type='many2one',
             relation='anytracker.method',

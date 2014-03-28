@@ -21,7 +21,7 @@ class TestStage(SharedSetupTransactionCase):
 
     def createProject(self, participant_ids):
         cr, uid = self.cr, self.uid
-        quickstart_method = self.ref('anytracker.anytracker_method-quickstart')
+        quickstart_method = self.ref('anytracker.method_quickstart')
         if isinstance(participant_ids, int) or isinstance(participant_ids, long):
             participant_ids = [participant_ids]
         project_id = self.tickets.create(cr, uid,

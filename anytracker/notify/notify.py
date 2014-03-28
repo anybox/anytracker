@@ -20,6 +20,11 @@ class Stage(osv.Model):
         'notify_sms': fields.boolean(
             u'SMS notification',
             help=u"NOT YET IMPLEMENTED (Enable SMS notification)"),
+        'notify_multiple': fields.boolean(
+            u'Notify multiple times',
+            help=(u"By default notifications are sent only once. "
+                  u"By checking this box you can force "
+                  u"Anytracker to send the notification each time the ticket reaches this stage")),
     }
 
 
@@ -32,8 +37,21 @@ class Ticket(osv.Model):
     def check_notify(self, cr, uid, ticket):
         """ Return True only if we should notify
         """
+        # no stage or no notify
         if not ticket.stage_id or not ticket.stage_id.notify:
             return False
+        # mail already sent and don't repeat
+        nb_sent = self.pool.get('mail.mail').search(
+            cr, uid, [
+                ('model', '=', 'anytracker.ticket'),
+                ('res_id', '=', ticket.id),
+                '|',
+                ('anytracker_stage_id', '=', ticket.stage_id.id),
+                ('anytracker_stage_id', '=', False)],
+            count=True)
+        if nb_sent > 0 and not ticket.stage_id.notify_multiple:
+            return False
+        # no mail template
         if not ticket.stage_id.notify_template_id:
             raise osv.except_osv(
                 _(u'Warning !'),
@@ -48,12 +66,15 @@ class Ticket(osv.Model):
         ticket = self.browse(cr, uid, res, context)
         if not self.check_notify(cr, uid, ticket):
             return res
-        self.pool.get('email.template').send_mail(
+        msg_id = self.pool.get('email.template').send_mail(
             cr, uid,
             ticket.stage_id.notify_template_id.id,
             ticket.id,
             force_send=ticket.stage_id.notify_urgent,
             context=context)
+        # store the related stage in the message
+        self.pool.get('mail.mail').write(
+            cr, uid, [msg_id], {'anytracker_stage_id': ticket.stage_id.id})
         return res
 
     def write(self, cr, uid, ids, values, context=None):
@@ -65,10 +86,25 @@ class Ticket(osv.Model):
         for ticket in self.browse(cr, uid, ids, context):
             if not self.check_notify(cr, uid, ticket):
                 return res
-            self.pool.get('email.template').send_mail(
+            msg_id = self.pool.get('email.template').send_mail(
                 cr, uid,
                 ticket.stage_id.notify_template_id.id,
                 ticket.id,
                 force_send=ticket.stage_id.notify_urgent,
                 context=context)
+            # store the related stage in the message
+            self.pool.get('mail.mail').write(
+                cr, uid, [msg_id], {'anytracker_stage_id': values['stage_id']})
         return res
+
+
+class MailMessage(osv.Model):
+    """ Add a column to messages to remember the stage
+    """
+    _inherit = "mail.mail"
+    _columns = {
+        'anytracker_stage_id': fields.many2one(
+            'anytracker.stage',
+            'Anytracker stage',
+            ondelete='set null'),
+    }

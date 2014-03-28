@@ -16,7 +16,8 @@ class Complexity(osv.Model):
             'Description', help='Description of this complexity', translate=True),
         'value': fields.float('Value', required=True),
         'color': fields.integer('Color'),
-        'method_id': fields.many2one('anytracker.method', 'Project method', help='Projet method'),
+        'method_id': fields.many2one('anytracker.method', 'Project method',
+                                     help='Projet method', ondelete='cascade'),
         'risk': fields.float(
             'Risk', required=True,
             help="risk is a value between 0 (no risk) and 100 (full risk)"),

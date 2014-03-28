@@ -16,7 +16,8 @@ class Importance(osv.Model):
         'description': fields.text('Description of the importance', translate=True),
         'seq': fields.integer('Importance'),
         'active': fields.boolean('Active', help='if check, this object is always available'),
-        'method_id': fields.many2one('anytracker.method', 'Method', required=True),
+        'method_id': fields.many2one('anytracker.method', 'Method',
+                                     required=True, ondelete='cascade'),
     }
 
     _defaults = {

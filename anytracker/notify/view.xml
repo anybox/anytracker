@@ -11,6 +11,7 @@
       <field name="forbidden_complexity_ids" position="after">
         <group>
           <field name="notify"/>
+          <field name="notify_multiple"/>
           <field name="notify_urgent"/>
           <field name="notify_sms" readonly="1"/>
           <field name="notify_template_id"/>
