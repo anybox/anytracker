@@ -55,9 +55,9 @@ class Ticket(osv.Model):
             assignment = {'assigned_user_id': a_user_id, 'assigned_user_email': u_mail}
             assignments[t_id] = assignment
             # to reenable the stage_id logic in assignment, replace the previous line with:
-            #assignments.setdefault(t_id, assignment)
+            # assignments.setdefault(t_id, assignment)
             # a more recent with the exact stage, or assignment without stage, keep it
-            #if a_stage_id == t_stage_id or not a_stage_id:
+            # if a_stage_id == t_stage_id or not a_stage_id:
             #    assignments[t_id] = assignment
 
         return assignments

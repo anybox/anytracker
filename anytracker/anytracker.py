@@ -10,7 +10,6 @@ class Ticket(osv.Model):
     _name = 'anytracker.ticket'
     _description = "Anytracker tickets"
     _rec_name = 'breadcrumb'
-    #_order = 'priority,importance,sequence,create_date DESC'  # makes kanban sortable
     _order = 'priority ASC, importance DESC, sequence ASC, create_date DESC'  # more logical now
     _parent_store = True
     _inherit = ['mail.thread']
@@ -47,8 +46,8 @@ class Ticket(osv.Model):
                        " FROM parent p, anytracker_ticket t WHERE t.id=p.parent_id) "
                        "SELECT id, parent_id, name FROM parent WHERE id!=0", (ticket_id,))
 
-            # The same when using parent_store. Actually slower for our typical trees
-            #cr.execute("select b.id, b.parent_id, b.name "
+            # The same when using parent_store. Actually slower for our typical trees:
+            # cr.execute("select b.id, b.parent_id, b.name "
             #           "from anytracker_ticket a join anytracker_ticket b "
             #           "on a.parent_left >= b.parent_left and a.parent_right<=b.parent_right "
             #           "and a.id=%s order by b.parent_left", (ticket_id,))
@@ -210,6 +209,38 @@ class Ticket(osv.Model):
             fvg['arch'] = etree.tostring(doc)
         return fvg
 
+    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
+        """
+            Overwrite the name_search function to search a ticket
+            with their name or thier number
+        """
+        if not args:
+            args = []
+        if name and operator in ('=', 'ilike', '=ilike', 'like', '=like'):
+            search_name = name
+            if operator in ('ilike', 'like'):
+                search_name = '%%%s%%' % name
+            if operator in ('=ilike', '=like'):
+                operator = operator[1:]
+            query_args = {'name': search_name}
+            if limit:
+                query_args['limit'] = limit
+            if name.isdigit():
+                query_args = {'number': int(name)}
+                query = '''SELECT ticket.id FROM anytracker_ticket ticket
+                           WHERE ticket.number = number '''
+            else:
+                query = '''SELECT ticket.id FROM anytracker_ticket ticket
+                          WHERE ticket.name ''' + operator + ''' %(name)s'''
+            cr.execute(query, query_args)
+
+            ids = [x[0] for x in cr.fetchall()]
+            ids = self.search(cr, uid, [('id', 'in', ids)] + args, limit=limit, context=context)
+            if ids:
+                return self.name_get(cr, uid, ids, context)
+        return super(Ticket, self).name_search(cr, uid, name, args, operator=operator,
+                                               context=context, limit=limit)
+
     _columns = {
         'name': fields.char('Title', 255, required=True),
         'number': fields.integer('Number'),
@@ -278,12 +309,6 @@ class Ticket(osv.Model):
         'parent_left': fields.integer('Parent Left', select=1),
         'parent_right': fields.integer('Parent Right', select=1),
         'sequence': fields.integer('sequence'),
-
-        #'active': fields.boolean(
-        #    'Active',
-        #    help=("If the active field is set to False, "
-        #          "it will allow you to hide the ticket without removing it.")),
-
     }
 
     _defaults = {

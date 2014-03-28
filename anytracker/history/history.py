@@ -104,8 +104,8 @@ class Ticket(osv.Model):
             # Create by import
             values['modified_openerp'] = values.get('modified_mindmap')
         else:
-            #TODO generate id_mindmap
-            #TODO generate time
+            # TODO generate id_mindmap
+            # TODO generate time
             pass
         values = self._add_history(cr, uid, values, context=context)
         return super(Ticket, self).create(cr, uid, values, context=context)

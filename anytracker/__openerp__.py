@@ -34,7 +34,6 @@
     'category': 'Project Management',
     'depends': [
         'base',
-        #'web_dynatree',
         'email_template',
     ],
     'images': [

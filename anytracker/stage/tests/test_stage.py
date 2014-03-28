@@ -39,4 +39,3 @@ class TestStage(SharedSetupTransactionCase):
                                            {'name': name,
                                             'parent_id': parent_id, })
         return ticket_id
-
