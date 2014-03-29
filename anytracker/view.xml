@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp><data>
 
-<!-- VIEWS -->
+<!-- Search tickets -->
 <record id="ticket_view_search" model="ir.ui.view">
   <field name="name">Search tickets</field>
   <field name="model">anytracker.ticket</field>
@@ -41,6 +41,7 @@
   </field>
 </record>
 
+<!-- Ticket list -->
 <record id="ticket_view_tree" model="ir.ui.view">
   <field name="name">Tickets</field>
   <field name="model">anytracker.ticket</field>
@@ -59,6 +60,7 @@
   </field>
 </record>
 
+<!-- Short list view to ease parent selection (should be replaced by dynatree) -->
 <record id="just_names" model="ir.ui.view">
   <field name="name">Tickets</field>
   <field name="model">anytracker.ticket</field>
@@ -74,6 +76,7 @@
   </field>
 </record>
 
+<!-- Ticket form -->
 <record id="ticket_view_form" model="ir.ui.view">
   <field name="name">ticket.form</field>
   <field name="model">anytracker.ticket</field>
@@ -87,10 +90,10 @@
     <sheet string="ticket">
         <group>
             <group>
-                    <field name="parent_id" colspan="4" nolabel="1" placeholder="Project (or parent ticket)"
-                           on_change="onchange_parent(parent_id)" domain="[('child_ids', '!=', False)]"
-                           context="{'tree_view_ref': 'anytracker.just_names'}">
-                    </field>
+                <field name="parent_id" colspan="4" nolabel="1" placeholder="Project (or parent ticket)"
+                       on_change="onchange_parent(parent_id)" domain="[('child_ids', '!=', False)]"
+                       context="{'tree_view_ref': 'anytracker.just_names'}">
+                </field>
                 <h1>
                     <field name="name" default_focus="1" placeholder="Ticket title"/>
                 </h1>
@@ -100,6 +103,7 @@
                 <field name="method_id" widget="selection" attrs="{'invisible': [('parent_id', '!=', False)]}"/>
                 <field name="project_method_id" invisible="1"/>
                 <field name="rating" readonly="True"/>
+                <field name="active" groups="anytracker.group_manager"/>
             </group>
         </group>
 

@@ -95,22 +95,30 @@ class Ticket(osv.Model):
         return project_id
 
     def write(self, cr, uid, ids, values, context=None):
-        """write the project_id when writing the parent
+        """write the project_id when writing the parent.
+        Also propagate the (in)active flag to the children
         """
         if not hasattr(ids, '__iter__'):
             ids = [ids]
+        children = None
         if 'parent_id' in values:
             root_id = self._get_root(cr, uid, values['parent_id'])
             values['project_id'] = root_id
             for ticket_id in ids:
                 if ticket_id == values['parent_id']:
                     raise osv.except_osv(_('Error'),
-                                         _(u"Think about yourself. Can you be your own parent?"))
+                                         _(u"Think of yourself. Can you be your own parent?"))
                 # reparenting to False, set current ticket as project for children
                 project_id = root_id or ticket_id
                 # set the project_id of me and all the children
                 children = self.search(cr, uid, [('id', 'child_of', ticket_id)])
                 self.write(cr, uid, children, {'project_id': project_id})
+        if 'active' in values:
+            for ticket_id in ids:
+                children = self.search(cr, uid, [
+                    ('id', 'child_of', ticket_id),
+                    ('active', '=', not values['active'])])
+                super(Ticket, self).write(cr, uid, children, {'active': values['active']})
         res = super(Ticket, self).write(cr, uid, ids, values, context=context)
         return res
 
@@ -309,12 +317,15 @@ class Ticket(osv.Model):
         'parent_left': fields.integer('Parent Left', select=1),
         'parent_right': fields.integer('Parent Right', select=1),
         'sequence': fields.integer('sequence'),
+        'active': fields.boolean('Active', help=("Uncheck to make the project disappear, "
+                                                 "instead of deleting it")),
     }
 
     _defaults = {
         'duration': 0,
         'parent_id': _default_parent_id,
         'project_id': _default_project_id,
+        'active': True,
 
     }
 

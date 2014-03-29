@@ -33,24 +33,6 @@ class TestAnytracker(SharedSetupTransactionCase):
              'groups_id': [(6, 0,
                            [self.ref('anytracker.group_customer')])]})
 
-    def createProject(self, participant_ids):
-        cr, uid = self.cr, self.uid
-        quickstart_method = self.ref('anytracker.anytracker_method-quickstart')
-        if isinstance(participant_ids, int) or isinstance(participant_ids, long):
-            participant_ids = [participant_ids]
-        project_id = self.ticket_mdl.create(cr, uid,
-                                            {'name': 'Quickstart test',
-                                             'participant_ids': [(6, 0, participant_ids)],
-                                             'method_id': quickstart_method})
-        return project_id
-
-    def createLeafTicket(self, name, parent_id):
-        cr, uid = self.cr, self.uid
-        ticket_id = self.ticket_mdl.create(cr, uid,
-                                           {'name': name,
-                                            'parent_id': parent_id, })
-        return ticket_id
-
     def test_name_search(self):
         """
             Test the name_search function in anytracker.ticket module.
@@ -58,8 +40,13 @@ class TestAnytracker(SharedSetupTransactionCase):
         """
         cr, uid = self.cr, self.uid
         # Create a ticket
-        project_id = self.createProject([self.customer_id, self.member_id, self.manager_id])
-        ticket_id = self.createLeafTicket('Test simple ticket', project_id)
+        project_id = self.ticket_mdl.create(
+            cr, uid,
+            {'name': 'Quickstart test',
+             'participant_ids': [(6, 0, [self.customer_id, self.member_id, self.manager_id])],
+             'method_id': self.ref('anytracker.anytracker_method-quickstart')})
+        ticket_id = self.ticket_mdl.create(
+            cr, uid, {'name': 'Test simple ticket', 'parent_id': project_id, })
         # get his number
         ticket_number = self.ticket_mdl.read(cr, uid, ticket_id, ['number'])['number']
         # Search by name
@@ -69,3 +56,31 @@ class TestAnytracker(SharedSetupTransactionCase):
         ticket_id_by_number = self.ticket_mdl.search(cr, uid, [('number', '=', ticket_number)])
         # Check if the two ids are equals
         self.assertEquals(ticket_id_by_name[0], ticket_id_by_number[0])
+
+    def test_disable_project(self):
+        """ Set a node as inactive, and check all subtickets are also inactive
+        """
+        cr, uid = self.cr, self.uid
+        # create a project
+        project_id = self.ticket_mdl.create(
+            cr, uid,
+            {'name': 'Quickstart test2',
+             'participant_ids': [(6, 0, [self.customer_id, self.member_id, self.manager_id])],
+             'method_id': self.ref('anytracker.anytracker_method-quickstart')})
+        # create a sub node and 2 tickets
+        node_id = self.ticket_mdl.create(cr, uid, {'name': 'A node', 'parent_id': project_id, })
+        self.ticket_mdl.create(cr, uid, {'name': 'ticket1', 'parent_id': node_id, })
+        self.ticket_mdl.create(cr, uid, {'name': 'ticket2', 'parent_id': node_id, })
+        # check that we can find all the tickets of the project
+        self.assertEquals(
+            4, self.ticket_mdl.search(cr, uid, [('id', 'child_of', project_id)], count=True))
+        # set the project as inactive
+        self.ticket_mdl.write(cr, uid, project_id, {'active': False})
+        # check that we CANNOT find all the tickets of the project
+        self.assertEquals(
+            0, self.ticket_mdl.search(cr, uid, [('id', 'child_of', project_id)], count=True))
+        # set the project as active again
+        self.ticket_mdl.write(cr, uid, project_id, {'active': True})
+        # check that we can find again all the tickets of the project
+        self.assertEquals(
+            4, self.ticket_mdl.search(cr, uid, [('id', 'child_of', project_id)], count=True))
