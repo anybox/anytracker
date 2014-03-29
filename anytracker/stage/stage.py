@@ -11,6 +11,7 @@ class Stage(osv.Model):
     _order = 'sequence'
     _columns = {
         'name': fields.char('name', size=64, required=True, translate=True),
+        'description': fields.text('Description', translate=True),
         'state': fields.char('state', size=64, required=True),
         'method_id': fields.many2one('anytracker.method', 'Project method',
                                      required=True, ondelete='cascade'),
@@ -223,4 +224,15 @@ class Ticket(osv.Model):
     _defaults = {
         'stage_id': _default_stage,
         'progress': 0.0,
+    }
+
+
+class Method(osv.Model):
+    _inherit = 'anytracker.method'
+    _columns = {
+        'stage_ids': fields.one2many(
+            'anytracker.stage',
+            'method_id',
+            'Stages',
+            help="The stages associated to this method"),
     }

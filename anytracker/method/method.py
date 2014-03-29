@@ -10,6 +10,7 @@ class Method(osv.Model):
     _columns = {
         'code': fields.char('Name', size=32, help='Short name of the project management method'),
         'name': fields.char('Name', size=64, help='Name of the project management method'),
+        'description': fields.text('Description', help='Description of the method'),
         'stage_ids': fields.one2many('anytracker.stage', 'method_id', 'Available stages'),
     }
 

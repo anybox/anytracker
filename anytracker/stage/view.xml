@@ -2,58 +2,39 @@
 <openerp>
 <data>
 
-<!-- STAGE -->
-<record id="view_stage_tree" model="ir.ui.view">
-    <field name="name">Project stages</field>
-    <field name="model">anytracker.stage</field>
-    <field name="type">tree</field>
-    <field name="priority" eval="8"/>
-    <field name="arch" type="xml">
-    <tree string="Ticket stages">
-        <field name="name"/>
-        <field name="state"/>
-        <field name="progress" string="Progress"/>
-        <field name="method_id"/>
-        <field name="sequence"/>
-        <field name="force_rating"/>
-    </tree>
-    </field>
-</record>
-
-<record id="view_stage_search" model="ir.ui.view">
-    <field name="name">anytracker.stage.search</field>
-    <field name="model">anytracker.stage</field>
-    <field name="type">search</field>
-    <field name="priority" eval="8"/>
-    <field name="arch" type="xml">
-    <search string="Search stages">
-        <filter name="stages_by_method"
-            string="By method"
-            context="{'group_by': 'method_id'}"
-            icon="gtk-indent"
-            help="Group by method"/>
-    </search>
-    </field>
-</record>
-
+<!-- Stage form -->
 <record id="view_stage_form" model="ir.ui.view">
     <field name="name">Stage</field>
     <field name="model">anytracker.stage</field>
     <field name="type">form</field>
     <field name="priority" eval="8"/>
     <field name="arch" type="xml">
-    <form string="Ticket stage">
-        <field name="name" select="1"/>
-        <field name="state"/>
-        <field name="progress" string="Progress"/>
-        <field name="method_id"/>
-        <field name="force_rating"/>
-        <field name="sequence"/>
-        <field name="forbidden_complexity_ids"/>
+    <form string="Ticket stage" version="7.0">
+        <group>
+            <group>
+                <h1><field name="name" select="1"/></h1>
+            </group>
+            <group>
+                <field name="state"/>
+                <field name="progress" string="Progress"/>
+                <field name="method_id" invisible="1"/>
+                <field name="force_rating"/>
+                <field name="sequence"/>
+            </group>
+        </group>
+        <notebook>
+            <page string="Description">
+                <field name="description"/>
+            </page>
+            <page string="Forbidden complexities">
+                <field name="forbidden_complexity_ids"/>
+            </page>
+        </notebook>
     </form>
     </field>
 </record>
 
+<!-- Search tickets by stage -->
 <record id="stage_ticket_view_search" model="ir.ui.view">
     <field name="name">anytracker.ticket.search</field>
     <field name="model">anytracker.ticket</field>
@@ -73,7 +54,7 @@
     </field>
 </record>
 
-<!-- ADD A TAB IN TICKET FORM -->
+<!-- Add a tab in the ticket form -->
 <record id="view_ticket_form_with_progress" model="ir.ui.view">
     <field name="name">Ticket</field>
     <field name="model">anytracker.ticket</field>
@@ -98,6 +79,28 @@
     </field>
 </record>
 
+<!-- Add a tab in the method form -->
+<record id="method_view_form_with_stages" model="ir.ui.view">
+    <field name="model">anytracker.method</field>
+    <field name="inherit_id" ref="view_method_form" />
+    <field name="arch" type="xml">
+        <xpath expr="//notebook" position="inside">
+            <page string="Stages">
+                <field name="stage_ids">
+                    <tree>
+                        <field name="name"/>
+                        <field name="description"/>
+                        <field name="state"/>
+                        <field name="sequence"/>
+                        <field name="progress"/>
+                    </tree>
+                </field>
+            </page>
+        </xpath>
+    </field>
+</record>
+
+<!-- Add a column in the ticket list -->
 <record id="view_ticket_tree_with_progress" model="ir.ui.view">
     <field name="name">Ticket</field>
     <field name="model">anytracker.ticket</field>
@@ -114,6 +117,7 @@
     </field>
 </record>
 
+<!-- Add a column in the ticket hierarchy -->
 <record id="tickets_hierarchy_with_progress" model="ir.ui.view">
     <field name="name">anytracker.ticket.hierarchy</field>
     <field name="model">anytracker.ticket</field>
@@ -125,6 +129,7 @@
     </field>
 </record>
 
+<!-- Ticket pie chart -->
 <record id="ticket_stage_piechart" model="ir.ui.view">
   <field name="name">anytracker.ticket.stage_piechart</field>
   <field name="model">anytracker.ticket</field>
@@ -138,40 +143,9 @@
 </record>
 
 
-<!-- ACTIONS -->
-<record model="ir.actions.act_window" id="act_open_stage_view">
-    <field name="name">Stages</field>
-    <field name="type">ir.actions.act_window</field>
-    <field name="res_model">anytracker.stage</field>
-    <field name="view_type">form</field>
-    <field name="view_mode">tree,form</field>
-    <field name="search_view_id" ref="view_stage_search"/>
-    <field name="domain">[]</field>
-    <field name="context">{'search_default_stages_by_method': 1}</field>
-</record>
-
-<record model="ir.actions.act_window.view" id="act_open_stage_view_form">
-    <field name="act_window_id" ref="act_open_stage_view"/>
-    <field name="sequence" eval="20"/>
-    <field name="view_mode">form</field>
-    <field name="view_id" ref="view_stage_form"/>
-</record>
-
-<record model="ir.actions.act_window.view" id="act_open_stage_view_tree">
-    <field name="act_window_id" ref="act_open_stage_view"/>
-    <field name="sequence" eval="10"/>
-    <field name="view_mode">tree</field>
-    <field name="view_id" ref="view_stage_tree"/>
-</record>
-
 <record model="ir.actions.act_window" id="act_all_tasks">
   <field name="view_mode">tree,form,graph</field>
 </record>
-
-<menuitem id="menu_stage"
-    parent="menu_configuration"
-    sequence="20"
-    action="act_open_stage_view"/>
 
 </data>
 </openerp>

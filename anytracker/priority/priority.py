@@ -54,3 +54,14 @@ class Ticket(osv.Model):
             _get_priority, method=True, string='Priority',
             type='integer', store=True),
     }
+
+
+class Method(osv.Model):
+    _inherit = 'anytracker.method'
+    _columns = {
+        'priority_ids': fields.one2many(
+            'anytracker.priority',
+            'method_id',
+            'Priorities',
+            help="The priorities associated to this method"),
+    }

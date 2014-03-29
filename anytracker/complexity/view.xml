@@ -1,38 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
-<!-- COMPLEXITY -->
-<record id="view_complexity_search" model="ir.ui.view">
-    <field name="name">anytracker.complexity.search</field>
-    <field name="model">anytracker.complexity</field>
-    <field name="type">search</field>
-    <field name="priority" eval="8"/>
-    <field name="arch" type="xml">
-    <search string="Complexities">
-        <filter name="complexities_by_method"
-            string="By method"
-            context="{'group_by': 'method_id'}"
-            icon="gtk-indent"
-            help="Group by method"/>
-    </search>
-    </field>
-</record>
-<record id="view_complexity_tree" model="ir.ui.view">
-    <field name="name">anytracker.complexity.tree</field>
-    <field name="model">anytracker.complexity</field>
-    <field name="type">tree</field>
-    <field name="priority" eval="8"/>
-    <field name="arch" type="xml">
-    <tree string="Complexities">
-        <field name="name"/>
-        <field name="value"/>
-        <field name="color"/>
-        <field name="method_id"/>
-        <field name="risk"/>
-    </tree>
-    </field>
-</record>
 
+<!-- complexity form -->
 <record id="view_complexity_form" model="ir.ui.view">
     <field name="name">anytracker.complexity.form</field>
     <field name="model">anytracker.complexity</field>
@@ -56,9 +26,8 @@
     </field>
 </record>
 
-<!-- ADD A TAB IN TICKET FORM -->
+<!-- Add a tab in the ticket form -->
 <record id="ticket_view_form_with_complexity" model="ir.ui.view">
-    <field name="name">Ticket</field>
     <field name="model">anytracker.ticket</field>
     <field name="inherit_id" ref="ticket_view_form" />
     <field name="arch" type="xml">
@@ -88,8 +57,27 @@
     </field>
 </record>
 
+<!-- Add a tab in the method form -->
+<record id="method_view_form_with_complexities" model="ir.ui.view">
+    <field name="model">anytracker.method</field>
+    <field name="inherit_id" ref="view_method_form" />
+    <field name="arch" type="xml">
+        <xpath expr="//notebook" position="inside">
+            <page string="Complexities">
+                <field name="complexity_ids">
+                    <tree>
+                        <field name="name"/>
+                        <field name="description"/>
+                        <field name="value"/>
+                        <field name="risk"/>
+                    </tree>
+                </field>
+            </page>
+        </xpath>
+    </field>
+</record>
+
 <record id="ticket_view_tree_with_complexity" model="ir.ui.view">
-    <field name="name">Ticket</field>
     <field name="model">anytracker.ticket</field>
     <field name="inherit_id" ref="ticket_view_tree" />
     <field name="arch" type="xml">
@@ -102,7 +90,6 @@
 </record>
 
 <record id="tickets_hierarchy_with_complexity" model="ir.ui.view">
-    <field name="name">anytracker.ticket.hierarchy</field>
     <field name="model">anytracker.ticket</field>
     <field name="inherit_id" ref="tickets_hierarchy" />
     <field name="arch" type="xml">
@@ -114,10 +101,7 @@
 </record>
 
 <record id="view_complexity_kanban" model="ir.ui.view">
-    <field name="name">anytracker.assignment.kanban</field>
     <field name="model">anytracker.ticket</field>
-    <field name="type">kanban</field>
-    <field name="priority" eval="8"/>
     <field name="inherit_id" ref="anytracker.tickets_view_kanban"/>
     <field name="arch" type="xml">
       <xpath expr="/kanban/field[@name='kanban_description']" position="after">
@@ -129,34 +113,5 @@
     </field>
 </record>
 
-<record model="ir.actions.act_window" id="act_open_complexity_view">
-    <field name="name">Complexities</field>
-    <field name="type">ir.actions.act_window</field>
-    <field name="res_model">anytracker.complexity</field>
-    <field name="view_type">form</field>
-    <field name="view_mode">tree,form</field>
-    <field name="domain">[]</field>
-    <field name="context">{'search_default_complexities_by_method': 1}</field>
-</record>
-
-<record model="ir.actions.act_window.view" id="act_open_complexity_view_form">
-    <field name="act_window_id" ref="act_open_complexity_view"/>
-    <field name="sequence" eval="20"/>
-    <field name="view_mode">form</field>
-    <field name="view_id" ref="view_complexity_form"/>
-</record>
-
-<record model="ir.actions.act_window.view" id="act_open_complexity_view_tree">
-    <field name="act_window_id" ref="act_open_complexity_view"/>
-    <field name="sequence" eval="10"/>
-    <field name="view_mode">tree</field>
-    <field name="view_id" ref="view_complexity_tree"/>
-</record>
-
-<menuitem id="menu_complexity"
-    parent="menu_configuration"
-    sequence="20"
-    groups="group_manager"
-    action="act_open_complexity_view"/>
 </data>
 </openerp>

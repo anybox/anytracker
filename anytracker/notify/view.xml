@@ -8,27 +8,28 @@
     <field name="model">anytracker.stage</field>
     <field name="inherit_id" ref="view_stage_form" />
     <field name="arch" type="xml">
-      <field name="forbidden_complexity_ids" position="after">
-        <group>
-          <field name="notify"/>
-          <field name="notify_multiple"/>
-          <field name="notify_urgent"/>
-          <field name="notify_sms" readonly="1"/>
-          <field name="notify_template_id"/>
-        </group>
-      </field>
+        <xpath expr="//notebook//page[@string='Forbidden complexities']" position="after">
+            <page string="Notifications">
+                <group>
+                <field name="notify"/>
+                <field name="notify_multiple"/>
+                <field name="notify_urgent"/>
+                <field name="notify_sms" readonly="1"/>
+                <field name="notify_template_id"/>
+                </group>
+            </page>
+        </xpath>
     </field>
 </record>
 
 <!-- Add a column in stage tree -->
-<record id="view_stage_tree_with_notif" model="ir.ui.view">
-    <field name="name">Stage</field>
-    <field name="model">anytracker.stage</field>
-    <field name="inherit_id" ref="view_stage_tree" />
+<record id="view_method_stage_tab_with_notif" model="ir.ui.view">
+    <field name="model">anytracker.method</field>
+    <field name="inherit_id" ref="method_view_form_with_stages" />
     <field name="arch" type="xml">
-      <field name="force_rating" position="after">
+      <xpath expr="//field[@name='progress']" position="after">
         <field name="notify" string="Notify"/>
-      </field>
+      </xpath>
     </field>
 </record>
 

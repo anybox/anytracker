@@ -217,3 +217,14 @@ class Ticket(osv.Model):
     _defaults = {
         'risk': 100.0,
     }
+
+
+class Method(osv.Model):
+    _inherit = 'anytracker.method'
+    _columns = {
+        'complexity_ids': fields.one2many(
+            'anytracker.complexity',
+            'method_id',
+            'Complexities',
+            help="The complexities associated to this method"),
+    }

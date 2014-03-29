@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data>
+        <!-- importance list -->
         <record id="view_anytracker_importance_tree" model="ir.ui.view">
             <field name="name">anytracker.importance.tree</field>
             <field name="model">anytracker.importance</field>
@@ -16,6 +17,7 @@
             </field>
         </record>
 
+        <!-- importance form -->
         <record id="view_anytracker_importance_form" model="ir.ui.view">
             <field name="name">anytracker.importance.form</field>
             <field name="model">anytracker.importance</field>
@@ -31,58 +33,29 @@
             </field>
         </record>
 
-        <record id="view_anytracker_importance_search" model="ir.ui.view">
-            <field name="name">anytracker.importance.search</field>
-            <field name="model">anytracker.importance</field>
-            <field name="type">search</field>
-            <field name="sequence" eval="8"/>
+        <!-- Add a tab in the method form -->
+        <record id="method_view_form_with_importances" model="ir.ui.view">
+            <field name="model">anytracker.method</field>
+            <field name="inherit_id" ref="view_method_form" />
             <field name="arch" type="xml">
-                <search string="Importances">
-                    <filter name="importances_by_method"
-                        string="By method"
-                        context="{'group_by': 'method_id'}"
-                        icon="gtk-indent"
-                        help="Group by method"/>
-                </search>
+                <xpath expr="//notebook" position="inside">
+                    <page string="Importances">
+                        <field name="importance_ids">
+                            <tree>
+                                <field name="name"/>
+                                <field name="description"/>
+                                <field name="seq"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
             </field>
         </record>
 
-        <record model="ir.actions.act_window" id="act_open_anytracker_importance_view">
-            <field name="name">Importances</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">anytracker.importance</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="search_view_id" ref="view_anytracker_importance_search"/>
-            <field name="domain">[]</field>
-            <field name="context">{'search_default_importances_by_method': 1}</field>
-        </record>
-
-        <record model="ir.actions.act_window.view" id="act_open_anytracker_importance_view_form">
-            <field name="act_window_id" ref="act_open_anytracker_importance_view"/>
-            <field name="sequence" eval="20"/>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="view_anytracker_importance_form"/>
-        </record>
-
-        <record model="ir.actions.act_window.view" id="act_open_anytracker_importance_view_tree">
-            <field name="act_window_id" ref="act_open_anytracker_importance_view"/>
-            <field name="sequence" eval="10"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_anytracker_importance_tree"/>
-        </record>
-
-        <menuitem id="menu_anytracker_importance"
-            parent="menu_configuration"
-            sequence="30"
-            action="act_open_anytracker_importance_view"/>
-
+        <!-- search tickets by importance -->
         <record id="importance_ticket_view_search" model="ir.ui.view">
-            <field name="name">anytracker.ticket.search</field>
             <field name="model">anytracker.ticket</field>
-            <field name="type">search</field>
             <field name="inherit_id" ref="anytracker.ticket_view_search"/>
-            <field name="priority" eval="16"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='id']" position="after">
                     <field name="importance_id" widget="selection"/>
@@ -97,11 +70,9 @@
             </field>
         </record>
 
+        <!-- Add an importance column in the ticket list -->
         <record id="importance_ticket_view_tree" model="ir.ui.view">
-            <field name="name">Tickets</field>
             <field name="model">anytracker.ticket</field>
-            <field name="type">tree</field>
-            <field name="priority" eval="16"/>
             <field name="inherit_id" ref="anytracker.ticket_view_tree"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='shortened_description']" position="after">
@@ -111,13 +82,10 @@
             </field>
         </record>
 
-        <!-- ADD A TAB IN TICKET FORM -->
+        <!-- Add a tab in the ticket form -->
         <record id="importance_ticket_view_form" model="ir.ui.view">
-            <field name="name">ticket.form</field>
             <field name="model">anytracker.ticket</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="anytracker.ticket_view_form"/>
-            <field name="priority" eval="16"/>
             <field name="arch" type="xml">
                 <xpath expr="//group[@id='extend']" position="inside">
                     <field name="importance_id" domain="[('method_id', '=', method_id)]" attrs="{'invisible': [('parent_id','=',False)]}" />

@@ -2,7 +2,7 @@
 <openerp>
 <data>
 
-<!-- TICKET -->
+<!-- Search tickets by assignments -->
 <record id="assignment_ticket_view_search" model="ir.ui.view">
     <field name="name">anytracker.ticket.search</field>
     <field name="model">anytracker.ticket</field>
@@ -35,6 +35,7 @@
     </field>
 </record>
 
+<!-- Add a column in the ticket list -->
 <record id="assignment_ticket_view_tree" model="ir.ui.view">
     <field name="name">Tickets</field>
     <field name="model">anytracker.ticket</field>
@@ -48,6 +49,7 @@
     </field>
 </record>
 
+<!-- Add a tab in the ticket form -->
 <record id="assignment_ticket_view_form" model="ir.ui.view">
     <field name="name">ticket.form</field>
     <field name="model">anytracker.ticket</field>
@@ -69,7 +71,7 @@
     </field>
 </record>
 
-<!-- ASSIGNMENT -->
+<!-- Assignment form -->
 <record id="view_assignment_form" model="ir.ui.view">
     <field name="name">anytracker.assignment.form</field>
     <field name="model">anytracker.assignment</field>
@@ -86,6 +88,7 @@
     </field>
 </record>
 
+<!-- Assignment list -->
 <record id="view_assignment_tree" model="ir.ui.view">
     <field name="name">anytracker.assignment.tree</field>
     <field name="model">anytracker.assignment</field>
@@ -100,6 +103,7 @@
     </field>
 </record>
 
+<!-- Display assignments in the kanban -->
 <record id="view_assignment_kanban" model="ir.ui.view">
     <field name="name">anytracker.assignment.kanban</field>
     <field name="model">anytracker.ticket</field>
@@ -136,6 +140,7 @@
     </field>
     <field name="domain">[]</field>
 </record>
+
 <menuitem id="menu_my_tickets"
     parent="menu_anytracker"
     sequence="-1"

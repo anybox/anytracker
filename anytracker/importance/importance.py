@@ -42,3 +42,14 @@ class Ticket(osv.Model):
             _get_importance, method=True, string='Importance',
             type='integer', store=True),
     }
+
+
+class Method(osv.Model):
+    _inherit = 'anytracker.method'
+    _columns = {
+        'importance_ids': fields.one2many(
+            'anytracker.importance',
+            'method_id',
+            'Importances',
+            help="The importances associated to this method"),
+    }
