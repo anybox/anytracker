@@ -36,7 +36,7 @@ class Ticket(osv.Model):
             res[ticket['id']] = '<br/>'.join(lines)
         return res
 
-    def _breadcrumb(self, cr, uid, ids, context=None):
+    def get_breadcrumb(self, cr, uid, ids, context=None):
         """ get all the parents up to the root ticket
         """
         res = {}
@@ -46,7 +46,7 @@ class Ticket(osv.Model):
                        " FROM parent p, anytracker_ticket t WHERE t.id=p.parent_id) "
                        "SELECT id, parent_id, name FROM parent WHERE id!=0", (ticket_id,))
 
-            # The same when using parent_store. Actually slower for our typical trees:
+            # The same using parent_store. Actually slower for our typical trees:
             # cr.execute("select b.id, b.parent_id, b.name "
             #           "from anytracker_ticket a join anytracker_ticket b "
             #           "on a.parent_left >= b.parent_left and a.parent_right<=b.parent_right "
@@ -60,7 +60,7 @@ class Ticket(osv.Model):
         TODO : format in the view (in js)
         """
         res = {}
-        for i, breadcrumb in self._breadcrumb(cr, uid, ids, context).items():
+        for i, breadcrumb in self.get_breadcrumb(cr, uid, ids, context).items():
             res[i] = u' / '.join([b['name'] for b in breadcrumb])
         return res
 
@@ -85,7 +85,7 @@ class Ticket(osv.Model):
                            load='_classic_write')
         parent_id = ticket.get('parent_id', False)
         if parent_id:
-            breadcrumb = self._breadcrumb(cr, uid, [parent_id], context)[parent_id]
+            breadcrumb = self.get_breadcrumb(cr, uid, [parent_id], context)[parent_id]
             if not breadcrumb:
                 breadcrumb = [self.read(cr, uid, parent_id, ['name', 'parent_id'])]
             project_id = breadcrumb[0]['id']

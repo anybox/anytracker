@@ -52,7 +52,7 @@ class Bouquet(osv.Model):
         ticket = self.pool.get('anytracker.ticket')
         for bouquet_read in self.read(cr, uid, ids, ('ticket_ids',), context=context):
             all_parents_ids = set(
-                t['id'] for tlist in ticket._breadcrumb(
+                t['id'] for tlist in ticket.get_breadcrumb(
                     cr, uid, bouquet_read['ticket_ids'], context=context).values()
                 for t in tlist)
             res[bouquet_read['id']] = list(set(

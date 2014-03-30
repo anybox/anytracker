@@ -33,6 +33,7 @@
     'website': 'http://anybox.fr',
     'category': 'Project Management',
     'depends': [
+        'web',
         'base',
         'email_template',
     ],
