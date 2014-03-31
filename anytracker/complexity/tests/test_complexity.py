@@ -61,7 +61,7 @@ class TestComplexity(SharedSetupTransactionCase):
     def test_rating(self):
         """ Simple rating scenario: a manager or member can rate, not a customer.
         """
-        cr, uid = self.cr, self.uid
+        cr = self.cr
         # create a project with a team of 3 people
         project_id = self.createProject([self.customer_id, self.member_id, self.manager_id])
         # create a ticket
