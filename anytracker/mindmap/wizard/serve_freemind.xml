@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="view_serve_freemind_form" model="ir.ui.view">
+            <field name="name">serve.freemind.file.form</field>
+            <field name="model">serve.freemind.wizard</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+            <form string="Serve mindmap File">
+                <field name="mindmap_binary_file" select="1" string="File mindmap to write" />
+            </form>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_serve_freemind_file">
+            <field name="name">Serve freemind file</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">serve.freemind.wizard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="domain">[]</field>
+            <field name="context" eval="{}" />
+            <field name="target">new</field>
+        </record>
+    </data>
+</openerp>

@@ -1,7 +1,7 @@
 from osv import osv, fields
-import random
-import time
-from xml.sax.saxutils import XMLGenerator
+from .freemind_parse import FreemindWriterHandler
+from .freemind_parse import FreemindParser
+import StringIO
 
 
 # TODO complexity icon, mindmapfile to binary?, richtext content generation
@@ -19,6 +19,9 @@ class export_freemind_wizard(osv.TransientModel):
     def execute_export(self, cr, uid, ids, context=None):
         '''Launch export of nn file to freemind'''
         any_tick_complexity_pool = self.pool.get('anytracker.complexity')
+        serv_freemind_wizard = self.pool.get('serve.freemind.wizard')
+        ir_action = self.pool.get('ir.actions.act_window')
+        mod_obj = self.pool.get('ir.model.data')
         for wizard in self.browse(cr, uid, ids, context=context):
             complexity_dict = {
                 'green_complexity_id':
@@ -32,77 +35,33 @@ class export_freemind_wizard(osv.TransientModel):
             ticket_id = wizard.ticket_id and wizard.ticket_id.id or False
             if not ticket_id:
                 raise osv.except_osv('Error', 'Please select a ticket to export')
-            fp = open(wizard.mindmap_file, 'wb')
+
+            fp = StringIO.StringIO()
+
             writer_handler = FreemindWriterHandler(cr, uid, self.pool, fp)
             writer_parser = FreemindParser(cr, uid, self.pool, writer_handler,
                                            ticket_id, complexity_dict)
             writer_parser.parse(cr, uid)
+
+            record_id = serv_freemind_wizard.create(
+                cr, uid, dict(mindmap_binary_file=fp.getvalues()))
+
             fp.close()
-        return {'type': 'ir.actions.act_window_close'}
+            res_id = mod_obj.get_object_reference(cr, uid, 'anytracker', 'action_serve_freemind_file')
+            res_r = ir_action.read(cr, uid, res_id, [], context=context)
+            import pdb
+            pdb.set_trace()
+            return {
+                'name': 'Provide your popup window name',
+                'view_type': 'form',
+                'view_mode': 'form',
+                'view_id': [res and res[1] or False],
+                'res_model': 'your.popup.model.name',
+                'context': "{}",
+                'type': 'ir.actions.act_window',
+                'nodestroy': True,
+                'target': 'new',
+                'res_id': record_id  or False,
+            }
 
 
-class FreemindParser(object):
-    '''Parse openerp project'''
-    def __init__(self, cr, uid, pool, handler, ticket_id, complexity_dict):
-        self.handler = handler
-        self.pool = pool
-        self.ticket_id = ticket_id
-        self.complexity_dict = complexity_dict
-
-    def parse(self, cr, uid):
-        ticket_osv = self.pool.get('anytracker.ticket')
-        self.handler.startDocument()
-        ticket_tree_ids = ticket_osv.makeTreeData(cr, uid, [self.ticket_id])
-
-        def recurs_ticket(ticket_d):
-            ticket_write = ticket_d.copy()
-            if 'child' in ticket_write:
-                ticket_write.pop('child')
-            self.handler.startElement('node', ticket_write)
-            if 'child' in ticket_d:
-                for ticket in ticket_d['child']:
-                    recurs_ticket(ticket)
-            self.handler.endElement('node')
-        recurs_ticket(ticket_tree_ids[0])
-        self.handler.endDocument()
-        return True
-
-
-def gMF(date):
-    '''getMindmapDateFormat
-
-    input: OpenERP string date/time format
-    output: str of decimal representation of Epoch-based timestamp milliseconds, rounded.
-    '''
-    timestamp = time.mktime(time.strptime(date, '%Y-%m-%d %H:%M:%S')) if date else time.time()
-    return '%d' % (timestamp * 1000)
-
-
-class FreemindWriterHandler(XMLGenerator):
-    '''For generate .mm file'''
-    def __init__(self, cr, uid, pool, fp):
-        self.pool = pool
-        self.padding = 0
-        XMLGenerator.__init__(self, fp, 'UTF-8')
-
-    def startDocument(self):
-        startElement = '''<map version="0.9.0">
-<!-- To view this file, download FreeMind from http://freemind.sourceforge.net -->
-'''
-        self._out.write(startElement)
-
-    def endDocument(self):
-        stopElement = '</' + 'map' + '>' + '\n'
-        self._out.write(stopElement)
-
-    def startElement(self, tag, attrs={}):
-        attrs_write = {'CREATED': gMF(attrs['created_mindmap']),
-                       'MODIFIED': gMF(max(attrs['modified_mindmap'],
-                                           attrs['modified_openerp'])),
-                       'ID': attrs['id_mindmap'] or 'ID_' + str(random.randint(1, 10**10)),
-                       'TEXT': attrs['name'],
-                       }
-        XMLGenerator.startElement(self, tag, attrs_write)
-
-    def endElement(self, tag):
-        XMLGenerator.endElement(self, tag)
