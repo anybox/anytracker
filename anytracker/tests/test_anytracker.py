@@ -44,7 +44,7 @@ class TestAnytracker(SharedSetupTransactionCase):
             cr, uid,
             {'name': 'Quickstart test',
              'participant_ids': [(6, 0, [self.customer_id, self.member_id, self.manager_id])],
-             'method_id': self.ref('anytracker.anytracker_method-quickstart')})
+             'method_id': self.ref('anytracker.method_quickstart')})
         ticket_id = self.ticket_mdl.create(
             cr, uid, {'name': 'Test simple ticket', 'parent_id': project_id, })
         # get his number
@@ -66,7 +66,7 @@ class TestAnytracker(SharedSetupTransactionCase):
             cr, uid,
             {'name': 'Quickstart test2',
              'participant_ids': [(6, 0, [self.customer_id, self.member_id, self.manager_id])],
-             'method_id': self.ref('anytracker.anytracker_method-quickstart')})
+             'method_id': self.ref('anytracker.method_quickstart')})
         # create a sub node and 2 tickets
         node_id = self.ticket_mdl.create(cr, uid, {'name': 'A node', 'parent_id': project_id, })
         self.ticket_mdl.create(cr, uid, {'name': 'ticket1', 'parent_id': node_id, })
