@@ -16,9 +16,9 @@ class TestComplexity(SharedSetupTransactionCase):
         self.user = self.registry('res.users')
         self.rating_mdl = self.registry('anytracker.rating')
 
-        self.complexity_2h = self.ref('anytracker.anytracker_complexity-2h')
-        self.complexity_4h = self.ref('anytracker.anytracker_complexity-4h')
-        self.complexity_1j = self.ref('anytracker.anytracker_complexity-1_jour')
+        self.complexity_2h = self.ref('anytracker.complexity_2h')
+        self.complexity_4h = self.ref('anytracker.complexity_4h')
+        self.complexity_1j = self.ref('anytracker.complexity_1j')
         self.member_id = self.user.create(
             cr, uid,
             {'name': 'Member',
@@ -42,7 +42,7 @@ class TestComplexity(SharedSetupTransactionCase):
 
     def createProject(self, participant_ids):
         cr, uid = self.cr, self.uid
-        quickstart_method = self.ref('anytracker.anytracker_method-quickstart')
+        quickstart_method = self.ref('anytracker.method_quickstart')
         if isinstance(participant_ids, int) or isinstance(participant_ids, long):
             participant_ids = [participant_ids]
         project_id = self.ticket_mdl.create(cr, uid,
