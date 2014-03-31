@@ -5,7 +5,10 @@ openerp.anytracker = function(instance) {
     module.ViewManagerAction.include({
         set_title: function() {
             // Replace the OpenERP breadcrumb with the Anytracker breadcrumb
-            if (this.action.res_model != 'anytracker.ticket' || !this.action.view_mode || this.action.view_mode.slice(0, 6) != 'kanban') {
+            if (this.action.res_model != 'anytracker.ticket'
+                || !this.action.view_mode
+                || this.action.view_mode.slice(0, 6) != 'kanban'
+                || !this.action.context.active_id) {
                 return this._super();
             } else {
                 this.breadcrumbs = [];

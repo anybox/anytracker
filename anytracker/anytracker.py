@@ -40,7 +40,7 @@ class Ticket(osv.Model):
         """ get all the parents up to the root ticket
         """
         res = {}
-        for ticket_id in ids:
+        for ticket_id in [int(i) for i in ids]:
             cr.execute("WITH RECURSIVE parent(id, parent_id, name) as "
                        "(select 0, %s, text('') UNION SELECT t.id, t.parent_id, t.name "
                        " FROM parent p, anytracker_ticket t WHERE t.id=p.parent_id) "
