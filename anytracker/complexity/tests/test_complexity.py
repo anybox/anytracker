@@ -6,6 +6,7 @@ from datetime import datetime
 class TestComplexity(SharedSetupTransactionCase):
 
     _module_ns = 'anytracker'
+    _data_files = ('complexity/tests/data.xml',)
 
     @classmethod
     def initTestData(self):
