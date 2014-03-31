@@ -3,6 +3,7 @@ from ..complexity.tests import test_complexity
 from ..stage.tests import test_stage
 from ..assignment.tests import test_assignment
 from ..notify.tests import test_notify
+import test_anytracker
 
 fast_suite = [
     test_bouquets,
@@ -10,4 +11,5 @@ fast_suite = [
     test_stage,
     test_assignment,
     test_notify,
+    test_anytracker,
 ]
