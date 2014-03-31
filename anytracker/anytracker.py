@@ -225,27 +225,16 @@ class Ticket(osv.Model):
         if not args:
             args = []
         if name and operator in ('=', 'ilike', '=ilike', 'like', '=like'):
-            search_name = name
-            if operator in ('ilike', 'like'):
-                search_name = '%%%s%%' % name
-            if operator in ('=ilike', '=like'):
-                operator = operator[1:]
-            query_args = {'name': search_name}
-            if limit:
-                query_args['limit'] = limit
+            ticket_ids = []
             if name.isdigit():
-                query_args = {'number': int(name)}
-                query = '''SELECT ticket.id FROM anytracker_ticket ticket
-                           WHERE ticket.number = number '''
+                number = int(name)
+                ticket_ids = self.search(cr, uid, [('number', '=', number)] + args,
+                                         limit=limit, context=context)
             else:
-                query = '''SELECT ticket.id FROM anytracker_ticket ticket
-                          WHERE ticket.name ''' + operator + ''' %(name)s'''
-            cr.execute(query, query_args)
-
-            ids = [x[0] for x in cr.fetchall()]
-            ids = self.search(cr, uid, [('id', 'in', ids)] + args, limit=limit, context=context)
-            if ids:
-                return self.name_get(cr, uid, ids, context)
+                ticket_ids = self.search(cr, uid, [('name', operator, name)] + args,
+                                         limit=limit, context=context)
+            if len(ticket_ids) > 0:
+                return self.name_get(cr, uid, ticket_ids, context)
         return super(Ticket, self).name_search(cr, uid, name, args, operator=operator,
                                                context=context, limit=limit)
 
