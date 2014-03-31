@@ -44,18 +44,25 @@ class TestAnytracker(SharedSetupTransactionCase):
             cr, uid,
             {'name': 'Quickstart test',
              'participant_ids': [(6, 0, [self.customer_id, self.member_id, self.manager_id])],
-             'method_id': self.ref('anytracker.anytracker_method-quickstart')})
+             'method_id': self.ref('anytracker.method_quickstart')})
         ticket_id = self.ticket_mdl.create(
             cr, uid, {'name': 'Test simple ticket', 'parent_id': project_id, })
+
         # get his number
         ticket_number = self.ticket_mdl.read(cr, uid, ticket_id, ['number'])['number']
+
         # Search by name
         ticket_id_by_name = self.ticket_mdl.search(cr, uid, [('name', '=', 'Test simple ticket')])
 
         # Search by ticket number
-        ticket_id_by_number = self.ticket_mdl.search(cr, uid, [('number', '=', ticket_number)])
-        # Check if the two ids are equals
-        self.assertEquals(ticket_id_by_name[0], ticket_id_by_number[0])
+        ticket_id_by_number = self.ticket_mdl.search(cr, uid, [('name', '=', ticket_number)])
+
+        # Check result
+        for i in range(len(ticket_id_by_name)):
+            self.assertEquals(ticket_id_by_name[i], ticket_id)
+
+        for j in range(len(ticket_id_by_number)):
+            self.assertEquals(ticket_id_by_number[j], ticket_id)
 
     def test_disable_project(self):
         """ Set a node as inactive, and check all subtickets are also inactive
@@ -66,7 +73,7 @@ class TestAnytracker(SharedSetupTransactionCase):
             cr, uid,
             {'name': 'Quickstart test2',
              'participant_ids': [(6, 0, [self.customer_id, self.member_id, self.manager_id])],
-             'method_id': self.ref('anytracker.anytracker_method-quickstart')})
+             'method_id': self.ref('anytracker.method_quickstart')})
         # create a sub node and 2 tickets
         node_id = self.ticket_mdl.create(cr, uid, {'name': 'A node', 'parent_id': project_id, })
         self.ticket_mdl.create(cr, uid, {'name': 'ticket1', 'parent_id': node_id, })
