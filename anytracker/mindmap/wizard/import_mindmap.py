@@ -8,9 +8,9 @@ from base64 import b64decode
 import time
 
 
-class import_freemind_wizard(osv.TransientModel):
-    _name = 'import.freemind.wizard'
-    _description = 'Import freemind .mm file into anytracker tree'
+class import_mindmap_wizard(osv.TransientModel):
+    _name = 'import.mindmap.wizard'
+    _description = 'Import mindmap .mm file into anytracker tree'
     _columns = {
         'ticket_id': fields.many2one(
             'anytracker.ticket', 'Ticket',
@@ -42,7 +42,9 @@ class import_freemind_wizard(osv.TransientModel):
     }
 
     def execute_import(self, cr, uid, ids, context=None):
-        '''Launch import of nn file from freemind'''
+        '''Launch import of nn file from mindmap'''
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         for wizard in self.browse(cr, uid, ids, context=context):
             complexity_dict = {'green_complexity_id': wizard.green_complexity.id or False,
                                'orange_complexity_id': wizard.orange_complexity.id or False,

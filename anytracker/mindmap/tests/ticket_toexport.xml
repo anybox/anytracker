@@ -1,0 +1,112 @@
+<openerp>
+  <data>
+    <record model="anytracker.ticket" id="anytracker_ticket-droit_dacces_application_mlf">
+      <field name="active" eval="True"/>
+      <field name="created_mindmap">2013-04-05 13:34:20</field>
+      <field name="description" eval="False"/>
+      <field name="id_mindmap">ID_900637744</field>
+      <field name="method_id" ref="anytracker.method_maintenance"/>
+      <field name="modified_mindmap">2014-04-01 15:58:24</field>
+      <field name="modified_openerp">2014-04-01 15:58:24</field>
+      <field name="my_rating" eval="False"/>
+      <field name="name">Droit d'acc&#233;s application mlf</field>
+      <field name="parent_id" eval="False"/>
+      <field name="parent_left" eval="1"/>
+      <field name="parent_right" eval="12"/>
+      <field name="permalink">/anytracker/any/ticket/1</field>
+      <field name="stage_id" ref="anytracker.stage_maintenance_new"/>
+    </record>
+    <record model="anytracker.ticket" id="anytracker_ticket-worflows_general_des_budgets">
+      <field name="active" eval="True"/>
+      <field name="created_mindmap">2013-04-05 13:34:35</field>
+      <field name="description" eval="False"/>
+      <field name="id_mindmap">ID_1748422440</field>
+      <field name="method_id" ref="anytracker.method_maintenance"/>
+      <field name="modified_mindmap">2013-04-05 15:44:20</field>
+      <field name="modified_openerp">2013-04-05 15:44:20</field>
+      <field name="my_rating" eval="False"/>
+      <field name="name">Worflows g&#233;n&#233;ral des budgets</field>
+      <field name="parent_id" ref="anytracker.anytracker_ticket-droit_dacces_application_mlf"/>
+      <field name="parent_left" eval="2"/>
+      <field name="parent_right" eval="5"/>
+      <field name="permalink">/anytracker/any/ticket/2</field>
+      <field name="stage_id" ref="anytracker.stage_maintenance_new"/>
+    </record>
+    <record model="anytracker.ticket" id="anytracker_ticket-worlflow_sur_analytic_budget">
+      <field name="active" eval="True"/>
+      <field name="created_mindmap">2013-04-05 13:41:31</field>
+      <field name="description">Le workflow doit avoir 4 &#233;tape:
+BrouillonVerrouill&#233; : le passage est effectu&#233; par le personnel de l'ets, et peut &#234;tre bilat&#233;ralPropos&#233; : le passage est effectu&#233; par le proviseur de l'ets. Sur un m&#234;me p&#233;riode, un seul budget peut atteindre cet &#233;tat. Un possiblit&#233; de retour en draft.Accept&#233; : Seul le si&#232;ge peut pousser le workflow jusque cette &#233;tape.</field>
+      <field name="id_mindmap">ID_238176366</field>
+      <field name="method_id" ref="anytracker.method_maintenance"/>
+      <field name="modified_mindmap">2013-04-05 13:50:57</field>
+      <field name="modified_openerp">2013-04-05 13:50:57</field>
+      <field name="my_rating" eval="False"/>
+      <field name="name">Worlflow sur 'analytic.budget'</field>
+      <field name="parent_id" ref="anytracker.anytracker_ticket-worflows_general_des_budgets"/>
+      <field name="parent_left" eval="3"/>
+      <field name="parent_right" eval="4"/>
+      <field name="permalink">/anytracker/any/ticket/3</field>
+      <field name="stage_id" ref="anytracker.stage_maintenance_new"/>
+    </record>
+    <record model="anytracker.ticket" id="anytracker_ticket-profils_utilisateurs_ets_et/ou_siege_(atelier)">
+      <field name="active" eval="True"/>
+      <field name="created_mindmap">2013-04-05 13:38:15</field>
+      <field name="description">2 groupes principaux : Si&#232;ge et &#201;tablissement
+Sous groupe:
+Si&#232;ge:
+- Administratif technique
+- Administratif fonctionnel
+- Supervision du si&#232;ge
+&#201;tablissement
+- Responsable
+- Assistant -&gt; faire encore un sous groupe en dessous de assistant ( comme assistant admistratif, ou assistant gestion, assistant controle de l'enseignement)
+</field>
+      <field name="id_mindmap">ID_1463818534</field>
+      <field name="method_id" ref="anytracker.method_maintenance"/>
+      <field name="modified_mindmap">2014-04-01 15:58:04</field>
+      <field name="modified_openerp">2014-04-01 15:58:04</field>
+      <field name="my_rating" eval="False"/>
+      <field name="name">profils utilisateurs ETS et/ou si&#232;ge (atelier)</field>
+      <field name="parent_id" ref="anytracker.anytracker_ticket-droit_dacces_application_mlf"/>
+      <field name="parent_left" eval="6"/>
+      <field name="parent_right" eval="11"/>
+      <field name="permalink">/anytracker/any/ticket/4</field>
+      <field name="stage_id" ref="anytracker.stage_maintenance_new"/>
+    </record>
+    <record model="anytracker.ticket" id="anytracker_ticket-condition_de_passage_de_workflow">
+      <field name="active" eval="True"/>
+      <field name="created_mindmap">2013-04-05 14:25:02</field>
+      <field name="description">utiliser des ir.rules qui prot&#232;gent les mod&#232;les openerp selon l'etat du workflow. utilisation du champs state pr&#233;c&#233;dement utilis&#233;(voir workflow g&#233;n&#233;ral budget).
+</field>
+      <field name="id_mindmap">ID_1538809963</field>
+      <field name="method_id" ref="anytracker.method_maintenance"/>
+      <field name="modified_mindmap">2013-04-05 14:37:17</field>
+      <field name="modified_openerp">2013-04-05 14:37:17</field>
+      <field name="my_rating" eval="False"/>
+      <field name="name">condition de passage de workflow</field>
+      <field name="parent_id" ref="anytracker.anytracker_ticket-profils_utilisateurs_ets_et/ou_siege_(atelier)"/>
+      <field name="parent_left" eval="7"/>
+      <field name="parent_right" eval="8"/>
+      <field name="permalink">/anytracker/any/ticket/5</field>
+      <field name="stage_id" ref="anytracker.stage_maintenance_new"/>
+    </record>
+    <record model="anytracker.ticket" id="anytracker_ticket-creer_un_abstract_model_de_protection_de_model">
+      <field name="active" eval="True"/>
+      <field name="created_mindmap">2013-04-05 14:27:13</field>
+      <field name="description">les r&#233;gles de securit&#233; par default OpenERP ne permettent pas d'&#233;diter les record a travers les vue form
+</field>
+      <field name="id_mindmap">ID_988269096</field>
+      <field name="method_id" ref="anytracker.method_maintenance"/>
+      <field name="modified_mindmap">2013-04-05 14:34:45</field>
+      <field name="modified_openerp">2013-04-05 14:34:45</field>
+      <field name="my_rating" eval="False"/>
+      <field name="name">Cr&#233;er un abstract model de protection de model</field>
+      <field name="parent_id" ref="anytracker.anytracker_ticket-profils_utilisateurs_ets_et/ou_siege_(atelier)"/>
+      <field name="parent_left" eval="9"/>
+      <field name="parent_right" eval="10"/>
+      <field name="permalink">/anytracker/any/ticket/6</field>
+      <field name="stage_id" ref="anytracker.stage_maintenance_new"/>
+    </record>
+  </data>
+</openerp>
