@@ -91,7 +91,7 @@
         <group>
             <group>
                 <field name="parent_id" colspan="4" nolabel="1" placeholder="Project (or parent ticket)"
-                       on_change="onchange_parent(parent_id)" domain="[('child_ids', '!=', False)]"
+                       on_change="onchange_parent(parent_id)" domain="['|',('child_ids', '!=', False), ('parent_id','=',False)]"
                        context="{'tree_view_ref': 'anytracker.just_names'}">
                 </field>
                 <h1>
