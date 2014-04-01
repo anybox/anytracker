@@ -52,11 +52,11 @@ class FreemindWriterHandler(XMLGenerator):
         startElement = '''<map version="0.9.0">
 <!-- To view this file, download FreeMind from http://freemind.sourceforge.net -->
 '''
-        self._out.write(startElement)
+        self._write(startElement.decode())
 
     def endDocument(self):
         stopElement = '</' + 'map' + '>' + '\n'
-        self._out.write(stopElement)
+        self._write(stopElement.decode())
 
     def startElement(self, tag, attrs={}):
         attrs_write = {'CREATED': gMF(attrs['created_mindmap']),

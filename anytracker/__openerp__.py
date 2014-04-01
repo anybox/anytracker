@@ -76,7 +76,7 @@ http://www.famfamfam.com/lab/icons/silk/
         'view.xml',
         'mindmap/wizard/import_mindmap.xml',
         'mindmap/wizard/export_mindmap.xml',
-        'mindmap/wizard/serve_freemind.xml',
+        'mindmap/wizard/serve_mindmap.xml',
         'method/view.xml',
         # load notify xml before stage/data.xml, cyclic depends
         'notify/pre_data.xml',

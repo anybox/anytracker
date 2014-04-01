@@ -27,7 +27,7 @@ class TestExportMindmap(SharedSetupTransactionCase):
         cls.main_ticket = cls.ref('anytracker.anytracker_ticket-droit_dacces_application_mlf')
 
     def create_wizard_export(self, **kw):
-        values = dict(ticket_id=self.main_ticket, mindmap_file='/tmp/truc.mm',
+        values = dict(ticket_id=self.main_ticket, mindmap_file='mock.mm',
                       green_complexity=self.green, orange_complexity=self.orange,
                       red_complexity=self.red)
         if kw:

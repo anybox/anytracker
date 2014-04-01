@@ -2,6 +2,7 @@ from osv import osv, fields
 from .mindmap_parse import FreemindWriterHandler
 from .mindmap_parse import FreemindParser
 import StringIO
+from base64 import b64encode
 
 
 # TODO complexity icon, mindmapfile to binary?, richtext content generation
@@ -9,12 +10,14 @@ class export_mindmap_wizard(osv.TransientModel):
     _name = 'export.mindmap.wizard'
     _description = 'export mindmap .mm file for generate by anytracker tree'
     _columns = {
-        'ticket_id': fields.many2one('anytracker.ticket', 'Ticket'),
-        'mindmap_file': fields.char('Path of file to write', 256),
-        'green_complexity': fields.many2one('anytracker.complexity', 'green complexity'),
-        'orange_complexity': fields.many2one('anytracker.complexity', 'orange complexity'),
-        'red_complexity': fields.many2one('anytracker.complexity', 'red complexity'),
+        'ticket_id': fields.many2one('anytracker.ticket', 'Ticket', required=True),
+        'mindmap_file': fields.char('filename to download', 256, required=True),
+        'green_complexity': fields.many2one('anytracker.complexity', 'green complexity', required=True),
+        'orange_complexity': fields.many2one('anytracker.complexity', 'orange complexity', required=True),
+        'red_complexity': fields.many2one('anytracker.complexity', 'red complexity', required=True),
     }
+
+    _defaults = dict(mindmap_file='mindmap.mm')
 
     def execute_export(self, cr, uid, ids, context=None):
         '''Launch export of nn file to mindmap'''
@@ -46,22 +49,19 @@ class export_mindmap_wizard(osv.TransientModel):
             writer_parser.parse(cr, uid)
 
             record_id = serv_mindmap_wizard.create(
-                cr, uid, dict(mindmap_binary_file=fp.getvalues()))
+                cr, uid, dict(mindmap_binary=b64encode(fp.getvalue()), mindmap_filename=wizard.mindmap_file))
 
             fp.close()
-            res_id = mod_obj.get_object_reference(cr, uid, 'anytracker', 'action_serve_freemind_file')
-            res_r = ir_action.read(cr, uid, res_id, [], context=context)
+            _, res = mod_obj.get_object_reference(cr, uid, 'anytracker', 'view_serve_mindmap_form')
             return {
-                'name': 'Provide your popup window name',
+                'name': 'Download mindmap wizard',
                 'view_type': 'form',
                 'view_mode': 'form',
-                'view_id': [res and res[1] or False],
-                'res_model': 'your.popup.model.name',
+                'view_id': res,
+                'res_model': 'serve.mindmap.wizard',
                 'context': "{}",
                 'type': 'ir.actions.act_window',
-                'nodestroy': True,
+                #'nodestroy': True,
                 'target': 'new',
                 'res_id': record_id  or False,
             }
-
-
