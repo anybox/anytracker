@@ -1,23 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
-        <!--Email template for ticket in initial stage -->
-        <record id="email_template_ticket_new" model="email.template">
-            <field name="name">Anytracker ticket new</field>
-            <field name="email_from">${user.email}</field>
-            <field name="subject">[${object.project_id.name}] ${user.name} created a ticket #${object.number}</field>
-            <field name="email_to"><![CDATA[<% for u in object.project_id.participant_ids %>${u.email and u.email + ',' or ''}<% endfor %>]]></field>
-            <field name="model_id" ref="anytracker.model_anytracker_ticket"/>
-            <field name="lang">${user.lang}</field>
-            <field name="auto_delete" eval="True"/>
-            <field name="body_html"><![CDATA[A new ticket #${object.number} has been created in anytracker by ${user.name}. It is now in stage ${object.stage_id.name}
-
-
-${object.name}
---
-${object.description or ''}
-            ]]></field>
-        </record>
         <!-- put the template at least on one stage, but disabled by default -->
         <record id="stage_maintenance_new" model="anytracker.stage">
             <field name="notify" eval="0"/>

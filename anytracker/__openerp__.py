@@ -77,6 +77,8 @@ http://www.famfamfam.com/lab/icons/silk/
         'mindmap/wizard/import_freemind.xml',
         'mindmap/wizard/export_freemind.xml',
         'method/view.xml',
+        # load notify xml before stage/data.xml, cyclic depends
+        'notify/pre_data.xml',
         'stage/data.xml',
         'stage/view.xml',
         'stage/ir.model.access.csv',
@@ -89,8 +91,8 @@ http://www.famfamfam.com/lab/icons/silk/
         'assignment/action.xml',
         'assignment/view.xml',
         'assignment/ir.model.access.csv',
-        'notify/view.xml',
         'notify/data.xml',
+        'notify/view.xml',
         'notify/ir.model.access.csv',
         'priority/data.xml',
         'priority/view.xml',
