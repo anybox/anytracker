@@ -8,34 +8,42 @@
   <field name="type">form</field>
   <field name="priority" eval="10"/>
   <field name="arch" type="xml">
-    <form version="7.0" string="bouquet form">
+    <form version="7.0" string="Bouquet">
       <header>
       </header>
-
-    <sheet string="bouquet">
+    <sheet>
       <group>
-        <field name="project_ids" widget="many2many_tags"/>
-        <h1>
-          <field name="name" default_focus="1" placeholder="Bouquet title"/>
-        </h1>
-        <field name="create_date" nolabel="1"/>
-        <field name="bouquet_rating" readonly="True"/>
+          <group>
+              <h1>
+                <field name="name" default_focus="1" placeholder="Bouquet title"/>
+              </h1>
+          </group>
+          <group>
+              <field name="project_ids" widget="many2many_tags"/>
+              <field name="create_date"/>
+              <field name="bouquet_rating" readonly="True"/>
+          </group>
       </group>
-      <field name="description" colspan="4" widget="html"
-             style="width: 800px; margin-left:0;"/>
-      <field name="ticket_ids" nolabel="1">
-        <tree>
-          <field name="number"/>
-          <field name="project_id"/>
-          <field name="name"/>
-          <field name="importance_id"/>
-          <field name="stage_id"/>
-          <button name="stage_previous" string="" type="object" icon="gtk-go-back" />
-          <button name="stage_next" string="" type="object" icon="gtk-go-forward" />
-          <field name="progress" widget="progressbar"/>
-          <field name="priority_id"/>
-        </tree>
-      </field>
+      <notebook>
+          <page string="Description">
+              <field name="description" colspan="4" widget="html"/>
+          </page>
+          <page string="Tickets">
+          <field name="ticket_ids" nolabel="1">
+            <tree>
+              <field name="number"/>
+              <field name="project_id"/>
+              <field name="name"/>
+              <field name="importance_id"/>
+              <field name="stage_id"/>
+              <button name="stage_previous" string="" type="object" icon="gtk-go-back" />
+              <button name="stage_next" string="" type="object" icon="gtk-go-forward" />
+              <field name="progress" widget="progressbar"/>
+              <field name="priority_id"/>
+            </tree>
+          </field>
+          </page>
+      </notebook>
     </sheet>
     </form>
   </field>
