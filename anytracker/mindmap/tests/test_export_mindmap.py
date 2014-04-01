@@ -1,8 +1,4 @@
 from anybox.testing.openerp import SharedSetupTransactionCase
-from anybox.testing.openerp import SharedSetupTransactionCase
-from openerp import modules
-import base64
-from .test_import_mindmap import get_mindmap_binary
 
 
 class TestExportMindmap(SharedSetupTransactionCase):
@@ -13,7 +9,6 @@ class TestExportMindmap(SharedSetupTransactionCase):
     @classmethod
     def initTestData(cls):
         super(TestExportMindmap, cls).initTestData()
-        cr, uid = cls.cr, cls.uid
         cls.tickets = cls.registry('anytracker.ticket')
         cls.notifys = cls.registry('anytracker.complexity')
         cls.user = cls.registry('res.users')
@@ -37,11 +32,9 @@ class TestExportMindmap(SharedSetupTransactionCase):
     def test_export_mindmap(self):
         cr, uid = self.cr, self.uid
         wiz_id = self.create_wizard_export()
-        next_action = self.wiz_export.execute_export(cr, uid, wiz_id)
+        self.wiz_export.execute_export(cr, uid, wiz_id)
 
     def test_wizard_export_mindmap(self):
         cr, uid = self.cr, self.uid
         wiz_id = self.create_wizard_export()
-        next_action = self.wiz_export.execute_export(cr, uid, wiz_id)
-
-
+        self.wiz_export.execute_export(cr, uid, wiz_id)

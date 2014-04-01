@@ -6,7 +6,7 @@ from datetime import date
 
 
 def get_mindmap_binary():
-    fp = open(modules.get_module_resource('anytracker','mindmap/tests/mock_mindmap.mm'), 'rb')
+    fp = open(modules.get_module_resource('anytracker', 'mindmap/tests/mock_mindmap.mm'), 'rb')
     return base64.b64encode(fp.read())
 
 
@@ -17,7 +17,6 @@ class TestImportMindmap(SharedSetupTransactionCase):
     @classmethod
     def initTestData(cls):
         super(TestImportMindmap, cls).initTestData()
-        cr, uid = cls.cr, cls.uid
         cls.tickets = cls.registry('anytracker.ticket')
         cls.notifys = cls.registry('anytracker.complexity')
         cls.user = cls.registry('res.users')
@@ -41,12 +40,12 @@ class TestImportMindmap(SharedSetupTransactionCase):
     def test_wizard_import_mindmap(self):
         cr, uid = self.cr, self.uid
         wiz_id = self.create_wizard_import()
-        close_action = self.wiz_import.execute_import(cr, uid, wiz_id)
+        self.wiz_import.execute_import(cr, uid, wiz_id)
 
     def test_import_mindmap(self):
         cr, uid = self.cr, self.uid
         wiz_id = self.create_wizard_import()
-        close_action = self.wiz_import.execute_import(cr, uid, wiz_id)
+        self.wiz_import.execute_import(cr, uid, wiz_id)
         ticket_ids = self.tickets.search(cr, uid, [])
         self.assertEqual(len(ticket_ids), 6)
 
@@ -54,5 +53,4 @@ class TestImportMindmap(SharedSetupTransactionCase):
     def test_bug_with_update_import_method_and_no_ticket_id(self):
         cr, uid = self.cr, self.uid
         wiz_id = self.create_wizard_import(import_method='update')
-        close_action = self.wiz_import.execute_import(cr, uid, wiz_id)
-
+        self.wiz_import.execute_import(cr, uid, wiz_id)

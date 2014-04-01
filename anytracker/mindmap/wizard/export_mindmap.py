@@ -12,8 +12,10 @@ class export_mindmap_wizard(osv.TransientModel):
     _columns = {
         'ticket_id': fields.many2one('anytracker.ticket', 'Ticket', required=True),
         'mindmap_file': fields.char('filename to download', 256, required=True),
-        'green_complexity': fields.many2one('anytracker.complexity', 'green complexity', required=True),
-        'orange_complexity': fields.many2one('anytracker.complexity', 'orange complexity', required=True),
+        'green_complexity': fields.many2one('anytracker.complexity', 'green complexity',
+                                            required=True),
+        'orange_complexity': fields.many2one('anytracker.complexity', 'orange complexity',
+                                             required=True),
         'red_complexity': fields.many2one('anytracker.complexity', 'red complexity', required=True),
     }
 
@@ -25,7 +27,6 @@ class export_mindmap_wizard(osv.TransientModel):
             ids = [ids]
         any_tick_complexity_pool = self.pool.get('anytracker.complexity')
         serv_mindmap_wizard = self.pool.get('serve.mindmap.wizard')
-        ir_action = self.pool.get('ir.actions.act_window')
         mod_obj = self.pool.get('ir.model.data')
         for wizard in self.browse(cr, uid, ids, context=context):
             complexity_dict = {
@@ -49,7 +50,8 @@ class export_mindmap_wizard(osv.TransientModel):
             writer_parser.parse(cr, uid)
 
             record_id = serv_mindmap_wizard.create(
-                cr, uid, dict(mindmap_binary=b64encode(fp.getvalue()), mindmap_filename=wizard.mindmap_file))
+                cr, uid, dict(mindmap_binary=b64encode(fp.getvalue()),
+                              mindmap_filename=wizard.mindmap_file))
 
             fp.close()
             _, res = mod_obj.get_object_reference(cr, uid, 'anytracker', 'view_serve_mindmap_form')
@@ -61,7 +63,6 @@ class export_mindmap_wizard(osv.TransientModel):
                 'res_model': 'serve.mindmap.wizard',
                 'context': "{}",
                 'type': 'ir.actions.act_window',
-                #'nodestroy': True,
                 'target': 'new',
-                'res_id': record_id  or False,
+                'res_id': record_id or False,
             }
