@@ -38,7 +38,7 @@
       <field name="active" eval="1"/>
       <field name="method_id" ref="method_maintenance"/>
       <field name="name">Major</field>
-      <field name="seq" eval="40"/>
+      <field name="seq" eval="30"/>
     </record>
     <record model="anytracker.importance" id="importance_maintenance_minor">
       <field name="active" eval="1"/>
