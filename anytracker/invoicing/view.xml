@@ -44,26 +44,15 @@
     <field name="model">anytracker.bouquet</field>
     <field name="inherit_id" ref="anytracker.bouquet_view_form"/>
     <field name="arch" type="xml">
-        <xpath expr="//notebook//page[last()]" position="after">
-            <page string="Invoicing" groups="anytracker.group_manager">
-                <group>
-                    <group>
-                    <label for="create_analytic_line"
-                           string=""/>
-                    <button name="create_analytic_lines"
-                            type="object"
-                            string="Create"/>
-                    <field name="ticket_ids" string="Analytic lines" readonly="1">
-                        <tree>
-                            <field name="number"/>
-                            <field name="analytic_line_id"/>
-                        </tree>
-                    </field>
-                    </group>
-                    <group>
-                    </group>
-                </group>
-            </page>
+        <xpath expr="//notebook//page[last()]" position="inside">
+            <label for="create_analytic_line"
+                   string="Create invoicing lines"/>
+            <button name="create_analytic_lines"
+                    type="object"
+                    string="Create"/>
+        </xpath>
+        <xpath expr="//notebook//tree//field[@name='number']" position="before">
+            <field name="analytic_line_id" widget="boolean" string="Invoiced?"/>
         </xpath>
     </field>
 </record>
