@@ -83,7 +83,7 @@
     </field>
 </record>
 
-<!-- Add a tab in the ticket form -->
+<!-- Add a field in the ticket form -->
 <record id="importance_ticket_view_form" model="ir.ui.view">
     <field name="model">anytracker.ticket</field>
     <field name="inherit_id" ref="anytracker.ticket_view_form"/>

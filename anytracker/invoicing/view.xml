@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+<!-- Add a tab in the ticket form -->
+<record id="invoicing_ticket_view_form" model="ir.ui.view">
+    <field name="model">anytracker.ticket</field>
+    <field name="inherit_id" ref="anytracker.ticket_view_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//notebook//page[last()]" position="after">
+            <page string="Invoicing" groups="anytracker.group_manager">
+                <group>
+                <group>
+                <label for="create_analytic_line"
+                       string="Analytic line"
+                       attrs="{'invisible': [('analytic_line_id','!=',False)]}"/>
+                <button name="create_analytic_line"
+                        type="object"
+                        string="Create"
+                        attrs="{'invisible': [('analytic_line_id','!=',False)]}"/>
+                <label for="create_analytic_line"
+                       string="Analytic line"
+                       attrs="{'invisible': [('analytic_line_id','=',False)]}"/>
+                <field name="analytic_line_id"
+                       nolabel="1"
+                       attrs="{'invisible': [('analytic_line_id','=',False)]}"/>
+                </group>
+                <group>
+                <field name="analytic_account_id"
+                       attrs="{'invisible': [('parent_id','!=',False)]}"/>
+                <field name="product_id"
+                       attrs="{'invisible': [('parent_id','!=',False)]}"/>
+                <field name="analytic_journal_id"
+                       attrs="{'invisible': [('parent_id','!=',False)]}"/>
+                </group>
+                </group>
+            </page>
+        </xpath>
+    </field>
+</record>
+
+<!-- Add a tab in the bouquet form -->
+<record id="invoicing_bouquet_view_form" model="ir.ui.view">
+    <field name="model">anytracker.bouquet</field>
+    <field name="inherit_id" ref="anytracker.bouquet_view_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//notebook//page[last()]" position="after">
+            <page string="Invoicing" groups="anytracker.group_manager">
+                <group>
+                    <group>
+                    <label for="create_analytic_line"
+                           string=""/>
+                    <button name="create_analytic_lines"
+                            type="object"
+                            string="Create"/>
+                    <field name="ticket_ids" string="Analytic lines" readonly="1">
+                        <tree>
+                            <field name="number"/>
+                            <field name="analytic_line_id"/>
+                        </tree>
+                    </field>
+                    </group>
+                    <group>
+                    </group>
+                </group>
+            </page>
+        </xpath>
+    </field>
+</record>
+
+</data>
+</openerp>
+

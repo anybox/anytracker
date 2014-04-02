@@ -11,3 +11,4 @@ from . import assignment
 from . import notify
 from . import priority
 from . import bouquet
+from . import invoicing

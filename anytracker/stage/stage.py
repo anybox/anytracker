@@ -1,5 +1,6 @@
 # coding: utf-8
-from osv import fields, osv
+from openerp.osv import osv
+from openerp.osv import fields
 from tools.translate import _
 
 

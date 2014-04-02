@@ -1,4 +1,5 @@
-from osv import fields, osv
+from openerp.osv import osv
+from openerp.osv import fields
 import time
 
 
@@ -91,7 +92,7 @@ class Ticket(osv.Model):
         return tickets
 
     def compute_risk_and_rating(self, cr, uid, ids, context=None):
-        """compute the risk of a leaf ticket, given its ratings
+        """compute the risk and rating of a leaf ticket, given its ratings
         """
         res_risk, res_rating = {}, {}
         if type(ids) is int:
@@ -101,34 +102,32 @@ class Ticket(osv.Model):
                 res_risk[ticket.id] = ticket.risk
                 res_rating[ticket.id] = ticket.rating
                 continue
-            latest_person_ratings_risk, latest_person_ratings_values = {}, {}
-            # find latest rating for each person
-            relevant_ratings_risk = sorted([(r.time, r.user_id, r.complexity_id.risk)
-                                            for r in ticket.rating_ids])
-            relevant_ratings_values = sorted([(r.time, r.user_id, r.complexity_id.value)
-                                             for r in ticket.rating_ids])
-            for rating in relevant_ratings_risk:
-                latest_person_ratings_risk[rating[1]] = rating[2]
-            for rating in relevant_ratings_values:
-                latest_person_ratings_values[rating[1]] = rating[2]
+            latest_person_risk, latest_person_rating = {}, {}
+            # find latest risk and rating for each person
+            for rating in sorted([(r.time, r.user_id, r.complexity_id.risk)
+                                  for r in ticket.rating_ids]):
+                latest_person_risk[rating[1]] = rating[2]
+            for rating in sorted([(r.time, r.user_id, r.complexity_id.value)
+                                  for r in ticket.rating_ids]):
+                latest_person_rating[rating[1]] = rating[2]
             # compute the mean of all latest ratings
             risk_mean = (sum([r or 100.0
-                             for r in latest_person_ratings_risk.values()]
-                             )/len(latest_person_ratings_risk)
-                         if latest_person_ratings_risk else 100.0)
+                             for r in latest_person_risk.values()]
+                             )/len(latest_person_risk)
+                         if latest_person_risk else 100.0)
             rating_mean = (sum([r or 0.0 for r in
-                               latest_person_ratings_values.values()]
-                               )/len(latest_person_ratings_values)
-                           if latest_person_ratings_values else 0)
+                               latest_person_rating.values()]
+                               )/len(latest_person_rating)
+                           if latest_person_rating else 0)
             res_risk[ticket.id] = risk_mean
             res_rating[ticket.id] = rating_mean
         return res_risk, res_rating
 
-    def recompute_risk(self, cr, uid, ids, context=None):
-        """recompute the overall risk of the node, based on subtickets.
+    def recompute_risk_and_rating(self, cr, uid, ids, context=None):
+        """recompute the overall risk and rating of the node, based on subtickets.
         And recompute sub-nodes as well
         This method is only used to be able to recompute all risks with a button in the form,
-        in case the risks are erroneous.
+        in case the risks and ratings are erroneous.
         """
         if not context:
             context = {}
@@ -141,7 +140,7 @@ class Ticket(osv.Model):
                 leaf_ids = self.search(cr, uid, [('id', 'child_of', ticket.id),
                                                  ('child_ids', '=', False),
                                                  ('id', '!=', ticket.id)])
-                self.recompute_risk(cr, uid, leaf_ids, context)
+                self.recompute_risk_and_rating(cr, uid, leaf_ids, context)
 
                 sub_node_ids = self.search(cr, uid, [('id', 'child_of', ticket.id),
                                                      ('child_ids', '!=', False),

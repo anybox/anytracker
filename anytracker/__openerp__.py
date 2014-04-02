@@ -36,6 +36,8 @@
         'web',
         'base',
         'email_template',
+        'analytic',
+        'account',
     ],
     'images': [
         'images/anytracker.png',
@@ -101,6 +103,7 @@ http://www.famfamfam.com/lab/icons/silk/
         'bouquet/ir.model.access.csv',
         'bouquet/view.xml',
         'bouquet/ir_rule.xml',
+        'invoicing/view.xml',
     ],
     'test': [],
     'demo': [],

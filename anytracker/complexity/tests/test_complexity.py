@@ -68,13 +68,13 @@ class TestComplexity(SharedSetupTransactionCase):
         # create a ticket
         ticket_id = self.createLeafTicket('Test simple ticket', project_id)
         # a member can rate
-        self.ticket_mdl.write(cr, self.member_id, [ticket_id], {'my_rating': 1})
+        self.ticket_mdl.write(cr, self.member_id, [ticket_id], {'my_rating': self.complexity_2h})
         # a manager can rate
-        self.ticket_mdl.write(cr, self.manager_id, [ticket_id], {'my_rating': 2})
+        self.ticket_mdl.write(cr, self.manager_id, [ticket_id], {'my_rating': self.complexity_2h})
         # a customer cannot rate
         self.assertRaises(except_orm,
                           self.ticket_mdl.write,
-                          cr, self.customer_id, [ticket_id], {'my_rating': 3})
+                          cr, self.customer_id, [ticket_id], {'my_rating': self.complexity_2h})
 
     def test_none_rating(self):
         """ Removing ratings linked to a ticket and ensure that this ticket has 0.0 value """

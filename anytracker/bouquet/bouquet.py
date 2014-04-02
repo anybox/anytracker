@@ -1,5 +1,6 @@
 import logging
-from openerp.osv import osv, fields
+from openerp.osv import fields
+from openerp.osv import osv
 
 logger = logging.getLogger(__file__)
 
