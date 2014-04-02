@@ -38,6 +38,7 @@
         'email_template',
         'analytic',
         'account',
+        'hr_timesheet_invoice',
     ],
     'images': [
         'images/anytracker.png',
