@@ -4,7 +4,6 @@
         <record id="view_import_mindmap_form" model="ir.ui.view">
             <field name="name">import mindmap wizard form</field>
             <field name="model">import.mindmap.wizard</field>
-            <field name="type">form</field>
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
                 <form string="Import mindmap map">

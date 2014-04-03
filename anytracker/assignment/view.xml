@@ -6,7 +6,6 @@
 <record id="assignment_ticket_view_search" model="ir.ui.view">
     <field name="name">anytracker.ticket.search</field>
     <field name="model">anytracker.ticket</field>
-    <field name="type">search</field>
     <field name="inherit_id" ref="anytracker.ticket_view_search"/>
     <field name="priority" eval="16"/>
     <field name="arch" type="xml">
@@ -39,7 +38,6 @@
 <record id="assignment_ticket_view_tree" model="ir.ui.view">
     <field name="name">Tickets</field>
     <field name="model">anytracker.ticket</field>
-    <field name="type">tree</field>
     <field name="priority" eval="16"/>
     <field name="inherit_id" ref="anytracker.ticket_view_tree"/>
     <field name="arch" type="xml">
@@ -53,7 +51,6 @@
 <record id="assignment_ticket_view_form" model="ir.ui.view">
     <field name="name">ticket.form</field>
     <field name="model">anytracker.ticket</field>
-    <field name="type">form</field>
     <field name="inherit_id" ref="anytracker.ticket_view_form"/>
     <field name="priority" eval="16"/>
     <field name="arch" type="xml">
@@ -75,7 +72,6 @@
 <record id="view_assignment_form" model="ir.ui.view">
     <field name="name">anytracker.assignment.form</field>
     <field name="model">anytracker.assignment</field>
-    <field name="type">form</field>
     <field name="priority" eval="8"/>
     <field name="arch" type="xml">
     <form string="Assignments">
@@ -92,7 +88,6 @@
 <record id="view_assignment_tree" model="ir.ui.view">
     <field name="name">anytracker.assignment.tree</field>
     <field name="model">anytracker.assignment</field>
-    <field name="type">tree</field>
     <field name="priority" eval="8"/>
     <field name="arch" type="xml">
     <tree string="">
@@ -107,7 +102,6 @@
 <record id="view_assignment_kanban" model="ir.ui.view">
     <field name="name">anytracker.assignment.kanban</field>
     <field name="model">anytracker.ticket</field>
-    <field name="type">kanban</field>
     <field name="priority" eval="8"/>
     <field name="inherit_id" ref="anytracker.tickets_view_kanban"/>
     <field name="arch" type="xml">

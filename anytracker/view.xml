@@ -5,7 +5,6 @@
 <record id="ticket_view_search" model="ir.ui.view">
   <field name="name">Search tickets</field>
   <field name="model">anytracker.ticket</field>
-  <field name="type">search</field>
   <field name="priority" eval="8"/>
   <field name="arch" type="xml">
   <search string="Search tickets">
@@ -45,7 +44,6 @@
 <record id="ticket_view_tree" model="ir.ui.view">
   <field name="name">Tickets</field>
   <field name="model">anytracker.ticket</field>
-  <field name="type">tree</field>
   <field name="priority" eval="10"/>
   <field name="arch" type="xml">
     <tree string="Ticket treeview">
@@ -64,7 +62,6 @@
 <record id="just_names" model="ir.ui.view">
   <field name="name">Tickets</field>
   <field name="model">anytracker.ticket</field>
-  <field name="type">tree</field>
   <field name="priority" eval="20"/>
   <field name="arch" type="xml">
     <tree string="Ticket treeview">
@@ -80,7 +77,6 @@
 <record id="ticket_view_form" model="ir.ui.view">
   <field name="name">ticket.form</field>
   <field name="model">anytracker.ticket</field>
-  <field name="type">form</field>
   <field name="priority" eval="10"/>
   <field name="arch" type="xml">
     <form version="7.0" string="Ticket">
@@ -169,7 +165,6 @@
 <record model="ir.ui.view" id="tickets_view_kanban">
   <field name="name">Anytracker - tickets</field>
   <field name="model">anytracker.ticket</field>
-  <field name="type">kanban</field>
   <field name="arch" type="xml">
     <kanban version="7.0" class="oe_background_grey">
       <field name="color"/>
@@ -229,7 +224,6 @@
 <record id="tickets_hierarchy" model="ir.ui.view">
   <field name="name">anytracker.ticket.hierarchy</field>
   <field name="model">anytracker.ticket</field>
-  <field name="type">tree</field>
   <field name="field_parent">subnode_ids</field>
   <field name="arch" type="xml">
     <tree string="Tickets hierarchy">

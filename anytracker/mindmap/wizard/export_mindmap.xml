@@ -4,7 +4,6 @@
         <record id="view_export_mindmap_form" model="ir.ui.view">
             <field name="name">export mindmap wizard form</field>
             <field name="model">export.mindmap.wizard</field>
-            <field name="type">form</field>
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
                 <form string="export mindmap map">
@@ -29,7 +28,6 @@
 
         <record model="ir.actions.act_window" id="action_export_mindmap_view">
             <field name="name">export mindmap map</field>
-            <field name="type">ir.actions.act_window</field>
             <field name="res_model">export.mindmap.wizard</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>

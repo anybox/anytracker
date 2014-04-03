@@ -5,7 +5,6 @@
 <record id="view_quickrating_form" model="ir.ui.view">
     <field name="name">anytracker.quickrating.form</field>
     <field name="model">anytracker.quickrating</field>
-    <field name="type">form</field>
     <field name="priority" eval="8"/>
     <field name="arch" type="xml">
     <form string="Quick ticket rating" col="2">

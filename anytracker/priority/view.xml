@@ -6,8 +6,6 @@
 <record id="view_anytracker_priority_form" model="ir.ui.view">
     <field name="name">anytracker.priority.form</field>
     <field name="model">anytracker.priority</field>
-    <field name="type">form</field>
-    <field name="sequence" eval="8"/>
     <field name="arch" type="xml">
         <form string="Priority">
             <field name="seq"/>
@@ -23,7 +21,6 @@
 <record id="priority_ticket_view_search" model="ir.ui.view">
     <field name="name">anytracker.ticket.search</field>
     <field name="model">anytracker.ticket</field>
-    <field name="type">search</field>
     <field name="inherit_id" ref="anytracker.ticket_view_search"/>
     <field name="priority" eval="16"/>
     <field name="arch" type="xml">
@@ -44,7 +41,6 @@
 <record id="priority_ticket_view_tree" model="ir.ui.view">
     <field name="name">Tickets</field>
     <field name="model">anytracker.ticket</field>
-    <field name="type">tree</field>
     <field name="priority" eval="16"/>
     <field name="inherit_id" ref="anytracker.ticket_view_tree"/>
     <field name="arch" type="xml">
@@ -59,7 +55,6 @@
 <record id="priority_ticket_view_form" model="ir.ui.view">
     <field name="name">ticket.form</field>
     <field name="model">anytracker.ticket</field>
-    <field name="type">form</field>
     <field name="inherit_id" ref="anytracker.ticket_view_form"/>
     <field name="priority" eval="16"/>
     <field name="arch" type="xml">

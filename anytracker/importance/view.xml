@@ -6,8 +6,6 @@
 <record id="view_anytracker_importance_tree" model="ir.ui.view">
     <field name="name">anytracker.importance.tree</field>
     <field name="model">anytracker.importance</field>
-    <field name="type">tree</field>
-    <field name="sequence" eval="8"/>
     <field name="arch" type="xml">
         <tree string="Importances">
             <field name="seq"/>
@@ -22,8 +20,6 @@
 <record id="view_anytracker_importance_form" model="ir.ui.view">
     <field name="name">anytracker.importance.form</field>
     <field name="model">anytracker.importance</field>
-    <field name="type">form</field>
-    <field name="sequence" eval="8"/>
     <field name="arch" type="xml">
         <form string="Importance">
             <field name="seq"/>

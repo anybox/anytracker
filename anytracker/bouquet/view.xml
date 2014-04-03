@@ -5,7 +5,6 @@
 <record id="bouquet_view_form" model="ir.ui.view">
   <field name="name">bouquet.form</field>
   <field name="model">anytracker.bouquet</field>
-  <field name="type">form</field>
   <field name="priority" eval="10"/>
   <field name="arch" type="xml">
     <form version="7.0" string="Bouquet">
@@ -53,7 +52,6 @@
 <record id="bouquet_view_search" model="ir.ui.view">
   <field name="name">Search bouquets</field>
   <field name="model">anytracker.bouquet</field>
-  <field name="type">search</field>
   <field name="priority" eval="8"/>
   <field name="arch" type="xml">
   <search string="Search bouquets">
@@ -67,7 +65,6 @@
 <record id="bouquet_view_tree" model="ir.ui.view">
   <field name="name">Bouquets</field>
   <field name="model">anytracker.bouquet</field>
-  <field name="type">tree</field>
   <field name="priority" eval="10"/>
   <field name="arch" type="xml">
     <tree string="Bouquet treeview">
