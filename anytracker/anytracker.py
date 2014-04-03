@@ -1,8 +1,10 @@
 # coding: utf-8
+import logging
 from osv import fields, osv
 from tools.translate import _
 from lxml import etree
 from openerp.osv.orm import transfer_modifiers_to_node
+logger = logging.getLogger(__file__)
 
 
 class Ticket(osv.Model):
@@ -208,11 +210,15 @@ class Ticket(osv.Model):
         fvg = super(Ticket, self).fields_view_get(
             cr, uid, view_id=view_id, view_type=view_type,
             context=context, toolbar=toolbar, submenu=submenu)
-        if view_type == 'form':
+        if view_type == 'form' and fvg['type'] == 'form':
             access_obj = self.pool.get('ir.model.access')
             allow = access_obj.check_groups(cr, uid, "anytracker.group_manager")
             doc = etree.fromstring(fvg['arch'])
-            node = doc.xpath("//field[@name='parent_id']")[0]
+            try:
+                node = doc.xpath("//field[@name='parent_id']")[0]
+            except:
+                logger.error("It seems you're using a broken version of OpenERP")
+                return fvg
             transfer_modifiers_to_node({'required': not allow}, node)
             fvg['arch'] = etree.tostring(doc)
         return fvg
