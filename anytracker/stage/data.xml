@@ -191,9 +191,6 @@
             <field name="method_id" ref="method_quickstart"/>
             <field name="sequence">1</field>
             <field name="progress">1.0</field>
-            <field name="notify" eval="True"/>
-            <field name="notify_template_id" ref="email_template_ticket_new"/>
-            <field name="notify_multiple" eval="False"/>
         </record>
         <record id="stage_quickstart_todo" model="anytracker.stage">
             <field name="name">Todo</field>
@@ -201,9 +198,6 @@
             <field name="method_id" ref="method_quickstart"/>
             <field name="sequence">5</field>
             <field name="progress">5.0</field>
-            <field name="notify" eval="True"/>
-            <field name="notify_multiple" eval="True"/>
-            <field name="notify_template_id" ref="email_template_ticket_new"/>
         </record>
         <record id="stage_quickstart_doing" model="anytracker.stage">
             <field name="name">Doing</field>

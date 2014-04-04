@@ -73,7 +73,6 @@ http://www.famfamfam.com/lab/icons/silk/
         'method/data.xml',
         'complexity/data.xml',
         'data.xml',
-        'notify/pre_data.xml',  # load before stage/data.xml: cyclic depends
         'stage/data.xml',
         'importance/data.xml',
         'notify/data.xml',
