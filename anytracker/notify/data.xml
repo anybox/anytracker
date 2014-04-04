@@ -1,23 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
-        <!--Email template for ticket acknowledged-->
-        <record id="email_template_ticket_ack" model="email.template">
-            <field name="name">Anytracker ticket acknowledged</field>
-            <field name="email_from">${user.email}</field>
-            <field name="subject">Ticket #${object.number} has been acknowledged by ${user.name}</field>
-            <field name="email_to"><![CDATA[<% for u in object.project_id.participant_ids %>${u.email and u.email + ',' or ''}<% endfor %>]]></field>
-            <field name="model_id" ref="anytracker.model_anytracker_ticket"/>
-            <field name="lang">${user.lang}</field>
-            <field name="auto_delete" eval="True"/>
-            <field name="body_html"><![CDATA[Ticket #${object.number} is now in stage ${object.stage_id.name}
-
-
-${object.name}
---
-${object.description or ''}
-            ]]></field>
-        </record>
         <!--Email template for ticket in initial stage -->
         <record id="email_template_ticket_new" model="email.template">
             <field name="name">Anytracker ticket new</field>
@@ -28,6 +11,23 @@ ${object.description or ''}
             <field name="lang">${user.lang}</field>
             <field name="auto_delete" eval="True"/>
             <field name="body_html"><![CDATA[A new ticket #${object.number} has been created in anytracker by ${user.name}. It is now in stage ${object.stage_id.name}
+
+
+${object.name}
+--
+${object.description or ''}
+            ]]></field>
+        </record>
+        <!--Email template for ticket acknowledged-->
+        <record id="email_template_ticket_ack" model="email.template">
+            <field name="name">Anytracker ticket acknowledged</field>
+            <field name="email_from">${user.email}</field>
+            <field name="subject">Ticket #${object.number} has been acknowledged by ${user.name}</field>
+            <field name="email_to"><![CDATA[<% for u in object.project_id.participant_ids %>${u.email and u.email + ',' or ''}<% endfor %>]]></field>
+            <field name="model_id" ref="anytracker.model_anytracker_ticket"/>
+            <field name="lang">${user.lang}</field>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[Ticket #${object.number} is now in stage ${object.stage_id.name}
 
 
 ${object.name}
@@ -52,9 +52,6 @@ ${object.description or ''}
             <field name="notify" eval="True"/>
             <field name="notify_template_id" ref="email_template_ticket_new"/>
             <field name="notify_multiple" eval="False"/>
-        </record>
-        <record id="stage_quickstart_done" model="anytracker.stage">
-            <field name="notify" eval="False"/>
         </record>
 
     </data>
