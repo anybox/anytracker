@@ -99,11 +99,11 @@
 </record>
 
 <!-- Display assignments in the kanban -->
-<record id="view_assignment_kanban" model="ir.ui.view">
+<record id="tickets_kanban_assignment" model="ir.ui.view">
     <field name="name">anytracker.assignment.kanban</field>
     <field name="model">anytracker.ticket</field>
     <field name="priority" eval="8"/>
-    <field name="inherit_id" ref="anytracker.tickets_view_kanban"/>
+    <field name="inherit_id" ref="anytracker.tickets_kanban"/>
     <field name="arch" type="xml">
       <xpath expr="//field[@name='name']" position="after">
         <field name="assigned_user_email"/>

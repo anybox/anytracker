@@ -162,7 +162,7 @@
 </record>
 
 <!-- Ticket Kanban View  -->
-<record model="ir.ui.view" id="tickets_view_kanban">
+<record model="ir.ui.view" id="tickets_kanban">
   <field name="name">Anytracker - tickets</field>
   <field name="model">anytracker.ticket</field>
   <field name="arch" type="xml">
@@ -240,7 +240,7 @@
     <field name="res_model">anytracker.ticket</field>
     <field name="view_type">form</field>
     <field name="view_mode">kanban,tree,form</field>
-    <field name="view_id" ref="tickets_view_kanban"/>
+    <field name="view_id" ref="tickets_kanban"/>
     <field name="domain">[('id', 'child_of', active_id), ('progress', '&lt;', 100.0), ('id', '!=', active_id)]</field>
     <field name="context">{'search_default_filter_tasks': 1, 'group_by': 'stage_id'}</field>
 </record>
@@ -274,7 +274,7 @@
   <field name="res_model">anytracker.ticket</field>
   <field name="view_mode">kanban,tree,form</field>
   <field name="view_type">form</field>
-  <field name="view_id" ref="tickets_view_kanban"/>
+  <field name="view_id" ref="tickets_kanban"/>
   <field name="context">{'search_default_filter_projects': 1}</field>
 </record>
 <record model="ir.actions.act_window" id="act_all_nodes">

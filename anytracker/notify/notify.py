@@ -41,16 +41,9 @@ class Ticket(osv.Model):
         # no stage or no notify
         if not ticket.stage_id or not ticket.stage_id.notify:
             return False
-        # mail already sent and don't repeat
-        nb_sent = self.pool.get('mail.mail').search(
-            cr, uid, [
-                ('model', '=', 'anytracker.ticket'),
-                ('res_id', '=', ticket.id),
-                '|',
-                ('anytracker_stage_id', '=', ticket.stage_id.id),
-                ('anytracker_stage_id', '=', False)],
-            count=True)
-        if nb_sent > 0 and not ticket.stage_id.notify_multiple:
+        # mail already sent and don't send multiple times
+        already_sent = [s.id for s in ticket.notified_stage_ids]
+        if already_sent and not ticket.stage_id.notify_multiple:
             return False
         # no mail template
         if not ticket.stage_id.notify_template_id:
@@ -67,15 +60,14 @@ class Ticket(osv.Model):
         ticket = self.browse(cr, uid, res, context)
         if not self.check_notify(cr, uid, ticket):
             return res
-        msg_id = self.pool.get('email.template').send_mail(
+        # store the related stage in the message
+        ticket.write({'notified_stage_ids': [(4, ticket.stage_id.id)]})
+        self.pool.get('email.template').send_mail(
             cr, uid,
             ticket.stage_id.notify_template_id.id,
             ticket.id,
             force_send=ticket.stage_id.notify_urgent,
             context=context)
-        # store the related stage in the message
-        self.pool.get('mail.mail').write(
-            cr, uid, [msg_id], {'anytracker_stage_id': ticket.stage_id.id})
         return res
 
     def write(self, cr, uid, ids, values, context=None):
@@ -87,25 +79,20 @@ class Ticket(osv.Model):
         for ticket in self.browse(cr, uid, ids, context):
             if not self.check_notify(cr, uid, ticket):
                 return res
-            msg_id = self.pool.get('email.template').send_mail(
+            ticket.write({'notified_stage_ids': [(4, ticket.stage_id.id)]})
+            self.pool.get('email.template').send_mail(
                 cr, uid,
                 ticket.stage_id.notify_template_id.id,
                 ticket.id,
                 force_send=ticket.stage_id.notify_urgent,
                 context=context)
-            # store the related stage in the message
-            self.pool.get('mail.mail').write(
-                cr, uid, [msg_id], {'anytracker_stage_id': values['stage_id']})
         return res
 
-
-class MailMessage(osv.Model):
-    """ Add a column to messages to remember the stage
-    """
-    _inherit = "mail.mail"
     _columns = {
-        'anytracker_stage_id': fields.many2one(
+        'notified_stage_ids': fields.many2many(
             'anytracker.stage',
-            'Anytracker stage',
-            ondelete='set null'),
+            'anytracker_ticket_notif_rel',
+            'ticket_id',
+            'stage_id',
+            'Notified stages'),
     }

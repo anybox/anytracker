@@ -13,12 +13,14 @@ class TestNotify(SharedSetupTransactionCase):
         self.notifys = self.registry('anytracker.complexity')
         self.user = self.registry('res.users')
         self.ratings = self.registry('anytracker.rating')
+        self.stages = self.registry('anytracker.stage')
         self.mails = self.registry('mail.mail')
 
         self.member_id = self.user.create(
             cr, uid,
             {'name': 'Member',
              'login': 'member',
+             'email': 'test@example.com',
              'groups_id': [(6, 0,
                            [self.ref('anytracker.group_member'),
                             self.ref('base.group_user')])]})
@@ -75,3 +77,24 @@ class TestNotify(SharedSetupTransactionCase):
         self.tickets.write(cr, uid, [ticket_id],
                            {'stage_id': self.ref('anytracker.stage_quickstart_done')})
         self.assertEquals(self.mails.search(cr, uid, [], count=True) - nb_mails, 3)
+
+        # we set the 1st column as urgent then we create another ticket
+        self.stages.write(cr, uid,
+                          self.ref('anytracker.stage_quickstart_draft'),
+                          {'notify_urgent': True})
+        urgent_ticket_id = self.tickets.create(cr, uid,
+                                               {'name': 'urgent notifying ticket',
+                                                'parent_id': project_id, },
+                                               context={'active_id': project_id})
+        self.assertEquals(self.mails.search(cr, uid, [], count=True) - nb_mails, 3)
+        self.assertEquals(
+            len(self.tickets.browse(cr, uid, urgent_ticket_id).notified_stage_ids), 1)
+
+        # we move forth and back the ticket, we shouldn't have another notification
+        self.tickets.write(cr, uid, [ticket_id],
+                           {'stage_id': self.ref('anytracker.stage_quickstart_done')})
+        self.tickets.write(cr, uid, [ticket_id],
+                           {'stage_id': self.ref('anytracker.stage_quickstart_draft')})
+        self.assertEquals(self.mails.search(cr, uid, [], count=True) - nb_mails, 3)
+        self.assertEquals(
+            len(self.tickets.browse(cr, uid, urgent_ticket_id).notified_stage_ids), 1)
