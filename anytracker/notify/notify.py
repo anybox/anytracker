@@ -43,7 +43,7 @@ class Ticket(osv.Model):
             return False
         # mail already sent and don't send multiple times
         already_sent = [s.id for s in ticket.notified_stage_ids]
-        if already_sent and not ticket.stage_id.notify_multiple:
+        if ticket.stage_id.id in already_sent and not ticket.stage_id.notify_multiple:
             return False
         # no mail template
         if not ticket.stage_id.notify_template_id:

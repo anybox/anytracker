@@ -20,7 +20,6 @@ class TestNotify(SharedSetupTransactionCase):
             cr, uid,
             {'name': 'Member',
              'login': 'member',
-             'email': 'test@example.com',
              'groups_id': [(6, 0,
                            [self.ref('anytracker.group_member'),
                             self.ref('base.group_user')])]})
@@ -48,6 +47,12 @@ class TestNotify(SharedSetupTransactionCase):
         cr, uid = self.cr, self.uid
         # create a project with a team of 3 people
         project_id = self.createProject([self.customer_id, self.member_id])
+        # we set the todo column as notifying
+        self.stages.write(cr, uid,
+                          [self.ref('anytracker.stage_quickstart_todo')],
+                          {'notify': True,
+                           'notify_multiple': True,
+                           'notify_template_id': self.ref('anytracker.email_template_ticket_new')})
         # we check the number of mails in the queue
         nb_mails = self.mails.search(cr, uid, [], count=True)
         # create a ticket
@@ -78,10 +83,12 @@ class TestNotify(SharedSetupTransactionCase):
                            {'stage_id': self.ref('anytracker.stage_quickstart_done')})
         self.assertEquals(self.mails.search(cr, uid, [], count=True) - nb_mails, 3)
 
-        # we set the 1st column as urgent then we create another ticket
+        # we set the 1st column as urgent and we set a sender email so that email is sent
         self.stages.write(cr, uid,
                           self.ref('anytracker.stage_quickstart_draft'),
                           {'notify_urgent': True})
+        self.user.write(cr, uid, self.member_id, {'email': 'test@example.com'})
+        # then we create another ticket
         urgent_ticket_id = self.tickets.create(cr, uid,
                                                {'name': 'urgent notifying ticket',
                                                 'parent_id': project_id, },
