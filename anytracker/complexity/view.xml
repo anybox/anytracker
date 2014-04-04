@@ -106,7 +106,7 @@
       <xpath expr="/kanban/field[@name='kanban_description']" position="after">
         <field name="rating"/>
       </xpath>
-      <xpath expr="//a[@string='Permalink']" position="after">
+      <xpath expr="//div[@class='oe_kanban_bottom_left']//a[last()]" position="after">
           <t t-if="record.rating.raw_value != 0"><span style="margin: 0 0.5em"><field name="rating"/></span></t>
       </xpath>
     </field>
