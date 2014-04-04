@@ -32,6 +32,7 @@
     'author': 'Anybox',
     'website': 'http://anybox.fr',
     'category': 'Project Management',
+    'sequence': 150,
     'depends': [
         'web',
         'base',
