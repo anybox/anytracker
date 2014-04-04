@@ -4,13 +4,12 @@ openerp.anytracker = function(instance) {
     module = instance.web;
     module.ViewManagerAction.include({
         set_title: function() {
-            // Replace the OpenERP breadcrumb with the Anytracker breadcrumb
-            if (this.action.res_model != 'anytracker.ticket'
-                || !this.action.view_mode
-                || this.action.view_mode.slice(0, 6) != 'kanban'
-                || !this.action.context.active_id) {
-                return this._super();
-            } else {
+            this._super();
+            // Replace the stupid Tickets title with the path to the active_id
+            if (this.action.res_model == 'anytracker.ticket'
+                && this.active_view == 'kanban'
+                && this.action.context.active_id)
+            {
                 var id = this.action.context.active_id;
                 var self = this;
                 var tickets = new module.Model("anytracker.ticket");
@@ -18,10 +17,10 @@ openerp.anytracker = function(instance) {
                     var items = result[id];
                     var breadcrumbs = [];
                     for (var i=0; i < items.length; i++) {
-                        breadcrumbs.push(_.str.sprintf('<span class="oe_breadcrumb_item">%s</span>', items[i].name))
+                        breadcrumbs.push(_.str.sprintf(items[i].name))
                     }
-                    var html_breadcrumb = breadcrumbs.join(' <span class="oe_fade">/</span> ');
-                    self.$el.find('.oe_breadcrumb_title:first').html(html_breadcrumb);
+                    var title = breadcrumbs.join(' / ');
+                    self.$el.find('.oe_breadcrumb_item:last').html(title);
                 })
             }
         }
