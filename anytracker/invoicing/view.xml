@@ -46,13 +46,15 @@
     <field name="arch" type="xml">
         <xpath expr="//notebook//page[last()]" position="inside">
             <label for="create_analytic_line"
-                   string="Create invoicing lines"/>
+                   string="Create invoicing lines"
+                   groups="anytracker.group_manager"/>
             <button name="create_analytic_lines"
                     type="object"
-                    string="Create"/>
+                    string="Create"
+                    groups="anytracker.group_manager"/>
         </xpath>
         <xpath expr="//notebook//tree//field[@name='number']" position="before">
-            <field name="analytic_line_id" widget="boolean" string="Invoiced?"/>
+            <field name="analytic_line_id" widget="boolean" string="Invoiced?" groups="anytracker.group_member"/>
         </xpath>
     </field>
 </record>
