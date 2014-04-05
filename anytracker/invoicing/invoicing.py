@@ -20,6 +20,12 @@ class Ticket(osv.Model):
         for ticket in self.browse(cr, uid, ids, context):
             if ticket.analytic_line_id:
                 continue
+            if not ticket.project_id.product_id:
+                raise osv.except_osv(
+                    _('Error'),
+                    _("To be able to invoice a ticket, "
+                      "you should set a product "
+                      "on the corresponding project"))
             if not ticket.project_id.analytic_account_id:
                 raise osv.except_osv(
                     _('Error'),
@@ -35,6 +41,14 @@ class Ticket(osv.Model):
                     _('Error'),
                     _("Ticket #%s is a project or node. "
                       "It cannot be invoiced") % ticket.number)
+            # on OCB the general account is not mandatory, but let's be compatible with openerp
+            gen_account = ticket.project_id.product_id.property_account_expense
+            if not gen_account and ticket.project_id.product_id.categ_id:
+                gen_account = ticket.project_id.product_id.categ_id.property_account_expense_categ
+            if not gen_account:
+                raise osv.except_osv(
+                    'Error', ("No expense account defined on the product (or category)"
+                              " configured in your anytracker project"))
             line_id = analines.create(cr, uid, {
                 'name': 'Ticket #%s: %s' % (ticket.number, ticket.name),
                 'amount': 1.0,
@@ -43,6 +57,7 @@ class Ticket(osv.Model):
                 'account_id': ticket.project_id.analytic_account_id.id,
                 'product_id': ticket.project_id.product_id.id,
                 'journal_id': ticket.project_id.analytic_journal_id.id,
+                'general_account_id': gen_account.id,
             })
             ticket.write({'analytic_line_id': line_id})
             result.append(line_id)

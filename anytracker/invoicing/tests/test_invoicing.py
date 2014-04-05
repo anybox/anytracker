@@ -42,6 +42,7 @@ class TestInvoicing(SharedSetupTransactionCase):
             {'name': 'Quickstart test',
              'participant_ids': [(6, 0, participant_ids)],
              'analytic_journal_id': self.anajournals.search(cr, uid, [])[0],
+             'product_id': self.ref('product.product_product_consultant'),
              'method_id': quickstart_method})
         return project_id
 
