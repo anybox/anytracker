@@ -40,11 +40,11 @@
 </record>
 
 <!-- Add a tab in the bouquet form -->
-<record id="invoicing_bouquet_view_form" model="ir.ui.view">
+<record id="invoicing_bouquet_form" model="ir.ui.view">
     <field name="model">anytracker.bouquet</field>
-    <field name="inherit_id" ref="anytracker.bouquet_view_form"/>
+    <field name="inherit_id" ref="anytracker.bouquet_form"/>
     <field name="arch" type="xml">
-        <xpath expr="//notebook//page[last()]" position="inside">
+        <xpath expr="//field[@name='ticket_ids']" position="inside">
             <label for="create_analytic_line"
                    string="Create invoicing lines"
                    groups="anytracker.group_manager"/>
@@ -53,7 +53,7 @@
                     string="Create"
                     groups="anytracker.group_manager"/>
         </xpath>
-        <xpath expr="//notebook//tree//field[@name='number']" position="before">
+        <xpath expr="//tree//field[@name='number']" position="before">
             <field name="analytic_line_id" widget="boolean" string="Invoiced?" groups="anytracker.group_member"/>
         </xpath>
     </field>

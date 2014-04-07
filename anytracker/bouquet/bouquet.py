@@ -13,6 +13,7 @@ class Bouquet(osv.Model):
 
     _name = 'anytracker.bouquet'
     _description = u"Ticket Bouquet"
+    _order = 'create_date DESC'
 
     def _get_rating(self, cr, uid, ids, field_name, args, context=None):
         res = {}
@@ -94,8 +95,8 @@ class Bouquet(osv.Model):
         nb_tickets=fields.function(_nb_tickets, method=True, string=u'Number of tickets',
                                    type='integer',
                                    store=False, help='Full number of tickets in this bouquet'),
-        create_date=fields.datetime('Creation Time'),
-        write_date=fields.datetime('Modification Time'),
+        create_date=fields.datetime('Creation Time', readonly=True),
+        write_date=fields.datetime('Modification Time', readonly=True),
         participant_ids=fields.function(_participant_ids, method=True,
                                         string=u'All participating users', type='many2many',
                                         fnct_search=_search_participants,
