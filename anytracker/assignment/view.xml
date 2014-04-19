@@ -121,6 +121,12 @@
     </field>
 </record>
 
+<record id="action_assign_to_current_user" model="ir.actions.server">
+  <field name="state">code</field>
+  <field name="model_id" ref="model_anytracker_ticket" />
+  <field name="code">self.assign_to_current_user(cr, uid, obj, context=context)</field>
+</record>
+
 <!-- MY TICKETS -->
 <record model="ir.actions.act_window" id="act_open_my_tickets_view">
     <field name="name">My tickets</field>

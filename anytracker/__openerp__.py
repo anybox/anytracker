@@ -88,7 +88,6 @@ http://www.famfamfam.com/lab/icons/silk/
         'complexity/wizard/view.xml',
         'complexity/view.xml',
         'importance/view.xml',
-        'assignment/action.xml',
         'assignment/view.xml',
         'notify/view.xml',
         'priority/view.xml',
