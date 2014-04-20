@@ -4,6 +4,7 @@ from osv import fields, osv
 from tools.translate import _
 from lxml import etree
 from openerp.osv.orm import transfer_modifiers_to_node
+from openerp import SUPERUSER_ID
 logger = logging.getLogger(__file__)
 
 
@@ -66,18 +67,6 @@ class Ticket(osv.Model):
             res[i] = u' / '.join([b['name'] for b in breadcrumb])
         return res
 
-    def _get_admin_id(self, cr, uid, context=None):
-        xml_obj = self.pool.get('ir.model.data')
-        res_users = self.pool.get('res.users')
-        admin_group_id = xml_obj.get_object_reference(cr, uid, 'base', 'group_erp_manager')[1]
-        domain = [
-            ('groups_id', "in", [admin_group_id]),
-        ]
-        admin_ids = res_users.search(cr, uid, domain, context=context)
-        if admin_ids:
-            return admin_ids[0]
-        raise osv.except_osv(_('Error'), _('No user with ERP Manager group found'))
-
     def _get_root(self, cr, uid, ticket_id, context=None):
         """Return the real root ticket (not the project_id of the ticket)
         """
@@ -133,7 +122,7 @@ class Ticket(osv.Model):
         """write the project_id when creating
         """
         values.update({
-            'number': self.pool.get('ir.sequence').next_by_code(cr, self._get_admin_id(cr, uid),
+            'number': self.pool.get('ir.sequence').next_by_code(cr, SUPERUSER_ID,
                                                                 'anytracker.ticket'),
         })
         ticket_id = super(Ticket, self).create(cr, uid, values, context=context)
@@ -325,3 +314,28 @@ class Ticket(osv.Model):
     }
 
     _sql_constraints = [('number_uniq', 'unique(number)', 'Number must be unique!')]
+
+
+class ResPartner(osv.Model):
+    """ Improve security
+    """
+    _inherit = 'res.partner'
+
+    def _anytracker_search_partners(self, cr, uid, obj, field, domain, context=None):
+        assert(len(domain) == 1 and domain[0][0] == 'anytracker_user_ids')
+        user_id = domain[0][2]
+        cr.execute('select distinct u.partner_id from res_users u, '
+                   'anytracker_ticket_assignment_rel m, anytracker_ticket_assignment_rel n '
+                   'where m.user_id=%s and u.id=n.user_id and n.ticket_id=m.ticket_id;',
+                   (user_id,))
+        return [('id', domain[0][1], tuple(a[0] for a in cr.fetchall()))]
+
+    _columns = {
+        'anytracker_user_ids': fields.function(
+            None,
+            fnct_search=_anytracker_search_partners,
+            type='one2many',
+            string='Allowed partners',
+            obj='res.users',
+            method=True),
+    }

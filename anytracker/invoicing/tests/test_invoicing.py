@@ -1,10 +1,12 @@
 from anybox.testing.openerp import SharedSetupTransactionCase
 from openerp.osv import osv
+from os.path import join
 
 
 class TestInvoicing(SharedSetupTransactionCase):
 
     _module_ns = 'anytracker'
+    _data_files = (join('..', '..', 'tests', 'data.xml'),)
 
     @classmethod
     def initTestData(self):
@@ -34,7 +36,7 @@ class TestInvoicing(SharedSetupTransactionCase):
 
     def createProject(self, participant_ids):
         cr, uid = self.cr, self.uid
-        quickstart_method = self.ref('anytracker.method_quickstart')
+        method = self.ref('anytracker.method_test')
         if isinstance(participant_ids, int) or isinstance(participant_ids, long):
             participant_ids = [participant_ids]
         project_id = self.tickets.create(
@@ -43,7 +45,7 @@ class TestInvoicing(SharedSetupTransactionCase):
              'participant_ids': [(6, 0, participant_ids)],
              'analytic_journal_id': self.anajournals.search(cr, uid, [])[0],
              'product_id': self.ref('product.product_product_consultant'),
-             'method_id': quickstart_method})
+             'method_id': method})
         return project_id
 
     def test_invoicing(self):
@@ -95,7 +97,7 @@ class TestInvoicing(SharedSetupTransactionCase):
 
         # We rate the ticket
         self.tickets.write(cr, uid, [ticket1_id], {
-            'my_rating': self.ref('anytracker.complexity_1h')})
+            'my_rating': self.ref('anytracker.complexity1')})
 
         # Once rated, the ticket can be invoiced successfully
         self.tickets.create_analytic_line(cr, uid, [ticket1_id])
@@ -109,9 +111,9 @@ class TestInvoicing(SharedSetupTransactionCase):
 
         # We rate tickets 2 and 3, but not the ticket 4
         self.tickets.write(cr, uid, [ticket2_id], {
-            'my_rating': self.ref('anytracker.complexity_2h')})
+            'my_rating': self.ref('anytracker.complexity2')})
         self.tickets.write(cr, uid, [ticket3_id], {
-            'my_rating': self.ref('anytracker.complexity_4h')})
+            'my_rating': self.ref('anytracker.complexity3')})
 
         # Now we create a bouquet with the 4 tickets
         bouquet_id = self.bouquets.create(
