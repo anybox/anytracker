@@ -28,7 +28,7 @@
 
 {
     'name': 'Anytracker',
-    'version': '0.2',
+    'version': '0.3',
     'author': 'Anybox',
     'website': 'http://anybox.fr',
     'category': 'Project Management',
@@ -50,18 +50,16 @@
 - Hierarchical ticket management
 - Freemind import/export
 - Email notification
-- Hierarchical Risk management
+- Hierarchical risk management
 - Hierarchical progress management
 - Complexity/evaluation management
 - Impact/Importance management
 - Priority management (timebox, deadline, milestone)
 - Commenting through OpenChatter
 - Assignment
-- Kanban view
+- Kanban view at any level with breadcrumb
 - Modifications history tracking
-
-Anytracker depends on a specific many2one widget : web_dynatree,
-which is available at https://bitbucket.org/anybox/web_dynatree
+- Ticket invoicing through an analytic account
 
 Anytracker includes some icons from the "fam fam fam silk" set,
 provided under the terms of the Creative Commons Attribution 2.5 license at
