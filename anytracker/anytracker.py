@@ -125,10 +125,13 @@ class Ticket(osv.Model):
             'number': self.pool.get('ir.sequence').next_by_code(cr, SUPERUSER_ID,
                                                                 'anytracker.ticket'),
         })
+        if 'parent_id' in values and values['parent_id']:
+            project_id = self.read(cr, uid, values['parent_id'],
+                                   ['project_id'], load='_classic_write')['project_id']
+            values['project_id'] = project_id
         ticket_id = super(Ticket, self).create(cr, uid, values, context=context)
-        # set the project of the ticket
-        root_id = self._get_root(cr, uid, ticket_id)
-        self.write(cr, uid, ticket_id, {'project_id': root_id})
+        if 'parent_id' not in values:
+            self.write(cr, uid, ticket_id, {'project_id': ticket_id})
         return ticket_id
 
     def _default_parent_id(self, cr, uid, context=None):
@@ -145,19 +148,6 @@ class Ticket(osv.Model):
             return ticket.parent_id.id
         else:
             return active_id
-
-    def _default_project_id(self, cr, uid, context=None):
-        """Return the same project as the active_id
-        """
-        ticket_obj = self.pool.get('anytracker.ticket')
-        active_id = context.get('active_id')
-        if not active_id:
-            return False
-        ticket = ticket_obj.browse(cr, uid, active_id)
-        if not ticket.parent_id:
-            return active_id
-        else:
-            return ticket.project_id.id
 
     def _subnode_ids(self, cr, uid, ids, field_name, args, context=None):
         """Return the list of children that are themselves nodes."""
@@ -308,9 +298,7 @@ class Ticket(osv.Model):
     _defaults = {
         'duration': 0,
         'parent_id': _default_parent_id,
-        'project_id': _default_project_id,
         'active': True,
-
     }
 
     _sql_constraints = [('number_uniq', 'unique(number)', 'Number must be unique!')]

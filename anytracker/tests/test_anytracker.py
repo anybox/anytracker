@@ -6,6 +6,7 @@ import base64
 class TestAnytracker(SharedSetupTransactionCase):
 
     _module_ns = 'anytracker'
+    _data_files = ('data.xml',)
 
     @classmethod
     def initTestData(self):
@@ -117,7 +118,7 @@ class TestAnytracker(SharedSetupTransactionCase):
             'res_id': ticket_id,
         })
         # don't let the customer delete his attachment
-        self.assertRaises(except_orm, self.attachments.unlink, cr, self.customer_id, (attach1_id,))
+        self.assertRaises(except_orm, self.attachments.unlink, cr, self.customer_id, [attach1_id])
         # check that the customer cannot access an attachment of another project
         project_id = self.tickets.create(
             cr, uid,
@@ -137,7 +138,7 @@ class TestAnytracker(SharedSetupTransactionCase):
                                              [('id', 'in', (attach1_id, attach2_id))])
         self.assertEquals(attach_ids, [attach1_id])
         self.assertRaises(except_orm,
-                          self.attachments.read, cr, self.customer_id, (attach2_id,), ['name'])
+                          self.attachments.read, cr, self.customer_id, [attach2_id], ['name'])
 
     def test_customer_access(self):
         """ Protect sensitive data
@@ -170,3 +171,50 @@ class TestAnytracker(SharedSetupTransactionCase):
         self.tickets.write(cr, uid, [project_id], {'participant_ids': [(3, self.member_id)]})
         self.assertRaises(except_orm,
                           self.partners.read, cr, self.customer_id, [member_partner_id], ['email'])
+
+    def test_move_tickets(self):
+        """ Check that we can move a ticket to another node or project
+        and that everything is still consistent
+        """
+        cr, uid = self.cr, self.uid
+        # create a first project with 3 tickets
+        project_id = self.tickets.create(
+            cr, self.manager_id,
+            {'name': 'Project1',
+             'participant_ids': [(6, 0, [self.customer_id, self.member_id, self.manager_id])],
+             'method_id': self.ref('anytracker.method_test')})
+
+        node_id = self.tickets.create(cr, self.customer_id,
+                                      {'name': 'Node1', 'parent_id': project_id, })
+        ticket1_id = self.tickets.create(cr, self.customer_id,
+                                         {'name': 'Ticket1', 'parent_id': node_id, })
+        ticket2_id = self.tickets.create(cr, self.customer_id,
+                                         {'name': 'Ticket2', 'parent_id': node_id, })
+
+        # rate the tickets and set the stage
+        self.tickets.write(cr, self.member_id, ticket1_id,
+                           {'my_rating': self.ref('anytracker.complexity1')})
+        # I change my mind and set another complexity
+        self.tickets.write(cr, self.member_id, ticket1_id, {
+            'my_rating': self.ref('anytracker.complexity2'),
+            'stage_id': self.ref('anytracker.stage_test_todo'),
+            })
+        self.tickets.write(cr, self.member_id, ticket2_id, {
+            'my_rating': self.ref('anytracker.complexity4'),
+            'stage_id': self.ref('anytracker.stage_test_doing'),
+            })
+        # the manager also rates the tickets
+        self.tickets.write(cr, self.manager_id, ticket1_id,
+                           {'my_rating': self.ref('anytracker.complexity3')})
+        self.tickets.write(cr, self.manager_id, ticket2_id,
+                           {'my_rating': self.ref('anytracker.complexity3')})
+
+        # check the progress and risk
+        self.assertEquals(self.tickets.browse(cr, uid, ticket1_id).rating, 3.0)
+        self.assertEquals(self.tickets.browse(cr, uid, ticket1_id).risk, 30.0)
+        self.assertEquals(self.tickets.browse(cr, uid, ticket2_id).rating, 5.5)
+        self.assertEquals(self.tickets.browse(cr, uid, ticket2_id).risk, 45.0)
+        self.assertEquals(self.tickets.browse(cr, uid, project_id).rating, 8.5)
+        self.assertEquals(self.tickets.browse(cr, uid, project_id).risk, 37.5)
+        self.assertEquals(self.tickets.browse(cr, uid, node_id).rating, 8.5)
+        self.assertEquals(self.tickets.browse(cr, uid, node_id).risk, 37.5)

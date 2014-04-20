@@ -99,6 +99,11 @@
 </record>
 
 <!-- Display assignments in the kanban -->
+<record id="action_assign_to_current_user" model="ir.actions.server">
+  <field name="state">code</field>
+  <field name="model_id" ref="model_anytracker_ticket" />
+  <field name="code">self.assign_to_current_user(cr, uid, obj, context=context)</field>
+</record>
 <record id="tickets_kanban_assignment" model="ir.ui.view">
     <field name="name">anytracker.assignment.kanban</field>
     <field name="model">anytracker.ticket</field>
@@ -119,12 +124,6 @@
                  <img width="16" height="16" src="/anytracker/static/src/img/cart_put.png"/></a>
         </xpath>
     </field>
-</record>
-
-<record id="action_assign_to_current_user" model="ir.actions.server">
-  <field name="state">code</field>
-  <field name="model_id" ref="model_anytracker_ticket" />
-  <field name="code">self.assign_to_current_user(cr, uid, obj, context=context)</field>
 </record>
 
 <!-- MY TICKETS -->

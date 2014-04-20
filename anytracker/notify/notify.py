@@ -76,6 +76,8 @@ class Ticket(osv.Model):
         res = super(Ticket, self).write(cr, uid, ids, values, context=context)
         if 'stage_id' not in values:
             return res
+        if not hasattr(ids, '__iter__'):
+            ids = [ids]
         for ticket in self.browse(cr, uid, ids, context):
             if not self.check_notify(cr, uid, ticket):
                 return res

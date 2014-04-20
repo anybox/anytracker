@@ -9,8 +9,9 @@ class TestBouquets(SharedSetupTransactionCase):
 
         :param kw: additional field values, will override the default ones.
         """
-        vals = dict(name="Test project", method_id=cls.ref('anytracker.method_scrum'),
-                    participant_ids=[(6, 0, participant_ids)])
+        vals = {'name': "Test project",
+                'method_id': cls.ref('anytracker.method_scrum'),
+                'participant_ids': [(6, 0, participant_ids)]}
         vals.update(kw)
         return cls.ticket.create(cls.cr, cls.uid, vals)
 
@@ -20,8 +21,8 @@ class TestBouquets(SharedSetupTransactionCase):
 
         :param kw: additional field values, will override the default ones.
         """
-        vals = dict(name="Test bouquet", method_id=cls.ref('anytracker.method_scrum'),
-                    ticket_ids=[(6, 0, ticket_ids)])
+        vals = {'name': "Test bouquet",
+                'ticket_ids': [(6, 0, ticket_ids)]}
         vals.update(kw)
         return cls.bouquet.create(cls.cr, cls.uid, vals)
 

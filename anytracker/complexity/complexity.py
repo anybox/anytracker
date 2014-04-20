@@ -95,7 +95,7 @@ class Ticket(osv.Model):
         """compute the risk and rating of a leaf ticket, given its ratings
         """
         res_risk, res_rating = {}, {}
-        if type(ids) is int:
+        if not hasattr(ids, '__iter__'):
             ids = [ids]
         for ticket in self.browse(cr, uid, ids, context):
             if ticket.child_ids:  # not a leaf
@@ -169,7 +169,7 @@ class Ticket(osv.Model):
         and recompute the risk of parents
         Unrated tickets have a risk of 100.0 and rating of 0.0!!
         """
-        if type(ids) is int:
+        if not hasattr(ids, '__iter__'):
             ids = [ids]
         if 'my_rating' in values:
             old_risk, old_rating = self.compute_risk_and_rating(cr, uid, ids, context)
@@ -180,22 +180,20 @@ class Ticket(osv.Model):
             new_risk, new_rating = self.compute_risk_and_rating(cr, uid,
                                                                 [ticket.id], context)
             new_risk, new_rating = new_risk[ticket.id], new_rating[ticket.id]
-            ticket.write({'risk': new_risk,
-                          'rating': new_rating})
+            ticket.write({'risk': new_risk, 'rating': new_rating})
             parent = ticket.parent_id
             # loop up to the root
             while parent:
                 child_ids = self.search(cr, uid, [('id', 'child_of', parent.id),
                                                   ('child_ids', '=', False),
                                                   ('id', '!=', parent.id)])
+                # rating
+                rating_increase = ticket.rating - old_rating[ticket.id]
+                new_rating = parent.rating + rating_increase
+                # risk
                 risk_increase = (ticket.risk - old_risk[ticket.id])/len(child_ids)
-                rating_diff = (ticket.rating - old_rating[ticket.id])
                 new_risk = parent.risk + risk_increase
-                new_risk = 100.0 if new_risk > 100.0 else new_risk
-                new_risk = 0.0 if new_risk < 0.0 else new_risk
-                new_rating = parent.rating + rating_diff
-                parent.write({'risk': new_risk})
-                parent.write({'rating': new_rating})
+                parent.write({'risk': new_risk, 'rating': new_rating})
                 parent = parent.parent_id
         return res
 
