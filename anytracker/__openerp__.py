@@ -64,6 +64,15 @@
 Anytracker includes some icons from the "fam fam fam silk" set,
 provided under the terms of the Creative Commons Attribution 2.5 license at
 http://www.famfamfam.com/lab/icons/silk/
+
+You can launch tests from a buildout with:
+
+  $ ./bin/openerp_command run-tests -d dbname -m anytracker
+
+Or, if you installed nose in your buildout
+
+  $ ./bin/nosetests -d dbname -- addons-anytracker/anytracker/
+
 ''',
     'data': [
         # groups:
