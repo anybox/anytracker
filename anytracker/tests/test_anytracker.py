@@ -290,3 +290,26 @@ class TestAnytracker(SharedSetupTransactionCase):
 
         # we delete the project1 and node2
         self.tickets.unlink(cr, uid, [project_id, node2_id])
+        # Moved tickets are in the correct project
+        self.assertEquals(self.tickets.browse(cr, uid, ticket1_id).project_id.id, project2_id)
+        self.assertEquals(self.tickets.browse(cr, uid, ticket2_id).project_id.id, project2_id)
+        self.assertEquals(self.tickets.browse(cr, uid, ticket1_id).method_id.name, 'Test2')
+
+        # Recreated the project1 and move the whole node3 at once
+        project_id = self.tickets.create(
+            cr, self.manager_id,
+            {'name': 'Project1',
+             'participant_ids': [(6, 0, [self.customer_id, self.member_id, self.manager_id])],
+             'method_id': self.ref('anytracker.method_test')})
+
+        self.tickets.write(cr, self.manager_id, node3_id, {'parent_id': project_id})
+        self.assertEquals(self.tickets.browse(cr, uid, node3_id).project_id.id, project_id)
+        self.assertEquals(self.tickets.browse(cr, uid, ticket1_id).project_id.id, project_id)
+        self.assertEquals(self.tickets.browse(cr, uid, ticket2_id).project_id.id, project_id)
+        self.assertEquals(self.tickets.browse(cr, uid, node3_id).method_id.name, 'Test')
+        self.assertEquals(self.tickets.browse(cr, uid, ticket1_id).method_id.name, 'Test')
+
+        # we change the method of the project1
+        self.tickets.write(cr, uid, project_id, {'method_id': self.ref('anytracker.method_test2')})
+        self.assertEquals(self.tickets.browse(cr, uid, node3_id).method_id.name, 'Test2')
+        self.assertEquals(self.tickets.browse(cr, uid, ticket1_id).method_id.name, 'Test2')

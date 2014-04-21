@@ -216,6 +216,8 @@ class Ticket(osv.Model):
             Rn = 1-(((1-Rn)^n)/(1-rn))^(1/(n-1))
         If we increase the risk of a ticket by x, the new risk is:
             Rn' = 1-(1-Rn)(1-x/(1-rn))**(1/n)
+
+        Keep you hands off this radioactive code!
         """
         # ticket is the ticket that has been changed or reparented
         for ticket in self.browse(cr, uid, ids):

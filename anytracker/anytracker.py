@@ -95,15 +95,15 @@ class Ticket(osv.Model):
         if 'parent_id' in values:
             root_id = self._get_root(cr, uid, values['parent_id'])
             values['project_id'] = root_id
-            for ticket_id in ids:
-                if ticket_id == values['parent_id']:
+            for ticket in self.browse(cr, uid, ids, context):
+                if ticket.id == values['parent_id']:
                     raise osv.except_osv(_('Error'),
                                          _(u"Think of yourself. Can you be your own parent?"))
                 # reparenting to False, set current ticket as project for children
-                project_id = root_id or ticket_id
+                project_id = root_id or ticket.id
                 # set the project_id of me and all the children
-                children = self.search(cr, uid, [('id', 'child_of', ticket_id)])
-                self.write(cr, uid, children, {'project_id': project_id})
+                children = self.search(cr, uid, [('id', 'child_of', ticket.id)])
+                super(Ticket, self).write(cr, uid, children, {'project_id': project_id})
         if 'active' in values:
             for ticket_id in ids:
                 children = self.search(cr, uid, [
@@ -111,6 +111,11 @@ class Ticket(osv.Model):
                     ('active', '=', not values['active'])])
                 super(Ticket, self).write(cr, uid, children, {'active': values['active']})
         res = super(Ticket, self).write(cr, uid, ids, values, context=context)
+        if 'parent_id' in values:
+            for ticket in self.browse(cr, uid, ids, context):
+                method_id = (ticket.parent_id.method_id.id
+                             if values['parent_id'] is not False else ticket.method_id.id)
+                super(Ticket, self).write(cr, uid, children, {'method_id': method_id})
         return res
 
     def _get_permalink(self, cr, uid, ids, field_name, args, context=None):

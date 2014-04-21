@@ -31,12 +31,18 @@ class Ticket(osv.Model):
             raise osv.except_osv('Error', 'You must choose the method of the project')
         return super(Ticket, self).create(cr, uid, data, context)
 
-    def write(self, cr, uid, ids, data, context=None):
+    def write(self, cr, uid, ids, values, context=None):
         """Forbid to change the method (unexpected results)
         """
-        if 'method_id' in data:
-            raise osv.except_osv('Error', 'You cannot change the method of a project')
-        return super(Ticket, self).write(cr, uid, ids, data, context)
+        res = super(Ticket, self).write(cr, uid, ids, values, context)
+        if 'method_id' in values:
+            for ticket in self.browse(cr, uid, ids):
+                child_ids = self.search(cr, uid, [('id', 'child_of', ticket.id),
+                                                  ('id', '!=', ticket.id)])
+                method_id = ticket.method_id.id
+                super(Ticket, self).write(cr, uid, child_ids,
+                                          {'method_id': method_id})
+        return res
 
     _columns = {
         'method_id': fields.many2one('anytracker.method', 'Method', help='Project method',
