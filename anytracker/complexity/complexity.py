@@ -158,7 +158,9 @@ class Ticket(osv.Model):
     def unlink(self, cr, uid, ids, context=None):
         project_ids = self.read(cr, uid, ids, ['project_id'], load='_classic_write')
         super(Ticket, self).unlink(cr, uid, ids, context)
-        self.recompute_subtickets(cr, uid, [v['project_id'] for v in project_ids])
+        # recompute the remaining
+        remaining = self.search(cr, uid, [('id', 'in', [v['project_id'] for v in project_ids])])
+        self.recompute_subtickets(cr, uid, remaining)
 
     def write(self, cr, uid, ids, values, context=None):
         """Climb the tree from the ticket to the root
