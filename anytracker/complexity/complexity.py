@@ -66,7 +66,7 @@ class Ticket(osv.Model):
                 cr, uid,
                 [('user_id', '=', uid),
                  ('ticket_id', '=', ticket_id)],
-                order='time, id DESC',
+                order='time DESC, id DESC',
                 context=context)
             if not rating_ids:
                 continue
@@ -123,7 +123,7 @@ class Ticket(osv.Model):
                                      if latest_person_rating else 0)
         return res_risk, res_rating
 
-    def recompute_subtickets(self, cr, uid, ids):
+    def recompute_subtickets(self, cr, uid, ids, context=None):
         """recompute the overall risk and rating of the node, based on subtickets.
         And recompute sub-nodes as well
         """
