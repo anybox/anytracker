@@ -3,6 +3,13 @@ from openerp.osv import fields
 import time
 
 
+def risk_mean(risks):
+    risks = [(1-r) for r in risks if r is not None]
+    if len(risks) == 0:
+        return 0.5
+    return 1 - reduce(lambda x, y: x*y, risks)**(1./len(risks))
+
+
 class Complexity(osv.Model):
     """Definition of the different complexity levels, in different contexts.
     Example:
@@ -59,26 +66,23 @@ class Ticket(osv.Model):
                 cr, uid,
                 [('user_id', '=', uid),
                  ('ticket_id', '=', ticket_id)],
+                order='time, id DESC',
                 context=context)
             if not rating_ids:
                 continue
             rating = ar_pool.browse(cr, uid, rating_ids[0])
             if rating.complexity_id:
-                my_rating = (rating.complexity_id.id, rating.complexity_id.name)
-            else:
-                my_rating = False
-            ratings[ticket_id] = my_rating
+                ratings[ticket_id] = (rating.complexity_id.id, rating.complexity_id.name)
         return ratings
 
-    def _set_my_rating(self, cr, uid, id, name, value, fnct_inv_arg, context):
+    def _set_my_rating(self, cr, uid, ticket_id, name, value, fnct_inv_arg, context):
         """set my rating
         """
-        if value is not False:
-            self.pool.get('anytracker.rating').create(cr, uid, {
-                'complexity_id': value,
-                'ticket_id': id,
-                'user_id': uid,
-                'time': time.strftime('%Y-%m-%d %H:%M:%S')})
+        self.pool.get('anytracker.rating').create(cr, uid, {
+            'complexity_id': value,
+            'ticket_id': ticket_id,
+            'user_id': uid,
+            'time': time.strftime('%Y-%m-%d %H:%M:%S')})
 
     def _get_color(self, cr, uid, ids, field_name, args, context=None):
         """get the color from my rating
@@ -111,16 +115,12 @@ class Ticket(osv.Model):
                                   for r in ticket.rating_ids]):
                 latest_person_rating[rating[2]] = rating[-1]
             # compute the mean of all latest ratings
-            risk_mean = (sum([r if r is not None else 0.5  # TODO geom mean
-                             for r in latest_person_risk.values()]
-                             )/len(latest_person_risk)
-                         if latest_person_risk else 0.5)
-            rating_mean = (sum([r or 0.0 for r in
-                               latest_person_rating.values()]
-                               )/len(latest_person_rating)
-                           if latest_person_rating else 0)
-            res_risk[ticket.id] = risk_mean
-            res_rating[ticket.id] = rating_mean
+            res_risk[ticket.id] = (risk_mean(latest_person_risk.values())
+                                   if latest_person_risk else 0.5)
+            res_rating[ticket.id] = (sum([r or 0.0 for r in
+                                          latest_person_rating.values()]
+                                         )/len(latest_person_rating)
+                                     if latest_person_rating else 0)
         return res_risk, res_rating
 
     def recompute_subtickets(self, cr, uid, ids):
@@ -151,7 +151,7 @@ class Ticket(osv.Model):
                     ratings = [r['rating'] for r in reads]
                     rating = sum(ratings)
                     risks = [r['risk'] for r in reads]
-                    risk = 1 - reduce(lambda x, y: x*y, [(1-r) for r in risks])**(1./len(risks))
+                    risk = risk_mean(risks)
                     self.write(cr, uid, node_id, {'risk': risk, 'rating': rating})
         return True
 
@@ -235,7 +235,7 @@ class Ticket(osv.Model):
                     rating = sum(r['rating'] for r in reads)
                     # risk
                     risks = [r['risk'] for r in reads]
-                    risk = 1 - reduce(lambda x, y: x*y, [(1-r) for r in risks])**(1./len(risks))
+                    risk = risk_mean(risks)
                     self.write(cr, uid, parent.id, {'risk': risk, 'rating': rating})
                 parent = parent.parent_id
 

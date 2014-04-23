@@ -79,16 +79,10 @@ class TestComplexity(SharedSetupTransactionCase):
         """ Removing ratings linked to a ticket and ensure that this ticket has 0.0 value """
         cr, uid = self.cr, self.uid
         project_id = self.createProject(self.member_id)
-        ticket1_id = self.createLeafTicket('Test ticket 1',
-                                           project_id)
-        self.tickets.write(cr, uid, [ticket1_id],
-                           {'my_rating': self.complexity2})
+        ticket1_id = self.createLeafTicket('Test ticket 1', project_id)
+        self.tickets.write(cr, uid, [ticket1_id], {'my_rating': self.complexity2})
         self.assertEquals(self.tickets.browse(cr, uid, ticket1_id).rating, 2)
-        rating_ids = [r.id for r in self.tickets.browse(cr, uid, ticket1_id).rating_ids if r]
-        for rating_id in rating_ids:
-            self.tickets.write(cr, uid, [ticket1_id],
-                               {'my_rating': None,
-                                'rating_ids': [(2, rating_id)]})
+        self.tickets.write(cr, uid, ticket1_id, {'my_rating': None})
         self.assertFalse(self.tickets.browse(cr, uid, ticket1_id).my_rating)
         self.assertEquals(self.tickets.browse(cr, uid, ticket1_id).rating, 0.0)
 

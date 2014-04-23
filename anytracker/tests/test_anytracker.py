@@ -215,14 +215,14 @@ class TestAnytracker(SharedSetupTransactionCase):
 
         # check the progress and risk
         self.assertEquals(self.tickets.browse(cr, uid, ticket1_id).rating, 3.0)
-        self.assertEquals(self.tickets.browse(cr, uid, ticket1_id).risk, 0.3)
+        self.assertEquals(self.tickets.browse(cr, uid, ticket1_id).risk, 0.307179676972449)
         self.assertEquals(self.tickets.browse(cr, uid, ticket2_id).rating, 5.5)
-        self.assertEquals(self.tickets.browse(cr, uid, ticket2_id).risk, 0.45)
+        self.assertEquals(self.tickets.browse(cr, uid, ticket2_id).risk, 0.452277442494834)
         self.assertEquals(self.tickets.browse(cr, uid, project_id).rating, 8.5)
-        # 1-((1-.3)*(1-.45))**(1/2.) = 0.37951631770045713
-        self.assertEquals(self.tickets.browse(cr, uid, project_id).risk, 0.379516317700457)
+        # 1-((1-0.307179676972449)*(1-0.452277442494834))**(1/2.) = 0.383985942351795
+        self.assertEquals(self.tickets.browse(cr, uid, project_id).risk, 0.383985942351795)
         self.assertEquals(self.tickets.browse(cr, uid, node_id).rating, 8.5)
-        self.assertEquals(self.tickets.browse(cr, uid, node_id).risk, 0.379516317700457)
+        self.assertEquals(self.tickets.browse(cr, uid, node_id).risk, 0.383985942351795)
 
         # Now create a second empty node
         node2_id = self.tickets.create(cr, self.member_id,
@@ -230,34 +230,34 @@ class TestAnytracker(SharedSetupTransactionCase):
         self.assertEquals(self.tickets.browse(cr, uid, node2_id).rating, 0.0)
         self.assertEquals(self.tickets.browse(cr, uid, node2_id).risk, 0.5)
         self.assertEquals(self.tickets.browse(cr, uid, project_id).rating, 8.5)
-        # 1-((1-.3)*(1-.45)*(1-.5))**(1/3.) = 0.4225998248542272
-        self.assertEquals(self.tickets.browse(cr, uid, project_id).risk, 0.422599824854227)
+        # 1-((1-0.307179676972449)*(1-0.452277442494834)*(1-.5))**(1/3.) = 0.4253760143455
+        self.assertEquals(self.tickets.browse(cr, uid, project_id).risk, 0.4253760143455)
 
         # Move the ticket1 to the new node
         self.tickets.write(cr, self.manager_id, ticket1_id, {'parent_id': node2_id})
         self.assertEquals(self.tickets.browse(cr, uid, ticket1_id).rating, 3.0)
-        self.assertEquals(self.tickets.browse(cr, uid, ticket1_id).risk, 0.3)
+        self.assertEquals(self.tickets.browse(cr, uid, ticket1_id).risk, 0.307179676972449)
         self.assertEquals(self.tickets.browse(cr, uid, ticket2_id).rating, 5.5)
-        self.assertEquals(self.tickets.browse(cr, uid, ticket2_id).risk, 0.45)
+        self.assertEquals(self.tickets.browse(cr, uid, ticket2_id).risk, 0.452277442494834)
         self.assertEquals(self.tickets.browse(cr, uid, node_id).rating, 5.5)
-        self.assertEquals(self.tickets.browse(cr, uid, node_id).risk, 0.45)
+        self.assertEquals(self.tickets.browse(cr, uid, node_id).risk, 0.452277442494834)
         self.assertEquals(self.tickets.browse(cr, uid, node2_id).rating, 3.0)
-        self.assertEquals(self.tickets.browse(cr, uid, node2_id).risk, 0.3)
+        self.assertEquals(self.tickets.browse(cr, uid, node2_id).risk, 0.307179676972449)
         self.assertEquals(self.tickets.browse(cr, uid, project_id).rating, 8.5)
-        self.assertEquals(self.tickets.browse(cr, uid, project_id).risk, 0.379516317700457)
+        self.assertEquals(self.tickets.browse(cr, uid, project_id).risk, 0.383985942351795)
 
         # We also move the ticket2, and the node1 is now empty
         self.tickets.write(cr, self.manager_id, ticket2_id, {'parent_id': node2_id})
         self.assertEquals(self.tickets.browse(cr, uid, node_id).rating, 0.0)
         self.assertEquals(self.tickets.browse(cr, uid, node_id).risk, 0.5)
         self.assertEquals(self.tickets.browse(cr, uid, node2_id).rating, 8.5)
-        self.assertEquals(self.tickets.browse(cr, uid, node2_id).risk, 0.379516317700457)
+        self.assertEquals(self.tickets.browse(cr, uid, node2_id).risk, 0.383985942351795)
         self.assertEquals(self.tickets.browse(cr, uid, project_id).rating, 8.5)
-        self.assertEquals(self.tickets.browse(cr, uid, project_id).risk, 0.422599824854227)
+        self.assertEquals(self.tickets.browse(cr, uid, project_id).risk, 0.4253760143455)
         # we remove the 1st node,
         self.tickets.unlink(cr, uid, [node_id])
         self.assertEquals(self.tickets.browse(cr, uid, project_id).rating, 8.5)
-        self.assertEquals(self.tickets.browse(cr, uid, project_id).risk, 0.379516317700457)
+        self.assertEquals(self.tickets.browse(cr, uid, project_id).risk, 0.383985942351795)
 
         # Now create a second project and move the tickets
         project2_id = self.tickets.create(
@@ -271,22 +271,22 @@ class TestAnytracker(SharedSetupTransactionCase):
         # move the ticket1 to the node3
         self.tickets.write(cr, self.manager_id, ticket1_id, {'parent_id': node3_id})
         self.assertEquals(self.tickets.browse(cr, uid, ticket1_id).rating, 3.0)
-        self.assertEquals(self.tickets.browse(cr, uid, ticket1_id).risk, 0.3)
+        self.assertEquals(self.tickets.browse(cr, uid, ticket1_id).risk, 0.307179676972449)
         self.assertEquals(self.tickets.browse(cr, uid, ticket2_id).rating, 5.5)
-        self.assertEquals(self.tickets.browse(cr, uid, ticket2_id).risk, 0.45)
+        self.assertEquals(self.tickets.browse(cr, uid, ticket2_id).risk, 0.452277442494834)
         self.assertEquals(self.tickets.browse(cr, uid, node3_id).rating, 3.0)
-        self.assertEquals(self.tickets.browse(cr, uid, node3_id).risk, 0.3)
+        self.assertEquals(self.tickets.browse(cr, uid, node3_id).risk, 0.307179676972449)
         self.assertEquals(self.tickets.browse(cr, uid, project_id).rating, 5.5)
-        self.assertEquals(self.tickets.browse(cr, uid, project_id).risk, 0.45)
+        self.assertEquals(self.tickets.browse(cr, uid, project_id).risk, 0.452277442494834)
         self.assertEquals(self.tickets.browse(cr, uid, project2_id).rating, 3.0)
-        self.assertEquals(self.tickets.browse(cr, uid, project2_id).risk, 0.3)
+        self.assertEquals(self.tickets.browse(cr, uid, project2_id).risk, 0.307179676972449)
 
         # We also move the ticket2, and the node2 is now empty
         self.tickets.write(cr, self.manager_id, ticket2_id, {'parent_id': node3_id})
         self.assertEquals(self.tickets.browse(cr, uid, node3_id).rating, 8.5)
-        self.assertEquals(self.tickets.browse(cr, uid, node3_id).risk, 0.379516317700457)
+        self.assertEquals(self.tickets.browse(cr, uid, node3_id).risk, 0.383985942351795)
         self.assertEquals(self.tickets.browse(cr, uid, project2_id).rating, 8.5)
-        self.assertEquals(self.tickets.browse(cr, uid, project2_id).risk, 0.379516317700457)
+        self.assertEquals(self.tickets.browse(cr, uid, project2_id).risk, 0.383985942351795)
 
         # we delete the project1 and node2
         self.tickets.unlink(cr, uid, [project_id, node2_id])
