@@ -26,7 +26,7 @@
       <field name="color" eval="0"/>
       <field name="description">cmplx3</field>
       <field name="method_id" ref="anytracker.method_test"/>
-      <field name="name">cmplx4</field>
+      <field name="name">cmplx3</field>
       <field name="risk" eval="0.4"/>
       <field name="value" eval="4.0"/>
     </record>
@@ -93,7 +93,7 @@
       <field name="description">cmplx5</field>
       <field name="method_id" ref="anytracker.method_test2"/>
       <field name="name">cmplx5</field>
-      <field name="risk" eval="0.15"/>
+      <field name="risk" eval="0.0"/>
       <field name="value" eval="1.5"/>
     </record>
     <record model="anytracker.complexity" id="complexity6">
@@ -117,7 +117,7 @@
       <field name="description">cmplx8</field>
       <field name="method_id" ref="anytracker.method_test2"/>
       <field name="name">cmplx8</field>
-      <field name="risk" eval="0.55"/>
+      <field name="risk" eval="1.0"/>
       <field name="value" eval="7.5"/>
     </record>
     <!-- test stages -->

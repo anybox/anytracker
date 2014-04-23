@@ -104,14 +104,14 @@ class Ticket(osv.Model):
                 continue
             latest_person_risk, latest_person_rating = {}, {}
             # find latest risk and rating for each person
-            for rating in sorted([(r.time, r.user_id, r.complexity_id.risk)
+            for rating in sorted([(r.time, r.id, r.user_id, r.complexity_id.risk)
                                   for r in ticket.rating_ids]):
-                latest_person_risk[rating[1]] = rating[2]
-            for rating in sorted([(r.time, r.user_id, r.complexity_id.value)
+                latest_person_risk[rating[2]] = rating[-1]
+            for rating in sorted([(r.time, r.id, r.user_id, r.complexity_id.value)
                                   for r in ticket.rating_ids]):
-                latest_person_rating[rating[1]] = rating[2]
+                latest_person_rating[rating[2]] = rating[-1]
             # compute the mean of all latest ratings
-            risk_mean = (sum([r or 0.5
+            risk_mean = (sum([r if r is not None else 0.5  # TODO geom mean
                              for r in latest_person_risk.values()]
                              )/len(latest_person_risk)
                          if latest_person_risk else 0.5)
@@ -123,22 +123,22 @@ class Ticket(osv.Model):
             res_rating[ticket.id] = rating_mean
         return res_risk, res_rating
 
-    def recompute_subtickets(self, cr, uid, ids, context=None):
+    def recompute_subtickets(self, cr, uid, ids):
         """recompute the overall risk and rating of the node, based on subtickets.
         And recompute sub-nodes as well
         """
-        if not context:
-            context = {}
-        for ticket in self.browse(cr, uid, ids, context):
+        if not ids:
+            return
+        for ticket in self.browse(cr, uid, ids):
             if not ticket.child_ids:
-                risk, rating = self.compute_risk_and_rating(cr, uid, ticket.id, context)
+                risk, rating = self.compute_risk_and_rating(cr, uid, ticket.id)
                 self.write(cr, uid, ticket.id, {'risk': risk[ticket.id],
-                                                'rating': rating[ticket.id]}, context)
+                                                'rating': rating[ticket.id]})
             else:
                 leaf_ids = self.search(cr, uid, [('id', 'child_of', ticket.id),
                                                  ('child_ids', '=', False),
                                                  ('id', '!=', ticket.id)])
-                self.recompute_subtickets(cr, uid, leaf_ids, context)
+                self.recompute_subtickets(cr, uid, leaf_ids)
 
                 sub_node_ids = self.search(cr, uid, [('id', 'child_of', ticket.id),
                                                      ('child_ids', '!=', False),
@@ -147,20 +147,25 @@ class Ticket(osv.Model):
                     leaf_ids = self.search(cr, uid, [('id', 'child_of', node_id),
                                                      ('child_ids', '=', False),
                                                      ('id', '!=', node_id)])
-                    reads = self.read(cr, uid, leaf_ids, ['risk', 'rating'], context)
+                    reads = self.read(cr, uid, leaf_ids, ['risk', 'rating'])
                     ratings = [r['rating'] for r in reads]
                     rating = sum(ratings)
                     risks = [r['risk'] for r in reads]
                     risk = 1 - reduce(lambda x, y: x*y, [(1-r) for r in risks])**(1./len(risks))
-                    self.write(cr, uid, node_id, {'risk': risk, 'rating': rating}, context)
+                    self.write(cr, uid, node_id, {'risk': risk, 'rating': rating})
         return True
 
     def unlink(self, cr, uid, ids, context=None):
-        project_ids = self.read(cr, uid, ids, ['project_id'], load='_classic_write')
+        tickets = self.read(cr, uid, ids, ['parent_id'], load='_classic_write')
+        for ticket in tickets:
+            # check if the old parent had other children
+            children = self.read(cr, uid, ticket['parent_id'], ['child_ids'])
+            if len(children['child_ids']) == 1:
+                self.write(cr, uid, ticket['parent_id'], {'rating': 0.0, 'risk': 0.5})
         super(Ticket, self).unlink(cr, uid, ids, context)
         # recompute the remaining
-        remaining = self.search(cr, uid, [('id', 'in', [v['project_id'] for v in project_ids])])
-        self.recompute_subtickets(cr, uid, remaining)
+        remaining = self.search(cr, uid, [('id', 'in', [v['parent_id'] for v in tickets])])
+        self.recompute_parents(cr, uid, remaining)
 
     def write(self, cr, uid, ids, values, context=None):
         """Climb the tree from the ticket to the root
@@ -173,7 +178,7 @@ class Ticket(osv.Model):
             old_values = {v['id']: v for v in
                           self.read(cr, uid, ids, ['risk', 'rating', 'parent_id', 'project_id'],
                           context, load='_classic_write')}
-            old_parents = {v['id']: v['parent_id'] for v in old_values.values()}
+            old_parents = [v['parent_id'] for v in old_values.values()]
         res = super(Ticket, self).write(cr, uid, ids, values, context)
         if 'my_rating' in values or 'parent_id' in values:
             # update the rating and risk (which may be different for each ticket,
@@ -185,7 +190,7 @@ class Ticket(osv.Model):
                                            'rating': new_rating[ticket_id]}, context)
         # Propagate to the parents
         if 'my_rating' in values and 'parent_id' not in values:
-            self.recompute_parents(cr, uid, ids, old_values, old_parents)
+            self.recompute_parents(cr, uid, old_parents)
         elif 'parent_id' in values and values['parent_id']:
             # We reparented, we recompute the subnodes
             old_projects = [v['project_id'] for v in old_values.values()]
@@ -198,61 +203,40 @@ class Ticket(osv.Model):
         """climb the tree up to the root and recompute
         """
         ticket_id = super(Ticket, self).create(cr, uid, values, context)
-        parent_ids = {ticket_id: values.get('parent_id')}
-        self.recompute_parents(cr, uid, [ticket_id], None, parent_ids, nb=+1)
+        if values.get('parent_id'):
+            self.recompute_parents(cr, uid, values.get('parent_id'))
         return ticket_id
 
-    def recompute_parents(self, cr, uid, ids, old_values, parent_ids, nb=0):
-        """climb the tree starting from parent_ids up to the root
-        and recompute the risk and rating of the parents, using:
-          * old_values is the values of the tickets before change or moving
-          * nb is -1 if the ticket was removed, 1 is added, or 0 if just changed
+    def recompute_parents(self, cr, uid, ids):
+        """climb the tree starting from ids up to the root
+        and recompute the risk and rating of each ticket.
 
+        The overall rating is the sum of all the rating below.
         If we have 3 tickets with risks a, b, c, we compute the overall risk as:
             R3 = 1 - ((1-a)(1-b)-(1-c))^1/3
-        If we had n tickets and we create a new ticket with risk rn, the new risk Rn is:
-            Rn = 1-((1-rn)(1-Rn)^n)^(1/(n+1))
-        If we had n tickets and we delete a ticket, the new risk is:
-            Rn = 1-(((1-Rn)^n)/(1-rn))^(1/(n-1))
-        If we increase the risk of a ticket by x, the new risk is:
-            Rn' = 1-(1-Rn)(1-x/(1-rn))**(1/n)
-
-        Keep you hands off this radioactive code!
         """
         # ticket is the ticket that has been changed or reparented
+        if not hasattr(ids, '__iter__'):
+            ids = [ids]
+        if not ids:
+            return
         for ticket in self.browse(cr, uid, ids):
-            if not parent_ids[ticket.id]:
+            parent = ticket if ticket else None
+            if not parent:
                 continue
-            # parent is the parent to recompute (may be old or new)
-            parent = self.browse(cr, uid, parent_ids[ticket.id])
             # loop up to the root
             while parent:
-                child_ids = self.search(cr, uid, [('id', 'child_of', parent.id),
-                                                  ('child_ids', '=', False),
-                                                  ('id', '!=', parent.id)])
-                if nb == 0:  # we did not reparent
+                leaf_ids = self.search(cr, uid, [('id', 'child_of', parent.id),
+                                                 ('child_ids', '=', False),
+                                                 ('id', '!=', parent.id)])
+                if leaf_ids:
+                    reads = self.read(cr, uid, leaf_ids, ['rating', 'risk'], load='_classic_write')
                     # rating
-                    rating_increase = ticket.rating - old_values[ticket.id]['rating']
-                    new_rating = parent.rating + rating_increase
+                    rating = sum(r['rating'] for r in reads)
                     # risk
-                    old_risk = old_values[ticket.id]['risk']
-                    risk_increase = ticket.risk - old_risk
-                    n = len(child_ids)
-                    new_risk = 1 - (1-parent.risk)*(1-risk_increase/(1-old_risk))**(1./n)
-                    parent.write({'risk': new_risk, 'rating': new_rating})
-                elif nb == 1:  # we added a ticket
-                    # rating
-                    rating_increase = ticket.rating
-                    new_rating = parent.rating + rating_increase
-                    # risk
-                    n = len(child_ids) - 1
-                    new_risk = 1 - ((1-ticket.risk)*(1-parent.risk)**n)**(1./(n+1))
-                    if n == 0:  # The parent was a ticket (not a node)
-                        new_risk = ticket.risk
-                    parent.write({'risk': new_risk, 'rating': new_rating})
-                else:
-                    raise NotImplementedError('Bad value for nb')
-
+                    risks = [r['risk'] for r in reads]
+                    risk = 1 - reduce(lambda x, y: x*y, [(1-r) for r in risks])**(1./len(risks))
+                    self.write(cr, uid, parent.id, {'risk': risk, 'rating': rating})
                 parent = parent.parent_id
 
     _columns = {
