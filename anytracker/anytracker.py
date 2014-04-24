@@ -17,6 +17,27 @@ class Ticket(osv.Model):
     _parent_store = True
     _inherit = ['mail.thread']
 
+    def _ids_to_be_recalculated(self, cr, uid, ids, context=None):
+        """ return list of id which will be recalculated """
+        res = []
+        for attachment in self.browse(cr, uid, ids):
+            if attachment.res_model == 'anytracker.ticket':
+                res.append(attachment.res_id)
+        return res
+
+    def _has_attachment(self, cr, uid, ids, field_name, args, context=None):
+        """ check if tickets have attachment(s) or not"""
+        res = {}
+        attach_model = self.pool.get('ir.attachment')
+        for ticket in ids:
+            attachment_ids = attach_model.search(
+                cr, uid, [('res_id', '=', ticket), ('res_model', '=', 'anytracker.ticket')])
+            if not attachment_ids:
+                res[ticket] = False
+                continue
+            res[ticket] = True
+        return res
+
     def _shortened_description(self, cr, uid, ids, field_name, args, context=None):
         """shortened description used in the list view and kanban view
         """
@@ -298,6 +319,12 @@ class Ticket(osv.Model):
         'sequence': fields.integer('sequence'),
         'active': fields.boolean('Active', help=("Uncheck to make the project disappear, "
                                                  "instead of deleting it")),
+        'has_attachment': fields.function(
+            _has_attachment,
+            type='boolean',
+            obj='anytracker.ticket',
+            string='Has attachment ?',
+            store={'ir.attachment': (_ids_to_be_recalculated, ['res_id', 'res_model'], 10)})
     }
 
     _defaults = {
