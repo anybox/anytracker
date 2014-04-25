@@ -17,9 +17,5 @@
             <field name="code">gtd</field>
             <field name="name">Getting Things Done</field>
         </record>
-        <record id="method_quickstart" model="anytracker.method">
-          <field name="code">qs</field>
-          <field name="name">Quickstart</field>
-        </record>
     </data>
 </openerp>

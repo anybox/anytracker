@@ -38,7 +38,7 @@ class TestNotify(SharedSetupTransactionCase):
         if isinstance(participant_ids, int) or isinstance(participant_ids, long):
             participant_ids = [participant_ids]
         project_id = self.tickets.create(cr, uid,
-                                         {'name': 'Quickstart test',
+                                         {'name': 'Test',
                                           'participant_ids': [(6, 0, participant_ids)],
                                           'method_id': method})
         return project_id

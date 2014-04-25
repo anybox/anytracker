@@ -41,7 +41,7 @@ class TestInvoicing(SharedSetupTransactionCase):
             participant_ids = [participant_ids]
         project_id = self.tickets.create(
             cr, uid,
-            {'name': 'Quickstart test',
+            {'name': 'Test',
              'participant_ids': [(6, 0, participant_ids)],
              'analytic_journal_id': self.anajournals.search(cr, uid, [])[0],
              'product_id': self.ref('product.product_product_consultant'),

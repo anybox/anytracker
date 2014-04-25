@@ -174,38 +174,5 @@
             <field name="method_id" ref="method_maintenance"/>
         </record>
 
-        <!-- Complexities for quickstart -->
-        <record model="anytracker.complexity" id="complexity_1h">
-          <field name="color" eval="0"/>
-          <field name="description">1h max</field>
-          <field name="method_id" ref="anytracker.method_quickstart"/>
-          <field name="name">1h</field>
-          <field name="risk" eval="10.0"/>
-          <field name="value" eval="1.0"/>
-        </record>
-        <record model="anytracker.complexity" id="complexity_2h">
-          <field name="color" eval="0"/>
-          <field name="description">2h max</field>
-          <field name="method_id" ref="anytracker.method_quickstart"/>
-          <field name="name">2h</field>
-          <field name="risk" eval="20.0"/>
-          <field name="value" eval="2.0"/>
-        </record>
-        <record model="anytracker.complexity" id="complexity_4h">
-          <field name="color" eval="0"/>
-          <field name="description">4h max</field>
-          <field name="method_id" ref="anytracker.method_quickstart"/>
-          <field name="name">4h</field>
-          <field name="risk" eval="40.0"/>
-          <field name="value" eval="4.0"/>
-        </record>
-        <record model="anytracker.complexity" id="complexity_1j">
-          <field name="color" eval="0"/>
-          <field name="description">1 jour max</field>
-          <field name="method_id" ref="anytracker.method_quickstart"/>
-          <field name="name">1 jour</field>
-          <field name="risk" eval="50.0"/>
-          <field name="value" eval="7.0"/>
-        </record>
     </data>
 </openerp>

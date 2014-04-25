@@ -47,9 +47,9 @@ class TestAnytracker(SharedSetupTransactionCase):
         # Create a ticket
         project_id = self.tickets.create(
             cr, uid,
-            {'name': 'Quickstart test',
+            {'name': 'Test1',
              'participant_ids': [(6, 0, [self.customer_id, self.member_id, self.manager_id])],
-             'method_id': self.ref('anytracker.method_quickstart')})
+             'method_id': self.ref('anytracker.method_test')})
         ticket_id = self.tickets.create(
             cr, uid, {'name': 'Test simple ticket', 'parent_id': project_id, })
 
@@ -76,9 +76,9 @@ class TestAnytracker(SharedSetupTransactionCase):
         # create a project
         project_id = self.tickets.create(
             cr, uid,
-            {'name': 'Quickstart test2',
+            {'name': 'Test2',
              'participant_ids': [(6, 0, [self.customer_id, self.member_id, self.manager_id])],
-             'method_id': self.ref('anytracker.method_quickstart')})
+             'method_id': self.ref('anytracker.method_test')})
         # create a sub node and 2 tickets
         node_id = self.tickets.create(cr, uid, {'name': 'A node', 'parent_id': project_id, })
         self.tickets.create(cr, uid, {'name': 'ticket1', 'parent_id': node_id, })

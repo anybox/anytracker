@@ -24,13 +24,13 @@ class TestStage(SharedSetupTransactionCase):
 
     def createProject(self, participant_ids):
         cr, uid = self.cr, self.uid
-        quickstart_method = self.ref('anytracker.method_quickstart')
+        test_method = self.ref('anytracker.method_test')
         if isinstance(participant_ids, int) or isinstance(participant_ids, long):
             participant_ids = [participant_ids]
         project_id = self.ticket_mdl.create(cr, uid,
-                                            {'name': 'Quickstart test',
+                                            {'name': 'Test',
                                              'participant_ids': [(6, 0, participant_ids)],
-                                             'method_id': quickstart_method})
+                                             'method_id': test_method})
         return project_id
 
     def createLeafTicket(self, name, parent_id):
