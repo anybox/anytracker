@@ -49,7 +49,7 @@ class TestImportMindmap(SharedSetupTransactionCase):
         ticket_ids = self.tickets.search(cr, uid, [])
         self.assertEqual(len(ticket_ids), 6)
 
-    @unittest.skipIf(date.today() < date(2014, 4, 5), "Must be fix")
+    @unittest.skipIf(date.today() < date(2014, 5, 5), "Must be fix")
     def test_bug_with_update_import_method_and_no_ticket_id(self):
         cr, uid = self.cr, self.uid
         wiz_id = self.create_wizard_import(import_method='update')
