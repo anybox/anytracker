@@ -175,6 +175,7 @@
       <field name="description"/>
       <field name="shortened_description"/>
       <field name="kanban_description"/>
+      <field name="has_attachment"/>
       <templates>
         <t t-name="ticket_details">
             <div><i><b><field name="breadcrumb"/></b><span> </span>(#<b><field name="number"/></b>)</i></div>
@@ -184,7 +185,6 @@
           <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_card oe_kanban_project oe_kanban_global_click">
 
             <div class="oe_kanban_content">
-                <img src="/anytracker/static/src/img/paperclip.png" class="oe_kanban_gravatar" attrs="{'invisible': [('has_attachment', '=', False)]}"/>
                 <h4>
                   <a t-attf-href="#{record.permalink.value}"
                      class="at_kanban_ticket_number">
@@ -192,7 +192,6 @@
                   </a>
                   <span class="at_kanban_ticket_title">
                     <field name="name"/>
-                    <field name="has_attachment" invisible="1"/>
                   </span>
                 </h4>
 
@@ -203,6 +202,9 @@
                 <div class="oe_kanban_bottom_left">
                 <t groups="anytracker.group_customer">
                   <a string="Edit" icon="gtk-edit" type="edit"/>
+                </t>
+                <t t-if="record.has_attachment.raw_value">
+                    <img src="/anytracker/static/src/img/paperclip.png"/>
                 </t>
                 <div class="oe_dropdown_toggle oe_dropdown_kanban"
                      groups="anytracker.group_customer">
