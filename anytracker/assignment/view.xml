@@ -87,7 +87,7 @@
     <field name="name">anytracker.assignment.kanban</field>
     <field name="model">anytracker.ticket</field>
     <field name="priority" eval="8"/>
-    <field name="inherit_id" ref="anytracker.tickets_kanban"/>
+    <field name="inherit_id" ref="anytracker.tickets_kanban2"/>
     <field name="arch" type="xml">
       <xpath expr="//field[@name='name']" position="after">
         <field name="assigned_user_email"/>

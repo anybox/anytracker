@@ -100,9 +100,9 @@
 
 <record id="tickets_kanban_complexity" model="ir.ui.view">
     <field name="model">anytracker.ticket</field>
-    <field name="inherit_id" ref="anytracker.tickets_kanban"/>
+    <field name="inherit_id" ref="anytracker.tickets_kanban2"/>
     <field name="arch" type="xml">
-      <xpath expr="/kanban/field[@name='kanban_description']" position="after">
+      <xpath expr="/kanban/field[last()]" position="after">
         <field name="rating"/>
       </xpath>
       <xpath expr="//div[@class='oe_kanban_bottom_left']//a[last()]" position="after">

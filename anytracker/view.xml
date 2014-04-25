@@ -162,7 +162,7 @@
 </record>
 
 <!-- Ticket Kanban View  -->
-<record model="ir.ui.view" id="tickets_kanban">
+<record model="ir.ui.view" id="tickets_kanban2">
   <field name="name">Anytracker - tickets</field>
   <field name="model">anytracker.ticket</field>
   <field name="arch" type="xml">
@@ -174,12 +174,11 @@
       <field name="sequence"/>
       <field name="description"/>
       <field name="shortened_description"/>
-      <field name="kanban_description"/>
       <field name="has_attachment"/>
       <templates>
         <t t-name="ticket_details">
             <div><i><b><field name="breadcrumb"/></b><span> </span>(#<b><field name="number"/></b>)</i></div>
-            <div><t t-raw="record.kanban_description.raw_value"/></div>
+            <div><t t-raw="record.description.raw_value"/></div>
         </t>
         <t t-name="kanban-box">
           <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_card oe_kanban_project oe_kanban_global_click">
@@ -190,7 +189,7 @@
                      class="at_kanban_ticket_number">
                     <field name="number"/>
                   </a>
-                  <span class="at_kanban_ticket_title">
+                  <span class="at_kanban_ticket_title" tooltip="ticket_details">
                     <field name="name"/>
                   </span>
                 </h4>
@@ -244,7 +243,7 @@
     <field name="res_model">anytracker.ticket</field>
     <field name="view_type">form</field>
     <field name="view_mode">kanban,tree,form</field>
-    <field name="view_id" ref="tickets_kanban"/>
+    <field name="view_id" ref="tickets_kanban2"/>
     <field name="domain">[('id', 'child_of', active_id), ('progress', '&lt;', 100.0), ('id', '!=', active_id)]</field>
     <field name="context">{'search_default_filter_tasks': 1, 'group_by': 'stage_id'}</field>
 </record>
@@ -278,7 +277,7 @@
   <field name="res_model">anytracker.ticket</field>
   <field name="view_mode">kanban,tree,form</field>
   <field name="view_type">form</field>
-  <field name="view_id" ref="tickets_kanban"/>
+  <field name="view_id" ref="tickets_kanban2"/>
   <field name="context">{'search_default_filter_projects': 1}</field>
 </record>
 <record model="ir.actions.act_window" id="act_all_nodes">

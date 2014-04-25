@@ -1,5 +1,6 @@
 # coding: utf-8
 import logging
+from lxml import html
 from osv import fields, osv
 from tools.translate import _
 from lxml import etree
@@ -44,20 +45,8 @@ class Ticket(osv.Model):
         res = {}
         limit = 150
         for ticket in self.read(cr, uid, ids, ['id', 'description'], context):
-            descr = ticket['description'] or ''
+            descr = html.fromstring(ticket['description']).text_content() or ''
             res[ticket['id']] = descr[:limit] + u'(…)' if len(descr) > limit else descr
-        return res
-
-    def _kanban_description(self, cr, uid, ids, field_name, args, context=None):
-        """shortened description when hovering a ticket in the kanban
-        """
-        res = {}
-        for ticket in self.read(cr, uid, ids, ['id', 'description'], context):
-            lines = (ticket['description'] or '').splitlines()
-            if len(lines) > 5:
-                lines = lines[:5]
-                lines.append(u'(…)')
-            res[ticket['id']] = '<br/>'.join(lines)
         return res
 
     def get_breadcrumb(self, cr, uid, ids, context=None):
@@ -265,11 +254,6 @@ class Ticket(osv.Model):
                                        string='Sub-nodes'),
         'shortened_description': fields.function(
             _shortened_description,
-            type='text',
-            obj='anytracker.ticket',
-            string='Description'),
-        'kanban_description': fields.function(
-            _kanban_description,
             type='text',
             obj='anytracker.ticket',
             string='Description'),
