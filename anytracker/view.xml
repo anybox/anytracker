@@ -8,10 +8,6 @@
   <field name="priority" eval="8"/>
   <field name="arch" type="xml">
   <search string="Search tickets">
-    <filter name="filter_unfinished"
-            string="Unfinished"
-            domain="[('progress','&lt;',100)]"
-            help="Show only unfinished tickets"/>
     <filter name="filter_tasks"
             string="Tasks"
             domain="[('child_ids','=',False)]"
