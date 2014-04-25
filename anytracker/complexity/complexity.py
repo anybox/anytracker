@@ -92,7 +92,7 @@ class Ticket(osv.Model):
             context = {}
         tickets = {}
         for ticket in self.browse(cr, uid, ids, context):
-            colors = ((r.complexity_id.risk, r.complexity_id) for r in ticket.rating_ids)
+            colors = list(((r.complexity_id.risk, r.complexity_id) for r in ticket.rating_ids))
             if colors:
                 tickets[ticket.id] = list(reversed(sorted(colors)))[0][1].color
             else:
