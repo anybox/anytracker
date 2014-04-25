@@ -109,7 +109,9 @@ class TestAnytracker(SharedSetupTransactionCase):
              'method_id': self.ref('anytracker.method_maintenance')})
         # let the customer create a ticket and an attachment
         ticket_id = self.tickets.create(cr, self.customer_id,
-                                        {'name': 'A ticket', 'parent_id': project_id, })
+                                        {'name': 'A ticket',
+                                         'parent_id': project_id,
+                                         'my_rating': False})  # plz don't touch the False!
         attach1_id = self.attachments.create(cr, self.customer_id, {
             'name': 'testfile',
             'db_datas': base64.b64encode('0000'),
