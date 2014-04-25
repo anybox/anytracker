@@ -8,18 +8,22 @@
   <field name="priority" eval="8"/>
   <field name="arch" type="xml">
   <search string="Search tickets">
-    <filter name="filter_projects"
-            string="Projects"
-            domain="[('parent_id','=',False)]"
-            help="Show only toplevel tickets. They correspond to projects"/>
-    <filter name="filter_nodes"
-            string="Nodes"
-            domain="[('child_ids','!=',False)]"
-            help="Show only tickets which have sub-tickets. They are used to gather tickets by nodes"/>
+    <filter name="filter_unfinished"
+            string="Unfinished"
+            domain="[('progress','&lt;',100)]"
+            help="Show only unfinished tickets"/>
     <filter name="filter_tasks"
             string="Tasks"
             domain="[('child_ids','=',False)]"
             help="Show only leaf tickets. They correspond to tasks"/>
+    <filter name="filter_nodes"
+            string="Nodes"
+            domain="[('child_ids','!=',False)]"
+            help="Show only tickets which have sub-tickets. They are used to gather tickets by nodes"/>
+    <filter name="filter_projects"
+            string="Projects"
+            domain="[('parent_id','=',False)]"
+            help="Show only toplevel tickets. They correspond to projects"/>
     <separator orientation="vertical"/>
     <group string="Group by...">
       <filter name="tickets_by_project"
@@ -244,8 +248,8 @@
     <field name="view_type">form</field>
     <field name="view_mode">kanban,tree,form</field>
     <field name="view_id" ref="tickets_kanban2"/>
-    <field name="domain">[('id', 'child_of', active_id), ('progress', '&lt;', 100.0), ('id', '!=', active_id)]</field>
-    <field name="context">{'search_default_filter_tasks': 1, 'group_by': 'stage_id'}</field>
+    <field name="domain">[('id', 'child_of', active_id), ('id', '!=', active_id)]</field>
+    <field name="context">{'search_default_filter_tasks': 1, 'search_default_unfinished': 1, 'group_by': 'stage_id'}</field>
 </record>
 <record id="ir_value_hierarchy_line_select" model="ir.values">
     <field name="key2">tree_but_open</field>
@@ -278,7 +282,7 @@
   <field name="view_mode">kanban,tree,form</field>
   <field name="view_type">form</field>
   <field name="view_id" ref="tickets_kanban2"/>
-  <field name="context">{'search_default_filter_projects': 1}</field>
+  <field name="context">{'search_default_filter_projects': 1, 'search_default_unfinished': 1}</field>
 </record>
 <record model="ir.actions.act_window" id="act_all_nodes">
   <field name="name">Nodes</field>
@@ -286,7 +290,7 @@
   <field name="view_mode">tree,form</field>
   <field name="view_type">form</field>
   <field name="view_id" ref="ticket_view_tree"/>
-  <field name="context">{'search_default_filter_nodes': 1}</field>
+  <field name="context">{'search_default_filter_nodes': 1, 'search_default_unfinished': 1}</field>
 </record>
 <record model="ir.actions.act_window" id="act_all_tasks">
   <field name="name">Tickets</field>
@@ -294,7 +298,7 @@
   <field name="view_mode">tree,form</field>
   <field name="view_type">form</field>
   <field name="view_id" ref="ticket_view_tree"/>
-  <field name="context">{'search_default_filter_tasks': 1}</field>
+  <field name="context">{'search_default_filter_tasks': 1, 'search_default_unfinished': 1}</field>
 </record>
 
 <!-- MENUITEMS -->
