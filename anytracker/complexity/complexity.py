@@ -92,8 +92,9 @@ class Ticket(osv.Model):
             context = {}
         tickets = {}
         for ticket in self.browse(cr, uid, ids, context):
-            complexity = ticket.my_rating
-            tickets[ticket.id] = getattr(complexity, 'color', False)
+            # find the complexity having the closest risk
+            tickets[ticket.id] = \
+                min((abs(ticket.risk-c.risk), c.color) for c in ticket.method_id.complexity_ids)[1]
         return tickets
 
     def compute_risk_and_rating(self, cr, uid, ids, context=None):

@@ -41,17 +41,6 @@ class TestComplexity(SharedSetupTransactionCase):
              'groups_id': [(6, 0,
                            [cls.ref('anytracker.group_customer')])]})
 
-    def createProject(self, participant_ids):
-        cr, uid = self.cr, self.uid
-        method_id = self.ref('anytracker.method_test')
-        if isinstance(participant_ids, int) or isinstance(participant_ids, long):
-            participant_ids = [participant_ids]
-        project_id = self.tickets.create(cr, uid,
-                                         {'name': 'test project',
-                                          'participant_ids': [(6, 0, participant_ids)],
-                                          'method_id': method_id})
-        return project_id
-
     def createLeafTicket(self, name, parent_id):
         cr, uid = self.cr, self.uid
         ticket_id = self.tickets.create(cr, uid,
@@ -62,9 +51,13 @@ class TestComplexity(SharedSetupTransactionCase):
     def test_rating(self):
         """ Simple rating scenario: a manager or member can rate, not a customer.
         """
-        cr = self.cr
+        cr, uid = self.cr, self.uid
         # create a project with a team of 3 people, and a ticket
-        project_id = self.createProject([self.customer_id, self.member_id, self.manager_id])
+        project_id = self.tickets.create(
+            cr, uid,
+            {'name': 'test project',
+             'participant_ids': [(6, 0, [self.customer_id, self.member_id, self.manager_id])],
+             'method_id': self.ref('anytracker.method_test')})
         ticket_id = self.createLeafTicket('Test simple ticket', project_id)
         # a member can rate
         self.tickets.write(cr, self.member_id, [ticket_id], {'my_rating': self.complexity2})
@@ -78,7 +71,10 @@ class TestComplexity(SharedSetupTransactionCase):
     def test_none_rating(self):
         """ Removing ratings linked to a ticket and ensure that this ticket has 0.0 value """
         cr, uid = self.cr, self.uid
-        project_id = self.createProject(self.member_id)
+        project_id = self.tickets.create(cr, uid,
+                                         {'name': 'test project',
+                                          'participant_ids': [(6, 0, [self.member_id])],
+                                          'method_id': self.ref('anytracker.method_test')})
         ticket1_id = self.createLeafTicket('Test ticket 1', project_id)
         self.tickets.write(cr, uid, [ticket1_id], {'my_rating': self.complexity2})
         self.assertEquals(self.tickets.browse(cr, uid, ticket1_id).rating, 2)
@@ -90,8 +86,12 @@ class TestComplexity(SharedSetupTransactionCase):
         """ Create several tickets for one project. Rate tickets, remove one and
         finally rate ticket with different user.
         Ensure that project's rating and tickets ratings are equal to what we expect"""
-        cr = self.cr
-        project_id = self.createProject(self.member_id)
+        cr, uid = self.cr, self.uid
+        project_id = self.tickets.create(
+            cr, uid,
+            {'name': 'test project',
+             'participant_ids': [(6, 0, [self.member_id])],
+             'method_id': self.ref('anytracker.method_test')})
         ticket1_id = self.createLeafTicket('Test ticket 1',
                                            project_id)
 
@@ -130,3 +130,31 @@ class TestComplexity(SharedSetupTransactionCase):
                            {'my_rating': self.ref('anytracker.complexity8')})
         self.tickets.write(cr, self.member_id, ticket1_id,
                            {'my_rating': self.ref('anytracker.complexity7')})
+
+    def test_get_complexity_color(self):
+        """ test the computed color of tickets
+        """
+
+        cr, uid = self.cr, self.uid
+        project_id = self.tickets.create(
+            cr, uid,
+            {'name': 'test project',
+             'participant_ids': [(6, 0, [self.member_id])],
+             'method_id': self.ref('anytracker.method_test2')})
+        ticket1_id = self.createLeafTicket('Test ticket 1',
+                                           project_id)
+        # we give two complexities
+        self.tickets.write(cr, self.member_id, [ticket1_id],
+                           {'my_rating': self.ref('anytracker.complexity6')})
+        self.tickets.write(cr, self.manager_id, [ticket1_id],
+                           {'my_rating': self.ref('anytracker.complexity7')})
+        # check the computed rating and risk
+        self.assertEquals(self.tickets.browse(cr, self.member_id, project_id).rating, 3.5)
+        self.assertEquals(self.tickets.browse(
+            cr, self.member_id, project_id).risk, 0.357738371066744)
+        # the computed color should be 3 (closest to complexity7)
+        self.assertEquals(self.tickets.browse(cr, self.member_id, project_id).color, 3)
+        # add a risky complexity
+        self.tickets.write(cr, self.manager_id, [ticket1_id],
+                           {'my_rating': self.ref('anytracker.complexity8')})
+        self.assertEquals(self.tickets.browse(cr, self.member_id, project_id).color, 4)

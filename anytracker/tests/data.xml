@@ -95,6 +95,7 @@
       <field name="name">cmplx5</field>
       <field name="risk" eval="0.0"/>
       <field name="value" eval="1.5"/>
+      <field name="color" eval="1"/>
     </record>
     <record model="anytracker.complexity" id="complexity6">
       <field name="color" eval="0"/>
@@ -103,6 +104,7 @@
       <field name="name">cmplx6</field>
       <field name="risk" eval="0.25"/>
       <field name="value" eval="2.5"/>
+      <field name="color" eval="2"/>
     </record>
     <record model="anytracker.complexity" id="complexity7">
       <field name="color" eval="0"/>
@@ -111,6 +113,7 @@
       <field name="name">cmplx7</field>
       <field name="risk" eval="0.45"/>
       <field name="value" eval="4.5"/>
+      <field name="color" eval="3"/>
     </record>
     <record model="anytracker.complexity" id="complexity8">
       <field name="color" eval="0"/>
@@ -119,6 +122,7 @@
       <field name="name">cmplx8</field>
       <field name="risk" eval="1.0"/>
       <field name="value" eval="7.5"/>
+      <field name="color" eval="4"/>
     </record>
     <!-- test stages -->
     <record id="stage_test_draft2" model="anytracker.stage">
