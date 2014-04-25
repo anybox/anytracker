@@ -1,5 +1,5 @@
-.at_kanban_box_content {
-	min-height: 60px;
+.oe_kanban_project {
+    min-height: 0px;
 }
 
 .oe_kanban_gravatar {
