@@ -45,8 +45,8 @@ class Ticket(osv.Model):
         res = {}
         limit = 150
         for ticket in self.read(cr, uid, ids, ['id', 'description'], context):
-            descr = html.fromstring(ticket['description']).text_content() or ''
-            res[ticket['id']] = descr[:limit] + u'(…)' if len(descr) > limit else descr
+            d = html.fromstring((ticket['description'] or '').strip() or '&nbsp;').text_content()
+            res[ticket['id']] = d[:limit] + u'(…)' if len(d) > limit else d
         return res
 
     def get_breadcrumb(self, cr, uid, ids, context=None):
