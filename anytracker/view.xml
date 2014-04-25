@@ -198,22 +198,22 @@
                   <t t-raw="record.shortened_description.raw_value"/>
                 </div>
 
-                <div class="oe_kanban_bottom_left">
-                <t groups="anytracker.group_customer">
-                  <a string="Edit" icon="gtk-edit" type="edit"/>
-                </t>
-                <t t-if="record.has_attachment.raw_value">
-                    <img src="/anytracker/static/src/img/paperclip.png"/>
-                </t>
-                <div class="oe_dropdown_toggle oe_dropdown_kanban"
-                     groups="anytracker.group_customer">
-                  <span class="oe_e">í</span>
-                  <ul class="oe_dropdown_menu">
-                    <t t-if="widget.view.is_action_enabled('edit')">
-                      <li><a type="edit">Edit ticket</a></li>
-                    </t>
-                  </ul>
-                </div>
+                <div class="oe_kanban_bottom_left" style="margin-top: 0.5em">
+                  <t groups="anytracker.group_customer">
+                    <a string="Edit" icon="gtk-edit" type="edit"/>
+                  </t>
+                  <t t-if="record.has_attachment.raw_value">
+                      <img src="/anytracker/static/src/img/paperclip.png"/>
+                  </t>
+                  <div class="oe_dropdown_toggle oe_dropdown_kanban"
+                       groups="anytracker.group_customer">
+                    <span class="oe_e">í</span>
+                    <ul class="oe_dropdown_menu">
+                      <t t-if="widget.view.is_action_enabled('edit')">
+                        <li><a type="edit">Edit ticket</a></li>
+                      </t>
+                    </ul>
+                  </div>
                 </div>
             </div>
           </div>
