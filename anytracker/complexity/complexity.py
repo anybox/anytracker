@@ -78,11 +78,12 @@ class Ticket(osv.Model):
     def _set_my_rating(self, cr, uid, ticket_id, name, value, fnct_inv_arg, context):
         """set my rating
         """
-        self.pool.get('anytracker.rating').create(cr, uid, {
-            'complexity_id': value,
-            'ticket_id': ticket_id,
-            'user_id': uid,
-            'time': time.strftime('%Y-%m-%d %H:%M:%S')})
+        if value is not False:
+            self.pool.get('anytracker.rating').create(cr, uid, {
+                'complexity_id': value,
+                'ticket_id': ticket_id,
+                'user_id': uid,
+                'time': time.strftime('%Y-%m-%d %H:%M:%S')})
 
     def _get_color(self, cr, uid, ids, field_name, args, context=None):
         """get the color from my rating
