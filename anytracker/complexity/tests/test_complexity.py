@@ -132,7 +132,7 @@ class TestComplexity(SharedSetupTransactionCase):
                            {'my_rating': self.ref('anytracker.complexity7')})
 
     def test_get_complexity_color(self):
-        """ test the computed color of tickets
+        """ test the color of tickets
         """
 
         cr, uid = self.cr, self.uid
@@ -149,12 +149,12 @@ class TestComplexity(SharedSetupTransactionCase):
         self.tickets.write(cr, self.manager_id, [ticket1_id],
                            {'my_rating': self.ref('anytracker.complexity7')})
         # check the computed rating and risk
-        self.assertEquals(self.tickets.browse(cr, self.member_id, project_id).rating, 3.5)
+        self.assertEquals(self.tickets.browse(cr, self.member_id, ticket1_id).rating, 3.5)
         self.assertEquals(self.tickets.browse(
             cr, self.member_id, project_id).risk, 0.357738371066744)
-        # the computed color should be 3 (closest to complexity7)
-        self.assertEquals(self.tickets.browse(cr, self.member_id, project_id).color, 3)
+        # the computed color should be 3 (complexity7)
+        self.assertEquals(self.tickets.browse(cr, self.member_id, ticket1_id).color, 3)
         # add a risky complexity
         self.tickets.write(cr, self.manager_id, [ticket1_id],
                            {'my_rating': self.ref('anytracker.complexity8')})
-        self.assertEquals(self.tickets.browse(cr, self.member_id, project_id).color, 4)
+        self.assertEquals(self.tickets.browse(cr, self.member_id, ticket1_id).color, 4)

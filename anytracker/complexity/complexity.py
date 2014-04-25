@@ -86,15 +86,17 @@ class Ticket(osv.Model):
                 'time': time.strftime('%Y-%m-%d %H:%M:%S')})
 
     def _get_color(self, cr, uid, ids, field_name, args, context=None):
-        """get the color from my rating
+        """get the color of the rating with highest risk
         """
         if not context:
             context = {}
         tickets = {}
         for ticket in self.browse(cr, uid, ids, context):
-            # find the complexity having the closest risk
-            tickets[ticket.id] = \
-                min((abs(ticket.risk-c.risk), c.color) for c in ticket.method_id.complexity_ids)[1]
+            colors = ((r.complexity_id.risk, r.complexity_id) for r in ticket.rating_ids)
+            if colors:
+                tickets[ticket.id] = list(reversed(sorted(colors)))[0][1].color
+            else:
+                tickets[ticket.id] = 0
         return tickets
 
     def compute_risk_and_rating(self, cr, uid, ids, context=None):
