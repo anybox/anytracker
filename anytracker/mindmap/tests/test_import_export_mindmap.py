@@ -3,8 +3,6 @@ from anybox.testing.openerp import SharedSetupTransactionCase
 from openerp import modules
 from openerp.osv import osv
 import base64
-import unittest
-from datetime import date
 
 
 def get_mindmap_binary():
@@ -70,7 +68,8 @@ class TestImportExportMindmap(SharedSetupTransactionCase):
         wiz_id = self.create_wizard_import()
         self.wiz_import.execute_import(cr, uid, wiz_id)
         ticket_id = self.tickets.search(
-            cr, uid, [('name', '=', u"Droit d'accés application mlf"), ('parent_id', '=', False)])[0]
+            cr, uid, [('name', '=', u"Droit d'accés application mlf"),
+                      ('parent_id', '=', False)])[0]
         ticket_ids = self.tickets.search(cr, uid, [('parent_id', 'child_of', ticket_id)])
         self.assertEqual(len(ticket_ids), 6)
 
