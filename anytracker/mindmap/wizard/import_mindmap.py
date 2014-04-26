@@ -60,6 +60,8 @@ class import_mindmap_wizard(osv.TransientModel):
 class FreemindContentHandler(sax.ContentHandler):
     '''Handling event of sax xml parser'''
 
+    rich_content_buffer = None
+
     def __init__(self, cr, uid, pool, wizard, complexity_dict):
         '''get element for access to openobject pool and db cursor'''
         self.cr = cr
@@ -71,7 +73,6 @@ class FreemindContentHandler(sax.ContentHandler):
         self.parent_ids = []
         self.updated_ticket_ids = []
         self.complexity_dict = complexity_dict
-        self.rich_content_buffer = False
         self.context = self.pool.get('res.users').context_get(cr, uid)
         self.context['import_mindmap'] = True
         stages = wizard.method_id.stage_ids
@@ -92,6 +93,12 @@ class FreemindContentHandler(sax.ContentHandler):
                 if self.import_method == 'insert':
                     self.parent_id = self.ticket_id
                 elif self.import_method == 'update':
+                    if not self.ticket_id:
+                        raise osv.except_osv(
+                            _('Error'),
+                            _("To be able to use update method, "
+                              "you should set a parent ticket "
+                              "on the export wizard"))
                     ticket = ticket_pool.browse(self.cr, self.uid, self.ticket_id, self.context)
                     self.parent_id = ticket.parent_id.id if ticket.parent_id else False
                 else:

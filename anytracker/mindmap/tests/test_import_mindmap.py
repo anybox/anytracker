@@ -1,5 +1,6 @@
 from anybox.testing.openerp import SharedSetupTransactionCase
 from openerp import modules
+from openerp.osv import osv
 import base64
 import unittest
 from datetime import date
@@ -49,8 +50,12 @@ class TestImportMindmap(SharedSetupTransactionCase):
         ticket_ids = self.tickets.search(cr, uid, [])
         self.assertEqual(len(ticket_ids), 6)
 
-    @unittest.skipIf(date.today() < date(2014, 5, 5), "Must be fix")
     def test_bug_with_update_import_method_and_no_ticket_id(self):
         cr, uid = self.cr, self.uid
         wiz_id = self.create_wizard_import(import_method='update')
-        self.wiz_import.execute_import(cr, uid, wiz_id)
+        try:
+            self.wiz_import.execute_import(cr, uid, wiz_id)
+            self.fail()
+        except osv.except_osv:
+            return
+        self.fail()
