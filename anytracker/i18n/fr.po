@@ -39,6 +39,11 @@ msgstr ""
 "\"."
 
 #. module: anytracker
+#: field:anytracker.ticket,assigned_user_id:0
+msgid "Assigned user"
+msgstr "Utilisateur affecté"
+
+#. module: anytracker
 #: field:anytracker.ticket,name:0
 msgid "Title"
 msgstr "Titre"
