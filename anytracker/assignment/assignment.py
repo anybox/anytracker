@@ -31,6 +31,13 @@ class Ticket(osv.Model):
     """
     _inherit = 'anytracker.ticket'
 
+    def _ids_to_recompute(self, cr, uid, ids, context=None):
+        """ return list of tickets ids that need to be recompute """
+        res = []
+        for assignment_id in self.browse(cr, uid, ids):
+            res.append(assignment_id.ticket_id.id)
+        return res
+
     def _get_assignment(self, cr, uid, ids, field_names, args, context=None):
         """ Return the latest assignment of the ticket for the current stage
         If the assignment stage is not the ticket stage, take an older one.
@@ -94,6 +101,7 @@ class Ticket(osv.Model):
             type='many2one',
             relation='res.users',
             string="Assigned user",
+            store={'anytracker.assignment': (_ids_to_recompute, ['user_id'], 10)},
             multi='assigned_user'),  # multi is the key to group function fields
         'assigned_user_email': fields.function(
             _get_assignment,
