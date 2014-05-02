@@ -20,6 +20,9 @@
                 <field name="force_rating"/>
                 <field name="sequence"/>
             </group>
+            <group>
+                <field name="groups_allowed" string="Authorized groups"/>
+            </group>
         </group>
         <notebook>
             <page string="Description">

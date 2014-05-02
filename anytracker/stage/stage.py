@@ -26,7 +26,14 @@ class Stage(osv.Model):
             'Forbidden complexities', help='complexities forbidden for this stage'),
         'progress': fields.float(
             'Progress', help='Progress value of the ticket reaching this stage'),
+        'groups_allowed': fields.many2many('res.groups',
+                                           'anytracker_stage_res_groups_rel',
+                                           'res_group_id',
+                                           'anytracker_stage_id',
+                                           'Authorized groups to move ticket to this stage'),
     }
+
+    _defaults = {'groups_allowed': False}
 
 
 class Ticket(osv.Model):
@@ -96,6 +103,32 @@ class Ticket(osv.Model):
         """
         # save the previous progress
         if 'stage_id' in values:
+            # retrieving authorized groups for this stage
+            groups_allowed = self.pool.get('anytracker.stage').read(
+                cr, uid, values['stage_id'],
+                ['groups_allowed'], load='_classic_write')['groups_allowed']
+            if groups_allowed:
+                # check if the user is in the right group to move the ticket to this stage
+                browse_user = self.pool.get('res.users').browse(
+                    cr, uid, uid)
+                # retrieving user whole groups
+                groups_ids = browse_user.groups_id
+                parent_groups = None
+                # loop through groups to only keep parent ones
+                for group in groups_ids:
+                    if not parent_groups:
+                        parent_groups = set(groups_ids)
+                    if not group.implied_ids:
+                        continue
+                    # remove imply group id from parent_groups
+                    for imp_gr in group.implied_ids:
+                        parent_groups.discard(imp_gr)
+                user_groups = [ug.id for ug in parent_groups]
+                if not set(user_groups).intersection(set(groups_allowed)) and uid != 1:
+                    raise osv.except_osv('Operation forbidden',
+                                         'You don\'t have the permission to move ticket '
+                                         'to this stage')
+
             old_progress = dict([(t.id, t.stage_id.progress)
                                  for t in self.browse(cr, uid, ids, context)])
 
