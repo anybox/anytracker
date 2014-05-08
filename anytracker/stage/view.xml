@@ -20,16 +20,18 @@
                 <field name="force_rating"/>
                 <field name="sequence"/>
             </group>
-            <group>
-                <field name="groups_allowed" string="Authorized groups"/>
-            </group>
         </group>
         <notebook>
             <page string="Description">
                 <field name="description"/>
             </page>
             <page string="Forbidden complexities">
+                <div style="margin: 1em">Ticket that have the following complexities can't be move to this stage</div>
                 <field name="forbidden_complexity_ids"/>
+            </page>
+            <page string="Authorized groups">
+                <div style="margin: 1em">Only user in these groups will be able to move the ticket to this stage</div>
+                <field name="groups_allowed"/>
             </page>
         </notebook>
     </form>
