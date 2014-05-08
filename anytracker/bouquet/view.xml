@@ -24,7 +24,7 @@
               <field name="bouquet_rating" readonly="True"/>
           </group>
       </group>
-      <group>
+      <group col="1">
           <field name="ticket_ids" nolabel="1">
             <tree>
               <field name="number"/>

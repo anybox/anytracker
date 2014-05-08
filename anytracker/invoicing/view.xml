@@ -44,13 +44,10 @@
     <field name="model">anytracker.bouquet</field>
     <field name="inherit_id" ref="anytracker.bouquet_form"/>
     <field name="arch" type="xml">
-        <xpath expr="//field[@name='ticket_ids']" position="inside">
-            <label for="create_analytic_line"
-                   string="Create invoicing lines"
-                   groups="anytracker.group_manager"/>
+        <xpath expr="//field[@name='ticket_ids']" position="after">
             <button name="create_analytic_lines"
                     type="object"
-                    string="Create"
+                    string="Create invoicing lines"
                     groups="anytracker.group_manager"/>
         </xpath>
         <xpath expr="//tree//field[@name='number']" position="before">
