@@ -95,7 +95,7 @@ class TestNotify(SharedSetupTransactionCase):
                                                {'name': 'urgent notifying ticket',
                                                 'parent_id': project_id, },
                                                context={'active_id': project_id})
-        self.assertEquals(self.mails.search(cr, uid, [], count=True) - nb_mails, 3)
+        self.assertEquals(self.mails.search(cr, uid, [], count=True) - nb_mails, 4)
         self.assertEquals(
             len(self.tickets.browse(cr, uid, urgent_ticket_id).notified_stage_ids), 1)
 
@@ -104,6 +104,6 @@ class TestNotify(SharedSetupTransactionCase):
                            {'stage_id': self.ref('anytracker.stage_test_done')})
         self.tickets.write(cr, uid, [ticket_id],
                            {'stage_id': self.ref('anytracker.stage_test_draft')})
-        self.assertEquals(self.mails.search(cr, uid, [], count=True) - nb_mails, 3)
+        self.assertEquals(self.mails.search(cr, uid, [], count=True) - nb_mails, 4)
         self.assertEquals(
             len(self.tickets.browse(cr, uid, urgent_ticket_id).notified_stage_ids), 1)
