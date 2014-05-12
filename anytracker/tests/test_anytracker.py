@@ -38,13 +38,14 @@ class TestAnytracker(SharedSetupTransactionCase):
              'groups_id': [(6, 0,
                            [self.ref('anytracker.group_customer')])]})
 
-    def test_name_search(self):
+    def test_name_search_and_autosubscribe(self):
         """
             Test the name_search function in anytracker.ticket module.
-            We may be able to find a ticket from his name or number
+            We may be able to find a ticket from his name or number.
+            Also test that project members are subscribed to the openchatter
         """
         cr, uid = self.cr, self.uid
-        # Create a ticket
+        # Create a project and a project
         project_id = self.tickets.create(
             cr, uid,
             {'name': 'Test1',
@@ -52,6 +53,10 @@ class TestAnytracker(SharedSetupTransactionCase):
              'method_id': self.ref('anytracker.method_test')})
         ticket_id = self.tickets.create(
             cr, uid, {'name': 'Test simple ticket', 'parent_id': project_id, })
+
+        # we check that there are 4 subscribers (uid/admin + the 3 project members)
+        followers = [f.id for f in self.tickets.browse(cr, uid, ticket_id).message_follower_ids]
+        self.assertEquals(len(followers), 4)
 
         # get his number
         ticket_number = self.tickets.read(cr, uid, ticket_id, ['number'])['number']

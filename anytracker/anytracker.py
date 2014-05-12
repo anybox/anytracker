@@ -147,6 +147,11 @@ class Ticket(osv.Model):
         ticket_id = super(Ticket, self).create(cr, uid, values, context=context)
         if 'parent_id' not in values:
             self.write(cr, uid, ticket_id, {'project_id': ticket_id})
+
+        # subscribe project members
+        participant_ids = self.browse(cr, uid, ticket_id).project_id.participant_ids
+        if participant_ids:
+            self.message_subscribe_users(cr, uid, [ticket_id], [p.id for p in participant_ids])
         return ticket_id
 
     def _default_parent_id(self, cr, uid, context=None):
