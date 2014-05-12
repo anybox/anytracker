@@ -103,7 +103,7 @@ class Ticket(osv.Model):
         """
         # save the previous progress
         if 'stage_id' in values:
-            # retrieving authorized groups for this stage
+            # retrieving authorized groups for this stage
             groups_allowed = self.pool.get('anytracker.stage').read(
                 cr, uid, values['stage_id'],
                 ['groups_allowed'], load='_classic_write')['groups_allowed']
@@ -111,16 +111,16 @@ class Ticket(osv.Model):
                 # check if the user is in the right group to move the ticket to this stage
                 browse_user = self.pool.get('res.users').browse(
                     cr, uid, uid)
-                # retrieving user whole groups
+                # retrieving user whole groups
                 groups_ids = browse_user.groups_id
                 parent_groups = None
-                # loop through groups to only keep parent ones
+                # loop through groups to only keep parent ones
                 for group in groups_ids:
                     if not parent_groups:
                         parent_groups = set(groups_ids)
                     if not group.implied_ids:
                         continue
-                    # remove imply group id from parent_groups
+                    # remove imply group id from parent_groups
                     for imp_gr in group.implied_ids:
                         parent_groups.discard(imp_gr)
                 user_groups = [ug.id for ug in parent_groups]
