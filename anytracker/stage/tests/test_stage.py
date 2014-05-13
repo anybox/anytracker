@@ -59,7 +59,7 @@ class TestStage(SharedSetupTransactionCase):
                       'method_id': test_method,
                       'state': 'todo',
                       'groups_allowed': [(6, 0, [self.ref('anytracker.group_customer')])]})
-        # anytracker member cannot move ticket to this stage
+        # anytracker member cannot move ticket to this stage
         self.assertRaises(
             osv.except_osv,
             self.ticket_mdl.write,
