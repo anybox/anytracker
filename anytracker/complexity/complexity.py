@@ -118,11 +118,15 @@ class Ticket(osv.Model):
             for rating in sorted([(r.time, r.id, r.user_id, r.complexity_id.value)
                                   for r in ticket.rating_ids]):
                 latest_person_rating[rating[2]] = rating[-1]
+            # a rating or risk of False or None is skipped
+            latest_person_rating = dict([r for r in latest_person_rating.items()
+                                         if r[-1] not in (None, False)])
+            latest_person_risk = dict([r for r in latest_person_risk.items()
+                                       if r[-1] not in (None, False)])
             # compute the mean of all latest ratings
             res_risk[ticket.id] = (risk_mean(latest_person_risk.values())
                                    if latest_person_risk else 0.5)
-            res_rating[ticket.id] = (sum([r or 0.0 for r in
-                                          latest_person_rating.values()]
+            res_rating[ticket.id] = (sum(latest_person_rating.values()
                                          )/len(latest_person_rating)
                                      if latest_person_rating else 0)
         return res_risk, res_rating

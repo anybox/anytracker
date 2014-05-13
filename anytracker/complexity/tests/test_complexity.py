@@ -81,6 +81,9 @@ class TestComplexity(SharedSetupTransactionCase):
         self.tickets.write(cr, uid, ticket1_id, {'my_rating': None})
         self.assertFalse(self.tickets.browse(cr, uid, ticket1_id).my_rating)
         self.assertEquals(self.tickets.browse(cr, uid, ticket1_id).rating, 0.0)
+        # add a rating from another person, and check that the rating None is ignored
+        self.tickets.write(cr, self.member_id, [ticket1_id], {'my_rating': self.complexity2})
+        self.assertEquals(self.tickets.browse(cr, uid, ticket1_id).rating, 2)
 
     def test_compute_rating(self):
         """ Create several tickets for one project. Rate tickets, remove one and
