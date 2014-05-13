@@ -5,6 +5,7 @@ from ..assignment.tests import test_assignment
 from ..notify.tests import test_notify
 from . import test_anytracker
 from ..invoicing.tests import test_invoicing
+from ..mindmap.tests import test_import_export_mindmap
 
 fast_suite = [
     test_bouquets,
@@ -14,4 +15,5 @@ fast_suite = [
     test_notify,
     test_anytracker,
     test_invoicing,
+    test_import_export_mindmap,
 ]
