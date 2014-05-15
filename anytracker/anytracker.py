@@ -145,7 +145,7 @@ class Ticket(osv.Model):
                                    ['project_id'], load='_classic_write')['project_id']
             values['project_id'] = project_id
         ticket_id = super(Ticket, self).create(cr, uid, values, context=context)
-        if 'parent_id' not in values:
+        if not values.get('parent_id'):
             self.write(cr, uid, ticket_id, {'project_id': ticket_id})
 
         # subscribe project members

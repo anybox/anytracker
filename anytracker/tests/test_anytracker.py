@@ -51,6 +51,9 @@ class TestAnytracker(SharedSetupTransactionCase):
             {'name': 'Test1',
              'participant_ids': [(6, 0, [self.customer_id, self.member_id, self.manager_id])],
              'method_id': self.ref('anytracker.method_test')})
+        # check project_id attribute exists
+        self.assertEquals(self.tickets.browse(cr, uid, project_id).project_id.id, project_id)
+
         ticket_id = self.tickets.create(
             cr, uid, {'name': 'Test simple ticket', 'parent_id': project_id, })
 
