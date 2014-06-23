@@ -8,9 +8,8 @@ from urllib import urlencode
 
 
 class UrlDirection(http.Controller):
-    _cp_path = '/anytracker'
 
-    @http.httprequest
+    @http.route('/', type="http", auth=None)
     def __dispatch(self, request):
         # extract db and ticket number from URL
         path = request.httprequest.path[1:].split('/')

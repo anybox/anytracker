@@ -1,7 +1,7 @@
 # coding: utf-8
 from openerp.osv import osv
 from openerp.osv import fields
-from tools.translate import _
+from openerp.tools.translate import _
 
 
 class Stage(osv.Model):
