@@ -1,8 +1,8 @@
 # coding: utf-8
 import logging
 from lxml import html
-from openerp.osv import fields, osv
-from openerp.tools.translate import _
+from osv import fields, osv
+from tools.translate import _
 from lxml import etree
 from openerp.osv.orm import transfer_modifiers_to_node
 from openerp import SUPERUSER_ID

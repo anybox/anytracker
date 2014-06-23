@@ -1,7 +1,6 @@
 #flake8: noqa
-import openerp
 from . import anytracker
-# from . import controller
+from . import controller
 from . import history
 from . import method
 from . import stage

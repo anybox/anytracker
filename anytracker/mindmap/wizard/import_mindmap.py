@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from openerp.osv import osv, fields
-from openerp.tools.translate import _
+from osv import osv, fields
+from tools.translate import _
 from xml import sax
 from datetime import datetime
 from cStringIO import StringIO

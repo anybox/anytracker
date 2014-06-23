@@ -1,6 +1,6 @@
 # coding: utf-8
 from openerp.osv import fields, osv
-from openerp.tools.translate import _
+from tools.translate import _
 import logging
 
 logger = logging.getLogger(__file__)

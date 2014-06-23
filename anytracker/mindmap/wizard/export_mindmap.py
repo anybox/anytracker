@@ -1,4 +1,4 @@
-from openerp.osv import osv, fields
+from osv import osv, fields
 from .mindmap_parse import FreemindWriterHandler
 from .mindmap_parse import FreemindParser
 import StringIO

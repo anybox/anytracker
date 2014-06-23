@@ -1,7 +1,7 @@
 # coding: utf-8
 from openerp.osv import osv
 from openerp.osv import fields
-from openerp.tools.translate import _
+from tools.translate import _
 import time
 
 

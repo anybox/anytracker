@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from openerp.osv import osv, fields
+from osv import osv, fields
 
 
 class serve_mindmap_wizard(osv.TransientModel):
