@@ -89,6 +89,7 @@
     <field name="arch" type="xml">
         <xpath expr="//notebook" position="inside">
             <page string="Stages">
+                <div>Stages correspond to the columns of the kanban, that is, the sequential steps of the lifecycle of a ticket.</div>
                 <field name="stage_ids">
                     <tree>
                         <field name="name"/>

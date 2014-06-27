@@ -62,6 +62,7 @@
     <field name="arch" type="xml">
         <xpath expr="//notebook" position="inside">
             <page string="Complexities">
+                <div>Complexities correspond to the evaluation done by people. It can be a time length or another value without unit.</div>
                 <field name="complexity_ids">
                     <tree>
                         <field name="name"/>

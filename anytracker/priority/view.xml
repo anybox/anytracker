@@ -73,6 +73,7 @@
     <field name="arch" type="xml">
         <xpath expr="//notebook" position="inside">
             <page string="Priorities">
+                <div>Priority correspond to the expected time span or urgency to finish the ticket, possibly with a deadline</div>
                 <field name="priority_ids">
                     <tree>
                         <field name="name"/>

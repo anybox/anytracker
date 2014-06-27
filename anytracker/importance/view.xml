@@ -37,6 +37,7 @@
     <field name="arch" type="xml">
         <xpath expr="//notebook" position="inside">
             <page string="Importances">
+                <div>Importance represents either the gravity of an issue, or the business value for a feature. It can help define what should be done first.</div>
                 <field name="importance_ids">
                     <tree>
                         <field name="name"/>
