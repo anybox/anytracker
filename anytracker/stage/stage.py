@@ -149,23 +149,16 @@ class Ticket(osv.Model):
         if not stage_id:
             return res
 
-        # set all children stage at once
         if not hasattr(ids, '__iter__'):
             ids = [ids]
         for ticket in self.browse(cr, uid, ids, context):
-            method = ticket.project_id.method_id
-            # TODO: replace with a configurable wf?
+            # check stage enforcements
             stage = self.pool.get('anytracker.stage').browse(cr, uid, stage_id, context)
-            if method.code == ('implementation'
-                               and not ticket.my_rating
-                               and stage.force_rating
-                               and not ticket.child_ids):
+            if not ticket.my_rating and stage.force_rating and not ticket.child_ids:
                 raise osv.except_osv(_('Warning !'),
                                      _('You must rate the ticket "%s" to enter the "%s" stage'
                                        % (ticket.name, stage.name)))
-            if method.code == ('implementation'
-                               and ticket.my_rating.id
-                               in [i.id for i in (stage.forbidden_complexity_ids or [])]):
+            if ticket.my_rating.id in [i.id for i in (stage.forbidden_complexity_ids or [])]:
                     raise osv.except_osv(
                         _('Warning !'),
                         _('The ticket "%s" is rated "%s" so it cannot enter this stage'
