@@ -21,6 +21,7 @@ class TestAnytracker(SharedSetupTransactionCase):
             cr, uid,
             {'name': 'Member',
              'login': 'member',
+             'email': 'member@localhost',
              'groups_id': [(6, 0,
                            [self.ref('anytracker.group_member'),
                             self.ref('base.group_user')])]})
@@ -28,6 +29,7 @@ class TestAnytracker(SharedSetupTransactionCase):
             cr, uid,
             {'name': 'Manager',
              'login': 'manager',
+             'email': 'manager@localhost',
              'groups_id': [(6, 0,
                            [self.ref('base.group_user'),
                             self.ref('anytracker.group_manager')])]})
@@ -35,6 +37,7 @@ class TestAnytracker(SharedSetupTransactionCase):
             cr, uid,
             {'name': 'Customer',
              'login': 'customer',
+             'email': 'customer@localhost',
              'groups_id': [(6, 0,
                            [self.ref('anytracker.group_customer')])]})
 
@@ -109,7 +112,7 @@ class TestAnytracker(SharedSetupTransactionCase):
         """ Check attachment creation, deletion and access
         """
         cr, uid = self.cr, self.uid
-        # create two projects, one with customer, on without
+        # create a project
         project_id = self.tickets.create(
             cr, uid,
             {'name': 'Attachment test',
