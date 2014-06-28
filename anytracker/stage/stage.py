@@ -98,10 +98,18 @@ class Ticket(osv.Model):
                 next_stage = stage_ids[stage_ids.index(stage_id)+1]
             self.write(cr, uid, [ticket.id], {'stage_id': next_stage}, context)
 
+    def create(self, cr, uid, values, context=None):
+        """select the default stage if parent is selected lately
+        """
+        if not values.get('stage_id') and values.get('parent_id'):
+            method = self.browse(cr, uid, values.get('parent_id')).method_id
+            values['stage_id'] = method.get_first_stage()[method.id]
+        return super(Ticket, self).create(cr, uid, values, context)
+
     def write(self, cr, uid, ids, values, context=None):
         """set children stages when writing stage_id
         """
-        # save the previous progress
+        # check we can do this
         if 'stage_id' in values:
             # retrieving authorized groups for this stage
             groups_allowed = self.pool.get('anytracker.stage').read(
@@ -129,6 +137,8 @@ class Ticket(osv.Model):
                                          'You don\'t have the permission to move ticket '
                                          'to this stage')
 
+        # save the previous progress
+        if 'stage_id' in values:
             old_progress = dict([(t.id, t.stage_id.progress)
                                  for t in self.browse(cr, uid, ids, context)])
 
@@ -189,12 +199,8 @@ class Ticket(osv.Model):
         active_id = context.get('active_id')
         if not active_id:
             return False
-        stages = [(s.progress, s.id)
-                  for s in self.pool.get('anytracker.ticket').browse(
-                      cr, uid, context.get('active_id')).method_id.stage_ids
-                  ]
-        smallest = sorted(stages)[0][1] if len(stages) else False
-        return smallest
+        method = self.browse(cr, uid, context.get('active_id')).method_id
+        return method.get_first_stage()[method.id]
 
     def recompute_progress(self, cr, uid, ids, context=None):
         """recompute the overall progress of the ticket, based on subtickets.
@@ -270,3 +276,11 @@ class Method(osv.Model):
             'Stages',
             help="The stages associated to this method"),
     }
+
+    def get_first_stage(self, cr, uid, ids, context=None):
+        """ Return the id of the first stage of a method"""
+        res = {}
+        for method in self.browse(cr, uid, ids, context):
+            stages = [(s.progress, s.id) for s in method.stage_ids]
+            res[method.id] = sorted(stages)[0][1] if len(stages) else False
+        return res
