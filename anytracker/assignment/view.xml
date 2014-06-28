@@ -151,7 +151,7 @@
 
 <menuitem id="menu_my_tickets"
     parent="menu_anytracker"
-    sequence="-1"
+    sequence="15"
     action="act_open_my_tickets_view"/>
 
 </data>
