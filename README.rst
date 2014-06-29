@@ -33,6 +33,9 @@ ticket can have subtickets. It allows to split a big project into subprojects,
 features, subfeatures, tickets, and split again a ticket when it is considered
 too big.
 
+The kanban view can display only tickets at a specific level in the hierarchy,
+to focus on a specific sub-node of the project.
+
 Separate submodules
 ~~~~~~~~~~~~~~~~~~~
 Different features are split into submodules, using inheritance as if they were
