@@ -137,7 +137,8 @@ class Ticket(osv.Model):
         """
         methods = self.pool.get('anytracker.method')
         for ticket in self.browse(cr, uid, ids):
-            methods.customize(cr, uid, ticket.method_id.id, context={'project_id': ticket.id})
+            methods.customize(
+                cr, uid, ticket.method_id.id, context={'project_id': ticket.project_id.id})
         return
 
     _columns = {

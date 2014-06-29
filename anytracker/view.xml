@@ -49,8 +49,9 @@
     <tree string="Ticket treeview">
       <field name="number"/>
       <field name="name"/>
-      <field name="project_id"/>
       <field name="parent_id" invisible="1"/>
+      <field name="project_id"/>
+      <field name="method_id"/>
       <field name="shortened_description"/>
       <field name="create_date"/>
       <field name="write_date"/>
@@ -298,6 +299,7 @@
   <field name="context">{'search_default_filter_tasks': 1, 'search_default_unfinished': 1}</field>
 </record>
 
+<!-- server action to create a specific method for a project -->
 <record id="action_set_specific_method" model="ir.actions.server">
     <field name="name">Create specific method</field>
     <field name="model_id" ref="model_anytracker_ticket"/>
