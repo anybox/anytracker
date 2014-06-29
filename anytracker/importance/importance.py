@@ -25,7 +25,7 @@ class Importance(osv.Model):
 
     _order = 'method_id, seq'
 
-    _sql_constraint = [
+    _sql_constraints = [
         ('seq_uniq', 'unique(method_id, seq)', 'Importance (seq) must be different from others')]
 
 
