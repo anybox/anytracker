@@ -6,7 +6,7 @@ from openerp.osv import fields
 class Priority(osv.Model):
     """Priorities represent the timeframe to do tasks.
     It can represent timeboxes, deadlines, milestones
-    TODO : define by project, add milestone
+    TODO : add milestone
     """
     _name = 'anytracker.priority'
     _description = 'Priority of Ticket by method'
@@ -27,6 +27,9 @@ class Priority(osv.Model):
     }
 
     _order = 'method_id, seq'
+
+    _sql_constraint = [
+        ('seq_uniq', 'unique(method_id, seq)', 'Priority (seq) must be different from others')]
 
 
 class Ticket(osv.Model):

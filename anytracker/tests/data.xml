@@ -73,6 +73,7 @@
         <field name="method_id" ref="method_test"/>
         <field name="sequence">20</field>
         <field name="progress">20.0</field>
+        <field name="forbidden_complexity_ids" eval="[(6,0,[ref('complexity3')])]"/>
     </record>
     <record id="stage_test_done" model="anytracker.stage">
         <field name="name">Done</field>

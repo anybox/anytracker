@@ -25,6 +25,9 @@ class Importance(osv.Model):
 
     _order = 'method_id, seq'
 
+    _sql_constraint = [
+        ('seq_uniq', 'unique(method_id, seq)', 'Importance (seq) must be different from others')]
+
 
 class Ticket(osv.Model):
     _inherit = 'anytracker.ticket'

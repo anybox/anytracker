@@ -14,20 +14,19 @@ class TestInvoicing(SharedSetupTransactionCase):
         cr, uid = self.cr, self.uid
         self.tickets = self.registry('anytracker.ticket')
         self.bouquets = self.registry('anytracker.bouquet')
-        self.user = self.registry('res.users')
-        self.ratings = self.registry('anytracker.rating')
+        self.users = self.registry('res.users')
         self.analines = self.registry('account.analytic.line')
         self.anaccounts = self.registry('account.analytic.account')
         self.anajournals = self.registry('account.analytic.journal')
 
-        self.member_id = self.user.create(
+        self.member_id = self.users.create(
             cr, uid,
             {'name': 'Member',
              'login': 'member',
              'groups_id': [(6, 0,
                            [self.ref('anytracker.group_member'),
                             self.ref('base.group_user')])]})
-        self.customer_id = self.user.create(
+        self.customer_id = self.users.create(
             cr, uid,
             {'name': 'Customer',
              'login': 'customer',

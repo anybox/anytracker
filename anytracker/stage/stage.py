@@ -107,10 +107,10 @@ class Ticket(osv.Model):
         return super(Ticket, self).create(cr, uid, values, context)
 
     def write(self, cr, uid, ids, values, context=None):
-        """set children stages when writing stage_id
+        """set permission and children stages when writing stage_id
         """
         # check we can do this
-        if 'stage_id' in values:
+        if values.get('stage_id'):
             # retrieving authorized groups for this stage
             groups_allowed = self.pool.get('anytracker.stage').read(
                 cr, uid, values['stage_id'],

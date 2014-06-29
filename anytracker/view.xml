@@ -95,7 +95,8 @@
             </group>
             <group id="extend">
                 <field name="number" readonly="1" class="oe_inline"/>
-                <field name="method_id" widget="selection" attrs="{'invisible': [('parent_id', '!=', False)]}"/>
+                <field name="method_id" attrs="{'invisible': [('parent_id', '!=', False)]}"
+                       domain="['|', ('project_id', '=', False), ('project_id', '=', id)]"/>
                 <field name="project_method_id" invisible="1"/>
                 <field name="rating" readonly="True"/>
                 <field name="active" groups="anytracker.group_manager"/>
@@ -295,6 +296,21 @@
   <field name="view_type">form</field>
   <field name="view_id" ref="ticket_view_tree"/>
   <field name="context">{'search_default_filter_tasks': 1, 'search_default_unfinished': 1}</field>
+</record>
+
+<record id="action_set_specific_method" model="ir.actions.server">
+    <field name="name">Create specific method</field>
+    <field name="model_id" ref="model_anytracker_ticket"/>
+    <field name="state">code</field>
+    <field name="code">action = obj.set_custom_method()</field>
+</record>
+
+<record model="ir.values" id="set_specific_method">
+    <field name="model_id" ref="model_anytracker_ticket"/>
+    <field name="name">Create specific method</field>
+    <field name="key2">client_action_multi</field>
+    <field name="value" eval="'ir.actions.server,%d'%action_set_specific_method" />
+    <field name="model">anytracker.ticket</field>
 </record>
 
 <!-- MENUITEMS -->

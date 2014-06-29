@@ -90,7 +90,7 @@
         <record id="complexity_gtd_project" model="anytracker.complexity">
             <field name="name">I can split it</field>
             <field name="description">Complex project that should be split</field>
-            <field name="value">4</field>
+            <field name="value">5</field>
             <field name="risk" eval="100.0"/>
             <field name="color">2</field>
             <field name="method_id" ref="method_gtd"/>
@@ -106,7 +106,7 @@
         <record id="complexity_gtd_action" model="anytracker.complexity">
             <field name="name">I can do it today</field>
             <field name="description">It's a simple action I can do today</field>
-            <field name="value">4</field>
+            <field name="value">3</field>
             <field name="risk" eval="50.0"/>
             <field name="color">2</field>
             <field name="method_id" ref="method_gtd"/>
