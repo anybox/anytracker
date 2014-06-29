@@ -34,26 +34,18 @@ class TestInvoicing(SharedSetupTransactionCase):
              'groups_id': [(6, 0,
                            [self.ref('anytracker.group_customer')])]})
 
-    def createProject(self, participant_ids):
-        cr, uid = self.cr, self.uid
-        method = self.ref('anytracker.method_test')
-        if isinstance(participant_ids, int) or isinstance(participant_ids, long):
-            participant_ids = [participant_ids]
-        project_id = self.tickets.create(
-            cr, uid,
-            {'name': 'Test',
-             'participant_ids': [(6, 0, participant_ids)],
-             'analytic_journal_id': self.anajournals.search(cr, uid, [])[0],
-             'product_id': self.ref('product.product_product_consultant'),
-             'method_id': method})
-        return project_id
-
     def test_invoicing(self):
         """ Check created analytic lines from a ticket
         """
         cr, uid = self.cr, self.uid
         # we create a project with a team of 3 people
-        project_id = self.createProject([self.customer_id, self.member_id])
+        project_id = self.tickets.create(
+            cr, uid,
+            {'name': 'Test',
+             'participant_ids': [(6, 0, [self.customer_id, self.member_id])],
+             'analytic_journal_id': self.anajournals.search(cr, uid, [])[0],
+             'product_id': self.ref('product.product_product_consultant'),
+             'method_id': self.ref('anytracker.method_test')})
         # we create 3 tickets
         ticket1_id = self.tickets.create(
             cr, uid,
