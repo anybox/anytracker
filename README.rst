@@ -67,13 +67,12 @@ Credits, contributing
 
 Contributors:
 
-- Christophe COMBELLES <ccomb@anybox.fr>
+- Christophe Combelles <ccomb@anybox.fr>
 - Florent Jouatte <fjouatte@anybox.fr>
 - Georges Racinet <gracinet@anybox.fr>
-- Jean Sebastien SUZANNE <jssuzanne@anybox.fr>
-- Simon ANDRE <sandre@anybox.fr>
-- Colin GOUTTE <cgoute@anybox.fr>
 - Jean-Sébastien Suzanne <jssuzanne@anybox.fr>
+- Simon André <sandre@anybox.fr>
+- Colin Goutte <cgoute@anybox.fr>
 - Clovis Nzouendjou Nana <clovis@anybox.fr>
 - Pierre Verkest <pverkest@anybox.fr>
 
