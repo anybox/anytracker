@@ -112,5 +112,16 @@
     </field>
 </record>
 
+<!-- Add a column in stage tree -->
+<record id="view_method_stage_tab_with_force_rate" model="ir.ui.view">
+    <field name="model">anytracker.method</field>
+    <field name="inherit_id" ref="method_view_form_with_stages" />
+    <field name="arch" type="xml">
+      <xpath expr="//field[@name='progress']" position="after">
+        <field name="force_rating" string="Force rating"/>
+      </xpath>
+    </field>
+</record>
+
 </data>
 </openerp>
