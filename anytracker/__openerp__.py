@@ -2,12 +2,6 @@
 #
 #    anytracker module for OpenERP, Ticket module
 #    Copyright (C) 2012-2013 Anybox (<http://www.anybox.fr>)
-#                Colin GOUTTE <cgoute@anybox.fr>
-#                Christophe COMBELLES <ccomb@anybox.fr>
-#                Simon ANDRE <sandre@anybox.fr>
-#                Jean Sebastien SUZANNE <jssuzanne@anybox.fr>
-#                Georges Racinet <gracinet@anybox.fr>
-#                Florent Jouatte <fjouatte@anybox.fr>
 #
 #    This file is a part of anytracker
 #
