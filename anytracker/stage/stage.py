@@ -154,7 +154,7 @@ class Ticket(osv.Model):
         for ticket in self.browse(cr, uid, ids, context):
             # check stage enforcements
             stage = self.pool.get('anytracker.stage').browse(cr, uid, stage_id, context)
-            if not ticket.my_rating and stage.force_rating and not ticket.child_ids:
+            if not ticket.rating_ids and stage.force_rating and not ticket.child_ids:
                 raise osv.except_osv(_('Warning !'),
                                      _('You must rate the ticket "%s" to enter the "%s" stage'
                                        % (ticket.name, stage.name)))
