@@ -27,7 +27,7 @@
             </page>
             <page string="Forbidden complexities">
                 <div style="margin: 1em">Ticket that have the following complexities can't be move to this stage</div>
-                <field name="forbidden_complexity_ids"/>
+                <field name="forbidden_complexity_ids" domain="[('method_id', '=', method_id)]"/>
             </page>
             <page string="Authorized groups">
                 <div style="margin: 1em">Only user in these groups will be able to move the ticket to this stage</div>
@@ -93,7 +93,6 @@
                 <field name="stage_ids">
                     <tree>
                         <field name="name"/>
-                        <field name="description"/>
                         <field name="state"/>
                         <field name="sequence"/>
                         <field name="progress"/>
