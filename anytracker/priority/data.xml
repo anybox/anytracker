@@ -18,7 +18,7 @@
       <field name="active" eval="1"/>
       <field name="method_id" ref="method_gtd"/>
       <field name="name">This week</field>
-      <field name="seq" eval="60"/>
+      <field name="seq" eval="50"/>
     </record>
     <record model="anytracker.priority" id="priority_gtd_month">
       <field name="active" eval="1"/>
@@ -57,7 +57,7 @@
       <field name="active" eval="1"/>
       <field name="method_id" ref="method_maintenance"/>
       <field name="name">No deadline</field>
-      <field name="seq" eval="30"/>
+      <field name="seq" eval="40"/>
     </record>
 
 
@@ -93,7 +93,7 @@
       <field name="active" eval="1"/>
       <field name="method_id" ref="method_implementation"/>
       <field name="name">No deadline</field>
-      <field name="seq" eval="30"/>
+      <field name="seq" eval="50"/>
     </record>
 
   </data>
