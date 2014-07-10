@@ -40,7 +40,8 @@
         </record>
 
         <menuitem id="menu_export_mindmap_wizard"
-            parent="menu_configuration"
+            name="Export..."
+            parent="menu_freemind"
             sequence="40"
             action="action_export_mindmap_view"/>
 
