@@ -49,7 +49,7 @@ class Ticket(osv.Model):
                 raise osv.except_osv(
                     'Error', ("No expense account defined on the product (or category)"
                               " configured in your anytracker project"))
-            line_id = analines.create(cr, uid, {
+            line_data = {
                 'name': 'Ticket #%s: %s' % (ticket.number, ticket.name),
                 'amount': 1.0,
                 'unit_amount': ticket.rating,
@@ -58,7 +58,11 @@ class Ticket(osv.Model):
                 'product_id': ticket.project_id.product_id.id,
                 'journal_id': ticket.project_id.analytic_journal_id.id,
                 'general_account_id': gen_account.id,
-            })
+                'user_id': ticket.assigned_user_id.id if ticket.assigned_user_id else uid
+            }
+            if ticket.priority_id and ticket.priority_id.discount_id:
+                line_data['to_invoice'] = ticket.priority_id.discount_id.id
+            line_id = analines.create(cr, uid, line_data)
             ticket.write({'analytic_line_id': line_id})
             result.append(line_id)
         return result
@@ -96,3 +100,14 @@ class Bouquet(osv.Model):
         for bouquet in self.browse(cr, uid, ids, context):
             ticket_ids = [t.id for t in bouquet.ticket_ids]
             tickets.create_analytic_line(cr, uid, ticket_ids)
+
+
+class Priority(osv.Model):
+    """Add invoicing ratio to priorities
+    """
+    _inherit = 'anytracker.priority'
+    _columns = {
+        'discount_id': fields.many2one(
+            'hr_timesheet_invoice.factor', 'Ratio',
+            help=u'set the invoicing ratio for tickets with this priority')
+    }

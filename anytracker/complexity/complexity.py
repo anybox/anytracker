@@ -31,9 +31,6 @@ class Complexity(osv.Model):
             help="risk is a value between 0.0 (no risk) and 1.0 (full risk)"),
     }
 
-    _sql_constraints = [
-        ('value_uniq', 'unique(method_id, value)', 'Value must be different from others')]
-
 
 class Rating(osv.Model):
     """Represents the rating of a ticket by one person at one time

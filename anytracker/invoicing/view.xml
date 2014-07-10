@@ -67,6 +67,27 @@
     </field>
 </record>
 
+<!-- add invoicing ratio to priorities -->
+<record id="priority_form_with_invoicing" model="ir.ui.view">
+    <field name="model">anytracker.priority</field>
+    <field name="inherit_id" ref="anytracker.view_anytracker_priority_form"/>
+    <field name="arch" type="xml">
+        <field name="deadline" position="after">
+            <field name="discount_id"/>
+        </field>
+    </field>
+</record>
+<record id="priority_tree_with_invoicing" model="ir.ui.view">
+    <field name="model">anytracker.method</field>
+    <field name="inherit_id" ref="anytracker.method_view_form_with_priorities"/>
+    <field name="arch" type="xml">
+        <field name="deadline" position="after">
+            <field name="discount_id"/>
+        </field>
+    </field>
+</record>
+
+
 </data>
 </openerp>
 

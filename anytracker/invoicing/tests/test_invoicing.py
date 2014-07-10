@@ -115,7 +115,7 @@ class TestInvoicing(SharedSetupTransactionCase):
         # we launch invoicing on the bouquet itself
         self.bouquets.create_analytic_lines(cr, uid, [bouquet_id])
 
-        # We should have only only two more analytic lines:
+        # We should have only two more analytic lines:
         # Ticket1 in not invoiced twice and ticket4 is not invoiced
         self.assertEquals(
             self.analines.search(cr, uid, [('name', 'like', 'Invoiced ticket')], count=True), 3)
@@ -124,3 +124,76 @@ class TestInvoicing(SharedSetupTransactionCase):
         self.assertRaises(osv.except_osv,
                           self.tickets.create_analytic_line,
                           cr, uid, [project_id])
+
+    def test_invoicing_ratio(self):
+        """ Test the different invoicing ratio
+        """
+        cr, uid = self.cr, self.uid
+        project_id = self.tickets.create(
+            cr, uid,
+            {'name': 'Test',
+             'participant_ids': [(6, 0, [self.customer_id, self.member_id])],
+             'analytic_journal_id': self.anajournals.search(cr, uid, [])[0],
+             'product_id': self.ref('product.product_product_consultant'),
+             'method_id': self.ref('anytracker.method_test')})
+        account_id = self.anaccounts.create(cr, uid, {
+            'name': 'project',
+            'type': 'contract',
+            'to_invoice': self.ref('hr_timesheet_invoice.timesheet_invoice_factor1')})
+        self.tickets.write(cr, uid, [project_id], {
+            'analytic_account_id': account_id})
+        # we create 3 tickets
+        ticket1_id = self.tickets.create(
+            cr, uid,
+            {'name': 'Invoiced ticket1',
+             'parent_id': project_id, },
+            context={'active_id': project_id})
+        ticket2_id = self.tickets.create(
+            cr, uid,
+            {'name': 'Invoiced ticket2',
+             'parent_id': project_id, },
+            context={'active_id': project_id})
+        ticket3_id = self.tickets.create(
+            cr, uid,
+            {'name': 'Invoiced ticket3',
+             'parent_id': project_id, },
+            context={'active_id': project_id})
+        ticket4_id = self.tickets.create(
+            cr, uid,
+            {'name': 'Invoiced ticket4',
+             'parent_id': project_id, },
+            context={'active_id': project_id})
+
+        # we set ratings
+        self.tickets.write(cr, uid, [ticket1_id, ticket2_id, ticket3_id, ticket4_id], {
+            'my_rating': self.ref('anytracker.complexity1')})
+        # we set priorities to the tickets 1 to 3 but not 4
+        self.tickets.write(cr, uid, [ticket1_id], {
+            'priority_id': self.ref('anytracker.test_prio_normal')})
+        self.tickets.write(cr, uid, [ticket2_id], {
+            'priority_id': self.ref('anytracker.test_prio_prio')})
+        self.tickets.write(cr, uid, [ticket3_id], {
+            'priority_id': self.ref('anytracker.test_prio_urgent')})
+
+        # Now we create a bouquet with the 3 tickets
+        bouquet_id = self.bouquets.create(
+            cr, uid,
+            {'name': 'bouquet',
+             'ticket_ids': [(6, 0, [ticket1_id, ticket2_id, ticket3_id, ticket4_id])]
+             })
+        # we launch invoicing on the bouquet
+        self.bouquets.create_analytic_lines(cr, uid, [bouquet_id])
+
+        # we check the ratio
+        self.assertEquals(
+            0,
+            self.tickets.browse(cr, uid, ticket1_id).analytic_line_id.to_invoice.factor)
+        self.assertEquals(
+            -40,
+            self.tickets.browse(cr, uid, ticket2_id).analytic_line_id.to_invoice.factor)
+        self.assertEquals(
+            -80,
+            self.tickets.browse(cr, uid, ticket3_id).analytic_line_id.to_invoice.factor)
+        self.assertEquals(
+            0,
+            self.tickets.browse(cr, uid, ticket4_id).analytic_line_id.to_invoice.factor)
