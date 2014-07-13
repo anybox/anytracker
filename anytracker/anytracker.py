@@ -7,6 +7,16 @@ from lxml import etree
 from openerp.osv.orm import transfer_modifiers_to_node
 from openerp import SUPERUSER_ID
 logger = logging.getLogger(__file__)
+import re
+
+ticket_regex = re.compile('#([\d]{1,5})')
+
+
+def add_permalinks(cr, string):
+    # replace ticket numbers with permalinks
+    return ticket_regex.subn(
+        '<a href="/anytracker/%s/ticket/\\1">#\\1</a>' % cr.dbname,
+        string)[0]
 
 
 class Ticket(osv.Model):
@@ -120,6 +130,11 @@ class Ticket(osv.Model):
                     ('id', 'child_of', ticket_id),
                     ('active', '=', not values['active'])])
                 super(Ticket, self).write(cr, uid, children, {'active': values['active']})
+
+        # replace ticket numbers with permalinks
+        if 'description' in values:
+            values['description'] = add_permalinks(cr, values['description'])
+
         res = super(Ticket, self).write(cr, uid, ids, values, context=context)
         if 'parent_id' in values:
             for ticket in self.browse(cr, uid, ids, context):
@@ -144,7 +159,13 @@ class Ticket(osv.Model):
             project_id = self.read(cr, uid, values['parent_id'],
                                    ['project_id'], load='_classic_write')['project_id']
             values['project_id'] = project_id
+
+        # replace ticket numbers with permalinks
+        if 'description' in values:
+            values['description'] = add_permalinks(cr, values['description'])
+
         ticket_id = super(Ticket, self).create(cr, uid, values, context=context)
+
         if not values.get('parent_id'):
             self.write(cr, uid, ticket_id, {'project_id': ticket_id})
 
@@ -152,6 +173,7 @@ class Ticket(osv.Model):
         participant_ids = self.browse(cr, uid, ticket_id).project_id.participant_ids
         if participant_ids:
             self.message_subscribe_users(cr, uid, [ticket_id], [p.id for p in participant_ids])
+
         return ticket_id
 
     def _default_parent_id(self, cr, uid, context=None):
@@ -348,3 +370,12 @@ class ResPartner(osv.Model):
             obj='res.users',
             method=True),
     }
+
+
+class MailMessage(osv.Model):
+    _inherit = 'mail.message'
+
+    def create(self, cr, uid, values, context=None):
+        if values.get('model') == 'anytracker.ticket' and 'body' in values:
+            values['body'] = add_permalinks(cr, values['body'])
+        return super(MailMessage, self).create(cr, uid, values, context)
