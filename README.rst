@@ -67,14 +67,14 @@ Credits, contributing
 
 Contributors:
 
-- Christophe Combelles <ccomb@anybox.fr>
-- Florent Jouatte <fjouatte@anybox.fr>
-- Georges Racinet <gracinet@anybox.fr>
-- Jean-Sébastien Suzanne <jssuzanne@anybox.fr>
-- Simon André <sandre@anybox.fr>
-- Colin Goutte <cgoute@anybox.fr>
-- Clovis Nzouendjou Nana <clovis@anybox.fr>
-- Pierre Verkest <pverkest@anybox.fr>
+- Christophe Combelles
+- Florent Jouatte
+- Georges Racinet
+- Jean-Sébastien Suzanne
+- Simon André
+- Colin Goutte
+- Clovis Nzouendjou Nana
+- Pierre Verkest
 
 Other contributions (with tests) are welcome from anyone through Bitbucket pull requests.
 
