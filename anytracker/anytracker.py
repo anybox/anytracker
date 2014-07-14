@@ -9,13 +9,13 @@ from openerp import SUPERUSER_ID
 logger = logging.getLogger(__file__)
 import re
 
-ticket_regex = re.compile('#([\d]{1,5})')
+ticket_regex = re.compile('(#|[Tt]icket ?)([\d]{1,5})')
 
 
 def add_permalinks(cr, string):
     # replace ticket numbers with permalinks
     return ticket_regex.subn(
-        '<a href="/anytracker/%s/ticket/\\1">#\\1</a>' % cr.dbname,
+        '<a href="/anytracker/%s/ticket/\\2">\\1\\2</a>' % cr.dbname,
         string)[0]
 
 
