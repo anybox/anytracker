@@ -9,7 +9,7 @@ from openerp import SUPERUSER_ID
 logger = logging.getLogger(__file__)
 import re
 
-ticket_regex = re.compile('(#|[Tt]icket ?)([\d]{1,5})')
+ticket_regex = re.compile('([\W^]#|[Tt]icket ?)([\d]{1,5})\W')
 
 
 def add_permalinks(cr, string):
