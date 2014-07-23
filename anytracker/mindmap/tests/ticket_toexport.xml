@@ -3,7 +3,7 @@
     <record model="anytracker.ticket" id="anytracker_ticket-droit_dacces_application_mlf">
       <field name="active" eval="True"/>
       <field name="created_mindmap">2013-04-05 13:34:20</field>
-      <field name="description" eval="False"/>
+      <field name="description">Descr for ID_900637744</field>
       <field name="id_mindmap">ID_900637744</field>
       <field name="method_id" ref="anytracker.method_maintenance"/>
       <field name="modified_mindmap">2014-04-01 15:58:24</field>
@@ -18,7 +18,7 @@
     <record model="anytracker.ticket" id="anytracker_ticket-worflows_general_des_budgets">
       <field name="active" eval="True"/>
       <field name="created_mindmap">2013-04-05 13:34:35</field>
-      <field name="description" eval="False"/>
+      <field name="description">Descr for ID_1748422440</field>
       <field name="id_mindmap">ID_1748422440</field>
       <field name="method_id" ref="anytracker.method_maintenance"/>
       <field name="modified_mindmap">2013-04-05 15:44:20</field>
