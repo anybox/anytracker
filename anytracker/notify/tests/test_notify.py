@@ -7,6 +7,31 @@ class TestNotify(SharedSetupTransactionCase):
     _module_ns = 'anytracker'
     _data_files = (join('..', '..', 'tests', 'data.xml'),)
 
+    def setUp(self):
+        """Prepare to test notifications.
+
+        Based on the fact that if mail is not actually sent, it will pile up
+        in a queue. We just count the number of mails awaiting delivery
+        (and disable any sending for test robustness and to avoid inadvertantly
+        spamming innocent bystanders).
+        """
+        super(TestNotify, self).setUp()
+        # GR I'm not using *args, **kwargs because OpenERP does not respect
+        # the rules that make it work consistently
+        self.sent_mails = []
+
+        def dont_send_but_log(cr, uid, ids, auto_commit=False,
+                              recipient_ids=None, context=None):
+            self.sent_mails.extend(ids)
+
+        self.orig_send_method = self.mails.send
+        self.mails.send = dont_send_but_log
+
+    def tearDown(self):
+        del self.sent_mails
+        self.mails.send = self.orig_send_method
+        super(TestNotify, self).tearDown()
+
     @classmethod
     def initTestData(cls):
         super(TestNotify, cls).initTestData()
@@ -17,7 +42,6 @@ class TestNotify(SharedSetupTransactionCase):
         cls.ratings = cls.registry('anytracker.rating')
         cls.stages = cls.registry('anytracker.stage')
         cls.mails = cls.registry('mail.mail')
-
         cls.member_id = cls.user.create(
             cr, uid,
             {'name': 'Member',
@@ -44,7 +68,7 @@ class TestNotify(SharedSetupTransactionCase):
         return project_id
 
     def test_notify(self):
-        """ Check notifications
+        """ Check notifications.
         """
         cr, uid = self.cr, self.uid
         # create a project with a team of 3 people
@@ -56,6 +80,7 @@ class TestNotify(SharedSetupTransactionCase):
                            'notify_multiple': True,
                            'notify_template_id': self.ref('anytracker.email_template_test')})
         # we check the number of mails in the queue
+        # GR we could use self.sent_mails, now
         nb_mails = self.mails.search(cr, uid, [], count=True)
         # create a ticket
         ticket_id = self.tickets.create(cr, uid,
@@ -63,6 +88,7 @@ class TestNotify(SharedSetupTransactionCase):
                                          'parent_id': project_id, },
                                         context={'active_id': project_id})
         # we should now have one more message
+        # GR we could use self.sent_mails, now
         self.assertEquals(self.mails.search(cr, uid, [], count=True) - nb_mails, 1)
 
         # now we move the ticket to another column which should notify as well
@@ -73,6 +99,7 @@ class TestNotify(SharedSetupTransactionCase):
         # If we move the column to the initial column it won't notify again
         self.tickets.write(cr, uid, [ticket_id],
                            {'stage_id': self.ref('anytracker.stage_test_draft')})
+        # GR we could use self.sent_mails, now
         self.assertEquals(self.mails.search(cr, uid, [], count=True) - nb_mails, 2)
 
         # if we move the ticket to the ever-notifying column, it will notify again
@@ -83,6 +110,7 @@ class TestNotify(SharedSetupTransactionCase):
         # if we move the ticket to a non-notifying column, it won't notify
         self.tickets.write(cr, uid, [ticket_id],
                            {'stage_id': self.ref('anytracker.stage_test_done')})
+        # GR we could use self.sent_mails, now
         self.assertEquals(self.mails.search(cr, uid, [], count=True) - nb_mails, 3)
 
         # we set the 1st column as urgent and we set a sender email so that email is sent
@@ -95,6 +123,7 @@ class TestNotify(SharedSetupTransactionCase):
                                                {'name': 'urgent notifying ticket',
                                                 'parent_id': project_id, },
                                                context={'active_id': project_id})
+        # GR we could use self.sent_mails, now
         self.assertEquals(self.mails.search(cr, uid, [], count=True) - nb_mails, 4)
         self.assertEquals(
             len(self.tickets.browse(cr, uid, urgent_ticket_id).notified_stage_ids), 1)
