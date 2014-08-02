@@ -81,39 +81,48 @@ class Ticket(osv.Model):
                     # find children with this stage
                     child_ids = self.search(cr, uid, [('id', 'child_of', ticket.id),
                                                       ('stage_id', '=', old_stage.id)])
+                    if not child_ids:
+                        continue
                     # find a stage with the same code in the new method
                     equ_stage = stages.search(cr, uid, [('state', '=', old_stage.state),
                                                         ('method_id', '=', new_meth_id)])
                     # if no stage found, reset to no stage at all
                     # (should display tickets on the left in the kanban)
                     equ_stage = equ_stage[0] if equ_stage else False
-                    self.write(cr, uid, child_ids, {'stage_id': equ_stage})
+                    cr.execute('update anytracker_ticket set stage_id=%s where id in %s',
+                               (equ_stage, tuple(child_ids)))
 
                 # update subticket to point to the equivalent priority in the new method
                 for old_priority in methods.browse(cr, uid, old_methods[ticket.id]).priority_ids:
                     # find children with this priority
                     child_ids = self.search(cr, uid, [('id', 'child_of', ticket.id),
                                                       ('priority_id', '=', old_priority.id)])
+                    if not child_ids:
+                        continue
                     # find a priority with the same seq in the new method
                     equ_priority = priorities.search(cr, uid, [('seq', '=', old_priority.seq),
                                                                ('method_id', '=', new_meth_id)])
                     # if no priority found, reset to no priority at all
                     # (should display tickets on the left in the kanban)
                     equ_priority = equ_priority[0] if equ_priority else False
-                    self.write(cr, uid, child_ids, {'priority_id': equ_priority})
+                    cr.execute('update anytracker_ticket set priority_id=%s where id in %s',
+                               (equ_priority, tuple(child_ids)))
 
                 # update subticket to point to the equivalent importance in the new method
                 for old_imp in methods.browse(cr, uid, old_methods[ticket.id]).importance_ids:
                     # find children with this importance
                     child_ids = self.search(cr, uid, [('id', 'child_of', ticket.id),
                                                       ('importance_id', '=', old_imp.id)])
+                    if not child_ids:
+                        continue
                     # find a importance with the same code in the new method
                     equ_importance = importances.search(cr, uid, [('seq', '=', old_imp.seq),
                                                                   ('method_id', '=', new_meth_id)])
                     # if no importance found, reset to no importance at all
                     # (should display tickets on the left in the kanban)
                     equ_importance = equ_importance[0] if equ_importance else False
-                    self.write(cr, uid, child_ids, {'importance_id': equ_importance})
+                    cr.execute('update anytracker_ticket set importance_id=%s where id in %s',
+                               (equ_importance, tuple(child_ids)))
 
                 # update ratings of subtickets to point to the equ complexity in the new method
                 for old_complex in methods.browse(cr, uid, old_methods[ticket.id]).complexity_ids:
@@ -121,6 +130,8 @@ class Ticket(osv.Model):
                     rating_ids = ratings.search(cr, uid, [
                         ('ticket_id', 'in', self.search(cr, uid, [('id', 'child_of', ticket.id)])),
                         ('complexity_id', '=', old_complex.id)])
+                    if not rating_ids:
+                        continue
                     # find a complexity with the same code in the new method
                     equ_complexity = complexities.search(
                         cr, uid, [('value', '=', old_complex.value),
@@ -128,7 +139,8 @@ class Ticket(osv.Model):
                     # if no complexity found, reset to no complexity at all
                     # (should display tickets on the left in the kanban)
                     equ_complexity = equ_complexity[0] if equ_complexity else False
-                    ratings.write(cr, uid, rating_ids, {'complexity_id': equ_complexity})
+                    cr.execute('update anytracker_rating set complexity_id=%s where id in %s',
+                               (equ_complexity, tuple(rating_ids)))
 
                 # recompute risk and ratings
                 self.recompute_subtickets(cr, uid, ticket.id)
