@@ -63,7 +63,7 @@ class TestStage(SharedSetupTransactionCase):
             cr, uid,
             {'name': 'Test',
              'participant_ids': [(6, 0, [self.member_id])],
-             'method_id': self.ref('anytracker.method_implementation')})
+             'method_id': self.ref('anytracker.method_test2')})
         ticket_id = self.tickets.create(cr, self.member_id,
                                         {'name': 'Ticket',
                                          'parent_id': project_id, })
@@ -72,20 +72,20 @@ class TestStage(SharedSetupTransactionCase):
             osv.except_osv,
             self.tickets.write,
             cr, self.member_id, [ticket_id],
-            {'stage_id': self.ref('anytracker.stage_implementation_todo')})
+            {'stage_id': self.ref('anytracker.stage_test_todo2')})
         # now we first rate red, we should not be able to move the ticket either
         self.tickets.write(
             cr, self.member_id, [ticket_id],
-            {'my_rating': self.ref('anytracker.complexity_implementation_red')})
+            {'my_rating': self.ref('anytracker.complexity8')})
         self.assertRaises(
             osv.except_osv,
             self.tickets.write,
             cr, self.member_id, [ticket_id],
-            {'stage_id': self.ref('anytracker.stage_implementation_todo')})
+            {'stage_id': self.ref('anytracker.stage_test_todo2')})
         # now we rate green and it should be ok
         self.tickets.write(
             cr, self.member_id, [ticket_id],
-            {'my_rating': self.ref('anytracker.complexity_implementation_green')})
+            {'my_rating': self.ref('anytracker.complexity6')})
         self.tickets.write(
             cr, self.member_id, [ticket_id],
-            {'stage_id': self.ref('anytracker.stage_implementation_todo')})
+            {'stage_id': self.ref('anytracker.stage_test_todo2')})
