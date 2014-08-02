@@ -1,6 +1,6 @@
 <map version="0.9.0">
 <!-- To view this file, download free mind mapping software FreeMind from http://freemind.sourceforge.net -->
-<node CREATED="1365168860621" ID="ID_900637744" MODIFIED="1396367904153" TEXT="Droit d&apos;acc&#xe9;s application mlf">
+<node CREATED="1365168860621" ID="ID_900637744" MODIFIED="1396367904153" TEXT="Droit d&apos;acc&#xe9;s application mlf (test)">
 <node CREATED="1365168875658" ID="ID_1748422440" MODIFIED="1365176660650" POSITION="right" TEXT="Worflows g&#xe9;n&#xe9;ral des budgets">
 <node CREATED="1365169291516" ID="ID_238176366" MODIFIED="1365169857544" TEXT="Worlflow sur &apos;analytic.budget&apos;">
 <richcontent TYPE="NOTE"><html>
