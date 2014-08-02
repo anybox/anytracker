@@ -56,13 +56,13 @@
     </field>
 </record>
 
-<!-- Modify the unifinished filter to display uninvoiced tickets -->
+<!-- Modify the unfinished filter to display uninvoiced tickets -->
 <record id="invoicing_ticket_view_search" model="ir.ui.view">
     <field name="model">anytracker.ticket</field>
     <field name="inherit_id" ref="anytracker.assignment_ticket_view_search"/>
     <field name="arch" type="xml">
         <xpath expr="//filter[@name='unfinished']" position="attributes">
-            <attribute name="domain">['|', ('progress', '&lt;', 100.0), '&amp;', ('analytic_line_id', '=', False), ('project_id.analytic_journal_id', '!=', False)]</attribute>
+            <attribute name="domain">['|', ('progress', '&lt;', 100.0), '&amp;', '&amp;', ('analytic_line_id', '=', False), ('project_id.analytic_journal_id', '!=', False), ('rating', '>', 0)]</attribute>
         </xpath>
     </field>
 </record>
