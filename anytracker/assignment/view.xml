@@ -17,19 +17,11 @@
             <filter name="assigned_to_me"
                     string="Assigned to me"
                     domain="[('assigned_user_id','=',uid)]"
-                    icon="terp-personal"
                     help="Show only tickets where I have an assignment"/>
             <filter name="created_by_me"
                     string="Created by me"
                     domain="[('create_uid', '=', uid)]"
-                    icon="terp-personal"
                     help="Show tickets created by me"/>
-            <separator/>
-            <filter name="unfinished"
-                    string="Unfinished"
-                    domain="[('progress', '&lt;', 100.0)]"
-                    icon="terp-personal"
-                    help="Show unfinished tickets"/>
         </xpath>
         <xpath expr="//filter[@name='tickets_by_node']" position="after">
             <filter name="tickets_by_assigned_user"

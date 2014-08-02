@@ -309,20 +309,40 @@ class TestAnytracker(SharedSetupTransactionCase):
         self.assertEquals(self.tickets.browse(cr, uid, ticket1_id).method_id.name, 'Test2')
 
         # Recreated the project1 and move the whole node3 at once
-        project_id = self.tickets.create(
+        project1_id = self.tickets.create(
             cr, self.manager_id,
             {'name': 'Project1',
              'participant_ids': [(6, 0, [self.customer_id, self.member_id, self.manager_id])],
              'method_id': self.ref('anytracker.method_test')})
 
-        self.tickets.write(cr, self.manager_id, node3_id, {'parent_id': project_id})
-        self.assertEquals(self.tickets.browse(cr, uid, node3_id).project_id.id, project_id)
-        self.assertEquals(self.tickets.browse(cr, uid, ticket1_id).project_id.id, project_id)
-        self.assertEquals(self.tickets.browse(cr, uid, ticket2_id).project_id.id, project_id)
+        self.tickets.write(cr, self.manager_id, node3_id, {'parent_id': project1_id})
+        self.assertEquals(self.tickets.browse(cr, uid, node3_id).project_id.id, project1_id)
+        self.assertEquals(self.tickets.browse(cr, uid, ticket1_id).project_id.id, project1_id)
+        self.assertEquals(self.tickets.browse(cr, uid, ticket2_id).project_id.id, project1_id)
         self.assertEquals(self.tickets.browse(cr, uid, node3_id).method_id.name, 'Test')
         self.assertEquals(self.tickets.browse(cr, uid, ticket1_id).method_id.name, 'Test')
 
         # we change the method of the project1
-        self.tickets.write(cr, uid, project_id, {'method_id': self.ref('anytracker.method_test2')})
+        self.tickets.write(cr, uid, project1_id,
+                           {'method_id': self.ref('anytracker.method_test2')})
         self.assertEquals(self.tickets.browse(cr, uid, node3_id).method_id.name, 'Test2')
         self.assertEquals(self.tickets.browse(cr, uid, ticket1_id).method_id.name, 'Test2')
+
+        # we trash the ticket1
+        self.assertEquals(self.tickets.browse(cr, uid, project1_id).risk, 0.5)
+        self.assertEquals(self.tickets.browse(cr, uid, project1_id).rating, 0.0)
+        self.assertEquals(self.tickets.browse(cr, uid, project1_id).progress, 0.0)
+        # rate the ticket1
+        self.tickets.write(cr, uid, ticket1_id, {'my_rating': self.ref('anytracker.complexity7')})
+        self.assertEquals(self.tickets.browse(cr, uid, ticket1_id).rating, 4.5)
+        self.assertEquals(self.tickets.browse(cr, uid, ticket1_id).risk, 0.45)
+        self.assertEquals(self.tickets.browse(cr, uid, ticket1_id).progress, 5.0)
+        self.assertEquals(self.tickets.browse(cr, uid, project1_id).risk, 0.475595575914924)
+        self.assertEquals(self.tickets.browse(cr, uid, project1_id).rating, 4.5)
+        self.assertEquals(self.tickets.browse(cr, uid, project1_id).progress, 0.0)
+        # trash the ticket1 and check that the risk, rating and progress of the project is updated
+        self.tickets.trash(cr, uid, ticket1_id)
+        self.assertEquals(self.tickets.browse(cr, uid, ticket1_id).progress, 100.0)
+        self.assertEquals(self.tickets.browse(cr, uid, project1_id).risk, 0.5)
+        self.assertEquals(self.tickets.browse(cr, uid, project1_id).rating, 0.0)
+        self.assertEquals(self.tickets.browse(cr, uid, project1_id).progress, 0.0)

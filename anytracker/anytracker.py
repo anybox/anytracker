@@ -124,6 +124,7 @@ class Ticket(osv.Model):
                 # set the project_id of me and all the children
                 children = self.search(cr, uid, [('id', 'child_of', ticket.id)])
                 super(Ticket, self).write(cr, uid, children, {'project_id': project_id})
+                self.recompute_subtickets(cr, uid, values['parent_id'])
         if 'active' in values:
             for ticket_id in ids:
                 children = self.search(cr, uid, [
@@ -265,6 +266,36 @@ class Ticket(osv.Model):
         return super(Ticket, self).name_search(cr, uid, name, args, operator=operator,
                                                context=context, limit=limit)
 
+    def trash(self, cr, uid, ids, context=None):
+        """ Trash the ticket
+        set active = False, and move to the last stage
+        """
+        if not hasattr(ids, '__iter__'):
+            ids = [ids]
+        self.write(cr, uid, ids, {
+            'active': False,
+            'state': 'trashed',
+            'progress': 100.0,
+            'stage_id': False})
+        self.recompute_parents(cr, uid, ids)
+
+    def reactivate(self, cr, uid, ids, context=None):
+        """ reactivate a trashed ticket
+        """
+        if not hasattr(ids, '__iter__'):
+            ids = [ids]
+        self.write(cr, uid, ids, {'active': True, 'state': 'running'})
+        stages = self.pool.get('anytracker.stage')
+        for ticket in self.browse(cr, uid, ids):
+            start_ids = stages.search(cr, uid, [('method_id', '=', ticket.method_id.id),
+                                                ('progress', '=', 0)])
+            if len(start_ids) != 1:
+                raise osv.except_osv(_('Configuration error !'),
+                                     _('One and only one stage should have a 0% progress'))
+            # write stage in a separate line to let it recompute progress and risk
+            ticket.write({'stage_id': start_ids[0]})
+        self.recompute_parents(cr, uid, ids)
+
     _columns = {
         'name': fields.char('Title', 255, required=True),
         'number': fields.integer('Number'),
@@ -330,6 +361,11 @@ class Ticket(osv.Model):
         'sequence': fields.integer('sequence'),
         'active': fields.boolean('Active', help=("Uncheck to make the project disappear, "
                                                  "instead of deleting it")),
+        'state': fields.selection(
+            [('running', 'Running'),
+             ('trashed', 'Trashed')],
+            'State',
+            required=True),
         'has_attachment': fields.function(
             _has_attachment,
             type='boolean',
@@ -342,6 +378,7 @@ class Ticket(osv.Model):
         'duration': 0,
         'parent_id': _default_parent_id,
         'active': True,
+        'state': 'running',
     }
 
     _sql_constraints = [('number_uniq', 'unique(number)', 'Number must be unique!')]

@@ -20,7 +20,16 @@
             string="Projects"
             domain="[('parent_id','=',False)]"
             help="Show only toplevel tickets. They correspond to projects"/>
-    <separator orientation="vertical"/>
+    <separator/>
+    <filter name="unfinished"
+            string="Unfinished"
+            domain="[('progress', '&lt;', 100.0)]"
+            help="Show unfinished tickets"/>
+    <filter name="trash"
+            string="Trash"
+            domain="[('active', '=', False), ('state', '=', 'trashed')]"
+            help="Show trashed tickets"/>
+    <separator/>
     <group string="Group by...">
       <filter name="tickets_by_project"
             string="Project"
@@ -82,6 +91,8 @@
   <field name="arch" type="xml">
     <form version="7.0" string="Ticket">
       <header>
+        <button name="trash" string="Trash" type="object" states="running"/>
+        <button name="reactivate" string="Reactivate" type="object" states="trashed"/>
       </header>
     <sheet>
         <group>
@@ -101,6 +112,7 @@
                 <field name="project_method_id" invisible="1"/>
                 <field name="rating" readonly="True"/>
                 <field name="active" groups="anytracker.group_manager"/>
+                <field name="state" groups="anytracker.group_manager" invisible="1"/>
             </group>
         </group>
 
@@ -298,6 +310,14 @@
   <field name="view_id" ref="ticket_view_tree"/>
   <field name="context">{'search_default_filter_tasks': 1, 'search_default_unfinished': 1}</field>
 </record>
+<record model="ir.actions.act_window" id="act_trash">
+  <field name="name">Trash</field>
+  <field name="res_model">anytracker.ticket</field>
+  <field name="view_mode">tree,form</field>
+  <field name="view_type">form</field>
+  <field name="view_id" ref="ticket_view_tree"/>
+  <field name="context">{'search_default_trash': 1}</field>
+</record>
 
 <!-- server action to create a specific method for a project -->
 <record id="action_set_specific_method" model="ir.actions.server">
@@ -339,6 +359,10 @@
       parent="menu_anytracker"
       sequence="40"
       action="act_all_tasks" />
+    <menuitem id="menu_trash"
+      parent="menu_anytracker"
+      sequence="60"
+      action="act_trash" />
 <menuitem id="menu_configuration"
   name="Configuration"
   sequence="200"

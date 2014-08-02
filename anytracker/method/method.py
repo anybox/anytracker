@@ -27,9 +27,9 @@ class Method(osv.Model):
         project_id = context.get('project_id')
         if not project_id:
             return
-        new_method_id = self.copy(cr, uid, method_id, {'project_id': project_id}, context)
-        self.pool.get('anytracker.ticket').write(cr, uid, project_id, {'method_id': new_method_id})
-        return new_method_id
+        new_meth_id = self.copy(cr, uid, method_id, {'project_id': project_id}, context)
+        self.pool.get('anytracker.ticket').write(cr, uid, project_id, {'method_id': new_meth_id})
+        return new_meth_id
 
     def copy(self, cr, uid, method_id, default, context=None):
         method = self.browse(cr, uid, method_id)
@@ -72,63 +72,66 @@ class Ticket(osv.Model):
             for ticket in self.browse(cr, uid, ids):
                 child_ids = self.search(cr, uid, [('id', 'child_of', ticket.id),
                                                   ('id', '!=', ticket.id)])
-                new_method_id = values['method_id']
+                new_meth_id = values['method_id']
                 super(Ticket, self).write(cr, uid, child_ids,
-                                          {'method_id': new_method_id})
+                                          {'method_id': new_meth_id})
 
-            # update subticket to point to the equivalent stage in the new method
-            for old_stage in methods.browse(cr, uid, old_methods[ticket.id]).stage_ids:
-                # find children with this stage
-                child_ids = self.search(cr, uid, [('id', 'child_of', ticket.id),
-                                                  ('stage_id', '=', old_stage.id)])
-                # find a stage with the same code in the new method
-                equ_stage = stages.search(cr, uid, [('state', '=', old_stage.state),
-                                                    ('method_id', '=', new_method_id)])
-                # if no stage found, reset to no stage at all
-                # (should display tickets on the left in the kanban)
-                equ_stage = equ_stage[0] if equ_stage else False
-                self.write(cr, uid, child_ids, {'stage_id': equ_stage})
+                # update subticket to point to the equivalent stage in the new method
+                for old_stage in methods.browse(cr, uid, old_methods[ticket.id]).stage_ids:
+                    # find children with this stage
+                    child_ids = self.search(cr, uid, [('id', 'child_of', ticket.id),
+                                                      ('stage_id', '=', old_stage.id)])
+                    # find a stage with the same code in the new method
+                    equ_stage = stages.search(cr, uid, [('state', '=', old_stage.state),
+                                                        ('method_id', '=', new_meth_id)])
+                    # if no stage found, reset to no stage at all
+                    # (should display tickets on the left in the kanban)
+                    equ_stage = equ_stage[0] if equ_stage else False
+                    self.write(cr, uid, child_ids, {'stage_id': equ_stage})
 
-            # update subticket to point to the equivalent priority in the new method
-            for old_priority in methods.browse(cr, uid, old_methods[ticket.id]).priority_ids:
-                # find children with this priority
-                child_ids = self.search(cr, uid, [('id', 'child_of', ticket.id),
-                                                  ('priority_id', '=', old_priority.id)])
-                # find a priority with the same seq in the new method
-                equ_priority = priorities.search(cr, uid, [('seq', '=', old_priority.seq),
-                                                           ('method_id', '=', new_method_id)])
-                # if no priority found, reset to no priority at all
-                # (should display tickets on the left in the kanban)
-                equ_priority = equ_priority[0] if equ_priority else False
-                self.write(cr, uid, child_ids, {'priority_id': equ_priority})
+                # update subticket to point to the equivalent priority in the new method
+                for old_priority in methods.browse(cr, uid, old_methods[ticket.id]).priority_ids:
+                    # find children with this priority
+                    child_ids = self.search(cr, uid, [('id', 'child_of', ticket.id),
+                                                      ('priority_id', '=', old_priority.id)])
+                    # find a priority with the same seq in the new method
+                    equ_priority = priorities.search(cr, uid, [('seq', '=', old_priority.seq),
+                                                               ('method_id', '=', new_meth_id)])
+                    # if no priority found, reset to no priority at all
+                    # (should display tickets on the left in the kanban)
+                    equ_priority = equ_priority[0] if equ_priority else False
+                    self.write(cr, uid, child_ids, {'priority_id': equ_priority})
 
-            # update subticket to point to the equivalent importance in the new method
-            for old_importance in methods.browse(cr, uid, old_methods[ticket.id]).importance_ids:
-                # find children with this importance
-                child_ids = self.search(cr, uid, [('id', 'child_of', ticket.id),
-                                                  ('importance_id', '=', old_importance.id)])
-                # find a importance with the same code in the new method
-                equ_importance = importances.search(cr, uid, [('seq', '=', old_importance.seq),
-                                                              ('method_id', '=', new_method_id)])
-                # if no importance found, reset to no importance at all
-                # (should display tickets on the left in the kanban)
-                equ_importance = equ_importance[0] if equ_importance else False
-                self.write(cr, uid, child_ids, {'importance_id': equ_importance})
+                # update subticket to point to the equivalent importance in the new method
+                for old_imp in methods.browse(cr, uid, old_methods[ticket.id]).importance_ids:
+                    # find children with this importance
+                    child_ids = self.search(cr, uid, [('id', 'child_of', ticket.id),
+                                                      ('importance_id', '=', old_imp.id)])
+                    # find a importance with the same code in the new method
+                    equ_importance = importances.search(cr, uid, [('seq', '=', old_imp.seq),
+                                                                  ('method_id', '=', new_meth_id)])
+                    # if no importance found, reset to no importance at all
+                    # (should display tickets on the left in the kanban)
+                    equ_importance = equ_importance[0] if equ_importance else False
+                    self.write(cr, uid, child_ids, {'importance_id': equ_importance})
 
-            # update ratings of subtickets to point to the equivalent complexity in the new method
-            for old_complexity in methods.browse(cr, uid, old_methods[ticket.id]).complexity_ids:
-                # find ratings with this complexity that are related to children
-                rating_ids = ratings.search(cr, uid, [
-                    ('ticket_id', 'in', self.search(cr, uid, [('id', 'child_of', ticket.id)])),
-                    ('complexity_id', '=', old_complexity.id)])
-                # find a complexity with the same code in the new method
-                equ_complexity = complexities.search(
-                    cr, uid, [('value', '=', old_complexity.value),
-                              ('method_id', '=', new_method_id)])
-                # if no complexity found, reset to no complexity at all
-                # (should display tickets on the left in the kanban)
-                equ_complexity = equ_complexity[0] if equ_complexity else False
-                ratings.write(cr, uid, rating_ids, {'complexity_id': equ_complexity})
+                # update ratings of subtickets to point to the equ complexity in the new method
+                for old_complex in methods.browse(cr, uid, old_methods[ticket.id]).complexity_ids:
+                    # find ratings with this complexity that are related to children
+                    rating_ids = ratings.search(cr, uid, [
+                        ('ticket_id', 'in', self.search(cr, uid, [('id', 'child_of', ticket.id)])),
+                        ('complexity_id', '=', old_complex.id)])
+                    # find a complexity with the same code in the new method
+                    equ_complexity = complexities.search(
+                        cr, uid, [('value', '=', old_complex.value),
+                                  ('method_id', '=', new_meth_id)])
+                    # if no complexity found, reset to no complexity at all
+                    # (should display tickets on the left in the kanban)
+                    equ_complexity = equ_complexity[0] if equ_complexity else False
+                    ratings.write(cr, uid, rating_ids, {'complexity_id': equ_complexity})
+
+                # recompute risk and ratings
+                self.recompute_subtickets(cr, uid, ticket.id)
 
         return res
 

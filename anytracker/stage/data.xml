@@ -155,13 +155,6 @@
             <field name="sequence">10</field>
             <field name="progress">0.0</field>
         </record>
-        <record id="stage_gtd_trash" model="anytracker.stage">
-            <field name="name">Trash</field>
-            <field name="state">trash</field>
-            <field name="method_id" ref="method_gtd"/>
-            <field name="sequence">10</field>
-            <field name="progress">100.0</field>
-        </record>
         <record id="stage_gtd_action" model="anytracker.stage">
             <field name="name">To do</field>
             <field name="state">action</field>

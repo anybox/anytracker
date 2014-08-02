@@ -50,7 +50,7 @@ class Ticket(osv.Model):
         has all columns even if there is no ticket in a stage.
         """
         # XXX improve the filter to handle categories
-        stage_osv = self.pool.get('anytracker.stage')
+        stages = self.pool.get('anytracker.stage')
         ticket_pool = self.pool.get('anytracker.ticket')
         project_id = ticket_pool.browse(cr, uid, context.get('active_id')).project_id
         if not project_id:
@@ -58,8 +58,8 @@ class Ticket(osv.Model):
         method = project_id.method_id
         if not method:
             return [], []
-        stage_ids = stage_osv.search(cr, uid, [('method_id', '=', method.id)], context=context)
-        stage_names = stage_osv.name_get(cr, access_rights_uid, stage_ids, context=context)
+        stage_ids = stages.search(cr, uid, [('method_id', '=', method.id)], context=context)
+        stage_names = stages.name_get(cr, access_rights_uid, stage_ids, context=context)
         return stage_names, dict([(i, False) for i in ids])  # all unfolded
 
     def stage_previous(self, cr, uid, ids, context=None):
@@ -177,6 +177,8 @@ class Ticket(osv.Model):
                 child_ids = self.search(cr, uid, [('id', 'child_of', parent.id),
                                                   ('child_ids', '=', False),
                                                   ('id', '!=', parent.id)])
+                if ticket.id not in child_ids:
+                    child_ids.append(ticket.id)
                 progression = (ticket.stage_id.progress
                                - (old_progress[ticket.id]or 0.0)) / len(child_ids)
                 new_progress = parent.progress + progression

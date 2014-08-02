@@ -137,6 +137,8 @@ class Ticket(osv.Model):
         """
         if not ids:
             return
+        if not hasattr(ids, '__iter__'):
+            ids = [ids]
         for ticket in self.browse(cr, uid, ids):
             if not ticket.child_ids:
                 risk, rating = self.compute_risk_and_rating(cr, uid, ticket.id)
