@@ -90,7 +90,7 @@ class Ticket(osv.Model):
                     # (should display tickets on the left in the kanban)
                     equ_stage = equ_stage[0] if equ_stage else False
                     cr.execute('update anytracker_ticket set stage_id=%s where id in %s',
-                               (equ_stage, tuple(child_ids)))
+                               (equ_stage or None, tuple(child_ids)))
 
                 # update subticket to point to the equivalent priority in the new method
                 for old_priority in methods.browse(cr, uid, old_methods[ticket.id]).priority_ids:
@@ -106,7 +106,7 @@ class Ticket(osv.Model):
                     # (should display tickets on the left in the kanban)
                     equ_priority = equ_priority[0] if equ_priority else False
                     cr.execute('update anytracker_ticket set priority_id=%s where id in %s',
-                               (equ_priority, tuple(child_ids)))
+                               (equ_priority or None, tuple(child_ids)))
 
                 # update subticket to point to the equivalent importance in the new method
                 for old_imp in methods.browse(cr, uid, old_methods[ticket.id]).importance_ids:
@@ -122,7 +122,7 @@ class Ticket(osv.Model):
                     # (should display tickets on the left in the kanban)
                     equ_importance = equ_importance[0] if equ_importance else False
                     cr.execute('update anytracker_ticket set importance_id=%s where id in %s',
-                               (equ_importance, tuple(child_ids)))
+                               (equ_importance or None, tuple(child_ids)))
 
                 # update ratings of subtickets to point to the equ complexity in the new method
                 for old_complex in methods.browse(cr, uid, old_methods[ticket.id]).complexity_ids:
@@ -140,7 +140,7 @@ class Ticket(osv.Model):
                     # (should display tickets on the left in the kanban)
                     equ_complexity = equ_complexity[0] if equ_complexity else False
                     cr.execute('update anytracker_rating set complexity_id=%s where id in %s',
-                               (equ_complexity, tuple(rating_ids)))
+                               (equ_complexity or None, tuple(rating_ids)))
 
                 # recompute risk and ratings
                 self.recompute_subtickets(cr, uid, ticket.id)
