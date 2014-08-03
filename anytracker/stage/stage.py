@@ -54,7 +54,8 @@ class Ticket(osv.Model):
         # XXX improve the filter to handle categories
         stages = self.pool.get('anytracker.stage')
         tickets = self.pool.get('anytracker.ticket')
-        project_id = tickets.browse(cr, uid, context.get('active_id')).project_id
+        active_id = tickets.browse(cr, uid, context.get('active_id'))
+        project_id = active_id.project_id
         if not project_id:
             return [], {}
         method = project_id.method_id
@@ -64,12 +65,13 @@ class Ticket(osv.Model):
         stages_data = stages.read(cr, access_rights_uid, stage_ids,
                                   ['name', 'groups_allowed'], context=context)
         groups = set(self.user_base_groups(cr, uid))
-        # we only fold empty and forbidden columns
+        # we only fold empty and forbidden columns (TODO: replace progress with state)
         folds = {
             s['id']:
             bool(s['groups_allowed']
                  and not groups.intersection(set(s['groups_allowed']))
-                 and not tickets.search(cr, uid, [('stage_id', '=', s['id'])]))
+                 and not tickets.search(cr, uid, [('stage_id', '=', s['id']),
+                                                  ('id', 'child_of', active_id.id)]))
             for s in stages_data}
         return [(s['id'], s['name']) for s in stages_data], folds
 
