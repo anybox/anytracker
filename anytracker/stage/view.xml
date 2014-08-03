@@ -30,7 +30,7 @@
                 <field name="forbidden_complexity_ids" domain="[('method_id', '=', method_id)]"/>
             </page>
             <page string="Authorized groups">
-                <div style="margin: 1em">Only user in these groups will be able to move the ticket to this stage</div>
+                <div style="margin: 1em">Only user in these groups will be able to move the ticket to this stage. Unauthorized columns are folded if empty. If this field is empty, no restrictions apply</div>
                 <field name="groups_allowed"/>
             </page>
         </notebook>

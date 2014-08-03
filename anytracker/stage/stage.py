@@ -2,6 +2,7 @@
 from openerp.osv import osv
 from openerp.osv import fields
 from tools.translate import _
+from openerp import SUPERUSER_ID
 
 
 class Stage(osv.Model):
@@ -49,18 +50,28 @@ class Ticket(osv.Model):
         """return all stage names for the group_by directive, so that the kanban
         has all columns even if there is no ticket in a stage.
         """
+        access_rights_uid = access_rights_uid or uid
         # XXX improve the filter to handle categories
         stages = self.pool.get('anytracker.stage')
-        ticket_pool = self.pool.get('anytracker.ticket')
-        project_id = ticket_pool.browse(cr, uid, context.get('active_id')).project_id
+        tickets = self.pool.get('anytracker.ticket')
+        project_id = tickets.browse(cr, uid, context.get('active_id')).project_id
         if not project_id:
-            return [], []
+            return [], {}
         method = project_id.method_id
         if not method:
-            return [], []
+            return [], {}
         stage_ids = stages.search(cr, uid, [('method_id', '=', method.id)], context=context)
-        stage_names = stages.name_get(cr, access_rights_uid, stage_ids, context=context)
-        return stage_names, dict([(i, False) for i in ids])  # all unfolded
+        stages_data = stages.read(cr, access_rights_uid, stage_ids,
+                                  ['name', 'groups_allowed'], context=context)
+        groups = set(self.user_base_groups(cr, uid))
+        # we only fold empty and forbidden columns
+        folds = {
+            s['id']:
+            bool(s['groups_allowed']
+                 and not groups.intersection(set(s['groups_allowed']))
+                 and not tickets.search(cr, uid, [('stage_id', '=', s['id'])]))
+            for s in stages_data}
+        return [(s['id'], s['name']) for s in stages_data], folds
 
     def stage_previous(self, cr, uid, ids, context=None):
         """move the ticket to the previous stage
@@ -106,41 +117,34 @@ class Ticket(osv.Model):
             values['stage_id'] = method.get_first_stage()[method.id]
         return super(Ticket, self).create(cr, uid, values, context)
 
+    def user_base_groups(self, cr, uid):
+        """ return the base (not implied) groups of the uid
+        """
+        cr.execute('select gu.gid from res_groups_users_rel gu, res_users u '
+                   'where u.id=gu.uid and u.id=%s '
+                   'EXCEPT select gi.hid '
+                   'from res_groups_implied_rel gi, res_groups_users_rel gu, res_users u '
+                   'where u.id=gu.uid and u.id=%s and gu.gid=gi.gid;', (uid, uid))
+        return [i[0] for i in cr.fetchall()]
+
     def write(self, cr, uid, ids, values, context=None):
         """set permission and children stages when writing stage_id
         """
         # check we can do this
-        if values.get('stage_id'):
-            # retrieving authorized groups for this stage
-            groups_allowed = self.pool.get('anytracker.stage').read(
-                cr, uid, values['stage_id'],
-                ['groups_allowed'], load='_classic_write')['groups_allowed']
-            if groups_allowed:
-                # check if the user is in the right group to move the ticket to this stage
-                browse_user = self.pool.get('res.users').browse(
-                    cr, uid, uid)
-                # retrieving user whole groups
-                groups_ids = browse_user.groups_id
-                parent_groups = None
-                # loop through groups to only keep parent ones
-                for group in groups_ids:
-                    if not parent_groups:
-                        parent_groups = set(groups_ids)
-                    if not group.implied_ids:
-                        continue
-                    # remove imply group id from parent_groups
-                    for imp_gr in group.implied_ids:
-                        parent_groups.discard(imp_gr)
-                user_groups = [ug.id for ug in parent_groups]
-                if not set(user_groups).intersection(set(groups_allowed)) and uid != 1:
-                    raise osv.except_osv('Operation forbidden',
-                                         'You don\'t have the permission to move ticket '
-                                         'to this stage')
+        stage_id = values.get('stage_id')
+        if stage_id and uid != SUPERUSER_ID:
+            stages = self.pool.get('anytracker.stage')
+            stage_groups = set(stages.read(cr, uid, values['stage_id'], ['groups_allowed'],
+                                           load='_classic_write')['groups_allowed'])
+            user_groups = set(self.user_base_groups(cr, uid))
+            if stage_groups and not stage_groups.intersection(user_groups):
+                raise osv.except_osv("Operation forbidden",
+                                     "You can't move this ticket to this stage")
 
         # save the previous progress
         if 'stage_id' in values:
-            old_progress = dict([(t.id, t.stage_id.progress)
-                                 for t in self.browse(cr, uid, ids, context)])
+            old_progress = {t.id: t.stage_id.progress
+                            for t in self.browse(cr, uid, ids, context)}
 
         res = super(Ticket, self).write(cr, uid, ids, values, context=context)
 
@@ -230,7 +234,7 @@ class Ticket(osv.Model):
         return True
 
     def _constant_one(self, cr, uid, ids, *a, **kw):
-        return dict((i, 1) for i in ids)
+        return {i: 1 for i in ids}
 
     _columns = {
         'stage_id': fields.many2one(
