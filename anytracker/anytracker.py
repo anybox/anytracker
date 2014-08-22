@@ -28,6 +28,12 @@ class Ticket(osv.Model):
     _parent_store = True
     _inherit = ['mail.thread']
 
+    def get_unevaluated_tickets(self, cr, uid, project_id, context=None):
+        """ return ids of unevaluated tickets from the given project"""
+        ticket_ids = self.search(cr, uid, ['&', ('project_id', '=', project_id),
+                                           ('rating_ids', '=', [])])
+        return ticket_ids
+
     def _ids_to_be_recalculated(self, cr, uid, ids, context=None):
         """ return list of id which will be recalculated """
         res = []
@@ -371,7 +377,8 @@ class Ticket(osv.Model):
             type='boolean',
             obj='anytracker.ticket',
             string='Has attachment ?',
-            store={'ir.attachment': (_ids_to_be_recalculated, ['res_id', 'res_model'], 10)})
+            store={'ir.attachment': (_ids_to_be_recalculated, ['res_id', 'res_model'], 10)}),
+        'completion_date': fields.date('Completion date'),
     }
 
     _defaults = {

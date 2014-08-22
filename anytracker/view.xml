@@ -111,6 +111,7 @@
                        domain="['|', ('project_id', '=', False), ('project_id', '=', id)]"/>
                 <field name="project_method_id" invisible="1"/>
                 <field name="rating" readonly="True"/>
+                <field name="completion_date"/>
                 <field name="active" groups="anytracker.group_manager"/>
                 <field name="state" groups="anytracker.group_manager" invisible="1"/>
             </group>
