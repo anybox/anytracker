@@ -14,6 +14,8 @@ ticket_regex = re.compile('([Tt]icket ?#?)([\d]+)')
 
 def add_permalinks(cr, string):
     # replace ticket numbers with permalinks
+    if not string:
+        raise osv.except_osv(u"Permalink cannot be created", u"Ticket has no description")
     return ticket_regex.subn(
         '<a href="/anytracker/%s/ticket/\\2">\\1\\2</a>' % cr.dbname,
         string)[0]

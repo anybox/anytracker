@@ -122,6 +122,21 @@ class Ticket(osv.Model):
             readonly=True),
     }
 
+    def get_all_subtickets_ids(self, cr, uid, record, context=None):
+        """ Return list of subtickets ids for the given record"""
+        subtickets_ids = []
+        for child in record.child_ids:
+            if child.child_ids:
+                subtickets_ids.extend(self.get_all_subtickets_ids(cr, uid, child, context))
+            subtickets_ids.append(child.id)
+        return subtickets_ids
+
+    def assign_subtickets_to_current_user(self, cr, uid, record, context=None):
+        """Assign the browse record and all subtickets to current user"""
+        subtickets_ids = self.get_all_subtickets_ids(cr, uid, record, context)
+        tickets_ids = subtickets_ids.append(record.id)
+        self.write(cr, uid, tickets_ids, dict(assigned_user_id=uid))
+
     def assign_to_current_user(self, cr, uid, record, context=None):
         """Assign the browse record to current user.
 
