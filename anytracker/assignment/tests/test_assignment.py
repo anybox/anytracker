@@ -45,7 +45,7 @@ class TestStage(SharedSetupTransactionCase):
         # create a project and a ticket
         parent_ticket_id = self.createLeafTicket('Test subtickets',
                                                  self.createProject([self.member_id]))
-        # create 3 subtickets to the previous one
+        # create 3 subtickets to the previous one
         first_child_id = self.createLeafTicket('child 1', parent_ticket_id)
         second_child_id = self.createLeafTicket('child 2', parent_ticket_id)
         third_child_id = self.createLeafTicket('child 3', parent_ticket_id)
