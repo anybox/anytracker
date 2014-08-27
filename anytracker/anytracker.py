@@ -269,7 +269,7 @@ class Ticket(osv.Model):
                 ticket_ids = self.search(cr, uid, [('number', '=', number)] + args,
                                          limit=limit, context=context)
             else:
-                ticket_ids = self.search(cr, uid, [('name', operator, name)] + args,
+                ticket_ids = self.search(cr, uid, ['&', ('name', operator, name)] + args,
                                          limit=limit, context=context)
             if len(ticket_ids) > 0:
                 return self.name_get(cr, uid, ticket_ids, context)
