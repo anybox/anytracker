@@ -204,7 +204,8 @@ class Ticket(osv.Model):
         """Return the list of children that are themselves nodes."""
         ticket_obj = self.pool.get('anytracker.ticket')
         # GR: I suppose we don't use self directly because it may be overridden ?
-        return {i: ticket_obj.search(cr, uid, [('parent_id', '=', i), '|', ('child_ids', '!=', False),
+        return {i: ticket_obj.search(cr, uid, [('parent_id', '=', i), '|',
+                                               ('child_ids', '!=', False),
                                                ('create_as_node', '=', True)],
                                      context=context)
                 for i in ids}
