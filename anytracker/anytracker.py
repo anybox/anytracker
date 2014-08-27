@@ -204,7 +204,8 @@ class Ticket(osv.Model):
         """Return the list of children that are themselves nodes."""
         ticket_obj = self.pool.get('anytracker.ticket')
         # GR: I suppose we don't use self directly because it may be overridden ?
-        return {i: ticket_obj.search(cr, uid, [('parent_id', '=', i), ('child_ids', '!=', False)],
+        return {i: ticket_obj.search(cr, uid, [('parent_id', '=', i), '|', ('child_ids', '!=', False),
+                                               ('create_as_node', '=', True)],
                                      context=context)
                 for i in ids}
 
@@ -235,7 +236,7 @@ class Ticket(osv.Model):
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form',
                         context=None, toolbar=False, submenu=False):
-        """ Allow managers to set an empy parent_id (a project)
+        """ Allow managers to set an empty parent_id (a project)
         """
         fvg = super(Ticket, self).fields_view_get(
             cr, uid, view_id=view_id, view_type=view_type,
@@ -381,6 +382,7 @@ class Ticket(osv.Model):
             string='Has attachment ?',
             store={'ir.attachment': (_ids_to_be_recalculated, ['res_id', 'res_model'], 10)}),
         'completion_date': fields.date('Completion date'),
+        'create_as_node': fields.boolean('Create as node'),
     }
 
     _defaults = {
@@ -388,6 +390,7 @@ class Ticket(osv.Model):
         'parent_id': _default_parent_id,
         'active': True,
         'state': 'running',
+        'create_as_node': False,
     }
 
     _sql_constraints = [('number_uniq', 'unique(number)', 'Number must be unique!')]

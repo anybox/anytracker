@@ -98,7 +98,7 @@
         <group>
             <group>
                 <field name="parent_id" colspan="4" nolabel="1" placeholder="Project (or parent ticket)"
-                       on_change="onchange_parent(parent_id)" domain="['|',('child_ids', '!=', False), ('parent_id','=',False)]"
+                       on_change="onchange_parent(parent_id)" domain="['|', '|', ('child_ids', '!=', False), ('create_as_node', '=', True), ('parent_id','=',False)]"
                        context="{'tree_view_ref': 'anytracker.just_names'}">
                 </field>
                 <h1>
@@ -110,6 +110,7 @@
                 <field name="method_id" attrs="{'invisible': [('parent_id', '!=', False)]}"
                        domain="['|', ('project_id', '=', False), ('project_id', '=', id)]"/>
                 <field name="project_method_id" invisible="1"/>
+                <field name="create_as_node"/>
                 <field name="rating" readonly="True"/>
                 <field name="completion_date"/>
                 <field name="active" groups="anytracker.group_manager"/>
