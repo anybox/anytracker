@@ -122,7 +122,7 @@
             <button type="action" name="%(action_assign_to_current_user)d"
                groups="anytracker.group_member" string="Assign to me"/>
             <button type="action" name="%(action_assign_subtickets_to_current_user)d"
-               groups="anytracker.group_member" string="Assign all subtickets to me"/>
+               groups="anytracker.group_member" string="Assign all subtickets to me" attrs="{'invisible': [('child_ids', '=', [])]}"/>
             <!-- GR restored label on assignment m2m to get the
             tooltip help. Not pretty, but more usable (expliciteness
             of behaviour) -->

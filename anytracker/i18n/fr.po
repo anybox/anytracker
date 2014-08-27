@@ -784,6 +784,11 @@ msgstr "Étapes"
 
 #. module: anytracker
 #: view:anytracker.ticket:0
+msgid "Assign all subtickets to me"
+msgstr "Affecter tous les sous-tickets à moi"
+
+#. module: anytracker
+#: view:anytracker.ticket:0
 msgid "Assign to me"
 msgstr "Affectés à moi"
 
@@ -813,6 +818,7 @@ msgid "Created MindMap"
 msgstr "Mindmap créé"
 
 #. module: anytracker
+#: view:anytracker.ticket:0
 #: model:ir.actions.act_window,name:anytracker.action_kanbans
 #: model:ir.ui.menu,name:anytracker.menu_hierarchy
 msgid "Hierarchy"
@@ -1226,6 +1232,16 @@ msgstr "anytracker.stage"
 #: field:anytracker.stage,sequence:0 help:anytracker.stage,sequence:0
 msgid "Sequence"
 msgstr "Séquence"
+
+#. module: anytracker
+#: field:anytracker.ticket,completion_date:0
+msgid "Completion"
+msgstr "Date de réalisation prévue"
+
+#. module: anytracker
+#: field:anytracker.ticket,create_as_node:0
+msgid "Create as node"
+msgstr "Créer comme noeud"
 
 #. module: anytracker
 #: field:anytracker.ticket,number:0

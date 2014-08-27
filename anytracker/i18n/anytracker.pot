@@ -779,6 +779,11 @@ msgstr "Étapes"
 
 #. module: anytracker
 #: view:anytracker.ticket:0
+msgid "Assign all subtickets to me"
+msgstr "Affecter tous les sous-tickets à moi"
+
+#. module: anytracker
+#: view:anytracker.ticket:0
 msgid "Assign to me"
 msgstr "Affecter à moi"
 
@@ -1213,6 +1218,16 @@ msgstr "anytracker.stage"
 #: field:anytracker.ticket,number:0
 msgid "Number"
 msgstr "Numéro"
+
+#. module: anytracker
+#: field:anytracker.ticket,create_as_node:0
+msgid "Create as node"
+msgstr "Créer comme noeud"
+
+#. module: anytracker
+#: field:anytracker.ticket,completion_date:0
+msgid "Completion"
+msgstr "Date de réalisation prévue"
 
 #. module: anytracker
 #: view:anytracker.ticket:0
