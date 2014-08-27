@@ -383,7 +383,8 @@ class Ticket(osv.Model):
             string='Has attachment ?',
             store={'ir.attachment': (_ids_to_be_recalculated, ['res_id', 'res_model'], 10)}),
         'completion_date': fields.date('Completion date'),
-        'create_as_node': fields.boolean('Create as node'),
+        'create_as_node': fields.boolean('Tag as node',
+                                         help="Tag the ticket as 'node'"),
     }
 
     _defaults = {

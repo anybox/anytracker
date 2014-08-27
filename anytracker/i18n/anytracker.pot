@@ -1221,8 +1221,8 @@ msgstr "Numéro"
 
 #. module: anytracker
 #: field:anytracker.ticket,create_as_node:0
-msgid "Create as node"
-msgstr "Créer comme noeud"
+msgid "Tag as node"
+msgstr "Marquer comme noeud"
 
 #. module: anytracker
 #: field:anytracker.ticket,completion_date:0
