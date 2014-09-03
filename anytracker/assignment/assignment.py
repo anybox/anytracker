@@ -124,11 +124,7 @@ class Ticket(osv.Model):
 
     def get_all_subtickets_ids(self, cr, uid, record, context=None):
         """ Return list of subtickets ids for the given record"""
-        subtickets_ids = []
-        for child in record.child_ids:
-            if child.child_ids:
-                subtickets_ids.append(self.get_all_subtickets(cr, uid, child, context))
-            subtickets_ids.append(child.id)
+        subtickets_ids = self.search(cr, uid, [('id', 'child_of', record.id)])
         return subtickets_ids
 
     def assign_subtickets_to_current_user(self, cr, uid, record, context=None):
