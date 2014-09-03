@@ -382,7 +382,6 @@ class Ticket(osv.Model):
             obj='anytracker.ticket',
             string='Has attachment ?',
             store={'ir.attachment': (_ids_to_be_recalculated, ['res_id', 'res_model'], 10)}),
-        'completion_date': fields.date('Completion date'),
         'create_as_node': fields.boolean('Tag as node',
                                          help="Tag the ticket as 'node'"),
     }
