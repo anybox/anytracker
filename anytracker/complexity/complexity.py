@@ -53,6 +53,12 @@ class Ticket(osv.Model):
     """
     _inherit = 'anytracker.ticket'
 
+    def get_unevaluated_tickets(self, cr, uid, project_id, context=None):
+        """ return ids of unevaluated tickets from the given project"""
+        ticket_ids = self.search(cr, uid, ['&', ('project_id', '=', project_id),
+                                           ('rating_ids', '=', [])])
+        return ticket_ids
+
     def _get_my_rating(self, cr, uid, ids, field_name, args, context=None):
         """get my latest rating for this ticket
         """
