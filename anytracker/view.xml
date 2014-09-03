@@ -110,7 +110,7 @@
                 <field name="method_id" attrs="{'invisible': [('parent_id', '!=', False)]}"
                        domain="['|', ('project_id', '=', False), ('project_id', '=', id)]"/>
                 <field name="project_method_id" invisible="1"/>
-                <field name="create_as_node"/>
+                <field name="create_as_node" groups="anytracker.group_member"/>
                 <field name="rating" readonly="True"/>
                 <field name="completion_date"/>
                 <field name="active" groups="anytracker.group_manager"/>
