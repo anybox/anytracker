@@ -52,7 +52,7 @@ class TestStage(SharedSetupTransactionCase):
 
         ticket_ids = self.tickets.get_all_subtickets_ids(
             cr, uid, self.tickets.browse(cr, uid, parent_ticket_id))
-        self.assertEquals(ticket_ids, [first_child_id, second_child_id, third_child_id])
+        self.assertEquals(set(ticket_ids), [first_child_id, second_child_id, third_child_id])
 
     def test_delete_assigned_ticket(self):
         """ Check we can delete an assigned ticket (#4171)
