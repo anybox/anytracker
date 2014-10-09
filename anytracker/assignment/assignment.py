@@ -122,12 +122,13 @@ class Ticket(osv.Model):
             readonly=True),
     }
 
-    def assign_to_current_user(self, cr, uid, record, context=None):
-        """Assign the browse record to current user.
-
-        Meant to be used in a server action of 'code' type.
-        This could as well have been a 'write' action but
-        - I don't have time to test these right now
-        - we may want to do more than a simple write at some point
+    def assign_to_me(self, cr, uid, ids, context=None):
+        """Assign the ticket_id and sub-tickets to current user.
         """
-        self.write(cr, uid, record.id, dict(assigned_user_id=uid))
+        if not hasattr(ids, '__iter__'):
+            ids = [ids]
+        for ticket_id in ids:
+            subtickets_ids = self.search(cr, uid, [('id', 'child_of', ticket_id)])
+            # subtickets_ids.remove(ticket_id)
+            # subtickets_ids.append(ticket_id)
+            self.write(cr, uid, subtickets_ids, dict(assigned_user_id=uid))
