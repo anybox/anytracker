@@ -10,7 +10,7 @@
         <xpath expr="//notebook//page[last()]" position="after">
             <page string="Invoicing" groups="anytracker.group_member">
                 <group>
-                <group>
+                <group attrs="{'invisible': ['|', ('parent_id','=',False), ('child_ids','!=',())]}">
                 <label for="create_analytic_line"
                        string="Analytic line"
                        attrs="{'invisible': [('analytic_line_id','!=',False)]}"/>
@@ -25,13 +25,10 @@
                        nolabel="1"
                        attrs="{'invisible': [('analytic_line_id','=',False)]}"/>
                 </group>
-                <group>
-                <field name="analytic_account_id"
-                       attrs="{'invisible': [('parent_id','!=',False)]}"/>
-                <field name="product_id"
-                       attrs="{'invisible': [('parent_id','!=',False)]}"/>
-                <field name="analytic_journal_id"
-                       attrs="{'invisible': [('parent_id','!=',False)]}"/>
+                <group attrs="{'invisible': [('parent_id','!=',False)]}">
+                <field name="analytic_account_id"/>
+                <field name="product_id"/>
+                <field name="analytic_journal_id"/>
                 </group>
                 </group>
             </page>
