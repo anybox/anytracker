@@ -38,13 +38,13 @@
 </record>
 
 <!-- Add a column in the ticket list -->
-<record id="priority_ticket_view_tree" model="ir.ui.view">
+<record id="priority_ticket_tree" model="ir.ui.view">
     <field name="name">Tickets</field>
     <field name="model">anytracker.ticket</field>
     <field name="priority" eval="16"/>
-    <field name="inherit_id" ref="anytracker.ticket_view_tree"/>
+    <field name="inherit_id" ref="anytracker.ticket_tree"/>
     <field name="arch" type="xml">
-        <xpath expr="//field[@name='shortened_description']" position="after">
+        <xpath expr="//field[@name='breadcrumb']" position="after">
             <field name="priority_id"/>
             <field name="priority" invisible="1"/>
         </xpath>

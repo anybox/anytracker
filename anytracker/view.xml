@@ -50,18 +50,31 @@
 </record>
 
 <!-- Ticket list -->
-<record id="ticket_view_tree" model="ir.ui.view">
+<record id="ticket_tree" model="ir.ui.view">
   <field name="name">Tickets</field>
   <field name="model">anytracker.ticket</field>
   <field name="priority" eval="10"/>
   <field name="arch" type="xml">
     <tree string="Ticket treeview">
       <field name="number"/>
-      <field name="name"/>
+      <field name="breadcrumb"/>
       <field name="parent_id" invisible="1"/>
-      <field name="project_id"/>
+      <field name="create_date"/>
+      <field name="write_date"/>
+    </tree>
+  </field>
+</record>
+<!-- Projects or node list -->
+<record id="node_view_tree" model="ir.ui.view">
+  <field name="name">Nodes</field>
+  <field name="model">anytracker.ticket</field>
+  <field name="priority" eval="10"/>
+  <field name="arch" type="xml">
+    <tree string="Ticket treeview">
+      <field name="number"/>
+      <field name="breadcrumb"/>
       <field name="method_id"/>
-      <field name="shortened_description"/>
+      <field name="parent_id" invisible="1"/>
       <field name="create_date"/>
       <field name="write_date"/>
     </tree>
@@ -292,14 +305,14 @@
   <field name="view_mode">kanban,tree,form</field>
   <field name="view_type">form</field>
   <field name="view_id" ref="tickets_kanban2"/>
-  <field name="context">{'search_default_filter_projects': 1, 'search_default_unfinished': 1}</field>
+  <field name="context">{'tree_view_ref': 'node_view_tree', 'search_default_filter_projects': 1, 'search_default_unfinished': 1}</field>
 </record>
 <record model="ir.actions.act_window" id="act_all_nodes">
   <field name="name">Nodes</field>
   <field name="res_model">anytracker.ticket</field>
   <field name="view_mode">tree,form</field>
   <field name="view_type">form</field>
-  <field name="view_id" ref="ticket_view_tree"/>
+  <field name="view_id" ref="node_view_tree"/>
   <field name="context">{'search_default_filter_nodes': 1, 'search_default_unfinished': 1}</field>
 </record>
 <record model="ir.actions.act_window" id="act_all_tasks">
@@ -307,7 +320,7 @@
   <field name="res_model">anytracker.ticket</field>
   <field name="view_mode">tree,form</field>
   <field name="view_type">form</field>
-  <field name="view_id" ref="ticket_view_tree"/>
+  <field name="view_id" ref="ticket_tree"/>
   <field name="context">{'search_default_filter_tasks': 1, 'search_default_unfinished': 1}</field>
 </record>
 <record model="ir.actions.act_window" id="act_trash">
@@ -315,7 +328,7 @@
   <field name="res_model">anytracker.ticket</field>
   <field name="view_mode">tree,form</field>
   <field name="view_type">form</field>
-  <field name="view_id" ref="ticket_view_tree"/>
+  <field name="view_id" ref="ticket_tree"/>
   <field name="context">{'search_default_trash': 1}</field>
 </record>
 

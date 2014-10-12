@@ -76,12 +76,23 @@
     </field>
 </record>
 
-<record id="ticket_view_tree_with_complexity" model="ir.ui.view">
+<!-- Add fields in the list -->
+<record id="ticket_tree_with_complexity" model="ir.ui.view">
     <field name="model">anytracker.ticket</field>
-    <field name="inherit_id" ref="ticket_view_tree" />
+    <field name="inherit_id" ref="ticket_tree" />
     <field name="arch" type="xml">
-        <xpath expr="/tree/field[@name='shortened_description']" position="after">
-            <field name="my_rating"/>
+        <xpath expr="/tree/field[@name='breadcrumb']" position="after">
+            <field name="rating"/>
+            <field name="risk" string="Risk level" />
+        </xpath>
+    </field>
+</record>
+<record id="node_tree_with_complexity" model="ir.ui.view">
+    <field name="model">anytracker.ticket</field>
+    <field name="inherit_id" ref="node_view_tree" />
+    <field name="arch" type="xml">
+        <xpath expr="/tree/field[@name='breadcrumb']" position="after">
+            <field name="rating"/>
             <button string="Rate subtickets" icon="gtk-execute" type="action" name="%(action_quickrating)d"/>
             <field name="risk" string="Risk level" />
         </xpath>

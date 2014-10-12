@@ -69,11 +69,11 @@
 </record>
 
 <!-- Add an importance column in the ticket list -->
-<record id="importance_ticket_view_tree" model="ir.ui.view">
+<record id="importance_ticket_tree" model="ir.ui.view">
     <field name="model">anytracker.ticket</field>
-    <field name="inherit_id" ref="anytracker.ticket_view_tree"/>
+    <field name="inherit_id" ref="anytracker.ticket_tree"/>
     <field name="arch" type="xml">
-        <xpath expr="//field[@name='shortened_description']" position="after">
+        <xpath expr="//field[@name='breadcrumb']" position="after">
             <field name="importance_id"/>
             <field name="importance" invisible="1"/>
         </xpath>
