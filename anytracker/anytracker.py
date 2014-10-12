@@ -185,7 +185,13 @@ class Ticket(osv.Model):
         ticket_obj = self.pool.get('anytracker.ticket')
         active_id = context.get('active_id')
         if not active_id:
-            return False
+            # if only one project, use it
+            project_ids = ticket_obj.search(
+                cr, uid, ['|', ('parent_id', '=', False), ('child_ids', '!=', False)])
+            if len(project_ids) == 1:
+                return project_ids[0]
+            else:
+                return False
         ticket = ticket_obj.browse(cr, uid, active_id)
         if not ticket.parent_id:
             return active_id
