@@ -12,5 +12,16 @@
             <field name="report_name">bouquet_webkit</field>
             <field name="webkit_header" ref="anytracker.ir_header_webkit_base_anytracker"></field>
         </record>
+        <report id="anytracker.report_ticket"
+                name="anytracker.report.ticket.webkit"
+                auto="False"
+                model="anytracker.ticket"
+                file="anytracker/report/webkit_report/ticket.mako"
+                string="Ticket"
+                report_type="webkit"/>
+        <record id="anytracker.report_ticket" model="ir.actions.report.xml">
+            <field name="report_name">ticket_webkit</field>
+            <field name="webkit_header" ref="anytracker.ir_header_webkit_base_anytracker"></field>
+        </record>
    </data>
 </openerp>
