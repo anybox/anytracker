@@ -1,8 +1,10 @@
-from openerp import netsvc
-from anybox.testing.openerp import SharedSetupTransactionCase
+from .ReportTestCase import ReportTestCase
 
 
-class TestBouquets(SharedSetupTransactionCase):
+class TestBouquets(ReportTestCase):
+
+    _report_name = 'bouquet_webkit'
+    _report_base_model = 'anytracker.bouquet'
 
     @classmethod
     def create_project(cls, participant_ids, **kw):
@@ -31,11 +33,6 @@ class TestBouquets(SharedSetupTransactionCase):
     def initTestData(cls):
         super(TestBouquets, cls).initTestData()
         cr, uid = cls.cr, cls.uid
-
-        cls.reportService = netsvc.LocalService('report.bouquet_webkit')
-        cls._bouquet_parser = cls.reportService.parser(
-            cr, uid, cls.reportService.name, context=None)
-
         ticket = cls.ticket = cls.registry('anytracker.ticket')
         cls.bouquet = cls.registry('anytracker.bouquet')
 
@@ -61,13 +58,13 @@ class TestBouquets(SharedSetupTransactionCase):
         cls.admin_id = cls.uid
 
     def test_parser_test_methode(self):
-        """test parse methode"""
-        self.assertTrue(self._bouquet_parser._test_methode())
+        """Example test parse methode"""
+        self.assertTrue(self.getParser()._test_methode())
 
     def test_report(self):
-        """launch bouquet report"""
-        cr, uid = self.cr, self.uid
-        (result, format) = self.reportService.create(cr, uid, [self.bouquet_id],
-                                                     {'model': 'anytracker.bouquet'}, context=None)
-        (result, format) = self.reportService.create(cr, uid, [self.bouquet_id, self.bouquet2_id],
-                                                     {'model': 'anytracker.bouquet'}, context=None)
+        """Launch one bouquet report"""
+        self.generateReport([self.bouquet_id])
+
+    def test_report_multi_bouquet(self):
+        """Launch report with two bouquets"""
+        (result, format) = self.generateReport([self.bouquet_id, self.bouquet2_id])
