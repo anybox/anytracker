@@ -1,4 +1,6 @@
 from .ReportTestCase import ReportTestCase
+from datetime import datetime
+from osv import osv
 
 
 class TestBouquets(ReportTestCase):
@@ -60,6 +62,16 @@ class TestBouquets(ReportTestCase):
     def test_parser_test_methode(self):
         """Example test parse methode"""
         self.assertTrue(self.getParser()._test_methode())
+
+    def test_displayLocaleDateTime(self):
+        self.assertEqual(self.getParser()._displayLocaleDateTime('UTC'),
+                         datetime.now().strftime('%d/%m/%Y %H:%M'))
+        self.assertEqual(self.getParser()._displayLocaleDateTime('UTC', '%Y --- %M'),
+                         datetime.now().strftime('%Y --- %M'))
+        self.assertRaises(
+            osv.except_osv,
+            self.getParser()._displayLocaleDateTime,
+            'unvalid value test')
 
     def test_report(self):
         """Launch one bouquet report"""

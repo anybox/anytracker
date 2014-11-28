@@ -21,8 +21,13 @@
     <body style="border:0; margin: 0;" onload="subst()">
         <table style="border-top: 1px solid black; width: 100%">
             <tr >
-                <td style="text-align:right;font-size:12;" width="95%">Page <span class="page"/></td>
-                <td style="text-align:left;font-size:12;">  of <span class="topage"/></td>
+                <td style="text-align:left;font-size:12;">
+                    ${displayLocaleDateTime(user.tz)}
+                </td>
+                <td style="text-align:right;font-size:12;">
+                    Page <span class="page"></span>
+                    sur <span class="topage"></span>
+                </td>
             </tr>
         </table>
     </body>
@@ -61,13 +66,62 @@
 </html>]]>
 </field>
             <field name="css" ><![CDATA[
-body {
-font-family:helvetica;
-font-size:12;
-}
+                body {
+                    font-family:helvetica;
+                    font-size:12;
+                }
 
+                /* Usuful to display m2m or tag likes */
+                p.tag{
+                    display: inline-block;
+                    border: solid 1px #F2F2F2;
+                    padding: 0px 2px 0px 2px;
+                }
 
-]]> </field>
+                /* Force adding break page at the end of the div */
+                div.page-break-after {
+                    page-break-after: always;
+                }
+
+                /* Force adding break page at the beginning of the div */
+                div.page-break-before {
+                    page-break-before: always;
+                }
+
+                /* Eviter d'avoir un élément sur plusieurs pages */
+                div.avoid-page-break {
+                    page-break-inside: avoid;
+                }
+
+                h1 {
+                    font-family: Arial, sans-serif, "Times New Roman", Times, serif;
+                    font-weight: bold;
+                    color: #475674;
+                    font-size: 24px;
+                    text-align: center;
+                }
+
+                h2 {
+                    font-family: Arial, sans-serif, "Times New Roman", Times, serif;
+                    font-weight: bold;
+                    background: #DEF05B;
+                    color: #475674;
+                    font-size: 18px;
+                }
+
+                h3 {
+                    font-family: Arial, sans-serif, "Times New Roman", Times, serif;
+                    font-weight: bold;
+                    font-style: italic;
+                    color: #475674;
+                    font-size: 14px;
+                }
+
+                p, td {
+                    font-family: "Times New Roman", Times, serif;
+                    font-size: 12px;
+                }
+            ]]></field>
             <field eval="&quot;&quot;&quot;Anytracker report base&quot;&quot;&quot;" name="name"/>
         </record>
     </data>

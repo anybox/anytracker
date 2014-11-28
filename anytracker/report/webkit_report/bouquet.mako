@@ -14,28 +14,7 @@
          *       to share it between reports
          */
 
-        /* Usuful to display m2m or tag likes */
-        p.tag{
-            display: inline-block;
-            border: solid 1px #F2F2F2;
-            padding: 0px 2px 0px 2px;
-        }
 
-        /* Force adding break page at the end of the div */
-        div.page-break-after {
-            page-break-after: always;
-        }
-
-        /* Force adding break page at the beginning of the div */
-        div.page-break-before {
-            page-break-before: always;
-        }
-
-        /* Eviter d'avoir un élément sur plusieurs pages */
-        div.avoid-page-break {
-            page-break-inside: avoid;
-        }
-        
     </style>
 </head>
 <body>
