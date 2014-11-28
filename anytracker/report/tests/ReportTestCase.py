@@ -1,5 +1,7 @@
 from anybox.testing.openerp import SharedSetupTransactionCase
 from openerp import netsvc
+from datetime import datetime
+from osv import osv
 
 
 class ReportTestCase(SharedSetupTransactionCase):
@@ -10,9 +12,12 @@ class ReportTestCase(SharedSetupTransactionCase):
     @classmethod
     def initTestData(self):
         super(ReportTestCase, self).initTestData()
-        self.reportService = netsvc.LocalService('report.' + self._report_name)
-        self.parser = self.reportService.parser(self.cr, self.uid, self.reportService.name,
-                                                context=None)
+        # need to test _report_name, if it's not define, nose is currently running ReportTestCase
+        # not inherits classes
+        if self._report_name:
+            self.reportService = netsvc.LocalService('report.' + self._report_name)
+            self.parser = self.reportService.parser(self.cr, self.uid, self.reportService.name,
+                                                    context=None)
 
     def generateReport(self, ids, data={}, context=None):
         """Generate the report and return it as a tuple (result, format)
@@ -25,3 +30,18 @@ class ReportTestCase(SharedSetupTransactionCase):
 
     def getParser(self):
         return self.parser
+
+    def test_displayLocaleDateTime(self):
+        """All reports that use ir_header_webkit_base_anytracker should test displayLocaleDateTime
+        """
+        # need to test _report_name, if it's not define, nose is currently running ReportTestCase
+        # not inherits classes
+        if self._report_name:
+            self.assertEqual(self.getParser()._displayLocaleDateTime('UTC'),
+                             datetime.now().strftime('%d/%m/%Y %H:%M'))
+            self.assertEqual(self.getParser()._displayLocaleDateTime('UTC', '%Y --- %M'),
+                             datetime.now().strftime('%Y --- %M'))
+            self.assertRaises(
+                osv.except_osv,
+                self.getParser()._displayLocaleDateTime,
+                'unvalid value test')
