@@ -23,7 +23,7 @@ class TestTickets(ReportTestCase):
         super(TestTickets, cls).initTestData()
         cr, uid = cls.cr, cls.uid
         ticket = cls.ticket = cls.registry('anytracker.ticket')
-
+        cls.ticket = ticket
         cls.member_id = cls.registry('res.users').create(
             cr, uid, dict(name="anytracker member",
                           login='at.user',
@@ -35,9 +35,16 @@ class TestTickets(ReportTestCase):
 
         pid = cls.project_id = cls.create_project([cls.member_id, cls.customer_id],
                                                   name="Main test project")
-        cls.t1_id = ticket.create(cr, uid, dict(name="First ticket", parent_id=pid))
-        cls.t2_id = ticket.create(cr, uid, dict(name="Second ticket", parent_id=pid))
-        cls.t3_id = ticket.create(cr, uid, dict(name="Third ticket", parent_id=pid))
+        cls.pid = pid
+        cls.t1_id = ticket.create(cr, uid, dict(name="First ticket",
+                                                description="Ticket description",
+                                                parent_id=pid))
+        cls.t2_id = ticket.create(cr, uid, dict(name="Second ticket",
+                                                description="Ticket description",
+                                                parent_id=pid))
+        cls.t3_id = ticket.create(cr, uid, dict(name="Third ticket",
+                                                description="Ticket description",
+                                                parent_id=pid))
 
         cls.admin_id = cls.uid
 
@@ -51,4 +58,9 @@ class TestTickets(ReportTestCase):
 
     def test_report_multi_ticket(self):
         """Launch report with many tickets"""
-        (result, format) = self.generateReport([self.t1_id, self.t2_id, self.t3_id])
+        self.generateReport([self.t1_id, self.t2_id, self.t3_id])
+
+    def test_report_without_description(self):
+        ticket_id_without_desc = self.ticket.create(
+            self.cr, self.uid, dict(name="Third ticket", parent_id=self.pid))
+        self.generateReport([self.t1_id, ticket_id_without_desc, self.t3_id])

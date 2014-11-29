@@ -6,47 +6,51 @@
         /*
          * Report css
          */
-        
 
     </style>
 </head>
 <body>
     % if len(objects) > 1:
         <div class="avoid-page-break">
-            <h1>${_("Récapitulatifs des Tickets")}</h1>
+            <h1>${_("Selected tickets")}</h1>
             <table style="width:100%;">
                 <thead>
                     <tr>
+                        <th>${_("Number")}</th>
                         <th>${_("Name")}</th>
-                        <th>${_("Projects")}</th>
+                        <th>${_("Location")}</th>
                         <th>${_("Rating")}</th>
+                        <th>${_("Stage")}</th>
                     </tr>
                 </thead>
                 <tbody>
                     <% value = 0 %>
                     %for ticket in objects:
                         <tr>
+                            <td>${ticket.number}</td>
                             <td>${ticket.name}</td>
                             <td>
-                                 ${ticket.project_id.name}
+                                 ${ticket.breadcrumb}
                             </td>
                             <td>
                                 ${ticket.rating}
                                 <% value = value + ticket.rating %>
+                            </td>
+                            <td>
+                                 ${ticket.stage_id.name}
                             </td>
                         </tr>
                     %endfor
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td>
-                        </td>
-                        <td>
+                        <td colspan="3">
                             ${_("Total")} ${_("Rating")}
                         </td>
                         <td>
                             ${value}
                         </td>
+                        <td></td>
                     </tr>
                 </tfoot>
             </table>
@@ -54,12 +58,17 @@
     % endif
     %for ticket in objects:
         <div class="page-break-before">
-            <h1>${ticket.name}</h1>
-            %if ticket.description:
-                <h2>${_("Description")}</h2>
-                <span>${ticket.rating}</span>
-                <p class="std_text"> ${ticket.description | n} </p>
-            %endif
+            <h2>
+                <span>#${ticket.number}</span>: ${ticket.name}
+                <span class="float-right">${_("rating")}: ${ticket.rating}</span>
+            </h2>
+            <span class="small">${_("Location")}: ${ticket.breadcrumb}</span>
+            <span class="small float-right">${_("Stage")}: ${ticket.stage_id.name}</span>
+            
+            <h3>${_("Description")}</h3>
+            % if ticket.description:
+                <div> ${ticket.description | n} </div>
+            % endif
         </div>  <!-- end breaking page: page-break-before -->
     %endfor
 </body>

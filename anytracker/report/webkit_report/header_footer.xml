@@ -107,6 +107,7 @@
                     background: #DEF05B;
                     color: #475674;
                     font-size: 18px;
+                    padding: 2px;
                 }
 
                 h3 {
@@ -120,6 +121,14 @@
                 p, td {
                     font-family: "Times New Roman", Times, serif;
                     font-size: 12px;
+                }
+
+                span.small {
+                    font-size: 12px;
+                }
+
+                span.float-right {
+                    float: right;
                 }
             ]]></field>
             <field eval="&quot;&quot;&quot;Anytracker report base&quot;&quot;&quot;" name="name"/>
