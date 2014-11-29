@@ -4,7 +4,7 @@
     <style type="text/css">
         ${css}
         /*
-         * Report css
+         * Specific report css
          */
 
     </style>
@@ -13,7 +13,7 @@
     % if len(objects) > 1:
         <div class="avoid-page-break">
             <h1>${_("Selected tickets")}</h1>
-            <table style="width:100%;">
+            <table style="margin-top:85px">
                 <thead>
                     <tr>
                         <th>${_("Number")}</th>
@@ -32,7 +32,7 @@
                             <td>
                                  ${ticket.breadcrumb}
                             </td>
-                            <td>
+                            <td class="align-right">
                                 ${ticket.rating}
                                 <% value = value + ticket.rating %>
                             </td>
@@ -44,13 +44,13 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td colspan="3">
+                        <th colspan="3" class="align-right">
                             ${_("Total")} ${_("Rating")}
-                        </td>
-                        <td>
+                        </th>
+                        <th class="align-right">
                             ${value}
-                        </td>
-                        <td></td>
+                        </th>
+                        <th></th>
                     </tr>
                 </tfoot>
             </table>

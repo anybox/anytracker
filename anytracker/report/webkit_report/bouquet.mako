@@ -18,7 +18,7 @@
         <div class="avoid-page-break">
             <h1>${_("Selected Bouquets")}</h1>
             <h2 style="margin-top: 100px;">${_("Bouquets summary")}</h2>
-            <table style="width:100%;">
+            <table>
                 <thead>
                     <tr>
                         <th>${_("Name")}</th>
@@ -71,7 +71,7 @@
 
                 % if len(bouquet.ticket_ids) > 1:
                     <h2>${_("Tickets")}</h2>
-                    <table style="width:100%;">
+                    <table>
                         <thead>
                             <tr>
                                 <th>${_("Number")}</th>
