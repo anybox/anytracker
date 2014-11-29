@@ -6,21 +6,18 @@
         /*
          * Report css
          */
-        
-        /*
-         * Common css
-         *
-         * TODO: Move the following section to ir_header_webkit_base_anytracker
-         *       to share it between reports
-         */
-
+        .description {
+            min-height: 50px;
+            margin-bottom: 30px;
+        }
 
     </style>
 </head>
 <body>
     % if len(objects) > 1:
         <div class="avoid-page-break">
-            <h1>${_("Récapitulatifs des Bouquets")}</h1>
+            <h1>${_("Selected Bouquets")}</h1>
+            <h2 style="margin-top: 100px;">${_("Bouquets summary")}</h2>
             <table style="width:100%;">
                 <thead>
                     <tr>
@@ -36,10 +33,10 @@
                             <td>${bouquet.name}</td>
                             <td>
                                 % for project in bouquet.project_ids:
-                                    <p class="tag">${project.name}</p>
+                                    <span class="tag">${project.name}</span>
                                 % endfor
                             </td>
-                            <td>
+                            <td class="align-right">
                                 ${bouquet.bouquet_rating}
                                 <% value = value + bouquet.bouquet_rating %>
                             </td>
@@ -48,14 +45,12 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td>
-                        </td>
-                        <td>
+                        <th colspan="2" class="align-right">
                             ${_("Total")} ${_("Rating")}
-                        </td>
-                        <td>
+                        </th>
+                        <th class="align-right">
                             ${value}
-                        </td>
+                        </th>
                     </tr>
                 </tfoot>
             </table>
@@ -63,59 +58,79 @@
     % endif
     %for bouquet in objects:
         <div class="page-break-before">
-            <h1>${bouquet.name}</h1>
-            %if bouquet.description:
-                <h2>${_("Description")}</h2>
-                <p class="std_text"> ${bouquet.description | n} </p>
-            %endif
-            % if len(bouquet.ticket_ids) > 1:
-                <div class="avoid-page-break">
-                    <h2>${_("Liste des tickets composant ce bouquet")}</h2>
-                    <table>
-                      <thead>
-                        <tr>
-                          <th>
-                            ${_("Ticket title")}
-                          </th>
-                          <th>
-                            ${_("Rating")}
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        % for ticket in bouquet.ticket_ids:
-                          <tr>
-                            <td>
-                              ${ ticket.name }
-                            </td>
-                          </tr>
-                        % endfor
-                      </tbody>
-                      <tfoot>
-                        <tr>
-                          <td>
-                              <th>
-                                ${_("Net Total:")}
-                              </th>
-                              <td>
-                                666.66
-                              </td>
-                          </td>
-                        </tr>
-                      </tfoot>
+            <div class="avoid-page-break">
+                <h1>${bouquet.name}</h1>
+                % for project in bouquet.project_ids:
+                    <span class="small tag">${project.name}</span>
+                % endfor
+                <span class="small float-right">${_("Rating")}: ${bouquet.bouquet_rating}</span>
+                %if bouquet.description:
+                    <h2>${_("Bouquet description")}</h2>
+                    <p class="description"> ${bouquet.description | n} </p>
+                %endif
+
+                % if len(bouquet.ticket_ids) > 1:
+                    <h2>${_("Tickets")}</h2>
+                    <table style="width:100%;">
+                        <thead>
+                            <tr>
+                                <th>${_("Number")}</th>
+                                <th>${_("Name")}</th>
+                                <th>${_("Location")}</th>
+                                <th>${_("Rating")}</th>
+                                <th>${_("Stage")}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% value = 0 %>
+                            %for ticket in bouquet.ticket_ids:
+                                <tr>
+                                    <td>${ticket.number}</td>
+                                    <td>${ticket.name}</td>
+                                    <td>
+                                         ${ticket.breadcrumb}
+                                    </td>
+                                    <td class="align-right">
+                                        ${ticket.rating}
+                                        <% value = value + ticket.rating %>
+                                    </td>
+                                    <td>
+                                         ${ticket.stage_id.name}
+                                    </td>
+                                </tr>
+                            %endfor
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="3" class="align-right">
+                                    ${_("Total")} ${_("Rating")}
+                                </th>
+                                <th class="align-right">
+                                    ${value}
+                                </th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
                     </table>
-                </div>  <!-- end avoid-page-break -->
-            % endif
-            % for ticket in bouquet.ticket_ids:
-                <div class="avoid-page-break">
-                    % if len(bouquet.ticket_ids) > 1:
-                        <span>${bouquet.name}</span>
-                    % endif
-                    <h1>${ticket.name}</h1>
-                    <span>${ticket.rating}</span>
-                    <p>${ticket.description}</p>
-                </div>  <!-- end avoid-page-break -->
-            % endfor
+                % endif
+                %for ticket in bouquet.ticket_ids:
+                    <div class="avoid-page-break">
+                        <h2>
+                            <span>#${ticket.number}</span>: ${ticket.name}
+                            <span class="float-right">${_("rating")}: ${ticket.rating}</span>
+                        </h2>
+                        <span class="small">${_("Location")}: ${ticket.breadcrumb}</span>
+                        <span class="small float-right">${_("Stage")}: ${ticket.stage_id.name}</span>
+                        
+                        <h3>${_("Description")}</h3>
+                        <div class="description">
+                            % if ticket.description:
+                                ${ticket.description | n}
+                            % endif
+                        </div>
+                    </div>  <!-- end avoid-page-break -->
+                %endfor
+            </div>  <!-- end avoid-page-break -->
         </div>  <!-- end breaking page: page-break-before -->
     %endfor
 </body>

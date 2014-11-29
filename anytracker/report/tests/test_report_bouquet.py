@@ -47,6 +47,7 @@ class TestBouquets(ReportTestCase):
 
         pid = cls.project_id = cls.create_project([cls.member_id, cls.customer_id],
                                                   name="Main test project")
+        cls.pid = pid
         t1_id = ticket.create(cr, uid, dict(name="First ticket", parent_id=pid))
         t2_id = ticket.create(cr, uid, dict(name="Second ticket", parent_id=pid))
         cls.ticket_ids = [t1_id, t2_id]
@@ -67,4 +68,24 @@ class TestBouquets(ReportTestCase):
 
     def test_report_multi_bouquet(self):
         """Launch report with two bouquets"""
-        (result, format) = self.generateReport([self.bouquet_id, self.bouquet2_id])
+        self.generateReport([self.bouquet_id, self.bouquet2_id])
+
+    def test_report_bouquet_without_description(self):
+        ticket_id = self.ticket.create(self.cr, self.uid, dict(name="Second ticket",
+                                                               description="Ticket description",
+                                                               parent_id=self.pid))
+        bouquet_id = self.create_bouquet(name=u"Un bouquet ?", ticket_ids=[ticket_id])
+        self.generateReport([bouquet_id, self.bouquet2_id])
+
+    def test_report_bouquet_without_ticket(self):
+        bouquet_id = self.create_bouquet(name=u"Un bouquet ?",
+                                         ticket_ids=[],
+                                         description="Bouquet without tickets")
+        self.generateReport([bouquet_id, self.bouquet2_id])
+
+    def test_report_bouquet_with_ticket_without_description(self):
+        ticket_id = self.ticket.create(self.cr, self.uid, dict(name="Second ticket",
+                                                               parent_id=self.pid))
+        bouquet_id = self.create_bouquet(name=u"Un bouquet ?", ticket_ids=[ticket_id])
+        self.generateReport([bouquet_id, self.bouquet2_id])
+

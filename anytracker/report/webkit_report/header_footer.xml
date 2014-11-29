@@ -71,13 +71,6 @@
                     font-size:12;
                 }
 
-                /* Usuful to display m2m or tag likes */
-                p.tag{
-                    display: inline-block;
-                    border: solid 1px #F2F2F2;
-                    padding: 0px 2px 0px 2px;
-                }
-
                 /* Force adding break page at the end of the div */
                 div.page-break-after {
                     page-break-after: always;
@@ -127,11 +120,43 @@
                     font-size: 12px;
                 }
 
+                /* Usuful to display m2m or tag likes */
+                span.tag{
+                    display: inline-block;
+                    border: solid 1px #F2F2F2;
+                    padding: 0px 2px 0px 2px;
+                }
+
                 span.float-right {
                     float: right;
+                }
+
+                /* table css */
+                table {
+                    border-collapse: collapse;
+                }
+                table > thead {
+                    border-bottom:1px solid #444444;
+                }
+                table > tbody > tr {
+                    border-top:0.5px solid #9C9C9C;
+                }
+                table > tfoot {
+                    border-top:1px solid #444444;
+                }
+                th {
+                    font-family: Arial, sans-serif, "Times New Roman", Times, serif;
+                    font-weight: bold;
+                    font-size: 14px;
+                    text-align: center;
+                }
+                .align-right {
+                    text-align: right;
+                    padding-right: 8px;
                 }
             ]]></field>
             <field eval="&quot;&quot;&quot;Anytracker report base&quot;&quot;&quot;" name="name"/>
         </record>
     </data>
 </openerp>
+
