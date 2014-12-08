@@ -106,6 +106,7 @@ Or, if you installed nose in your buildout
         'notify/ir.model.access.csv',
         'priority/ir.model.access.csv',
         'bouquet/ir.model.access.csv',
+        'report/security/ir.model.access.csv',
         # report
         'report/webkit_report/header_footer.xml',
         'report/webkit_report.xml',
