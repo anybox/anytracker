@@ -19,14 +19,16 @@ class ReportTestCase(SharedSetupTransactionCase):
             self.parser = self.reportService.parser(self.cr, self.uid, self.reportService.name,
                                                     context=None)
 
-    def generateReport(self, ids, data={}, context=None):
+    def generateReport(self, ids, data={}, user_id=None, context=None):
         """Generate the report and return it as a tuple (result, format)
             where `result` is the report document and `format` is generaly the file extension.
         """
         if not isinstance(data, dict):
             data = dict()
         data.update({'model': self. _report_base_model})
-        return self.reportService.create(self.cr, self.uid, ids, data, context=context)
+        if not user_id:
+            user_id = self.uid
+        return self.reportService.create(self.cr, user_id, ids, data, context=context)
 
     def getParser(self):
         return self.parser

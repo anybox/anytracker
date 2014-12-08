@@ -36,16 +36,23 @@ class TestBouquets(ReportTestCase):
         ticket = cls.ticket = cls.registry('anytracker.ticket')
         cls.bouquet = cls.registry('anytracker.bouquet')
 
+        cls.manager_id = cls.registry('res.users').create(
+            cr, uid, dict(name="anytracker Manager",
+                          tz="Europe/Paris",
+                          login='at.manager',
+                          groups_id=[(6, 0, [cls.ref('anytracker.group_manager')])]))
         cls.member_id = cls.registry('res.users').create(
             cr, uid, dict(name="anytracker member",
+                          tz="Europe/Paris",
                           login='at.user',
                           groups_id=[(6, 0, [cls.ref('anytracker.group_member')])]))
         cls.customer_id = cls.registry('res.users').create(
             cr, uid, dict(name="anytracker customer",
+                          tz="Europe/Paris",
                           login='at.cust',
                           groups_id=[(6, 0, [cls.ref('anytracker.group_customer')])]))
 
-        pid = cls.project_id = cls.create_project([cls.member_id, cls.customer_id],
+        pid = cls.project_id = cls.create_project([cls.manager_id, cls.member_id, cls.customer_id],
                                                   name="Main test project")
         cls.pid = pid
         t1_id = ticket.create(cr, uid, dict(name="First ticket", parent_id=pid))
@@ -89,3 +96,11 @@ class TestBouquets(ReportTestCase):
         bouquet_id = self.create_bouquet(name=u"Un bouquet ?", ticket_ids=[ticket_id])
         self.generateReport([bouquet_id, self.bouquet2_id])
 
+    def test_report_bouquet_by_customer(self):
+        self.generateReport([self.bouquet_id], user_id=self.customer_id)
+
+    def test_report_bouquet_by_member(self):
+        self.generateReport([self.bouquet_id], user_id=self.member_id)
+
+    def test_report_bouquet_by_manager(self):
+        self.generateReport([self.bouquet_id], user_id=self.manager_id)
