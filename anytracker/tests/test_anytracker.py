@@ -165,9 +165,10 @@ class TestAnytracker(SharedSetupTransactionCase):
         # create a partner as manager
         partner_id = self.partners.create(cr, 1, {
             'name': 'test partner', 'email': 'test@example.com'})
-        # customer cannot search or access partners
+        # customer cannot search or access partners, except anytracker user and partner link to
+        # its company
         partner_ids = self.partners.search(cr, self.customer_id, [])
-        self.assertTrue(len(partner_ids) == 3)
+        self.assertTrue(len(partner_ids) == 4)
         self.assertRaises(except_orm,
                           self.partners.read, cr, self.customer_id, (partner_id,), ['name'])
         self.assertRaises(except_orm,
@@ -175,7 +176,7 @@ class TestAnytracker(SharedSetupTransactionCase):
 
         # users are protected as well
         user_ids = self.partners.search(cr, self.customer_id, [])
-        self.assertTrue(len(user_ids) == 3)
+        self.assertTrue(len(user_ids) == 4)
         # The customer can access the member user
         member_partner_id = self.users.read(cr, self.customer_id, [self.member_id],
                                             ['name', 'partner_id'])[0]['partner_id'][0]
@@ -184,6 +185,12 @@ class TestAnytracker(SharedSetupTransactionCase):
         self.tickets.write(cr, uid, [project_id], {'participant_ids': [(3, self.member_id)]})
         self.assertRaises(except_orm,
                           self.partners.read, cr, self.customer_id, [member_partner_id], ['email'])
+        # Partner can read the partner link to its company but not write on it
+        customer = self.users.browse(cr, self.customer_id, self.customer_id)
+        self.partners.read(cr, self.customer_id, [customer.company_id.partner_id.id], ['email'])
+        self.assertRaises(except_orm,
+                          self.partners.write, cr, self.customer_id,
+                          [customer.company_id.partner_id.id], {'email': 'test@test.fr'})
 
     def test_move_tickets(self):
         """ Check that we can move a ticket to another node or project
