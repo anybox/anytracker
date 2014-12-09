@@ -24,14 +24,14 @@
     <field name="perm_unlink" eval="False"/>
 </record>
 <record id="anytracker_rule_partners" model="ir.rule">
-    <field name="name">Partner filter for customers</field>
+    <field name="name">Partner filter for members and managers</field>
     <field model="ir.model" name="model_id" ref="model_res_partner"/>
     <field name="domain_force">[('anytracker_user_ids', 'not in', user.id)]</field>
     <field name="groups" eval="[(6, 0, [ref('anytracker.group_member'), ref('anytracker.group_manager')])]"/>
-    <field name="perm_create" eval="True"/>
-    <field name="perm_write" eval="True"/>
+    <field name="perm_create" eval="False"/>
+    <field name="perm_write" eval="False"/>
     <field name="perm_read" eval="True"/>
-    <field name="perm_unlink" eval="True"/>
+    <field name="perm_unlink" eval="False"/>
 </record>
 
 </data></openerp>
