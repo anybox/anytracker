@@ -1,0 +1,134 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* anytracker_report
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 7.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-12-10 18:15+0000\n"
+"PO-Revision-Date: 2014-12-10 19:20+0100\n"
+"Last-Translator: Pierre Verkest <pverkest@anybox.fr>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+
+#. module: anytracker_report
+#: report:addons/anytracker_report/webkit_report/bouquet.mako:73
+msgid "Tickets"
+msgstr "Tickets"
+
+#. module: anytracker_report
+#: report:addons/anytracker_report/webkit_report/bouquet.mako:26
+#: report:addons/anytracker_report/webkit_report/bouquet.mako:49
+#: report:addons/anytracker_report/webkit_report/bouquet.mako:66
+#: report:addons/anytracker_report/webkit_report/bouquet.mako:80
+#: report:addons/anytracker_report/webkit_report/bouquet.mako:106
+#: report:addons/anytracker_report/webkit_report/ticket.mako:22
+#: report:addons/anytracker_report/webkit_report/ticket.mako:48
+msgid "Rating"
+msgstr "Evaluation"
+
+#. module: anytracker_report
+#: model:ir.actions.report.xml,name:anytracker_report.report_ticket
+msgid "Ticket"
+msgstr "Ticket"
+
+#. module: anytracker_report
+#: report:addons/anytracker_report/webkit_report/bouquet.mako:49
+#: report:addons/anytracker_report/webkit_report/bouquet.mako:106
+#: report:addons/anytracker_report/webkit_report/ticket.mako:48
+msgid "Total"
+msgstr "Total"
+
+#. module: anytracker_report
+#: report:addons/anytracker_report/webkit_report/bouquet.mako:125
+#: report:addons/anytracker_report/webkit_report/ticket.mako:68
+msgid "Description"
+msgstr "Description"
+
+#. module: anytracker_report
+#: report:addons/anytracker_report/webkit_report/bouquet.mako:120
+#: report:addons/anytracker_report/webkit_report/ticket.mako:63
+msgid "rating"
+msgstr "évaluation"
+
+#. module: anytracker_report
+#: model:ir.actions.report.xml,name:anytracker_report.report_bouquet
+msgid "Bouquet"
+msgstr "Bouquet"
+
+#. module: anytracker_report
+#: code:addons/anytracker_report/webkit_report/CommonParser.py:25
+#, python-format
+msgid " One of those values is not valid: timezone= %r - format= %r"
+msgstr "L'une de ces valeurs est invalide: timezone= %r - format= %r"
+
+#. module: anytracker_report
+#: code:addons/anytracker_report/webkit_report/CommonParser.py:23
+#, python-format
+msgid "Timezone error or date format invalid!"
+msgstr "Fuseau horaire non défini ou format de date invalide"
+
+#. module: anytracker_report
+#: report:addons/anytracker_report/webkit_report/bouquet.mako:77
+#: report:addons/anytracker_report/webkit_report/ticket.mako:19
+msgid "Number"
+msgstr "Numéro"
+
+#. module: anytracker_report
+#: code:addons/anytracker_report/webkit_report/CommonParser.py:24
+#, python-format
+msgid "Please set your timezone before to generate this report."
+msgstr "Renseigner votre fuseau horaire par le menu préférence avant d'éditer ce rapport."
+
+#. module: anytracker_report
+#: report:addons/anytracker_report/webkit_report/ticket.mako:15
+msgid "Selected tickets"
+msgstr "Liste des tickets"
+
+#. module: anytracker_report
+#: report:addons/anytracker_report/webkit_report/bouquet.mako:25
+msgid "Projects"
+msgstr "Projets"
+
+#. module: anytracker_report
+#: report:addons/anytracker_report/webkit_report/bouquet.mako:79
+#: report:addons/anytracker_report/webkit_report/bouquet.mako:122
+#: report:addons/anytracker_report/webkit_report/ticket.mako:21
+#: report:addons/anytracker_report/webkit_report/ticket.mako:65
+msgid "Location"
+msgstr "Emplacement"
+
+#. module: anytracker_report
+#: report:addons/anytracker_report/webkit_report/bouquet.mako:68
+msgid "Bouquet description"
+msgstr "Description du bouquet"
+
+#. module: anytracker_report
+#: report:addons/anytracker_report/webkit_report/bouquet.mako:81
+#: report:addons/anytracker_report/webkit_report/bouquet.mako:123
+#: report:addons/anytracker_report/webkit_report/ticket.mako:23
+#: report:addons/anytracker_report/webkit_report/ticket.mako:66
+msgid "Stage"
+msgstr "Etape"
+
+#. module: anytracker_report
+#: report:addons/anytracker_report/webkit_report/bouquet.mako:19
+msgid "Selected Bouquets"
+msgstr "Liste des bouquets"
+
+#. module: anytracker_report
+#: report:addons/anytracker_report/webkit_report/bouquet.mako:20
+msgid "Bouquets summary"
+msgstr "Récapitulatif des bouquets"
+
+#. module: anytracker_report
+#: report:addons/anytracker_report/webkit_report/bouquet.mako:24
+#: report:addons/anytracker_report/webkit_report/bouquet.mako:78
+#: report:addons/anytracker_report/webkit_report/ticket.mako:20
+msgid "Name"
+msgstr "Nom"
+
