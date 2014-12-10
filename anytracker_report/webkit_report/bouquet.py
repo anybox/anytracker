@@ -14,5 +14,5 @@ class BouquetReport(CommonParser):
 
 report_sxw.report_sxw('report.bouquet_webkit',
                       'anytracker.bouquet',
-                      'anytracker/report/webkit_report/bouquet.mako',
+                      'anytracker_report/webkit_report/bouquet.mako',
                       parser=BouquetReport)

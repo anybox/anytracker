@@ -33,7 +33,6 @@
         'email_template',
         'analytic',
         'hr_timesheet_invoice',
-        'report_webkit',
     ],
     'images': [
         'images/anytracker.png',
@@ -106,10 +105,6 @@ Or, if you installed nose in your buildout
         'notify/ir.model.access.csv',
         'priority/ir.model.access.csv',
         'bouquet/ir.model.access.csv',
-        'report/security/ir.model.access.csv',
-        # report
-        'report/webkit_report/header_footer.xml',
-        'report/webkit_report.xml',
         # security rules:
         'bouquet/ir_rule.xml',
         'security/ir_rule.xml',

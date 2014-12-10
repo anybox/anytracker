@@ -15,5 +15,5 @@ class TicketReport(CommonParser):
 
 report_sxw.report_sxw('report.ticket_webkit',
                       'anytracker.ticket',
-                      'anytracker/report/webkit_report/ticket.mako',
+                      'anytracker_report/webkit_report/ticket.mako',
                       parser=TicketReport)
