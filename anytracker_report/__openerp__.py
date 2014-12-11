@@ -38,7 +38,6 @@
     'data': [
         'webkit_report/header_footer.xml',
         'webkit_report.xml',
-        'security/ir.model.access.csv',
     ],
     'test': [],
     'demo': [],
