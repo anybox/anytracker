@@ -13,7 +13,7 @@
     % if len(objects) > 1:
         <div class="avoid-page-break">
             <h1>${_("Selected tickets")}</h1>
-            <table style="margin-top:85px">
+            <table class="content" style="margin-top:85px">
                 <thead>
                     <tr>
                         <th>${_("Number")}</th>
