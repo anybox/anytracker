@@ -168,7 +168,7 @@ class TestAnytracker(SharedSetupTransactionCase):
         # customer cannot search or access partners, except anytracker user and partner link to
         # its company
         partner_ids = self.partners.search(cr, self.customer_id, [])
-        self.assertTrue(len(partner_ids) == 4)
+        self.assertEquals(len(partner_ids), 4)
         self.assertRaises(except_orm,
                           self.partners.read, cr, self.customer_id, (partner_id,), ['name'])
         self.assertRaises(except_orm,
@@ -176,7 +176,7 @@ class TestAnytracker(SharedSetupTransactionCase):
 
         # users are protected as well
         user_ids = self.partners.search(cr, self.customer_id, [])
-        self.assertTrue(len(user_ids) == 4)
+        self.assertEquals(len(user_ids), 4)
         # The customer can access the member user
         member_partner_id = self.users.read(cr, self.customer_id, [self.member_id],
                                             ['name', 'partner_id'])[0]['partner_id'][0]
