@@ -16,7 +16,7 @@
 <record id="anytracker_rule_partners_customer" model="ir.rule">
     <field name="name">Partner filter for customers</field>
     <field model="ir.model" name="model_id" ref="model_res_partner"/>
-    <field name="domain_force">[('anytracker_user_ids', 'in', user.id)]</field>
+    <field name="domain_force">['|', ('anytracker_user_ids', 'in', user.id), ('id', '=', user.company_id.partner_id.id)]</field>
     <field name="groups" eval="[(6, 0, [ref('anytracker.group_customer')])]"/>
     <field name="perm_create" eval="False"/>
     <field name="perm_write" eval="False"/>

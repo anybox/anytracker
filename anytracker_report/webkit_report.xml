@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+        <report id="anytracker_report.report_bouquet"
+                name="anytracker_report.report.bouquet.webkit"
+                auto="False"
+                model="anytracker.bouquet"
+                file="anytracker_report/webkit_report/bouquet.mako"
+                string="Bouquet"
+                report_type="webkit"/>
+        <record id="anytracker_report.report_bouquet" model="ir.actions.report.xml">
+            <field name="report_name">bouquet_webkit</field>
+            <field name="webkit_header" ref="anytracker_report.ir_header_webkit_base_anytracker"></field>
+        </record>
+        <report id="anytracker_report.report_ticket"
+                name="anytracker_report.report.ticket.webkit"
+                auto="False"
+                model="anytracker.ticket"
+                file="anytracker_report/webkit_report/ticket.mako"
+                string="Ticket"
+                report_type="webkit"/>
+        <record id="anytracker_report.report_ticket" model="ir.actions.report.xml">
+            <field name="report_name">ticket_webkit</field>
+            <field name="webkit_header" ref="anytracker_report.ir_header_webkit_base_anytracker"></field>
+        </record>
+   </data>
+</openerp>
