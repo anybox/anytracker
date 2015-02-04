@@ -16,7 +16,7 @@
             <group>
                 <field name="state"/>
                 <field name="progress" string="Progress"/>
-                <field name="method_id" invisible="1"/>
+                <field name="method_id" invisible="1" required="False"/>
                 <field name="force_rating"/>
                 <field name="sequence"/>
             </group>
@@ -30,7 +30,7 @@
                 <field name="forbidden_complexity_ids" domain="[('method_id', '=', method_id)]"/>
             </page>
             <page string="Authorized groups">
-                <div style="margin: 1em">Only user in these groups will be able to move the ticket to this stage. Unauthorized columns are folded if empty. If this field is empty, no restrictions apply</div>
+                <div style="margin: 1em">Only users in these groups will be able to move the ticket to this stage. Unauthorized columns are folded if empty. If this field is empty, no restrictions apply</div>
                 <field name="groups_allowed"/>
             </page>
         </notebook>
