@@ -1,4 +1,5 @@
 # coding: utf-8
+import re
 import logging
 from lxml import html
 from osv import fields, osv
@@ -7,7 +8,6 @@ from lxml import etree
 from openerp.osv.orm import transfer_modifiers_to_node
 from openerp import SUPERUSER_ID
 logger = logging.getLogger(__file__)
-import re
 
 ticket_regex = re.compile('([Tt]icket ?#?)([\d]+)')
 
