@@ -188,8 +188,6 @@ class Ticket(osv.Model):
                 progression = (ticket.stage_id.progress
                                - (old_progress[ticket.id]or 0.0)) / len(child_ids)
                 new_progress = parent.progress + progression
-                new_progress = 100.0 if new_progress > 100.0 else new_progress
-                new_progress = 0.0 if new_progress < 0.0 else new_progress
                 parent.write({'progress': new_progress})
                 parent = parent.parent_id
         return res

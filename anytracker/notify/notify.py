@@ -58,9 +58,10 @@ class Ticket(osv.Model):
         """
         res = super(Ticket, self).create(cr, uid, values, context=context)
         ticket = self.browse(cr, uid, res, context)
+        # don't sent a message already sent if configured as such
         if not self.check_notify(cr, uid, ticket):
             return res
-        # store the related stage in the message
+        # remember that we sent a message for this stage, then send the message
         ticket.write({'notified_stage_ids': [(4, ticket.stage_id.id)]})
         self.pool.get('email.template').send_mail(
             cr, uid,
