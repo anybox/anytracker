@@ -89,3 +89,30 @@ class TestStage(SharedSetupTransactionCase):
         self.tickets.write(
             cr, self.member_id, [ticket_id],
             {'stage_id': self.ref('anytracker.stage_test_todo2')})
+
+    def test_progress_on_create_delete(self):
+        """ check that the progress is recomputed on ticket creation and deletion
+        """
+        cr, uid, = self.cr, self.uid
+        project_id = self.tickets.create(
+            cr, uid,
+            {'name': 'Project',
+             'participant_ids': [(6, 0, [self.member_id, self.customer_id])],
+             'method_id': self.ref('anytracker.method_test')})
+        ticket1_id = self.tickets.create(cr, uid,
+                                         {'name': 'Ticket 1',
+                                          'stage_id': self.ref('anytracker.stage_test_todo'),
+                                          'parent_id': project_id, })
+        self.assertEquals(self.tickets.browse(cr, uid, ticket1_id).progress, 5.0)
+        self.assertEquals(self.tickets.browse(cr, uid, project_id).progress, 5.0)
+        # we add a second ticket
+        ticket2_id = self.tickets.create(cr, uid,
+                                         {'name': 'Ticket 2',
+                                          'parent_id': project_id, })
+        self.assertEquals(self.tickets.browse(cr, uid, project_id).progress, 3.0)
+        self.assertEquals(self.tickets.browse(cr, uid, ticket1_id).progress, 5.0)
+        self.assertEquals(self.tickets.browse(cr, uid, ticket2_id).progress, 1.0)
+        # we delete the second ticket
+        self.tickets.unlink(cr, uid, ticket2_id)
+        self.assertEquals(self.tickets.browse(cr, uid, ticket1_id).progress, 5.0)
+        self.assertEquals(self.tickets.browse(cr, uid, project_id).progress, 5.0)

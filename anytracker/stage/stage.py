@@ -78,13 +78,13 @@ class Ticket(osv.Model):
     def stage_previous(self, cr, uid, ids, context=None):
         """move the ticket to the previous stage
         """
-        stage_pool = self.pool.get('anytracker.stage')
+        stages = self.pool.get('anytracker.stage')
         for ticket in self.browse(cr, uid, ids, context):
             method = ticket.project_id.method_id
             if not method:
                 raise osv.except_osv(_('Warning !'), _('No method defined in the project.'))
             stage_id = ticket.stage_id.id
-            stage_ids = stage_pool.search(cr, uid, [('method_id', '=', method.id)])
+            stage_ids = stages.search(cr, uid, [('method_id', '=', method.id)])
             if stage_id == stage_ids[0]:  # first stage
                 next_stage = False
             elif stage_id not in stage_ids:  # no stage
@@ -96,13 +96,13 @@ class Ticket(osv.Model):
     def stage_next(self, cr, uid, ids, context=None):
         """move the ticket to the next stage
         """
-        stage_pool = self.pool.get('anytracker.stage')
+        stages = self.pool.get('anytracker.stage')
         for ticket in self.browse(cr, uid, ids, context):
             method = ticket.project_id.method_id
             if not method:
                 raise osv.except_osv(_('Warning !'), _('No method defined in the project.'))
             stage_id = ticket.stage_id.id
-            stage_ids = stage_pool.search(cr, uid, [('method_id', '=', method.id)])
+            stage_ids = stages.search(cr, uid, [('method_id', '=', method.id)])
             if stage_id == stage_ids[-1]:  # last stage
                 raise osv.except_osv(_('Warning !'), _("You're already in the last stage"))
             elif stage_id not in stage_ids:  # no stage
@@ -114,10 +114,50 @@ class Ticket(osv.Model):
     def create(self, cr, uid, values, context=None):
         """select the default stage if parent is selected lately
         """
-        if not values.get('stage_id') and values.get('parent_id'):
-            method = self.browse(cr, uid, values.get('parent_id')).method_id
+        if not values.get('stage_id'):
+            if values.get('parent_id'):
+                method = self.browse(cr, uid, values.get('parent_id')).method_id
+            else:
+                methods = self.pool.get('anytracker.method')
+                method = methods.browse(cr, uid, values['method_id'])
             values['stage_id'] = method.get_first_stage()[method.id]
-        return super(Ticket, self).create(cr, uid, values, context)
+        stages = self.pool.get('anytracker.stage')
+        values['progress'] = (stages.browse(cr, uid, values['stage_id']).progress
+                              if values['stage_id'] else 0.0)
+        ticket_id = super(Ticket, self).create(cr, uid, values, context)
+        # loop up to the root
+        ticket = self.browse(cr, uid, ticket_id, context)
+        parent = ticket.parent_id
+        while parent:
+            child_ids = self.search(cr, uid, [('id', 'child_of', parent.id),
+                                              ('child_ids', '=', False),
+                                              ('id', '!=', parent.id)])
+            if ticket.id not in child_ids:
+                child_ids.append(ticket.id)
+            children = len(child_ids)
+            new_progress = (parent.progress*(children-1)+(ticket.stage_id.progress or 0))/children
+            parent.write({'progress': new_progress})
+            parent = parent.parent_id
+        return ticket_id
+
+    def unlink(self, cr, uid, ids, context=None):
+        if not hasattr(ids, '__iter__'):
+            ids = [ids]
+        for ticket_id in ids:
+            ticket = self.browse(cr, uid, ticket_id, context)
+            parent = ticket.parent_id
+            ticket_progress = ticket.progress
+            ticket_id = super(Ticket, self).unlink(cr, uid, ids, context)
+            while parent:
+                child_ids = self.search(cr, uid, [('id', 'child_of', parent.id),
+                                                  ('child_ids', '=', False),
+                                                  ('id', '!=', parent.id)])
+                children = len(child_ids)
+                if children:
+                    new_progress = (parent.progress*(children+1)-ticket_progress)/children
+                    parent.write({'progress': new_progress})
+                parent = parent.parent_id
+            return ticket_id
 
     def user_base_groups(self, cr, uid):
         """ return the base (not implied) groups of the uid

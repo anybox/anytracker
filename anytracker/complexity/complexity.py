@@ -166,6 +166,8 @@ class Ticket(osv.Model):
         return True
 
     def unlink(self, cr, uid, ids, context=None):
+        if not hasattr(ids, '__iter__'):
+            ids = [ids]
         tickets = self.read(cr, uid, ids, ['parent_id'], load='_classic_write')
         for ticket in tickets:
             # check if the old parent had other children
