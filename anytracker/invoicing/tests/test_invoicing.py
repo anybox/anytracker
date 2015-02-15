@@ -269,3 +269,4 @@ class TestInvoicing(SharedSetupTransactionCase):
         datetime.set_now(datetime.now() + timedelta(1))
         self.tickets.cron(cr, uid)
         self.assertEquals(previous_count + 2, count_invoiced())
+        datetime.real_now()
