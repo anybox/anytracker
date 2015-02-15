@@ -63,6 +63,9 @@ class Ticket(osv.Model):
             }
             if ticket.priority_id and ticket.priority_id.discount_id:
                 line_data['to_invoice'] = ticket.priority_id.discount_id.id
+            line_data.update(analines.on_change_unit_amount(
+                cr, uid, None, line_data['product_id'], line_data['unit_amount'], None,
+                journal_id=line_data['journal_id'])['value'])
             line_id = analines.create(cr, uid, line_data)
             ticket.write({'analytic_line_id': line_id})
             result.append(line_id)
@@ -71,13 +74,13 @@ class Ticket(osv.Model):
     def cron(self, cr, uid, context=None):
         super(Ticket, self).cron(cr, uid, context)
         # tickets to invoice
-        yesterday = (datetime.now() - timedelta(1)).strftime("%Y-%m-%d %H:%M:%S")
+        yesterday = (datetime.now()-timedelta(1)).strftime("%Y-%m-%d %H:%M:%S")
         ticket_ids = self.search(cr, uid, [
             ('analytic_line_id', '=', False),
             ('progress', '=', 100.0),
             ('rating', '!=', 0.0),
             ('active', '=', True),
-            ('write_date', '<', yesterday),
+            ('write_date', '<=', yesterday),
             ('project_id.analytic_journal_id', '!=', False),
             ('project_id.product_id', '!=', False),
             ('project_id.analytic_account_id', '!=', False),

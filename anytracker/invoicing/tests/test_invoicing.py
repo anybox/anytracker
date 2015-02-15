@@ -3,6 +3,7 @@ from openerp.osv import osv
 from os.path import join
 import anybox.testing.datetime  # noqa
 from datetime import datetime, timedelta
+import time
 
 
 class TestInvoicing(SharedSetupTransactionCase):
@@ -205,6 +206,7 @@ class TestInvoicing(SharedSetupTransactionCase):
         """
         cr, uid = self.cr, self.uid
         # run once before to invoice everything
+        datetime.set_now(datetime.now() + timedelta(10))
         self.tickets.cron(cr, uid)
         project_id = self.tickets.create(
             cr, uid,
@@ -216,7 +218,7 @@ class TestInvoicing(SharedSetupTransactionCase):
             cr, uid,
             {'name': 'Invoiced ticket1',
              'parent_id': project_id, })
-        self.tickets.create(
+        ticket2_id = self.tickets.create(
             cr, uid,
             {'name': 'Invoiced ticket2',
              'parent_id': project_id, })
@@ -224,25 +226,30 @@ class TestInvoicing(SharedSetupTransactionCase):
             cr, uid,
             {'name': 'Invoiced ticket3',
              'parent_id': project_id, })
-        self.tickets.create(
+        ticket4_id = self.tickets.create(
             cr, uid,
             {'name': 'Invoiced ticket4',
              'parent_id': project_id, })
         self.tickets.write(cr, uid, [ticket1_id, ticket3_id], {
             'my_rating': self.ref('anytracker.complexity1')})
+        # also fake the crete_date and write_date
+        # because anybox.testing.datetime doesn't work for postgresql now() function
+        cr.execute('update anytracker_ticket set create_date=%s, write_date=%s '
+                   'where id in (%s, %s, %s, %s)',
+                   (time.strftime('%Y-%m-%d %H:%M:%S'), time.strftime('%Y-%m-%d %H:%M:%S'),
+                    ticket1_id, ticket2_id, ticket3_id, ticket4_id))
 
         def count_invoiced():
             return len(self.tickets.search(cr, uid, [('analytic_line_id', '!=', False)]))
 
         previous_count = count_invoiced()
-        # run the cron
-        self.tickets.cron(cr, uid)
-        # check that we have no tickets invoiced yet
-        self.assertEquals(previous_count, count_invoiced())
 
-        # now set 2 tickets as finished
+        # now set the 2 tickets as finished
         self.tickets.write(cr, uid, [ticket1_id, ticket3_id],
                            {'stage_id': self.ref('anytracker.stage_test_done')})
+        cr.execute('update anytracker_ticket set write_date=%s '
+                   'where id in (%s, %s)',
+                   (time.strftime('%Y-%m-%d %H:%M:%S'), ticket1_id, ticket3_id))
         # relaunch the cron, still nothing invoiced
         self.tickets.cron(cr, uid)
         self.assertEquals(previous_count, count_invoiced())
