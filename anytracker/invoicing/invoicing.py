@@ -2,6 +2,7 @@
 from openerp.osv import fields, osv
 from tools.translate import _
 import logging
+from datetime import datetime, timedelta
 
 logger = logging.getLogger(__file__)
 
@@ -66,6 +67,23 @@ class Ticket(osv.Model):
             ticket.write({'analytic_line_id': line_id})
             result.append(line_id)
         return result
+
+    def cron(self, cr, uid, context=None):
+        super(Ticket, self).cron(cr, uid, context)
+        # tickets to invoice
+        yesterday = (datetime.now() - timedelta(1)).strftime("%Y-%m-%d %H:%M:%S")
+        ticket_ids = self.search(cr, uid, [
+            ('analytic_line_id', '=', False),
+            ('progress', '=', 100.0),
+            ('rating', '!=', 0.0),
+            ('active', '=', True),
+            ('write_date', '<', yesterday),
+            ('project_id.analytic_journal_id', '!=', False),
+            ('project_id.product_id', '!=', False),
+            ('project_id.analytic_account_id', '!=', False),
+            ('child_ids', '=', False),
+        ])
+        self.create_analytic_line(cr, uid, ticket_ids, context)
 
     _columns = {
         'analytic_account_id': fields.many2one(

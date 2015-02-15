@@ -11,6 +11,20 @@
     <field name="name">Anytracker ticket</field>
     <field name="code">anytracker.ticket</field>
 </record>
+</data>
+
+<data>
+<record id="anytracker_cron" model="ir.cron">
+    <field name="name">Anytracker automatic tasks</field>
+    <field name="user_id" ref="base.user_root"/>
+    <field name="interval_number">1</field>
+    <field name="interval_type">days</field>
+    <field name="numbercall">-1</field>
+    <field eval="False" name="doall"/>
+    <field eval="'anytracker.ticket'" name="model"/>
+    <field eval="'cron'" name="function"/>
+    <field eval="'()'" name="args"/>
+</record>
 
 </data>
 </openerp>

@@ -298,6 +298,12 @@ class Ticket(osv.Model):
             ticket.write({'stage_id': start_ids[0]})
         self.recompute_parents(cr, uid, ids)
 
+    def cron(self, cr, uid, context=None):
+        """Anytracker CRON tasks
+        To be overloaded by submodules
+        """
+        return
+
     _columns = {
         'name': fields.char('Title', 255, required=True),
         'number': fields.integer('Number'),

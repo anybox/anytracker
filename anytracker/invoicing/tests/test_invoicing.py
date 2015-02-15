@@ -1,6 +1,8 @@
 from anybox.testing.openerp import SharedSetupTransactionCase
 from openerp.osv import osv
 from os.path import join
+import anybox.testing.datetime  # noqa
+from datetime import datetime, timedelta
 
 
 class TestInvoicing(SharedSetupTransactionCase):
@@ -45,7 +47,7 @@ class TestInvoicing(SharedSetupTransactionCase):
              'analytic_journal_id': self.anajournals.search(cr, uid, [])[0],
              'product_id': self.ref('product.product_product_consultant'),
              'method_id': self.ref('anytracker.method_test')})
-        # we create 3 tickets
+        # we create a few tickets
         ticket1_id = self.tickets.create(
             cr, uid,
             {'name': 'Invoiced ticket1',
@@ -197,3 +199,66 @@ class TestInvoicing(SharedSetupTransactionCase):
         self.assertEquals(
             0,
             self.tickets.browse(cr, uid, ticket4_id).analytic_line_id.to_invoice.factor)
+
+    def test_cron(self):
+        """ check that finished tickets are moved to invoicing after +24h
+        """
+        cr, uid = self.cr, self.uid
+        # run once before to invoice everything
+        self.tickets.cron(cr, uid)
+        project_id = self.tickets.create(
+            cr, uid,
+            {'name': 'Test',
+             'participant_ids': [(6, 0, [self.customer_id, self.member_id])],
+             'method_id': self.ref('anytracker.method_test')})
+        # we create some tickets
+        ticket1_id = self.tickets.create(
+            cr, uid,
+            {'name': 'Invoiced ticket1',
+             'parent_id': project_id, })
+        self.tickets.create(
+            cr, uid,
+            {'name': 'Invoiced ticket2',
+             'parent_id': project_id, })
+        ticket3_id = self.tickets.create(
+            cr, uid,
+            {'name': 'Invoiced ticket3',
+             'parent_id': project_id, })
+        self.tickets.create(
+            cr, uid,
+            {'name': 'Invoiced ticket4',
+             'parent_id': project_id, })
+        self.tickets.write(cr, uid, [ticket1_id, ticket3_id], {
+            'my_rating': self.ref('anytracker.complexity1')})
+
+        def count_invoiced():
+            return len(self.tickets.search(cr, uid, [('analytic_line_id', '!=', False)]))
+
+        previous_count = count_invoiced()
+        # run the cron
+        self.tickets.cron(cr, uid)
+        # check that we have no tickets invoiced yet
+        self.assertEquals(previous_count, count_invoiced())
+
+        # now set 2 tickets as finished
+        self.tickets.write(cr, uid, [ticket1_id, ticket3_id],
+                           {'stage_id': self.ref('anytracker.stage_test_done')})
+        # relaunch the cron, still nothing invoiced
+        self.tickets.cron(cr, uid)
+        self.assertEquals(previous_count, count_invoiced())
+
+        # now fill the missing data in the project, we still have 0 tickets invoiced
+        account_id = self.anaccounts.create(cr, uid, {
+            'name': 'project',
+            'type': 'contract'})
+        self.tickets.write(cr, uid, project_id,
+                           {'analytic_journal_id': self.anajournals.search(cr, uid, [])[0],
+                            'product_id': self.ref('product.product_product_consultant'),
+                            'analytic_account_id': account_id})
+        self.tickets.cron(cr, uid)
+        self.assertEquals(previous_count, count_invoiced())
+
+        # we should wait +24h, so we set the time to tomorrow and run the cron
+        datetime.set_now(datetime.now() + timedelta(1))
+        self.tickets.cron(cr, uid)
+        self.assertEquals(previous_count + 2, count_invoiced())
