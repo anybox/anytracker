@@ -50,6 +50,12 @@ class Ticket(osv.Model):
                 raise osv.except_osv(
                     'Error', ("No expense account defined on the product (or category)"
                               " configured in your anytracker project"))
+            if ticket.assigned_user_id:
+                user_id = ticket.assigned_user_id.id
+            elif ticket.rating_ids:
+                user_id = ticket.rating_ids[0].user_id.id
+            else:
+                user_id = uid
             line_data = {
                 'name': 'Ticket #%s: %s' % (ticket.number, ticket.name),
                 'amount': 1.0,
@@ -59,7 +65,7 @@ class Ticket(osv.Model):
                 'product_id': ticket.project_id.product_id.id,
                 'journal_id': ticket.project_id.analytic_journal_id.id,
                 'general_account_id': gen_account.id,
-                'user_id': ticket.assigned_user_id.id if ticket.assigned_user_id else uid
+                'user_id': user_id,
             }
             if ticket.priority_id and ticket.priority_id.discount_id:
                 line_data['to_invoice'] = ticket.priority_id.discount_id.id
