@@ -59,7 +59,7 @@
     <field name="inherit_id" ref="anytracker.ticket_view_search"/>
     <field name="arch" type="xml">
         <xpath expr="//filter[@name='unfinished']" position="attributes">
-            <attribute name="domain">['|', ('progress', '&lt;', 100.0), '&amp;', '&amp;', ('analytic_line_id', '=', False), ('project_id.analytic_journal_id', '!=', False), ('rating', '>', 0)]</attribute>
+            <attribute name="domain">['|', ('progress', '&lt;', 100.0), '&amp;', '&amp;', ('project_id.analytic_journal_id', '!=', False), ('rating', '&gt;', 0), '|', ('analytic_line_id', '=', False), ('analytic_line_id.date', '&gt;', (context_today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]</attribute>
         </xpath>
     </field>
 </record>
