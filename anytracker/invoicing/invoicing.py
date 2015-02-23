@@ -3,6 +3,7 @@ from openerp.osv import fields, osv
 from tools.translate import _
 import logging
 from datetime import datetime, timedelta
+from openerp import SUPERUSER_ID
 
 logger = logging.getLogger(__file__)
 
@@ -138,3 +139,15 @@ class Priority(osv.Model):
             'hr_timesheet_invoice.factor', 'Ratio',
             help=u'set the invoicing ratio for tickets with this priority')
     }
+
+
+class account_analytic_line(osv.Model):
+    """ Allow a customer to search analytic line by date (related to commit d6106d1aa13d)
+    """
+    _inherit = "account.analytic.line"
+
+    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
+        if len(args) == 1 and len(args[0]) == 3 and args[0][0] == 'date':
+            uid = SUPERUSER_ID
+        return super(account_analytic_line, self).search(cr, uid, args, offset, limit,
+                                                         order, context=context, count=count)
