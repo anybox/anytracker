@@ -215,7 +215,12 @@ class Ticket(osv.Model):
         """climb the tree up to the root and recompute
         """
         ticket_id = super(Ticket, self).create(cr, uid, values, context)
-        if values.get('parent_id'):
+        if 'my_rating' in values:
+            new_risk, new_rating = self.compute_risk_and_rating(cr, uid, [ticket_id])
+            super(Ticket, self).write(cr, uid, ticket_id,
+                                      {'risk': new_risk[ticket_id],
+                                       'rating': new_rating[ticket_id]}, context)
+        if 'parent_id' in values:
             self.recompute_parents(cr, uid, values.get('parent_id'))
         return ticket_id
 

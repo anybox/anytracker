@@ -41,13 +41,6 @@ class TestComplexity(SharedSetupTransactionCase):
              'groups_id': [(6, 0,
                            [cls.ref('anytracker.group_customer')])]})
 
-    def createLeafTicket(self, name, parent_id):
-        cr, uid = self.cr, self.uid
-        ticket_id = self.tickets.create(cr, uid,
-                                        {'name': name,
-                                         'parent_id': parent_id, })
-        return ticket_id
-
     def test_rating(self):
         """ Simple rating scenario: a manager or member can rate, not a customer.
         """
@@ -58,7 +51,9 @@ class TestComplexity(SharedSetupTransactionCase):
             {'name': 'test project',
              'participant_ids': [(6, 0, [self.customer_id, self.member_id, self.manager_id])],
              'method_id': self.ref('anytracker.method_test')})
-        ticket_id = self.createLeafTicket('Test simple ticket', project_id)
+        ticket_id = self.tickets.create(cr, uid,
+                                        {'name': 'Test simple ticket',
+                                         'parent_id': project_id, })
         # a member can rate
         self.tickets.write(cr, self.member_id, [ticket_id], {'my_rating': self.complexity2})
         # a manager can rate
@@ -75,7 +70,9 @@ class TestComplexity(SharedSetupTransactionCase):
                                          {'name': 'test project',
                                           'participant_ids': [(6, 0, [self.member_id])],
                                           'method_id': self.ref('anytracker.method_test')})
-        ticket1_id = self.createLeafTicket('Test ticket 1', project_id)
+        ticket1_id = self.tickets.create(cr, uid,
+                                         {'name': 'Test ticket 1',
+                                          'parent_id': project_id, })
         self.tickets.write(cr, uid, [ticket1_id], {'my_rating': self.complexity2})
         self.assertEquals(self.tickets.browse(cr, uid, ticket1_id).rating, 2)
         self.tickets.write(cr, uid, ticket1_id, {'my_rating': None})
@@ -95,21 +92,26 @@ class TestComplexity(SharedSetupTransactionCase):
             {'name': 'test project',
              'participant_ids': [(6, 0, [self.member_id])],
              'method_id': self.ref('anytracker.method_test')})
-        ticket1_id = self.createLeafTicket('Test ticket 1',
-                                           project_id)
+        ticket1_id = self.tickets.create(cr, uid,
+                                         {'name': 'Test ticket 1',
+                                          'parent_id': project_id, })
 
         self.tickets.write(cr, self.member_id, [ticket1_id],
                            {'my_rating': self.complexity2})
         self.assertEquals(self.tickets.browse(cr, self.member_id, ticket1_id).rating, 2)
         self.assertEquals(self.tickets.browse(cr, self.member_id, project_id).rating, 2)
 
-        ticket2_id = self.createLeafTicket('Test ticket 2', project_id)
+        ticket2_id = self.tickets.create(cr, uid,
+                                         {'name': 'Test ticket 2',
+                                          'parent_id': project_id, })
         self.tickets.write(cr, self.member_id, [ticket2_id], {'my_rating': self.complexity3})
         self.assertEquals(self.tickets.browse(cr, self.member_id, project_id).rating, 6)
         self.tickets.write(cr, self.member_id, [ticket2_id], {'my_rating': self.complexity2})
         self.assertEquals(self.tickets.browse(cr, self.member_id, project_id).rating, 4)
         # create a subticket under ticket2
-        ticket3_id = self.createLeafTicket('Test ticket 3', ticket2_id)
+        ticket3_id = self.tickets.create(cr, uid,
+                                         {'name': 'Test ticket 3',
+                                          'parent_id': ticket2_id, })
         self.tickets.write(cr, self.member_id, [ticket3_id], {'my_rating': self.complexity4})
         self.assertEquals(self.tickets.browse(cr, self.member_id, project_id).rating, 9)
         self.assertEquals(self.tickets.browse(cr, self.member_id, ticket2_id).rating, 7)
@@ -144,8 +146,9 @@ class TestComplexity(SharedSetupTransactionCase):
             {'name': 'test project',
              'participant_ids': [(6, 0, [self.member_id])],
              'method_id': self.ref('anytracker.method_test2')})
-        ticket1_id = self.createLeafTicket('Test ticket 1',
-                                           project_id)
+        ticket1_id = self.tickets.create(cr, uid,
+                                         {'name': 'Test ticket 1',
+                                          'parent_id': project_id, })
         # we give two complexities
         self.tickets.write(cr, self.member_id, [ticket1_id],
                            {'my_rating': self.ref('anytracker.complexity6')})
@@ -161,3 +164,18 @@ class TestComplexity(SharedSetupTransactionCase):
         self.tickets.write(cr, self.manager_id, [ticket1_id],
                            {'my_rating': self.ref('anytracker.complexity8')})
         self.assertEquals(self.tickets.browse(cr, self.member_id, ticket1_id).color, 4)
+
+    def test_rate_at_creation(self):
+        """ check that a ticket rated at creation has a rating
+        """
+        cr, uid = self.cr, self.uid
+        project_id = self.tickets.create(
+            cr, uid,
+            {'name': 'test project',
+             'participant_ids': [(6, 0, [self.member_id])],
+             'method_id': self.ref('anytracker.method_test2')})
+        ticket1_id = self.tickets.create(cr, uid,
+                                         {'name': 'Test ticket 1',
+                                          'parent_id': project_id,
+                                          'my_rating': self.ref('anytracker.complexity7')})
+        self.assertEquals(self.tickets.browse(cr, self.member_id, ticket1_id).rating, 4.5)
