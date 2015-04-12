@@ -232,7 +232,7 @@ class TestInvoicing(SharedSetupTransactionCase):
              'parent_id': project_id, })
         self.tickets.write(cr, uid, [ticket1_id, ticket3_id], {
             'my_rating': self.ref('anytracker.complexity1')})
-        # also fake the crete_date and write_date
+        # also fake the create_date and write_date
         # because anybox.testing.datetime doesn't work for postgresql now() function
         cr.execute('update anytracker_ticket set create_date=%s, write_date=%s '
                    'where id in (%s, %s, %s, %s)',
