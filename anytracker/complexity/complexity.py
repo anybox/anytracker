@@ -220,7 +220,7 @@ class Ticket(osv.Model):
             super(Ticket, self).write(cr, uid, ticket_id,
                                       {'risk': new_risk[ticket_id],
                                        'rating': new_rating[ticket_id]}, context)
-        if 'parent_id' in values:
+        if values.get('parent_id'):
             self.recompute_parents(cr, uid, values.get('parent_id'))
         return ticket_id
 
