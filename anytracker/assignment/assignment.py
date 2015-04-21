@@ -42,6 +42,8 @@ class Ticket(osv.Model):
         """ Return the latest assignment of the ticket for the current stage
         If the assignment stage is not the ticket stage, take an older one.
         """
+        if not ids:
+            return False
         if not context:
             context = {}
 
