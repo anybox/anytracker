@@ -21,6 +21,19 @@ def add_permalinks(cr, string):
         string)[0]
 
 
+class Type(osv.Model):
+    """ Ticket type (project, ticket, deliverable, etc.)
+    """
+    _name = 'anytracker.ticket.type'
+    _columns = {
+        'name': fields.char('Title', 255, required=True),
+        'code': fields.char('Title', 255, required=True),
+        'description': fields.text('Description'),
+        'has_children': fields.boolean('Can have children'),
+        'default': fields.boolean('Default for new tickets'),
+    }
+
+
 class Ticket(osv.Model):
 
     _name = 'anytracker.ticket'
@@ -111,6 +124,7 @@ class Ticket(osv.Model):
         """write the project_id when writing the parent.
         Also propagate the (in)active flag to the children
         """
+        types = self.pool.get('anytracker.ticket.type')
         if not hasattr(ids, '__iter__'):
             ids = [ids]
         children = None
@@ -121,7 +135,7 @@ class Ticket(osv.Model):
                 if ticket.id == values['parent_id']:
                     raise osv.except_osv(_('Error'),
                                          _(u"Think of yourself. Can you be your own parent?"))
-                # reparenting to False, set current ticket as project for children
+                # if reparenting to False, propagate the current ticket as project for children
                 project_id = root_id or ticket.id
                 # set the project_id of me and all the children
                 children = self.search(cr, uid, [('id', 'child_of', ticket.id)])
@@ -138,12 +152,24 @@ class Ticket(osv.Model):
         if 'description' in values:
             values['description'] = add_permalinks(cr, values['description'])
 
+        # don't allow to set a ticket as node if it has children
+        if values.get('type'):
+            for ticket in self.browse(cr, uid, ids, context):
+                if ticket.child_ids and types.browse(cr, uid, values.get('type')).code != 'node':
+                    del values['type']
+
         res = super(Ticket, self).write(cr, uid, ids, values, context=context)
         if 'parent_id' in values:
             for ticket in self.browse(cr, uid, ids, context):
                 method_id = (ticket.parent_id.method_id.id
                              if values['parent_id'] is not False else ticket.method_id.id)
                 super(Ticket, self).write(cr, uid, children, {'method_id': method_id})
+        # correct the parent to be a node
+        if 'parent_id' in values:
+                type_ids = types.search(cr, uid, [('code', '=', 'node')])
+                if type_ids:
+                    self.write(cr, uid, values['parent_id'], {'type': type_ids[0]})
+
         return res
 
     def _get_permalink(self, cr, uid, ids, field_name, args, context=None):
@@ -154,6 +180,8 @@ class Ticket(osv.Model):
     def create(self, cr, uid, values, context=None):
         """write the project_id when creating
         """
+        types = self.pool.get('anytracker.ticket.type')
+        type_ids = types.search(cr, uid, [('code', '=', 'node')])
         values.update({
             'number': self.pool.get('ir.sequence').next_by_code(cr, SUPERUSER_ID,
                                                                 'anytracker.ticket'),
@@ -162,6 +190,10 @@ class Ticket(osv.Model):
             project_id = self.read(cr, uid, values['parent_id'],
                                    ['project_id'], load='_classic_write')['project_id']
             values['project_id'] = project_id
+
+        # project creation: auto-assign the 'node' type
+        if not values.get('parent_id') and type_ids:
+            values['type'] = type_ids[0]
 
         # replace ticket numbers with permalinks
         if 'description' in values:
@@ -172,6 +204,10 @@ class Ticket(osv.Model):
         if not values.get('parent_id'):
             self.write(cr, uid, ticket_id, {'project_id': ticket_id})
 
+        # turn the parent into a node
+        if 'parent_id' in values and values['parent_id'] and type_ids:
+            self.write(cr, uid, values['parent_id'], {'type': type_ids[0]})
+
         # subscribe project members
         participant_ids = self.browse(cr, uid, ticket_id).project_id.participant_ids
         if participant_ids:
@@ -180,26 +216,31 @@ class Ticket(osv.Model):
         return ticket_id
 
     def _default_parent_id(self, cr, uid, context=None):
-        """Return the current ticket of the parent if this is a leaf
+        """When creating a ticket, return the current ticket as default parent
+        or its parent if this is a leaf (to create a sibling)
         """
-        ticket_obj = self.pool.get('anytracker.ticket')
         active_id = context.get('active_id')
         if not active_id:
             return False
-        ticket = ticket_obj.browse(cr, uid, active_id)
+        ticket = self.browse(cr, uid, active_id)
         if not ticket.parent_id:
             return active_id
-        elif not ticket.child_ids:
+        elif not ticket.type.has_children:
             return ticket.parent_id.id
         else:
             return active_id
 
+    def _default_type(self, cr, uid, context=None):
+        types = self.pool.get('anytracker.ticket.type')
+        type_ids = types.search(cr, uid, [('default', '=', True)])
+        if not type_ids:
+            return False
+        return type_ids[0]
+
     def _subnode_ids(self, cr, uid, ids, field_name, args, context=None):
         """Return the list of children that are themselves nodes."""
-        ticket_obj = self.pool.get('anytracker.ticket')
-        # GR: I suppose we don't use self directly because it may be overridden ?
-        return {i: ticket_obj.search(cr, uid, [('parent_id', '=', i), ('child_ids', '!=', False)],
-                                     context=context)
+        return {i: self.search(cr, uid, [('parent_id', '=', i), ('type.has_children', '=', True)],
+                               context=context)
                 for i in ids}
 
     def _nb_children(self, cr, uid, ids, field_name, args, context=None):
@@ -307,6 +348,11 @@ class Ticket(osv.Model):
     _columns = {
         'name': fields.char('Title', 255, required=True),
         'number': fields.integer('Number'),
+        'type': fields.many2one(
+            'anytracker.ticket.type',
+            'Type',
+            required=True,
+            select=True),
         'permalink': fields.function(_get_permalink, type='string', string='Permalink',
                                      obj='anytracker.ticket', method=True),
         'description': fields.text('Description', required=False),
@@ -342,7 +388,7 @@ class Ticket(osv.Model):
             method=True,
             string='# of children',
             type='integer',
-            store=False, help='Number of children'),
+            help='Number of children'),
         'participant_ids': fields.many2many(
             'res.users',
             'anytracker_ticket_assignment_rel',
@@ -383,6 +429,7 @@ class Ticket(osv.Model):
     }
 
     _defaults = {
+        'type': _default_type,
         'duration': 0,
         'parent_id': _default_parent_id,
         'active': True,

@@ -106,7 +106,7 @@ class Ticket(osv.Model):
         if not hasattr(ids, '__iter__'):
             ids = [ids]
         for ticket in self.browse(cr, uid, ids, context):
-            if ticket.child_ids:  # not a leaf
+            if ticket.type.has_children:  # not a leaf
                 res_risk[ticket.id] = ticket.risk
                 res_rating[ticket.id] = ticket.rating
                 continue
@@ -140,22 +140,22 @@ class Ticket(osv.Model):
         if not hasattr(ids, '__iter__'):
             ids = [ids]
         for ticket in self.browse(cr, uid, ids):
-            if not ticket.child_ids:
+            if not ticket.type.has_children:
                 risk, rating = self.compute_risk_and_rating(cr, uid, ticket.id)
                 self.write(cr, uid, ticket.id, {'risk': risk[ticket.id],
                                                 'rating': rating[ticket.id]})
             else:
                 leaf_ids = self.search(cr, uid, [('id', 'child_of', ticket.id),
-                                                 ('child_ids', '=', False),
+                                                 ('type.has_children', '=', False),
                                                  ('id', '!=', ticket.id)])
                 self.recompute_subtickets(cr, uid, leaf_ids)
 
                 sub_node_ids = self.search(cr, uid, [('id', 'child_of', ticket.id),
-                                                     ('child_ids', '!=', False),
+                                                     ('type.has_children', '=', True),
                                                      ('id', '!=', ticket.id)])
                 for node_id in [ticket.id] + sub_node_ids:
                     leaf_ids = self.search(cr, uid, [('id', 'child_of', node_id),
-                                                     ('child_ids', '=', False),
+                                                     ('type.has_children', '=', False),
                                                      ('id', '!=', node_id)])
                     reads = self.read(cr, uid, leaf_ids, ['risk', 'rating'])
                     ratings = [r['rating'] for r in reads]
@@ -244,7 +244,7 @@ class Ticket(osv.Model):
             # loop up to the root
             while parent:
                 leaf_ids = self.search(cr, uid, [('id', 'child_of', parent.id),
-                                                 ('child_ids', '=', False),
+                                                 ('type.has_children', '=', False),
                                                  ('id', '!=', parent.id)])
                 if leaf_ids:
                     reads = self.read(cr, uid, leaf_ids, ['rating', 'risk'], load='_classic_write')

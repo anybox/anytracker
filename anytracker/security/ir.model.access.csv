@@ -8,3 +8,5 @@ acc_anytracker_res_partner_customer,Read partner for customer,base.model_res_par
 acc_anytracker_res_users_customer,Read users for customer,base.model_res_users,group_customer,1,0,0,0
 acc_anytracker_customer_attachments,Attachments for customers,base.model_ir_attachment,group_customer,1,1,1,1
 acc_anytracker_customer_groups,Groups for customers,base.model_res_groups,group_customer,1,0,0,0
+acc_anytracker_customer_types,Types for customers,model_anytracker_ticket_type,group_customer,1,0,0,0
+acc_anytracker_manager_types,Types for managers,model_anytracker_ticket_type,group_manager,1,1,1,1

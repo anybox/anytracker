@@ -273,7 +273,7 @@ class TestAnytracker(SharedSetupTransactionCase):
         self.assertEquals(self.tickets.browse(cr, uid, node2_id).rating, 8.5)
         self.assertEquals(self.tickets.browse(cr, uid, node2_id).risk, 0.383985942351795)
         self.assertEquals(self.tickets.browse(cr, uid, project_id).rating, 8.5)
-        self.assertEquals(self.tickets.browse(cr, uid, project_id).risk, 0.4253760143455)
+        self.assertEquals(self.tickets.browse(cr, uid, project_id).risk, 0.383985942351795)
         # we remove the 1st node,
         self.tickets.unlink(cr, uid, [node_id])
         self.assertEquals(self.tickets.browse(cr, uid, project_id).rating, 8.5)
@@ -353,3 +353,30 @@ class TestAnytracker(SharedSetupTransactionCase):
         self.assertEquals(self.tickets.browse(cr, uid, project1_id).risk, 0.5)
         self.assertEquals(self.tickets.browse(cr, uid, project1_id).rating, 0.0)
         self.assertEquals(self.tickets.browse(cr, uid, project1_id).progress, 1.0)
+
+    def test_ticket_type(self):
+        """
+        Tickets have a type
+        """
+        cr, uid = self.cr, self.uid
+        # create a first project with 1 subnode and 2 tickets
+        project_id = self.tickets.create(
+            cr, self.manager_id,
+            {'name': 'Project1',
+             'participant_ids': [(6, 0, [self.customer_id, self.member_id, self.manager_id])],
+             'method_id': self.ref('anytracker.method_test')})
+
+        node_id = self.tickets.create(cr, self.customer_id,
+                                      {'name': 'Node1', 'parent_id': project_id, })
+        ticket1_id = self.tickets.create(cr, self.customer_id,
+                                         {'name': 'Ticket1', 'parent_id': node_id, })
+        ticket2_id = self.tickets.create(cr, self.customer_id,
+                                         {'name': 'Ticket2', 'parent_id': node_id, })
+        # We have 2 natives types: 'node', 'ticket', they are automatically assigned
+        self.assertEquals(self.tickets.browse(cr, uid, project_id).type.code, 'node')
+        self.assertEquals(self.tickets.browse(cr, uid, node_id).type.code, 'node')
+        self.assertEquals(self.tickets.browse(cr, uid, ticket1_id).type.code, 'ticket')
+        self.assertEquals(self.tickets.browse(cr, uid, ticket2_id).type.code, 'ticket')
+        
+
+

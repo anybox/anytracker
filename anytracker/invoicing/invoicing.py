@@ -1,5 +1,5 @@
 # coding: utf-8
-from openerp.osv import fields, osv
+from openerp.osv import fields, orm
 from tools.translate import _
 import logging
 from datetime import datetime, timedelta
@@ -8,7 +8,7 @@ from openerp import SUPERUSER_ID
 logger = logging.getLogger(__file__)
 
 
-class Ticket(osv.Model):
+class Ticket(orm.Model):
     """ Allow to invoice a single ticket
     """
 
@@ -23,13 +23,13 @@ class Ticket(osv.Model):
             if ticket.analytic_line_id:
                 continue
             if not ticket.project_id.product_id:
-                raise osv.except_osv(
+                raise orm.except_orm(
                     _('Error'),
                     _("To be able to invoice a ticket, "
                       "you should set a product "
                       "on the corresponding project"))
             if not ticket.project_id.analytic_account_id:
-                raise osv.except_osv(
+                raise orm.except_orm(
                     _('Error'),
                     _("To be able to invoice a ticket, "
                       "you should set an analytic account "
@@ -38,8 +38,8 @@ class Ticket(osv.Model):
                 logger.warn(("Ticket #%s could not be invoiced "
                              "because it has no rating"), ticket.number)
                 continue
-            if ticket.child_ids:
-                raise osv.except_osv(
+            if ticket.type.has_children:
+                raise orm.except_orm(
                     _('Error'),
                     _("Ticket #%s is a project or node. "
                       "It cannot be invoiced") % ticket.number)
@@ -48,7 +48,7 @@ class Ticket(osv.Model):
             if not gen_account and ticket.project_id.product_id.categ_id:
                 gen_account = ticket.project_id.product_id.categ_id.property_account_expense_categ
             if not gen_account:
-                raise osv.except_osv(
+                raise orm.except_orm(
                     'Error', ("No expense account defined on the product (or category)"
                               " configured in your anytracker project"))
             if ticket.assigned_user_id:
@@ -91,7 +91,7 @@ class Ticket(osv.Model):
             ('project_id.analytic_journal_id', '!=', False),
             ('project_id.product_id', '!=', False),
             ('project_id.analytic_account_id', '!=', False),
-            ('child_ids', '=', False),
+            ('type.has_children', '=', False),
         ])
         self.create_analytic_line(cr, uid, ticket_ids, context)
 
@@ -116,7 +116,7 @@ class Ticket(osv.Model):
     }
 
 
-class Bouquet(osv.Model):
+class Bouquet(orm.Model):
     """ Allow to invoice all the tickets of the bouquet
     """
     _inherit = "anytracker.bouquet"
@@ -130,7 +130,7 @@ class Bouquet(osv.Model):
             tickets.create_analytic_line(cr, uid, ticket_ids)
 
 
-class Priority(osv.Model):
+class Priority(orm.Model):
     """Add invoicing ratio to priorities
     """
     _inherit = 'anytracker.priority'
@@ -141,7 +141,7 @@ class Priority(osv.Model):
     }
 
 
-class account_analytic_line(osv.Model):
+class account_analytic_line(orm.Model):
     """ Allow a customer to search analytic line by date (related to commit d6106d1aa13d)
     """
     _inherit = "account.analytic.line"

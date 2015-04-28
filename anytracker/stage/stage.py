@@ -130,7 +130,7 @@ class Ticket(osv.Model):
         parent = ticket.parent_id
         while parent:
             child_ids = self.search(cr, uid, [('id', 'child_of', parent.id),
-                                              ('child_ids', '=', False),
+                                              ('type.has_children', '=', False),
                                               ('id', '!=', parent.id)])
             if ticket.id not in child_ids:
                 child_ids.append(ticket.id)
@@ -150,7 +150,7 @@ class Ticket(osv.Model):
             ticket_id = super(Ticket, self).unlink(cr, uid, ids, context)
             while parent:
                 child_ids = self.search(cr, uid, [('id', 'child_of', parent.id),
-                                                  ('child_ids', '=', False),
+                                                  ('type.has_children', '=', False),
                                                   ('id', '!=', parent.id)])
                 children = len(child_ids)
                 if children:
@@ -200,7 +200,7 @@ class Ticket(osv.Model):
         for ticket in self.browse(cr, uid, ids, context):
             # check stage enforcements
             stage = self.pool.get('anytracker.stage').browse(cr, uid, stage_id, context)
-            if not ticket.rating_ids and stage.force_rating and not ticket.child_ids:
+            if not ticket.rating_ids and stage.force_rating and not ticket.type.has_children:
                 raise osv.except_osv(_('Warning !'),
                                      _('You must rate the ticket "%s" to enter the "%s" stage'
                                        % (ticket.name, stage.name)))
@@ -221,7 +221,7 @@ class Ticket(osv.Model):
             # loop up to the root
             while parent:
                 child_ids = self.search(cr, uid, [('id', 'child_of', parent.id),
-                                                  ('child_ids', '=', False),
+                                                  ('type.has_children', '=', False),
                                                   ('id', '!=', parent.id)])
                 if ticket.id not in child_ids:
                     child_ids.append(ticket.id)
@@ -248,21 +248,21 @@ class Ticket(osv.Model):
         if not context:
             context = {}
         for ticket in self.browse(cr, uid, ids, context):
-            if not ticket.child_ids:
+            if not ticket.type.has_children:
                 self.write(cr, uid, ticket.id, {'progress': ticket.stage_id.progress}, context)
             else:
                 leaf_ids = self.search(cr, uid, [('id', 'child_of', ticket.id),
-                                                 ('child_ids', '=', False),
+                                                 ('type.has_children', '=', False),
                                                  ('id', '!=', ticket.id)])
                 for leaf in self.browse(cr, uid, leaf_ids, context):
                     leaf.write({'progress': leaf.stage_id.progress})
 
             sub_node_ids = self.search(cr, uid, [('id', 'child_of', ticket.id),
-                                                 ('child_ids', '!=', False),
+                                                 ('type.has_children', '=', True),
                                                  ('id', '!=', ticket.id)])
             for node_id in [ticket.id] + sub_node_ids:
                 leaf_ids = self.search(cr, uid, [('id', 'child_of', node_id),
-                                                 ('child_ids', '=', False),
+                                                 ('type.has_children', '=', False),
                                                  ('id', '!=', node_id)])
                 progresses = self.read(cr, uid, leaf_ids, ['progress'])
                 nb_tickets = len(progresses)

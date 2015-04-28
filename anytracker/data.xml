@@ -26,5 +26,18 @@
     <field eval="'()'" name="args"/>
 </record>
 
+<!-- Native ticket types -->
+<record id="anytracker_ticket_type_project" model="anytracker.ticket.type">
+    <field name="name">project or subprojet</field>
+    <field name="code">node</field>
+    <field name="has_children">True</field>
+    <field name="description">A ticket which is supposed to have children</field>
+</record>
+<record id="anytracker_ticket_type_ticket" model="anytracker.ticket.type">
+    <field name="name">ticket</field>
+    <field name="code">ticket</field>
+    <field name="default">True</field>
+    <field name="description">normal ticket without children</field>
+</record>
 </data>
 </openerp>

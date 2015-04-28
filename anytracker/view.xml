@@ -10,11 +10,11 @@
   <search string="Search tickets">
     <filter name="filter_tasks"
             string="Tasks"
-            domain="[('child_ids','=',False)]"
+            domain="[('type.has_children','=',False)]"
             help="Show only leaf tickets. They correspond to tasks"/>
     <filter name="filter_nodes"
             string="Nodes"
-            domain="[('child_ids','!=',False)]"
+            domain="[('type.has_children','=',True)]"
             help="Show only tickets which have sub-tickets. They are used to gather tickets by nodes"/>
     <filter name="filter_projects"
             string="Projects"
@@ -111,7 +111,7 @@
         <group>
             <group>
                 <field name="parent_id" colspan="4" nolabel="1" placeholder="Project (or parent ticket)"
-                       on_change="onchange_parent(parent_id)" domain="['|',('child_ids', '!=', False), ('parent_id','=',False)]"
+                       on_change="onchange_parent(parent_id)" domain="['|',('type.has_children', '=', True), ('parent_id','=',False)]"
                        context="{'tree_view_ref': 'anytracker.just_names'}">
                 </field>
                 <h1>
@@ -119,13 +119,14 @@
                 </h1>
             </group>
             <group id="extend">
-                <field name="number" readonly="1" class="oe_inline"/>
+                <field name="type" widget="selection"/>
+                <field name="number" readonly="1" />
                 <field name="method_id" attrs="{'invisible': [('parent_id', '!=', False)]}"
                        domain="['|', ('project_id', '=', False), ('project_id', '=', id)]"/>
                 <field name="project_method_id" invisible="1"/>
                 <field name="rating" readonly="True"/>
-                <field name="active" groups="anytracker.group_manager"/>
-                <field name="state" groups="anytracker.group_manager" invisible="1"/>
+                <field name="active" invisible="1"/>
+                <field name="state" invisible="1"/>
             </group>
         </group>
 
@@ -331,6 +332,13 @@
   <field name="view_id" ref="ticket_tree"/>
   <field name="context">{'search_default_trash': 1}</field>
 </record>
+<record model="ir.actions.act_window" id="act_open_types_view">
+    <field name="name">Ticket types</field>
+    <field name="type">ir.actions.act_window</field>
+    <field name="res_model">anytracker.ticket.type</field>
+    <field name="view_type">form</field>
+    <field name="view_mode">tree,form</field>
+</record>
 
 <!-- server action to create a specific method for a project -->
 <record id="action_set_specific_method" model="ir.actions.server">
@@ -381,6 +389,10 @@
   sequence="200"
   groups="group_manager"
   parent="tabmenu_anytracker"/>
+<menuitem id="menu_types"
+    parent="menu_configuration"
+    sequence="20"
+    action="act_open_types_view"/>
 
 </data> </openerp>
 

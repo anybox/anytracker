@@ -123,8 +123,8 @@ class TestComplexity(SharedSetupTransactionCase):
         # now as manager
         self.tickets.write(cr, self.manager_id, [ticket2_id],
                            {'my_rating': self.complexity4})
-        self.assertEquals(self.tickets.browse(cr, self.manager_id, project_id).rating, 6.50)
-        self.assertEquals(self.tickets.browse(cr, self.manager_id, ticket2_id).rating, 4.50)
+        self.assertEquals(self.tickets.browse(cr, self.manager_id, project_id).rating, 2)
+        self.assertEquals(self.tickets.browse(cr, self.manager_id, ticket2_id).rating, 0)
 
         # test with a risk of 0.0 and 1.0 on the test2 method
         self.tickets.write(cr, self.manager_id, project_id,
