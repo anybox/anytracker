@@ -2,10 +2,10 @@
 import re
 import logging
 from lxml import html
-from osv import fields, osv
+from openerp.osv import fields
+from openerp.osv import orm
 from tools.translate import _
 from lxml import etree
-from openerp.osv.orm import transfer_modifiers_to_node
 from openerp import SUPERUSER_ID
 logger = logging.getLogger(__file__)
 
@@ -21,7 +21,7 @@ def add_permalinks(cr, string):
         string)[0]
 
 
-class Type(osv.Model):
+class Type(orm.Model):
     """ Ticket type (project, ticket, deliverable, etc.)
     """
     _name = 'anytracker.ticket.type'
@@ -34,7 +34,7 @@ class Type(osv.Model):
     }
 
 
-class Ticket(osv.Model):
+class Ticket(orm.Model):
 
     _name = 'anytracker.ticket'
     _description = "Anytracker tickets"
@@ -133,7 +133,7 @@ class Ticket(osv.Model):
             values['project_id'] = root_id
             for ticket in self.browse(cr, uid, ids, context):
                 if ticket.id == values['parent_id']:
-                    raise osv.except_osv(_('Error'),
+                    raise orm.except_orm(_('Error'),
                                          _(u"Think of yourself. Can you be your own parent?"))
                 # if reparenting to False, propagate the current ticket as project for children
                 project_id = root_id or ticket.id
@@ -284,7 +284,7 @@ class Ticket(osv.Model):
             except:
                 logger.error("It seems you're using a broken version of OpenERP")
                 return fvg
-            transfer_modifiers_to_node({'required': not allow}, node)
+            orm.transfer_modifiers_to_node({'required': not allow}, node)
             fvg['arch'] = etree.tostring(doc)
         return fvg
 
@@ -333,7 +333,7 @@ class Ticket(osv.Model):
             start_ids = stages.search(cr, uid, [('method_id', '=', ticket.method_id.id),
                                                 ('progress', '=', 0)])
             if len(start_ids) != 1:
-                raise osv.except_osv(_('Configuration error !'),
+                raise orm.except_orm(_('Configuration error !'),
                                      _('One and only one stage should have a 0% progress'))
             # write stage in a separate line to let it recompute progress and risk
             ticket.write({'stage_id': start_ids[0]})
@@ -439,7 +439,7 @@ class Ticket(osv.Model):
     _sql_constraints = [('number_uniq', 'unique(number)', 'Number must be unique!')]
 
 
-class ResPartner(osv.Model):
+class ResPartner(orm.Model):
     """ Improve security
     """
     _inherit = 'res.partner'
@@ -464,7 +464,7 @@ class ResPartner(osv.Model):
     }
 
 
-class MailMessage(osv.Model):
+class MailMessage(orm.Model):
     _inherit = 'mail.message'
 
     def create(self, cr, uid, values, context=None):

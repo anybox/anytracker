@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from osv import osv, fields
+from openerp.osv import fields
+from openerp.osv import orm
 from tools.translate import _
 from xml import sax
 from datetime import datetime
@@ -8,7 +9,7 @@ from base64 import b64decode
 import time
 
 
-class import_mindmap_wizard(osv.TransientModel):
+class import_mindmap_wizard(orm.TransientModel):
     _name = 'import.mindmap.wizard'
     _description = 'Import mindmap .mm file into anytracker tree'
     _columns = {
@@ -94,7 +95,7 @@ class FreemindContentHandler(sax.ContentHandler):
                     self.parent_id = self.ticket_id
                 elif self.import_method == 'update':
                     if not self.ticket_id:
-                        raise osv.except_osv(
+                        raise orm.except_orm(
                             _('Error'),
                             _("To be able to use update method, "
                               "you should set a parent ticket "
@@ -104,7 +105,7 @@ class FreemindContentHandler(sax.ContentHandler):
                 else:
                     raise Exception('Bad import method')
             else:
-                self.parent_id = self.parent_ids[-1:][0]['osv_id']
+                self.parent_id = self.parent_ids[-1:][0]['orm_id']
 
             modified_mindmap = datetime.fromtimestamp(int(attrs.getValue('MODIFIED'))/1000.0)
             modified_mindmap = datetime.strftime(modified_mindmap, '%Y-%m-%d %H:%M:%S')
@@ -130,18 +131,18 @@ class FreemindContentHandler(sax.ContentHandler):
                 domain.append(('parent_id', '=', self.parent_id))
             elif self.ticket_id:
                 domain.append(('id', '=', self.ticket_id))
-            osv_id = ticket_pool.search(self.cr, self.uid, domain,
+            orm_id = ticket_pool.search(self.cr, self.uid, domain,
                                         context=self.context)
-            if (not osv_id) or (not self.parent_id and not self.ticket_id):
+            if (not orm_id) or (not self.parent_id and not self.ticket_id):
                 vals['method_id'] = self.wizard.method_id.id,
-                osv_id = ticket_pool.create(self.cr, self.uid, vals, context=self.context)
+                orm_id = ticket_pool.create(self.cr, self.uid, vals, context=self.context)
             else:
                 assert self.import_method == 'update', "Found existing ticket, but "
                 "import method is not update"
-                ticket_pool.write(self.cr, self.uid, osv_id, vals, context=self.context)
-                osv_id = osv_id[0]
-            self.parent_ids.append({'id': id_mindmap, 'osv_id': osv_id})
-            self.updated_ticket_ids.append(osv_id)
+                ticket_pool.write(self.cr, self.uid, orm_id, vals, context=self.context)
+                orm_id = orm_id[0]
+            self.parent_ids.append({'id': id_mindmap, 'orm_id': orm_id})
+            self.updated_ticket_ids.append(orm_id)
         # rich content
         if name == 'richcontent':
             self.rich_content_buffer = ['']
@@ -161,7 +162,7 @@ class FreemindContentHandler(sax.ContentHandler):
             if complexity_id:
                 self.pool.get('anytracker.rating').create(
                     self.cr, self.uid,
-                    {'ticket_id': self.parent_ids[-1:][0]['osv_id'],
+                    {'ticket_id': self.parent_ids[-1:][0]['orm_id'],
                      'complexity_id': complexity_id,
                      'user_id': self.uid,
                      'time': time.strftime('%Y-%m-%d %H:%M:%S'),
@@ -187,7 +188,7 @@ class FreemindContentHandler(sax.ContentHandler):
         if name == 'richcontent':
             ticket_pool.write(
                 self.cr, self.uid,
-                self.parent_ids[-1:][0]['osv_id'],
+                self.parent_ids[-1:][0]['orm_id'],
                 {'description': ''.join(self.rich_content_buffer)},
                 context=self.context)
             self.rich_content_buffer = False
@@ -198,7 +199,7 @@ class FreemindContentHandler(sax.ContentHandler):
         ticket_obj = self.pool.get('anytracker.ticket')
         first_ticket_id = self.updated_ticket_ids[0]
         if self.ticket_id and self.ticket_id != first_ticket_id and self.import_method == 'update':
-            raise osv.except_osv(_('Error'), _('You try to update the wrong main ticket'))
+            raise orm.except_orm(_('Error'), _('You try to update the wrong main ticket'))
         domain = [
             ('id', 'child_of', first_ticket_id),  # children of main ticket
             ('id', 'not in', self.updated_ticket_ids),  # ticket not updated
@@ -212,15 +213,15 @@ class FreemindErrorHandler(sax.ErrorHandler):
 
     def error(self, exception):
         "Handle a recoverable error."
-        raise osv.except_osv(_('Error !'),
+        raise orm.except_orm(_('Error !'),
                              exception.args[0])
 
     def fatalError(self, exception):
         "Handle a non-recoverable error."
-        raise osv.except_osv(_('Error !'),
+        raise orm.except_orm(_('Error !'),
                              exception.args[0])
 
     def warning(self, exception):
         "Handle a warning."
-        raise osv.except_osv(_('Warning !'),
+        raise orm.except_orm(_('Warning !'),
                              exception.args[0])

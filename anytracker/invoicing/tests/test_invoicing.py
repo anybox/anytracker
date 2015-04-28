@@ -1,5 +1,5 @@
 from anybox.testing.openerp import SharedSetupTransactionCase
-from openerp.osv import osv
+from openerp.osv import orm
 from os.path import join
 import anybox.testing.datetime  # noqa
 from datetime import datetime, timedelta
@@ -71,7 +71,7 @@ class TestInvoicing(SharedSetupTransactionCase):
             context={'active_id': project_id})
 
         # we cannot invoice until we haven't set an account on the project
-        self.assertRaises(osv.except_osv,
+        self.assertRaises(orm.except_orm,
                           self.tickets.create_analytic_line,
                           cr, uid, [ticket1_id])
 
@@ -124,7 +124,7 @@ class TestInvoicing(SharedSetupTransactionCase):
             self.analines.search(cr, uid, [('name', 'like', 'Invoiced ticket')], count=True), 3)
 
         # We try to invoice the project itself. It should not do anything
-        self.assertRaises(osv.except_osv,
+        self.assertRaises(orm.except_orm,
                           self.tickets.create_analytic_line,
                           cr, uid, [project_id])
 

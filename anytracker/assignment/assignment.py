@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-from openerp.osv import osv
+from openerp.osv import orm
 from openerp.osv import fields
 import time
 
 
-class Assignment(osv.Model):
+class Assignment(orm.Model):
     """ Several users can be assigned to a ticket at different stages
     So we have a separated object for assignment
     """
@@ -26,7 +26,7 @@ class Assignment(osv.Model):
     }
 
 
-class Ticket(osv.Model):
+class Ticket(orm.Model):
     """ Add assignment to tickets
     """
     _inherit = 'anytracker.ticket'

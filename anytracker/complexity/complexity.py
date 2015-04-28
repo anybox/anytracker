@@ -1,4 +1,4 @@
-from openerp.osv import osv
+from openerp.osv import orm
 from openerp.osv import fields
 import time
 
@@ -10,7 +10,7 @@ def risk_mean(risks):
     return 1 - reduce(lambda x, y: x*y, risks)**(1./len(risks))
 
 
-class Complexity(osv.Model):
+class Complexity(orm.Model):
     """Definition of the different complexity levels, in different contexts.
     Example:
         - with a 'scrum' method, values can be the fibonacci series
@@ -32,7 +32,7 @@ class Complexity(osv.Model):
     }
 
 
-class Rating(osv.Model):
+class Rating(orm.Model):
     """Represents the rating of a ticket by one person at one time
     """
     _name = 'anytracker.rating'
@@ -46,7 +46,7 @@ class Rating(osv.Model):
     }
 
 
-class Ticket(osv.Model):
+class Ticket(orm.Model):
     """Add complexity and risk functionnality to tickets
     Risk is based on complexities. Each complexity has a risk value,
     and the risk is copied on the ticket
@@ -275,7 +275,7 @@ class Ticket(osv.Model):
     }
 
 
-class Method(osv.Model):
+class Method(orm.Model):
     _inherit = 'anytracker.method'
     _columns = {
         'complexity_ids': fields.one2many(

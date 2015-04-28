@@ -1,5 +1,6 @@
 # coding: utf-8
-from openerp.osv import fields, orm
+from openerp.osv import orm
+from openerp.osv import fields
 from tools.translate import _
 import logging
 from datetime import datetime, timedelta

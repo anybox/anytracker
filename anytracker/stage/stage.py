@@ -1,11 +1,11 @@
 # coding: utf-8
-from openerp.osv import osv
+from openerp.osv import orm
 from openerp.osv import fields
 from tools.translate import _
 from openerp import SUPERUSER_ID
 
 
-class Stage(osv.Model):
+class Stage(orm.Model):
     """Stage of a ticket.
     Correspond to kanban columns
     """
@@ -37,7 +37,7 @@ class Stage(osv.Model):
     _defaults = {'groups_allowed': False}
 
 
-class Ticket(osv.Model):
+class Ticket(orm.Model):
     """ Add stage and progress functionality to tickets
     Progress is based on stages. Each stage has a progress,
     and the progress is copied on the ticket
@@ -82,7 +82,7 @@ class Ticket(osv.Model):
         for ticket in self.browse(cr, uid, ids, context):
             method = ticket.project_id.method_id
             if not method:
-                raise osv.except_osv(_('Warning !'), _('No method defined in the project.'))
+                raise orm.except_orm(_('Warning !'), _('No method defined in the project.'))
             stage_id = ticket.stage_id.id
             stage_ids = stages.search(cr, uid, [('method_id', '=', method.id)])
             if stage_id == stage_ids[0]:  # first stage
@@ -100,11 +100,11 @@ class Ticket(osv.Model):
         for ticket in self.browse(cr, uid, ids, context):
             method = ticket.project_id.method_id
             if not method:
-                raise osv.except_osv(_('Warning !'), _('No method defined in the project.'))
+                raise orm.except_orm(_('Warning !'), _('No method defined in the project.'))
             stage_id = ticket.stage_id.id
             stage_ids = stages.search(cr, uid, [('method_id', '=', method.id)])
             if stage_id == stage_ids[-1]:  # last stage
-                raise osv.except_osv(_('Warning !'), _("You're already in the last stage"))
+                raise orm.except_orm(_('Warning !'), _("You're already in the last stage"))
             elif stage_id not in stage_ids:  # no stage
                 next_stage = stage_ids[0]
             else:
@@ -180,7 +180,7 @@ class Ticket(osv.Model):
                                            load='_classic_write')['groups_allowed'])
             user_groups = set(self.user_base_groups(cr, uid))
             if stage_groups and not stage_groups.intersection(user_groups):
-                raise osv.except_osv("Operation forbidden",
+                raise orm.except_orm("Operation forbidden",
                                      "You can't move this ticket to this stage")
 
         # save the previous progress
@@ -201,11 +201,11 @@ class Ticket(osv.Model):
             # check stage enforcements
             stage = self.pool.get('anytracker.stage').browse(cr, uid, stage_id, context)
             if not ticket.rating_ids and stage.force_rating and not ticket.type.has_children:
-                raise osv.except_osv(_('Warning !'),
+                raise orm.except_orm(_('Warning !'),
                                      _('You must rate the ticket "%s" to enter the "%s" stage'
                                        % (ticket.name, stage.name)))
             if ticket.my_rating.id in [i.id for i in (stage.forbidden_complexity_ids or [])]:
-                    raise osv.except_osv(
+                    raise orm.except_orm(
                         _('Warning !'),
                         _('The ticket "%s" is rated "%s" so it cannot enter this stage'
                           % (ticket.name, ticket.my_rating.name)))
@@ -306,7 +306,7 @@ class Ticket(osv.Model):
     }
 
 
-class Method(osv.Model):
+class Method(orm.Model):
     _inherit = 'anytracker.method'
     _columns = {
         'stage_ids': fields.one2many(

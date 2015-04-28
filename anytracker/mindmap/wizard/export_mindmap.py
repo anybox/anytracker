@@ -1,4 +1,5 @@
-from osv import osv, fields
+from openerp.osv import fields
+from openerp.osv import orm
 from .mindmap_parse import FreemindWriterHandler
 from .mindmap_parse import FreemindParser
 import StringIO
@@ -6,7 +7,7 @@ from base64 import b64encode
 
 
 # TODO complexity icon, mindmapfile to binary?, richtext content generation
-class export_mindmap_wizard(osv.TransientModel):
+class export_mindmap_wizard(orm.TransientModel):
     _name = 'export.mindmap.wizard'
     _description = 'export mindmap .mm file for generate by anytracker tree'
     _columns = {
@@ -40,7 +41,7 @@ class export_mindmap_wizard(osv.TransientModel):
             }
             ticket_id = wizard.ticket_id and wizard.ticket_id.id or False
             if not ticket_id:
-                raise osv.except_osv('Error', 'Please select a ticket to export')
+                raise orm.except_orm('Error', 'Please select a ticket to export')
 
             fp = StringIO.StringIO()
 

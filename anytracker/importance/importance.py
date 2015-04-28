@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-from openerp.osv import osv
+from openerp.osv import orm
 from openerp.osv import fields
 
 
-class Importance(osv.Model):
+class Importance(orm.Model):
     """For a task, importance is the added value for the customer,
     For an issue, it is the the impact
     """
@@ -26,7 +26,7 @@ class Importance(osv.Model):
     _order = 'method_id, seq'
 
 
-class Ticket(osv.Model):
+class Ticket(orm.Model):
     _inherit = 'anytracker.ticket'
 
     def _get_importance(self, cr, uid, ids, fname, args, context=None):
@@ -43,7 +43,7 @@ class Ticket(osv.Model):
     }
 
 
-class Method(osv.Model):
+class Method(orm.Model):
     _inherit = 'anytracker.method'
     _columns = {
         'importance_ids': fields.one2many(

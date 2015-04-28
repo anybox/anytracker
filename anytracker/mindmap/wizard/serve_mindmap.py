@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-from osv import osv, fields
+from openerp.osv import fields
+from openerp.osv import orm
 
 
-class serve_mindmap_wizard(osv.TransientModel):
+class serve_mindmap_wizard(orm.TransientModel):
     _name = 'serve.mindmap.wizard'
     _description = 'Serve mindmap generated file'
     _columns = {

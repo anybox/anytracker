@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from anybox.testing.openerp import SharedSetupTransactionCase
 from openerp import modules
-from openerp.osv import osv
+from openerp.osv import orm
 import base64
 
 
@@ -70,6 +70,6 @@ class TestImportExportMindmap(SharedSetupTransactionCase):
         try:
             self.wiz_import.execute_import(cr, uid, wiz_id)
             self.fail()
-        except osv.except_osv:
+        except orm.except_orm:
             return
         self.fail()

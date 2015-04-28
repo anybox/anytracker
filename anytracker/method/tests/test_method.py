@@ -1,7 +1,6 @@
 from anybox.testing.openerp import SharedSetupTransactionCase
 from os.path import join
-from openerp.osv.orm import except_orm
-from openerp.osv import osv
+from openerp.osv import orm
 
 
 class TestInvoicing(SharedSetupTransactionCase):
@@ -70,12 +69,12 @@ class TestInvoicing(SharedSetupTransactionCase):
 
         # we customize the method for this specific project
         self.assertRaises(
-            except_orm,
+            orm.except_orm,
             self.methods.customize,
             cr, self.customer_id, self.ref('anytracker.method_test'),
             context={'project_id': project_id})
         self.assertRaises(
-            except_orm,
+            orm.except_orm,
             self.methods.customize,
             cr, self.member_id, self.ref('anytracker.method_test'),
             context={'project_id': project_id})
@@ -102,7 +101,7 @@ class TestInvoicing(SharedSetupTransactionCase):
             cr, self.member_id, [('state', '=', 'doing'),
                                  ('method_id', '=', new_method_id)])[0]
         self.assertRaises(
-            osv.except_osv,
+            orm.except_orm,
             self.tickets.write,
             cr, self.member_id, ticket_id,
             {'stage_id': new_doing})

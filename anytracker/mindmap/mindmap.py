@@ -1,9 +1,9 @@
 # coding: utf-8
-from openerp.osv import osv
+from openerp.osv import orm
 from openerp.osv import fields
 
 
-class Ticket(osv.Model):
+class Ticket(orm.Model):
     _inherit = 'anytracker.ticket'
     _columns = {
         'id_mindmap': fields.char('ID MindMap', size=64),

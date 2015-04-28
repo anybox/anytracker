@@ -1,7 +1,7 @@
 # coding: utf-8
 
 from anybox.testing.openerp import SharedSetupTransactionCase
-from openerp.osv import osv
+from openerp.osv import orm
 from os.path import join
 
 
@@ -49,7 +49,7 @@ class TestStage(SharedSetupTransactionCase):
                       'groups_allowed': [(6, 0, [self.ref('anytracker.group_customer')])]})
         # anytracker member cannot move ticket to this stage
         self.assertRaises(
-            osv.except_osv,
+            orm.except_orm,
             self.tickets.write,
             cr, self.member_id, [ticket_id], {'stage_id': todo_stage_id})
         # anytracker customer can move ticket to this stage
@@ -69,7 +69,7 @@ class TestStage(SharedSetupTransactionCase):
                                          'parent_id': project_id, })
         # we try move the ticket to the todo column which forces a rating
         self.assertRaises(
-            osv.except_osv,
+            orm.except_orm,
             self.tickets.write,
             cr, self.member_id, [ticket_id],
             {'stage_id': self.ref('anytracker.stage_test_todo2')})
@@ -78,7 +78,7 @@ class TestStage(SharedSetupTransactionCase):
             cr, self.member_id, [ticket_id],
             {'my_rating': self.ref('anytracker.complexity8')})
         self.assertRaises(
-            osv.except_osv,
+            orm.except_orm,
             self.tickets.write,
             cr, self.member_id, [ticket_id],
             {'stage_id': self.ref('anytracker.stage_test_todo2')})

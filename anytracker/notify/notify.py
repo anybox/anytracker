@@ -1,10 +1,10 @@
 # coding: utf-8
-from openerp.osv import osv
+from openerp.osv import orm
 from openerp.osv import fields
 from tools.translate import _
 
 
-class Stage(osv.Model):
+class Stage(orm.Model):
     """Add notifying config to the stage
     """
     _inherit = 'anytracker.stage'
@@ -29,7 +29,7 @@ class Stage(osv.Model):
     }
 
 
-class Ticket(osv.Model):
+class Ticket(orm.Model):
     """ Add notification feature
     """
 
@@ -47,7 +47,7 @@ class Ticket(osv.Model):
             return False
         # no mail template
         if not ticket.stage_id.notify_template_id:
-            raise osv.except_osv(
+            raise orm.except_orm(
                 _(u'Warning !'),
                 _(u'No email template selected in the "%s" stage of the "%s" method'
                   % (ticket.stage_id.name, ticket.method_id.name)))

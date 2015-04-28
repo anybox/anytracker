@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-from openerp.osv import osv
+from openerp.osv import orm
 from openerp.osv import fields
 
 
-class Priority(osv.Model):
+class Priority(orm.Model):
     """Priorities represent the timeframe to do tasks.
     It can represent timeboxes, deadlines, milestones
     TODO : add milestone
@@ -29,7 +29,7 @@ class Priority(osv.Model):
     _order = 'method_id, seq'
 
 
-class Ticket(osv.Model):
+class Ticket(orm.Model):
     _inherit = 'anytracker.ticket'
 
     def _get_priority(self, cr, uid, ids, fname, args, context=None):
@@ -57,7 +57,7 @@ class Ticket(osv.Model):
     }
 
 
-class Method(osv.Model):
+class Method(orm.Model):
     _inherit = 'anytracker.method'
     _columns = {
         'priority_ids': fields.one2many(

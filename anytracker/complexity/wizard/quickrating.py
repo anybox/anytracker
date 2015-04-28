@@ -1,9 +1,9 @@
-from osv import osv
-from osv import fields
+from openerp.osv import orm
+from openerp.osv import fields
 from tools.translate import _
 
 
-class QuickRating(osv.TransientModel):
+class QuickRating(orm.TransientModel):
     """Wizard for quick rating
     """
     _name = 'anytracker.quickrating'
@@ -30,7 +30,7 @@ class QuickRating(osv.TransientModel):
         position = ticket_ids.index(ticket_id)
         step = context.get('step')
         if step < 0 and position == 0:
-            raise osv.except_osv(_('Nothing before!'),
+            raise orm.except_orm(_('Nothing before!'),
                                  _('You are already on the first ticket.'))
         elif step > 0 and position == len(ticket_ids) - 1:
             return {'type': 'ir.actions.act_window_close'}

@@ -1,8 +1,8 @@
-from openerp.osv import osv
+from openerp.osv import orm
 from openerp.osv import fields
 
 
-class Method(osv.Model):
+class Method(orm.Model):
     """ Choice of project method
     such as GTD, anytracker, TMA, etc.
     """
@@ -37,7 +37,7 @@ class Method(osv.Model):
         return super(Method, self).copy(cr, uid, method_id, default, context)
 
 
-class Ticket(osv.Model):
+class Ticket(orm.Model):
     """add method selection on tickets
     """
     _inherit = 'anytracker.ticket'
@@ -50,7 +50,7 @@ class Ticket(osv.Model):
             method_id = self.browse(cr, uid, parent_id).method_id.id
             data['method_id'] = method_id
         elif not data.get('method_id'):
-            raise osv.except_osv('Error', 'You must choose the method of the project')
+            raise orm.except_orm('Error', 'You must choose the method of the project')
         return super(Ticket, self).create(cr, uid, data, context)
 
     def write(self, cr, uid, ids, values, context=None):

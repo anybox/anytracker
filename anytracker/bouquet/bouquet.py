@@ -1,6 +1,6 @@
 import logging
 from openerp.osv import fields
-from openerp.osv import osv
+from openerp.osv import orm
 
 logger = logging.getLogger(__file__)
 
@@ -9,7 +9,7 @@ BOUQUET_TYPES = (('changelog', u"Change log",),
                  )
 
 
-class Bouquet(osv.Model):
+class Bouquet(orm.Model):
 
     _name = 'anytracker.bouquet'
     _description = u"Ticket Bouquet"

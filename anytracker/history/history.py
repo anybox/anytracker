@@ -1,11 +1,11 @@
 # coding: utf-8
-from openerp.osv import osv
+from openerp.osv import orm
 from openerp.osv import fields
 from tools.translate import _
 import time
 
 
-class History(osv.Model):
+class History(orm.Model):
 
     _name = 'anytracker.history'
     _description = 'History of ticket'
@@ -17,7 +17,7 @@ class History(osv.Model):
     }
 
 
-class Ticket(osv.Model):
+class Ticket(orm.Model):
 
     _inherit = 'anytracker.ticket'
 
@@ -123,7 +123,7 @@ class Ticket(osv.Model):
         if values.get('modified_mindmap'):
             for i in self.read(cr, uid, ids, ['name', 'modified_openerp'], context=context):
                 if values['modified_mindmap'] < i['modified_openerp']:
-                    raise osv.except_osv(_('Error'),
+                    raise orm.except_orm(_('Error'),
                                          _('You can t update the ticket %s') % i['name'])
         elif context.get('import_mindmap', False):
             # description and complexity
