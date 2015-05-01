@@ -377,6 +377,3 @@ class TestAnytracker(SharedSetupTransactionCase):
         self.assertEquals(self.tickets.browse(cr, uid, node_id).type.code, 'node')
         self.assertEquals(self.tickets.browse(cr, uid, ticket1_id).type.code, 'ticket')
         self.assertEquals(self.tickets.browse(cr, uid, ticket2_id).type.code, 'ticket')
-        
-
-
