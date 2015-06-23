@@ -44,6 +44,7 @@
     <field name="name" select="True"/>
     <field name="description"/>
     <field name="project_id"/>
+    <field name="type"/>
     <field name="id" invisible="1"/>
   </search>
   </field>
@@ -154,7 +155,7 @@
                 <field name="name"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <div style="position: relative">
+                        <div>
                             <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
                             <div class="oe_module_vignette">
                                 <div class="oe_module_desc">
@@ -199,6 +200,7 @@
       <field name="number"/>
       <field name="permalink"/>
       <field name="name"/>
+      <field name="icon"/>
       <field name="sequence"/>
       <field name="description"/>
       <field name="shortened_description"/>
@@ -230,6 +232,9 @@
                   <t groups="anytracker.group_customer">
                     <a string="Edit" icon="gtk-edit" type="edit"/>
                   </t>
+                  <t t-if="record.icon.raw_value">
+                      <img t-attf-src="#{'data:image;base64,' + record.icon.raw_value}"/>
+                  </t>
                   <t t-if="record.has_attachment.raw_value">
                       <img src="/anytracker/static/src/img/paperclip.png"/>
                   </t>
@@ -249,6 +254,30 @@
       </templates>
     </kanban>
   </field>
+</record>
+
+<!-- Ticket type -->
+<record id="view_type_form" model="ir.ui.view">
+    <field name="name">anytracker.ticket.type.form</field>
+    <field name="model">anytracker.ticket.type</field>
+    <field name="type">form</field>
+    <field name="priority" eval="8"/>
+    <field name="arch" type="xml">
+    <form string="Type" version="7.0">
+    <sheet>
+        <group>
+        <h1><field name="name" select="1" placeholder="Ticket type"/></h1>
+        </group>
+        <group>
+        <field name="code"/>
+        <field name="has_children"/>
+        <field name="default"/>
+        <field name="icon"/>
+        <field name="description"/>
+        </group>
+    </sheet>
+    </form>
+    </field>
 </record>
 
 <!-- hierarchical view for the tickets -->

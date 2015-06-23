@@ -1,0 +1,3 @@
+/* after implementing the ticket types we need to fill the type column */
+update anytracker_ticket set type=(select id from anytracker_ticket_type where name='node') where id in (select id from (select t.id, (select count(u.id) from anytracker_ticket u where u.parent_id=t.id) c, t.name from anytracker_ticket t) sub where c!=0);
+update anytracker_ticket set type=(select id from anytracker_ticket_type where code='ticket') where type is NULL;

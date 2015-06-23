@@ -26,11 +26,12 @@ class Type(orm.Model):
     """
     _name = 'anytracker.ticket.type'
     _columns = {
-        'name': fields.char('Title', 255, required=True),
-        'code': fields.char('Title', 255, required=True),
-        'description': fields.text('Description'),
-        'has_children': fields.boolean('Can have children'),
-        'default': fields.boolean('Default for new tickets'),
+        'name': fields.char(u'Title', 255, required=True),
+        'code': fields.char(u'Code', 255, required=True),
+        'description': fields.text(u'Description'),
+        'has_children': fields.boolean(u'Can have children'),
+        'default': fields.boolean(u'Default for new tickets'),
+        'icon': fields.binary(u'Icon in the kanban'),
     }
 
 
@@ -152,10 +153,10 @@ class Ticket(orm.Model):
         if 'description' in values:
             values['description'] = add_permalinks(cr, values['description'])
 
-        # don't allow to set a ticket as node if it has children
+        # don't allow to set a node as ticket if it has children
         if values.get('type'):
             for ticket in self.browse(cr, uid, ids, context):
-                if ticket.child_ids and types.browse(cr, uid, values.get('type')).code != 'node':
+                if ticket.child_ids and not types.browse(cr, uid, values.get('type')).has_children:
                     del values['type']
 
         res = super(Ticket, self).write(cr, uid, ids, values, context=context)
@@ -420,6 +421,7 @@ class Ticket(orm.Model):
              ('trashed', 'Trashed')],
             'State',
             required=True),
+        'icon': fields.related('type', 'icon', type='binary'),
         'has_attachment': fields.function(
             _has_attachment,
             type='boolean',
