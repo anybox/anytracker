@@ -219,6 +219,9 @@
                      class="at_kanban_ticket_number">
                     <field name="number"/>
                   </a>
+                  <t t-if="record.icon.raw_value">
+                      <img t-attf-src="#{'data:image;base64,' + record.icon.raw_value}"/>
+                  </t>
                   <span class="at_kanban_ticket_title" tooltip="ticket_details">
                     <field name="name"/>
                   </span>
@@ -231,9 +234,6 @@
                 <div class="oe_kanban_bottom_left" style="margin-top: 0.5em">
                   <t groups="anytracker.group_customer">
                     <a string="Edit" icon="gtk-edit" type="edit"/>
-                  </t>
-                  <t t-if="record.icon.raw_value">
-                      <img t-attf-src="#{'data:image;base64,' + record.icon.raw_value}"/>
                   </t>
                   <t t-if="record.has_attachment.raw_value">
                       <img src="/anytracker/static/src/img/paperclip.png"/>
