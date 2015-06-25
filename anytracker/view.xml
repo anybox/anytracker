@@ -215,13 +215,13 @@
 
             <div class="oe_kanban_content">
                 <h4>
+                  <t t-if="record.icon.raw_value">
+                      <img t-attf-src="#{'data:image;base64,' + record.icon.raw_value}"/>
+                  </t>
                   <a t-attf-href="#{record.permalink.value}"
                      class="at_kanban_ticket_number">
                     <field name="number"/>
                   </a>
-                  <t t-if="record.icon.raw_value">
-                      <img t-attf-src="#{'data:image;base64,' + record.icon.raw_value}"/>
-                  </t>
                   <span class="at_kanban_ticket_title" tooltip="ticket_details">
                     <field name="name"/>
                   </span>

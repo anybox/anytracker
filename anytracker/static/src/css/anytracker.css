@@ -11,7 +11,7 @@
    slightly bigger and darker than title's #4C4C4C
    with a barely noticeable touch of green for the optimism */
 .at_kanban_ticket_number {
-    font-size: 110%;
+    font-size: 100%;
     padding-right: 0.07em;
     color: #354235;
 }
