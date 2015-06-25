@@ -82,24 +82,10 @@ class Ticket(orm.Model):
             'user_id': value,
             })
 
-    def _search_assignment(self, cr, uid, obj, field, domain, context=None):
-        """search on assigned_user_id.
-
-        Return a domain for a search of tickets
-        """
-        req = ('select distinct a.ticket_id, a.date '
-               'from anytracker_assignment a, anytracker_ticket t '
-               'where a.user_id%s%s and a.stage_id = t.stage_id order by a.date desc')
-        assert(len(domain) == 1 and len(domain[0]) == 3)  # handle just this case
-        cr.execute(req % (domain[0][1], domain[0][2]))
-        res = cr.fetchall()
-        return [('id', 'in', [a[0] for a in res])]
-
     _columns = {
         'assigned_user_id': fields.function(
             _get_assignment,
             fnct_inv=_set_assignment,
-            fnct_search=_search_assignment,
             type='many2one',
             relation='res.users',
             string="Assigned user",

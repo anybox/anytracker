@@ -446,7 +446,7 @@ class ResPartner(orm.Model):
     """
     _inherit = 'res.partner'
 
-    def _anytracker_search_partners(self, cr, uid, obj, field, domain, context=None):
+    def _anytracker_search_users(self, cr, uid, obj, field, domain, context=None):
         assert(len(domain) == 1 and domain[0][0] == 'anytracker_user_ids')
         user_id = domain[0][2]
         cr.execute('select distinct u.partner_id from res_users u, '
@@ -458,9 +458,9 @@ class ResPartner(orm.Model):
     _columns = {
         'anytracker_user_ids': fields.function(
             None,
-            fnct_search=_anytracker_search_partners,
+            fnct_search=_anytracker_search_users,
             type='one2many',
-            string='Allowed partners',
+            string='Allowed users',
             obj='res.users',
             method=True),
     }
