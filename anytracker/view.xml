@@ -332,7 +332,7 @@
 <record model="ir.actions.act_window" id="act_all_projects">
   <field name="name">Projects</field>
   <field name="res_model">anytracker.ticket</field>
-  <field name="view_mode">kanban,tree,form</field>
+  <field name="view_mode">tree,form</field>
   <field name="view_type">form</field>
   <field name="view_id" ref="tickets_kanban2"/>
   <field name="context">{'tree_view_ref': 'node_view_tree', 'search_default_filter_projects': 1, 'search_default_unfinished': 1}</field>
