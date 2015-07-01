@@ -60,7 +60,7 @@ class Ticket(orm.Model):
                 user_id = uid
             line_data = {
                 'name': 'Ticket %s: %s' % (ticket.number, ticket.name),
-                'origin': 'Ticket %s' % ticket.number,
+                'ref': 'Ticket %s' % ticket.number,
                 'amount': 1.0,
                 'unit_amount': ticket.rating,
                 'to_invoice': ticket.project_id.analytic_account_id.to_invoice.id,
