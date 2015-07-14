@@ -278,7 +278,8 @@ class Ticket(orm.Model):
             context=context, toolbar=toolbar, submenu=submenu)
         if view_type == 'form' and fvg['type'] == 'form':
             access_obj = self.pool.get('ir.model.access')
-            allow = access_obj.check_groups(cr, uid, "anytracker.group_manager")
+            allow = (access_obj.check_groups(cr, uid, "anytracker.group_manager")
+                     or access_obj.check_groups(cr, uid, "anytracker.group_member"))
             doc = etree.fromstring(fvg['arch'])
             try:
                 node = doc.xpath("//field[@name='parent_id']")[0]
