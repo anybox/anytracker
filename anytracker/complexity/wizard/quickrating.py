@@ -1,9 +1,8 @@
-from openerp.osv import orm
-from openerp.osv import fields
-from tools.translate import _
+from openerp import models, fields, api, _
+from openerp.exceptions import except_orm, Warning, RedirectWarning
 
 
-class QuickRating(orm.TransientModel):
+class QuickRating(models.TransientModel):
     """Wizard for quick rating
     """
     _name = 'anytracker.quickrating'
@@ -30,8 +29,8 @@ class QuickRating(orm.TransientModel):
         position = ticket_ids.index(ticket_id)
         step = context.get('step')
         if step < 0 and position == 0:
-            raise orm.except_orm(_('Nothing before!'),
-                                 _('You are already on the first ticket.'))
+            raise except_orm(_('Nothing before!'),
+                             _('You are already on the first ticket.'))
         elif step > 0 and position == len(ticket_ids) - 1:
             return {'type': 'ir.actions.act_window_close'}
         position += context.get('step')
@@ -87,24 +86,16 @@ class QuickRating(orm.TransientModel):
         ticket_id = eval(self._default_tickets(cr, uid, context))[0]
         return self.pool.get('anytracker.ticket').browse(cr, uid, ticket_id).my_rating.id
 
-    _columns = {
-        'ticket_id': fields.many2one('anytracker.ticket', 'Ticket'),
-        'ticket_ids': fields.text('Tickets to rate'),
-        'breadcrumb': fields.related(
-            'ticket_id',
-            'breadcrumb',
-            type='char',
-            string='Name',
-            readonly=True),
-        'description': fields.related(
-            'ticket_id',
-            'description',
-            type='text',
-            string='Description'),
-        'method_id': fields.many2one('anytracker.method', 'Method'),
-        'my_rating': fields.many2one('anytracker.complexity', 'My rating',),
-        'progress': fields.float('Progress'),
-    }
+    ticket_id = fields.Many2one('anytracker.ticket', 'Ticket')
+    ticket_ids = fields.Text('Tickets to rate')
+    breadcrumb = fields.Char(
+        'ticket_id.breadcrumb',
+        readonly=True)
+    description = fields.Text(
+        'ticket_id.description',)
+    method_id = fields.Many2one('anytracker.method', 'Method')
+    my_rating = fields.Many2one('anytracker.complexity', 'My rating', )
+    progress = fields.Float('Progress')
 
     _defaults = {
         'ticket_ids': _default_tickets,

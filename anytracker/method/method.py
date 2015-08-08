@@ -1,25 +1,24 @@
-from openerp.osv import orm
-from openerp.osv import fields
+from openerp import models, fields, api, _
+from openerp.exceptions import except_orm, Warning, RedirectWarning
 
 
-class Method(orm.Model):
+class Method(models.Model):
     """ Choice of project method
     such as GTD, anytracker, TMA, etc.
     """
     _name = "anytracker.method"
-    _columns = {
-        'code': fields.char(
-            'Name', size=32, help='Short name of the project management method'),
-        'name': fields.char(
-            'Name', size=64, help='Name of the project management method'),
-        'description': fields.text(
-            'Description', help='Description of the method'),
-        'stage_ids': fields.one2many(
-            'anytracker.stage', 'method_id', 'Available stages'),
-        'project_id': fields.many2one(
-            'anytracker.ticket', 'Project',
-            help='This method is specific to this project. If empty, this is a template method.'),
-    }
+
+    code = fields.Char(
+        'Name', size=32, help='Short name of the project management method')
+    name = fields.Char(
+        'Name', size=64, help='Name of the project management method')
+    description = fields.Text(
+        'Description', help='Description of the method')
+    stage_ids = fields.One2many(
+        'anytracker.stage', 'method_id', 'Available stages')
+    project_id = fields.Many2one(
+        'anytracker.ticket', 'Project',
+        help='This method is specific to this project. If empty, this is a template method.')
 
     def customize(self, cr, uid, method_id, context=None):
         """ Create a copy of the method for the project
@@ -37,7 +36,7 @@ class Method(orm.Model):
         return super(Method, self).copy(cr, uid, method_id, default, context)
 
 
-class Ticket(orm.Model):
+class Ticket(models.Model):
     """add method selection on tickets
     """
     _inherit = 'anytracker.ticket'
@@ -50,7 +49,7 @@ class Ticket(orm.Model):
             method_id = self.browse(cr, uid, parent_id).method_id.id
             data['method_id'] = method_id
         elif not data.get('method_id'):
-            raise orm.except_orm('Error', 'You must choose the method of the project')
+            raise except_orm('Error', 'You must choose the method of the project')
         return super(Ticket, self).create(cr, uid, data, context)
 
     def write(self, cr, uid, ids, values, context=None):
@@ -156,17 +155,13 @@ class Ticket(orm.Model):
                 cr, uid, ticket.method_id.id, context={'project_id': ticket.project_id.id})
         return
 
-    _columns = {
-        'method_id': fields.many2one(
-            'anytracker.method',
-            'Method',
-            help='Method of the project',
-            ondelete="restrict"),
-        'project_method_id': fields.related(
-            'project_id',
-            'method_id',
-            readonly=True, type='many2one',
-            relation='anytracker.method',
-            string='Method of the project',
-            help='Project method'),
-    }
+    method_id = fields.Many2one(
+        'anytracker.method',
+        'Method',
+        help='Method of the project',
+        ondelete="restrict")
+    project_method_id = fields.Many2many(
+        'anytracker.method', 'anytracker_method_rel', 'anytracker_id', 'method_id',
+        readonly=True,
+        string='Method of the project',
+        help='Project method')

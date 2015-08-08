@@ -1,16 +1,15 @@
 # coding: utf-8
-from openerp.osv import orm
-from openerp.osv import fields
+from openerp import models, fields, api, _
+from openerp.exceptions import except_orm, Warning, RedirectWarning
 
 
-class Ticket(orm.Model):
+class Ticket(models.Model):
     _inherit = 'anytracker.ticket'
-    _columns = {
-        'id_mindmap': fields.char('ID MindMap', size=64),
-        'created_mindmap': fields.datetime('Created MindMap'),
-        'modified_mindmap': fields.datetime('Modified MindMap'),
-        'modified_openerp': fields.datetime('Modified OpenERP'),
-    }
+
+    id_mindmap = fields.Char('ID MindMap', size=64)
+    created_mindmap = fields.Datetime('Created MindMap')
+    modified_mindmap = fields.Datetime('Modified MindMap')
+    modified_openerp = fields.Datetime('Modified OpenERP')
 
     def makeTreeData(self, cr, uid, ids, context=None):
         '''Return all ticket of a tree so ordered'''
@@ -32,7 +31,8 @@ class Ticket(orm.Model):
                 ticket_branch['child'].append(
                     self.read(cr, uid, ticket_id, data_to_retrieve, context)
                 )
-                makeRecursTree(ticket_branch['child'][len(ticket_branch['child'])-1])
+                makeRecursTree(ticket_branch['child'][len(ticket_branch['child']) - 1])
+
         ticket_tree = []
         for ticket_tree_data in self.read(cr, uid, ids, data_to_retrieve, context):
             ticket_tree.append(ticket_tree_data)

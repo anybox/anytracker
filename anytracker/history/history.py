@@ -1,34 +1,27 @@
 # coding: utf-8
-from openerp.osv import orm
-from openerp.osv import fields
-from tools.translate import _
+from openerp import models, fields, api, _
+from openerp.exceptions import except_orm, Warning, RedirectWarning
 import time
 
 
-class History(orm.Model):
-
+class History(models.Model):
     _name = 'anytracker.history'
     _description = 'History of ticket'
 
-    _columns = {
-        'create_uid': fields.many2one('res.users', 'User', readonly=True),
-        'create_date': fields.datetime('Create Date', readonly=True),
-        'modification': fields.text('Modification', readonly=True),
-    }
+    create_uid = fields.Many2one('res.users', 'User', readonly=True)
+    create_date = fields.Datetime('Create Date', readonly=True)
+    modification = fields.Text('Modification', readonly=True)
 
 
-class Ticket(orm.Model):
-
+class Ticket(models.Model):
     _inherit = 'anytracker.ticket'
 
-    _columns = {
-        'history_ids': fields.many2many(
-            'anytracker.history',
-            'anytracker_ticket_history_rel',
-            'ticket_id',
-            'history_id',
-            'History'),
-    }
+    history_ids = fields.Many2many(
+        'anytracker.history',
+        'anytracker_ticket_history_rel',
+        'ticket_id',
+        'history_id',
+        'History')
 
     def _add_history(self, cr, uid, values, context=None):
         if not context:
@@ -120,11 +113,12 @@ class Ticket(orm.Model):
                 if values.get(i):
                     return True
             return False
+
         if values.get('modified_mindmap'):
             for i in self.read(cr, uid, ids, ['name', 'modified_openerp'], context=context):
                 if values['modified_mindmap'] < i['modified_openerp']:
-                    raise orm.except_orm(_('Error'),
-                                         _('You can t update the ticket %s') % i['name'])
+                    raise except_orm(_('Error'),
+                                     _('You can t update the ticket %s') % i['name'])
         elif context.get('import_mindmap', False):
             # description and complexity
             pass  # TODO

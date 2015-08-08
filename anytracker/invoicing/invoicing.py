@@ -1,7 +1,6 @@
 # coding: utf-8
-from openerp.osv import orm
-from openerp.osv import fields
-from tools.translate import _
+from openerp import models, fields, api, _
+from openerp.exceptions import except_orm, Warning, RedirectWarning
 import logging
 from datetime import datetime, timedelta
 from openerp import SUPERUSER_ID
@@ -9,7 +8,7 @@ from openerp import SUPERUSER_ID
 logger = logging.getLogger(__file__)
 
 
-class Ticket(orm.Model):
+class Ticket(models.Model):
     """ Allow to invoice a single ticket
     """
 
@@ -24,13 +23,13 @@ class Ticket(orm.Model):
             if ticket.analytic_line_id:
                 continue
             if not ticket.project_id.product_id:
-                raise orm.except_orm(
+                raise except_orm(
                     _('Error'),
                     _("To be able to invoice a ticket, "
                       "you should set a product "
                       "on the corresponding project"))
             if not ticket.project_id.analytic_account_id:
-                raise orm.except_orm(
+                raise except_orm(
                     _('Error'),
                     _("To be able to invoice a ticket, "
                       "you should set an analytic account "
@@ -40,7 +39,7 @@ class Ticket(orm.Model):
                              "because it has no rating"), ticket.number)
                 continue
             if ticket.type.has_children:
-                raise orm.except_orm(
+                raise except_orm(
                     _('Error'),
                     _("Ticket #%s is a project or node. "
                       "It cannot be invoiced") % ticket.number)
@@ -49,7 +48,7 @@ class Ticket(orm.Model):
             if not gen_account and ticket.project_id.product_id.categ_id:
                 gen_account = ticket.project_id.product_id.categ_id.property_account_expense_categ
             if not gen_account:
-                raise orm.except_orm(
+                raise except_orm(
                     'Error', ("No expense account defined on the product (or category)"
                               " configured in your anytracker project"))
             if ticket.assigned_user_id:
@@ -83,7 +82,7 @@ class Ticket(orm.Model):
     def cron(self, cr, uid, context=None):
         super(Ticket, self).cron(cr, uid, context)
         # tickets to invoice
-        yesterday = (datetime.now()-timedelta(1)).strftime("%Y-%m-%d %H:%M:%S")
+        yesterday = (datetime.now() - timedelta(1)).strftime("%Y-%m-%d %H:%M:%S")
         ticket_ids = self.search(cr, uid, [
             ('analytic_line_id', '=', False),
             ('progress', '=', 100.0),
@@ -97,28 +96,26 @@ class Ticket(orm.Model):
         ])
         self.create_analytic_line(cr, uid, ticket_ids, context)
 
-    _columns = {
-        'analytic_account_id': fields.many2one(
-            'account.analytic.account',
-            'Analytic account / project',
-            help=(u"Choose the analytic account or project on which "
-                  u"to create analytic lines to invoice")),
-        'analytic_line_id': fields.many2one(
-            'account.analytic.line',
-            'Analytic line',
-            help=(u"The analytic line used to invoice the ticket")),
-        'product_id': fields.many2one(
-            'product.product',
-            'Product to invoice',
-            help=(u"The product to invoice")),
-        'analytic_journal_id': fields.many2one(
-            'account.analytic.journal',
-            'Analytic journal',
-            help=(u"Analytic journal to use when invoicing")),
-    }
+    analytic_account_id = fields.Many2one(
+        'account.analytic.account',
+        'Analytic account / project',
+        help=(u"Choose the analytic account or project on which "
+              u"to create analytic lines to invoice"))
+    analytic_line_id = fields.Many2one(
+        'account.analytic.line',
+        'Analytic line',
+        help=(u"The analytic line used to invoice the ticket"))
+    product_id = fields.Many2one(
+        'product.product',
+        'Product to invoice',
+        help=(u"The product to invoice"))
+    analytic_journal_id = fields.Many2one(
+        'account.analytic.journal',
+        'Analytic journal',
+        help=(u"Analytic journal to use when invoicing"))
 
 
-class Bouquet(orm.Model):
+class Bouquet(models.Model):
     """ Allow to invoice all the tickets of the bouquet
     """
     _inherit = "anytracker.bouquet"
@@ -132,18 +129,17 @@ class Bouquet(orm.Model):
             tickets.create_analytic_line(cr, uid, ticket_ids)
 
 
-class Priority(orm.Model):
+class Priority(models.Model):
     """Add invoicing ratio to priorities
     """
     _inherit = 'anytracker.priority'
-    _columns = {
-        'discount_id': fields.many2one(
-            'hr_timesheet_invoice.factor', 'Ratio',
-            help=u'set the invoicing ratio for tickets with this priority')
-    }
+
+    discount_id = fields.Many2one(
+        'hr_timesheet_invoice.factor', 'Ratio',
+        help=u'set the invoicing ratio for tickets with this priority')
 
 
-class account_analytic_line(orm.Model):
+class account_analytic_line(models.Model):
     """ Allow a customer to search analytic line by date (related to commit d6106d1aa13d)
     """
     _inherit = "account.analytic.line"

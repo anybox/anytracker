@@ -1,72 +1,62 @@
 import logging
-from openerp.osv import fields
-from openerp.osv import orm
+from openerp import models, fields, api, _
+from openerp.exceptions import except_orm, Warning, RedirectWarning
 
 logger = logging.getLogger(__file__)
-
 
 BOUQUET_TYPES = (('changelog', u"Change log",),
                  )
 
 
-class Bouquet(orm.Model):
-
+class Bouquet(models.Model):
     _name = 'anytracker.bouquet'
     _description = u"Ticket Bouquet"
     _order = 'create_date DESC'
 
-    def _get_rating(self, cr, uid, ids, field_name, args, context=None):
+    @api.one
+    def _get_rating(self):
         res = {}
-        for bouquet in self.browse(cr, uid, ids):
-            total = 0
-            for ticket in bouquet.ticket_ids:
-                if ticket.rating:
-                    total = total+ticket.rating
-            res[bouquet.id] = total
-        return res
+        total = 0
+        for ticket in self.ticket_ids:
+            if ticket.rating:
+                total = total + ticket.rating
+        self.bouquet_rating = total
 
-    def _nb_tickets(self, cr, uid, ids, field_name, args, context=None):
-        if isinstance(ids, (int, long)):
-            ids = (ids,)
-        cr.execute("SELECT bouquet_id, count(ticket_id) FROM anytracker_ticket_bouquet_rel "
-                   "WHERE bouquet_id IN %s GROUP BY bouquet_id", (tuple(ids),))
-        return dict(cr.fetchall())
+    @api.one
+    def _nb_tickets(self):
+        self._cr.execute("SELECT bouquet_id, count(ticket_id) FROM anytracker_ticket_bouquet_rel "
+                   "WHERE bouquet_id IN %s GROUP BY bouquet_id", (tuple([self.ids]),))
+        self.nb_tickets =  dict(self._cr.fetchall())
 
-    def _project_ids(self, cr, uid, ids, field_name, args, context=None):
-        if isinstance(ids, (int, long)):
-            ids = (ids,)
-        bouquet_reads = self.read(cr, uid, ids, ['ticket_ids'], context=context)
-        all_tickets = set(tid for br in bouquet_reads for tid in br['ticket_ids'])
+    @api.one
+    def _project_ids(self):
+        # if isinstance(ids, (int, long)):
+        #     ids = (ids,)
+        all_tickets = self.browse().ticket_ids
+        # all_tickets = set(tid for br in bouquet_reads for tid in br['ticket_ids'])
         # GR py 2.6 valid dict comprehension
-        ticket = self.pool.get('anytracker.ticket')
+        ticket = self.env['anytracker.ticket']
         ticket_projects = dict(
             (tr['id'], tr['project_id'])
-            for tr in ticket.read(cr, uid, list(all_tickets), ['project_id'],
-                                  load='_classic_write', context=context))
+            for tr in all_tickets.project_id)
 
-        return dict((br['id'], list(set(ticket_projects[tid] for tid in br['ticket_ids'])))
-                    for br in bouquet_reads)
+        self.project_ids = ticket_projects
 
-    _columns = dict(
-        name=fields.char(u'Name', size=128, required=True),
-        description=fields.char(u'Description'),
-        ticket_ids=fields.many2many('anytracker.ticket', 'anytracker_ticket_bouquet_rel',
-                                    'bouquet_id', 'ticket_id', u"Tickets"),
-        type=fields.selection(BOUQUET_TYPES, u"Type"),
-        nb_tickets=fields.function(_nb_tickets, method=True, string=u'Number of tickets',
-                                   type='integer',
-                                   store=False, help='Full number of tickets in this bouquet'),
-        create_date=fields.datetime('Creation Time', readonly=True),
-        write_date=fields.datetime('Modification Time', readonly=True),
-        participant_ids=fields.related('ticket_ids', 'project_id', 'participant_ids',
-                                       string=u'All participating users', type='many2many',
-                                       relation='res.users'),
-        project_ids=fields.function(_project_ids, method=True,
-                                    string=u"Projects", type='many2many',
-                                    relation='anytracker.ticket'),
-        bouquet_rating=fields.function(_get_rating, method=True,
-                                       store=False,
-                                       string=u"Rating", type='float'),
-    )
+    name = fields.Char(u'Name', size=128, required=True)
+    description = fields.Char(u'Description')
+    ticket_ids = fields.Many2many('anytracker.ticket', 'anytracker_ticket_bouquet_rel',
+                                  'bouquet_id', 'ticket_id', u"Tickets")
+    type = fields.Selection(BOUQUET_TYPES, u"Type")
+    nb_tickets = fields.Integer(compute='_nb_tickets', string=u'Number of tickets',
+                                store=False, help='Full number of tickets in this bouquet')
+    create_date = fields.Datetime(string='Creation Time', readonly=True)
+    write_date = fields.Datetime(string='Modification Time', readonly=True)
+    participant_ids = fields.Many2many('res.users', 'ticket_ids', 'project_id', 'participant_ids',
+                                       string=u'All participating users', )
+    project_ids = fields.Many2many('anytracker.ticket', compute='_project_ids',
+                                   string=u"Projects")
+    bouquet_rating = fields.Float(compute='_get_rating', method=True,
+                                  store=False,
+                                  string=u"Rating", )
 
     _defaults = {'bouquet_rating': 0}

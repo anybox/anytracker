@@ -2,11 +2,12 @@
 import re
 import logging
 from lxml import html
-from openerp.osv import fields
-from openerp.osv import orm
-from tools.translate import _
+from openerp import models, fields, api, _
+from openerp.exceptions import except_orm, Warning, RedirectWarning
 from lxml import etree
 from openerp import SUPERUSER_ID
+from openerp.osv import orm
+
 logger = logging.getLogger(__file__)
 
 ticket_regex = re.compile('([Tt]icket ?#?)([\d]+)')
@@ -21,22 +22,20 @@ def add_permalinks(cr, string):
         string)[0]
 
 
-class Type(orm.Model):
+class Type(models.Model):
     """ Ticket type (project, ticket, deliverable, etc.)
     """
     _name = 'anytracker.ticket.type'
-    _columns = {
-        'name': fields.char(u'Title', 255, required=True),
-        'code': fields.char(u'Code', 255, required=True),
-        'description': fields.text(u'Description'),
-        'has_children': fields.boolean(u'Can have children'),
-        'default': fields.boolean(u'Default for new tickets'),
-        'icon': fields.binary(u'Icon in the kanban'),
-    }
+
+    name = fields.Char('Title', size=255, required=True)
+    code = fields.Char('Code', size=255, required=True)
+    description = fields.Text('Description')
+    has_children = fields.Boolean('Can have children')
+    default = fields.Boolean('Default for new tickets')
+    icon = fields.Binary('Icon in the kanban')
 
 
-class Ticket(orm.Model):
-
+class Ticket(models.Model):
     _name = 'anytracker.ticket'
     _description = "Anytracker tickets"
     _rec_name = 'breadcrumb'
@@ -52,56 +51,51 @@ class Ticket(orm.Model):
                 res.append(attachment.res_id)
         return res
 
-    def _has_attachment(self, cr, uid, ids, field_name, args, context=None):
+    @api.one
+    def _has_attachment(self, ):
         """ check if tickets have attachment(s) or not"""
-        res = {}
-        attach_model = self.pool.get('ir.attachment')
-        for ticket in ids:
-            attachment_ids = attach_model.search(
-                cr, uid, [('res_id', '=', ticket), ('res_model', '=', 'anytracker.ticket')])
-            if not attachment_ids:
-                res[ticket] = False
-                continue
-            res[ticket] = True
-        return res
+        attach_model = self.env['ir.attachment']
+        attachment_ids = attach_model.search([('res_id', '=', self.ids), ('res_model', '=', 'anytracker.ticket')])
+        if not attachment_ids:
+            self.has_attachment = False
+        self.has_attachment = True
 
-    def _shortened_description(self, cr, uid, ids, field_name, args, context=None):
+    @api.one
+    def _shortened_description(self):
         """shortened description used in the list view and kanban view
         """
-        res = {}
         limit = 150
-        for ticket in self.read(cr, uid, ids, ['id', 'description'], context):
-            d = html.fromstring((ticket['description'] or '').strip() or '&nbsp;').text_content()
-            res[ticket['id']] = d[:limit] + u'(…)' if len(d) > limit else d
-        return res
+        d = html.fromstring((self.description or '').strip() or '&nbsp;').text_content()
+        self.shortened_description = d[:limit] + u'(…)' if len(d) > limit else d
 
-    def get_breadcrumb(self, cr, uid, ids, context=None):
+    @api.one
+    def get_breadcrumb(self):
         """ get all the parents up to the root ticket
         """
-        res = {}
-        for ticket_id in [int(i) for i in ids]:
-            cr.execute("WITH RECURSIVE parent(id, parent_id, name) as "
-                       "(select 0, %s, text('') UNION SELECT t.id, t.parent_id, t.name "
-                       " FROM parent p, anytracker_ticket t WHERE t.id=p.parent_id) "
-                       "SELECT id, parent_id, name FROM parent WHERE id!=0", (ticket_id,))
+        # for ticket_id in [int(i) for i in ids]:
+        self._cr.execute("WITH RECURSIVE parent(id, parent_id, name) as "
+                   "(select 0, %s, text('') UNION SELECT t.id, t.parent_id, t.name "
+                   " FROM parent p, anytracker_ticket t WHERE t.id=p.parent_id) "
+                   "SELECT id, parent_id, name FROM parent WHERE id!=0", (self.id,))
 
-            # The same using parent_store. Actually slower for our typical trees:
-            # cr.execute("select b.id, b.parent_id, b.name "
-            #           "from anytracker_ticket a join anytracker_ticket b "
-            #           "on a.parent_left >= b.parent_left and a.parent_right<=b.parent_right "
-            #           "and a.id=%s order by b.parent_left", (ticket_id,))
-            res[ticket_id] = [dict(zip(('id', 'parent_id', 'name'), line))
-                              for line in reversed(cr.fetchall())]
-        return res
+        # The same using parent_store. Actually slower for our typical trees:
+        # cr.execute("select b.id, b.parent_id, b.name "
+        #           "from anytracker_ticket a join anytracker_ticket b "
+        #           "on a.parent_left >= b.parent_left and a.parent_right<=b.parent_right "
+        #           "and a.id=%s order by b.parent_left", (ticket_id,))
+        res = [dict(zip(('id', 'parent_id', 'name'), line))
+                          for line in reversed(self._cr.fetchall())]
+        print(res)
+        return res[0]
 
-    def _formatted_breadcrumb(self, cr, uid, ids, field_name, args, context=None):
+    @api.one
+    def _formatted_breadcrumb(self):
         """ format the breadcrumb
         TODO : format in the view (in js)
         """
         res = {}
-        for i, breadcrumb in self.get_breadcrumb(cr, uid, ids, context).items():
-            res[i] = u' / '.join([b['name'] for b in breadcrumb])
-        return res
+        breadcrumb = self.get_breadcrumb()
+        self.breadcrumb = u' / '.join([b['name'] for b in breadcrumb])
 
     def _get_root(self, cr, uid, ticket_id, context=None):
         """Return the real root ticket (not the project_id of the ticket)
@@ -134,8 +128,8 @@ class Ticket(orm.Model):
             values['project_id'] = root_id
             for ticket in self.browse(cr, uid, ids, context):
                 if ticket.id == values['parent_id']:
-                    raise orm.except_orm(_('Error'),
-                                         _(u"Think of yourself. Can you be your own parent?"))
+                    raise except_orm(_('Error'),
+                                     _(u"Think of yourself. Can you be your own parent?"))
                 # if reparenting to False, propagate the current ticket as project for children
                 project_id = root_id or ticket.id
                 # set the project_id of me and all the children
@@ -167,16 +161,16 @@ class Ticket(orm.Model):
                 super(Ticket, self).write(cr, uid, children, {'method_id': method_id})
         # correct the parent to be a node
         if 'parent_id' in values:
-                type_ids = types.search(cr, uid, [('code', '=', 'node')])
-                if type_ids:
-                    self.write(cr, uid, values['parent_id'], {'type': type_ids[0]})
+            type_ids = types.search(cr, uid, [('code', '=', 'node')])
+            if type_ids:
+                self.write(cr, uid, values['parent_id'], {'type': type_ids[0]})
 
         return res
 
-    def _get_permalink(self, cr, uid, ids, field_name, args, context=None):
-        base_uri = '/anytracker/%s/ticket/' % cr.dbname
-        return dict((r['id'], base_uri + str(r['number']))
-                    for r in self.read(cr, uid, ids, ('number',)))
+    @api.one
+    def _get_permalink(self):
+        base_uri = '/anytracker/%s/ticket/' % self._cr.dbname
+        self.permalink = base_uri + str(self.number)
 
     def create(self, cr, uid, values, context=None):
         """write the project_id when creating
@@ -238,26 +232,23 @@ class Ticket(orm.Model):
             return False
         return type_ids[0]
 
-    def _subnode_ids(self, cr, uid, ids, field_name, args, context=None):
+    @api.one
+    def _subnode_ids(self):
         """Return the list of children that are themselves nodes."""
-        return {i: self.search(cr, uid, [('parent_id', '=', i), ('type.has_children', '=', True)],
-                               context=context)
-                for i in ids}
+        self.subnode_ids = self.search([('parent_id', '=', self.ids), ('type.has_children', '=', True)])
 
-    def _nb_children(self, cr, uid, ids, field_name, args, context=None):
-        res = {}
-        for i in ids:
-            nb_children = self.search(cr, uid, [('id', 'child_of', i)], count=True)
-            res[i] = nb_children
-        return res
+    @api.one
+    def _nb_children(self):
+        nb_children = self.search([('id', 'child_of', self.ids)], count=True)
+        self.nb_children = nb_children
 
-    def _search_breadcrumb(self, cr, uid, obj, field, domain, context=None):
+    def _search_breadcrumb(self, operator, value):
         """Use the 'name' in the search function for the parent,
         instead of 'breadcrum' which is implicitly used because of the _rec_name
         """
-        assert(len(domain) == 1 and len(domain[0]) == 3)  # handle just this case
-        (f, o, v) = domain[0]
-        return [('name', o, v)]
+        # assert (len(domain) == 1 and len(domain[0]) == 3)  # handle just this case
+        # (f, o, v) = domain[0]
+        return [('name', operator, value)]
 
     def onchange_parent(self, cr, uid, ids, parent_id, context=None):
         """ Fill the method when changing parent
@@ -335,8 +326,8 @@ class Ticket(orm.Model):
             start_ids = stages.search(cr, uid, [('method_id', '=', ticket.method_id.id),
                                                 ('progress', '=', 0)])
             if len(start_ids) != 1:
-                raise orm.except_orm(_('Configuration error !'),
-                                     _('One and only one stage should have a 0% progress'))
+                raise except_orm(_('Configuration error !'),
+                                 _('One and only one stage should have a 0% progress'))
             # write stage in a separate line to let it recompute progress and risk
             ticket.write({'stage_id': start_ids[0]})
         self.recompute_parents(cr, uid, ids)
@@ -347,89 +338,75 @@ class Ticket(orm.Model):
         """
         return
 
-    _columns = {
-        'name': fields.char('Title', 255, required=True),
-        'number': fields.integer('Number'),
-        'type': fields.many2one(
-            'anytracker.ticket.type',
-            'Type',
-            required=True,
-            select=True),
-        'permalink': fields.function(_get_permalink, type='string', string='Permalink',
-                                     obj='anytracker.ticket', method=True),
-        'description': fields.text('Description', required=False),
-        'create_date': fields.datetime('Creation Time'),
-        'write_date': fields.datetime('Modification Time'),
-        'subnode_ids': fields.function(_subnode_ids,
-                                       type='one2many',
-                                       relation='anytracker.ticket',
-                                       method=True,
-                                       readonly=True,
-                                       string='Sub-nodes'),
-        'shortened_description': fields.function(
-            _shortened_description,
-            type='text',
-            obj='anytracker.ticket',
-            string='Description'),
-        'breadcrumb': fields.function(
-            _formatted_breadcrumb,
-            fnct_search=_search_breadcrumb,
-            type='char',
-            obj='anytracker.ticket',
-            string='Location'),
-        'duration': fields.selection(
-            [(0, '< half a day'), (None, 'Will be computed'), (1, 'Half a day')],
-            'duration'),
-        'child_ids': fields.one2many(
-            'anytracker.ticket',
-            'parent_id',
-            'Sub-tickets',
-            required=False),
-        'nb_children': fields.function(
-            _nb_children,
-            method=True,
-            string='# of children',
-            type='integer',
-            help='Number of children'),
-        'participant_ids': fields.many2many(
-            'res.users',
-            'anytracker_ticket_assignment_rel',
-            'ticket_id',
-            'user_id',
-            required=False),
-        'parent_id': fields.many2one(
-            'anytracker.ticket',
-            'Parent',
-            required=False,
-            select=True,
-            ondelete='cascade'),
-        'project_id': fields.many2one(
-            'anytracker.ticket',
-            'Project',
-            ondelete='cascade',
-            domain=[('parent_id', '=', False)],
-            readonly=True),
-        'requester_id': fields.many2one(
-            'res.users',
-            'Requester'),
-        'parent_left': fields.integer('Parent Left', select=1),
-        'parent_right': fields.integer('Parent Right', select=1),
-        'sequence': fields.integer('sequence'),
-        'active': fields.boolean('Active', help=("Uncheck to make the project disappear, "
-                                                 "instead of deleting it")),
-        'state': fields.selection(
-            [('running', 'Running'),
-             ('trashed', 'Trashed')],
-            'State',
-            required=True),
-        'icon': fields.related('type', 'icon', type='binary'),
-        'has_attachment': fields.function(
-            _has_attachment,
-            type='boolean',
-            obj='anytracker.ticket',
-            string='Has attachment ?',
-            store={'ir.attachment': (_ids_to_be_recalculated, ['res_id', 'res_model'], 10)})
-    }
+    name = fields.Char(string='Title',required=True)
+    number = fields.Integer(string='Number')
+    type = fields.Many2one(
+        'anytracker.ticket.type',
+        string='Type',
+        required=True)
+    permalink = fields.Char(compute='_get_permalink', string='Permalink', )
+    description = fields.Text(string='Description', required=False)
+    create_date = fields.Datetime(string='Creation Time')
+    write_date = fields.Datetime(string='Modification Time')
+    subnode_ids = fields.One2many('anytracker.ticket',
+                                  readonly=True,
+                                  string='Sub-nodes',
+                                  compute='_subnode_ids')
+    shortened_description = fields.Text(
+        string='Description',
+        compute='_shortened_description')
+    breadcrumb = fields.Char(
+        search='_search_breadcrumb',
+        string='Location',
+        compute='_formatted_breadcrumb')
+    duration = fields.Selection(
+        [(0, '< half a day'), (None, 'Will be computed'), (1, 'Half a day')],
+        string='duration'),
+    child_ids = fields.One2many(
+        'anytracker.ticket',
+        'parent_id',
+        string='Sub-tickets',
+        required=False)
+    nb_children = fields.Integer(
+        string='# of children',
+        help='Number of children',
+        compute='_nb_children')
+    participant_ids = fields.Many2many(
+        'res.users',
+        'anytracker_ticket_assignment_rel',
+        'ticket_id',
+        'user_id',
+        string='Participant',
+        required=False)
+    parent_id = fields.Many2one(
+        'anytracker.ticket',
+        string='Parent',
+        required=False,
+        ondelete='cascade')
+    project_id = fields.Many2one(
+        'anytracker.ticket',
+        string='Project',
+        ondelete='cascade',
+        domain=[('parent_id', '=', False)],
+        readonly=True)
+    requester_id = fields.Many2one(
+        'res.users',
+        string='Requester')
+    parent_left = fields.Integer(string='Parent Left', )
+    parent_right = fields.Integer(string='Parent Right', )
+    sequence = fields.Integer(string='sequence')
+    active = fields.Boolean('Active', help="Uncheck to make the project disappear, "
+                                            "instead of deleting it")
+    state = fields.Selection(
+        [('running', 'Running'),
+         ('trashed', 'Trashed')],
+        string='State',
+        required=True)
+    icon = fields.Binary('anytracker.ticket.type',related='type.icon', )
+    has_attachment = fields.Boolean(
+        string='Has attachment ?',
+        # store={'ir.attachment': (_ids_to_be_recalculated, ['res_id', 'res_model'], 10)},
+        compute='_has_attachment')
 
     _defaults = {
         'type': _default_type,
@@ -442,32 +419,27 @@ class Ticket(orm.Model):
     _sql_constraints = [('number_uniq', 'unique(number)', 'Number must be unique!')]
 
 
-class ResPartner(orm.Model):
+class ResPartner(models.Model):
     """ Improve security
     """
     _inherit = 'res.partner'
 
-    def _anytracker_search_users(self, cr, uid, obj, field, domain, context=None):
-        assert(len(domain) == 1 and domain[0][0] == 'anytracker_user_ids')
-        user_id = domain[0][2]
-        cr.execute('select distinct u.partner_id from res_users u, '
-                   'anytracker_ticket_assignment_rel m, anytracker_ticket_assignment_rel n '
-                   'where m.user_id=%s and u.id=n.user_id and n.ticket_id=m.ticket_id;',
-                   (user_id,))
-        return [('id', domain[0][1], tuple(a[0] for a in cr.fetchall()))]
+    def _anytracker_search_users(self, operator, value):
+        # assert (len(domain) == 1 and domain[0][0] == 'anytracker_user_ids')
+        # user_id = domain[0][2]
+        # cr.execute('select distinct u.partner_id from res_users u, '
+        #            'anytracker_ticket_assignment_rel m, anytracker_ticket_assignment_rel n '
+        #            'where m.user_id=%s and u.id=n.user_id and n.ticket_id=m.ticket_id;',
+        #            (user_id,))
+        return [('name', operator, value)]
 
-    _columns = {
-        'anytracker_user_ids': fields.function(
-            None,
-            fnct_search=_anytracker_search_users,
-            type='one2many',
-            string='Allowed users',
-            obj='res.users',
-            method=True),
-    }
+    anytracker_user_ids = fields.One2many('res.users',
+                                          'user_id',
+                                          search='_anytracker_search_users',
+                                          string='Allowed users')
 
 
-class MailMessage(orm.Model):
+class MailMessage(models.Model):
     _inherit = 'mail.message'
 
     def create(self, cr, uid, values, context=None):

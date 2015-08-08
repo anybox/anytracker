@@ -23,7 +23,7 @@
 {
     'name': 'Anytracker',
     'version': '0.3',
-    'author': 'Anybox',
+    'author': 'Anybox - Khchine5',
     'website': 'http://anybox.fr',
     'category': 'Project Management',
     'sequence': 150,
@@ -106,8 +106,8 @@ Or, if you installed nose in your buildout
         'priority/ir.model.access.csv',
         'bouquet/ir.model.access.csv',
         # security rules:
-        'bouquet/ir_rule.xml',
-        'security/ir_rule.xml',
+        # 'bouquet/ir_rule.xml',
+        # 'security/ir_rule.xml',
     ],
     'test': [],
     'demo': [],

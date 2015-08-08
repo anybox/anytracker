@@ -1,7 +1,8 @@
 # coding: utf-8
 
-from openerp.addons.web import http
+# from openerp.addons.web import http
 import werkzeug.utils
+from openerp.addons.web import http
 from openerp import pooler, SUPERUSER_ID as uid
 from urlparse import urljoin
 from urllib import urlencode

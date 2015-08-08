@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-from openerp.osv import fields
-from openerp.osv import orm
-from tools.translate import _
+from openerp import models, fields, api, _
+from openerp.exceptions import except_orm, Warning, RedirectWarning
 from xml import sax
 from datetime import datetime
 from cStringIO import StringIO
@@ -9,35 +8,34 @@ from base64 import b64decode
 import time
 
 
-class import_mindmap_wizard(orm.TransientModel):
+class import_mindmap_wizard(models.TransientModel):
     _name = 'import.mindmap.wizard'
     _description = 'Import mindmap .mm file into anytracker tree'
-    _columns = {
-        'ticket_id': fields.many2one(
-            'anytracker.ticket', 'Ticket',
-            help="Ticket that will be updated"),
-        'import_method': fields.selection(
-            [('update', 'Update the ticket tree'),
-             ('insert', 'Insert under the ticket')],
-            'Import method',
-            required=True,
-            help="You can either update a tree or insert the mindmap under an existing ticket"
-        ),
-        'mindmap_content': fields.binary(_('File'), required=True),
-        'green_complexity': fields.many2one(
-            'anytracker.complexity',
-            'green complexity',
-            required=True),
-        'orange_complexity': fields.many2one(
-            'anytracker.complexity',
-            'orange complexity',
-            required=True),
-        'red_complexity': fields.many2one(
-            'anytracker.complexity',
-            'red complexity',
-            required=True),
-        'method_id': fields.many2one('anytracker.method', 'Project method', required=True),
-    }
+
+    ticket_id = fields.Many2one(
+        'anytracker.ticket', 'Ticket',
+        help="Ticket that will be updated")
+    import_method = fields.Selection(
+        [('update', 'Update the ticket tree'),
+         ('insert', 'Insert under the ticket')],
+        'Import method',
+        required=True,
+        help="You can either update a tree or insert the mindmap under an existing ticket")
+    mindmap_content = fields.Binary(_('File'), required=True)
+    green_complexity = fields.Many2one(
+        'anytracker.complexity',
+        'green complexity',
+        required=True)
+    orange_complexity = fields.Many2one(
+        'anytracker.complexity',
+        'orange complexity',
+        required=True)
+    red_complexity = fields.Many2one(
+        'anytracker.complexity',
+        'red complexity',
+        required=True)
+    method_id = fields.Many2one('anytracker.method', 'Project method', required=True)
+
     _defaults = {
         'import_method': 'insert'
     }
@@ -95,7 +93,7 @@ class FreemindContentHandler(sax.ContentHandler):
                     self.parent_id = self.ticket_id
                 elif self.import_method == 'update':
                     if not self.ticket_id:
-                        raise orm.except_orm(
+                        raise except_orm(
                             _('Error'),
                             _("To be able to use update method, "
                               "you should set a parent ticket "
@@ -107,9 +105,9 @@ class FreemindContentHandler(sax.ContentHandler):
             else:
                 self.parent_id = self.parent_ids[-1:][0]['orm_id']
 
-            modified_mindmap = datetime.fromtimestamp(int(attrs.getValue('MODIFIED'))/1000.0)
+            modified_mindmap = datetime.fromtimestamp(int(attrs.getValue('MODIFIED')) / 1000.0)
             modified_mindmap = datetime.strftime(modified_mindmap, '%Y-%m-%d %H:%M:%S')
-            created_mindmap = datetime.fromtimestamp(int(attrs.getValue('CREATED'))/1000.0)
+            created_mindmap = datetime.fromtimestamp(int(attrs.getValue('CREATED')) / 1000.0)
             created_mindmap = datetime.strftime(created_mindmap, '%Y-%m-%d %H:%M:%S')
             id_mindmap = attrs.getValue('ID')
             vals = {
@@ -199,7 +197,7 @@ class FreemindContentHandler(sax.ContentHandler):
         ticket_obj = self.pool.get('anytracker.ticket')
         first_ticket_id = self.updated_ticket_ids[0]
         if self.ticket_id and self.ticket_id != first_ticket_id and self.import_method == 'update':
-            raise orm.except_orm(_('Error'), _('You try to update the wrong main ticket'))
+            raise except_orm(_('Error'), _('You try to update the wrong main ticket'))
         domain = [
             ('id', 'child_of', first_ticket_id),  # children of main ticket
             ('id', 'not in', self.updated_ticket_ids),  # ticket not updated
@@ -213,15 +211,15 @@ class FreemindErrorHandler(sax.ErrorHandler):
 
     def error(self, exception):
         "Handle a recoverable error."
-        raise orm.except_orm(_('Error !'),
-                             exception.args[0])
+        raise except_orm(_('Error !'),
+                         exception.args[0])
 
     def fatalError(self, exception):
         "Handle a non-recoverable error."
-        raise orm.except_orm(_('Error !'),
-                             exception.args[0])
+        raise except_orm(_('Error !'),
+                         exception.args[0])
 
     def warning(self, exception):
         "Handle a warning."
-        raise orm.except_orm(_('Warning !'),
-                             exception.args[0])
+        raise except_orm(_('Warning !'),
+                         exception.args[0])

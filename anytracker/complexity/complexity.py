@@ -1,16 +1,16 @@
-from openerp.osv import orm
-from openerp.osv import fields
+from openerp import models, fields, api, _
+from openerp.exceptions import except_orm, Warning, RedirectWarning
 import time
 
 
 def risk_mean(risks):
-    risks = [(1-r) for r in risks if r is not None]
+    risks = [(1 - r) for r in risks if r is not None]
     if len(risks) == 0:
         return 0.5
-    return 1 - reduce(lambda x, y: x*y, risks)**(1./len(risks))
+    return 1 - reduce(lambda x, y: x * y, risks) ** (1. / len(risks))
 
 
-class Complexity(orm.Model):
+class Complexity(models.Model):
     """Definition of the different complexity levels, in different contexts.
     Example:
         - with a 'scrum' method, values can be the fibonacci series
@@ -18,72 +18,62 @@ class Complexity(orm.Model):
         - ...
     """
     _name = 'anytracker.complexity'
-    _columns = {
-        'name': fields.char('Name', size=64, required=True, translate=True),
-        'description': fields.text(
-            'Description', help='Description of this complexity', translate=True),
-        'value': fields.float('Value', required=True),
-        'color': fields.integer('Color'),
-        'method_id': fields.many2one('anytracker.method', 'Project method',
-                                     help='Projet method', ondelete='cascade'),
-        'risk': fields.float(
-            'Risk', required=True,
-            help="risk is a value between 0.0 (no risk) and 1.0 (full risk)"),
-    }
+
+    name = fields.Char('Name', size=64, required=True, translate=True)
+    description = fields.Text('Description', help='Description of this complexity', translate=True)
+    value = fields.Float('Value', required=True)
+    color = fields.Integer('Color')
+    method_id = fields.Many2one('anytracker.method', 'Project method',
+                                help='Projet method', ondelete='cascade')
+    risk = fields.Float(
+        'Risk', required=True,
+        help="risk is a value between 0.0 (no risk) and 1.0 (full risk)")
 
 
-class Rating(orm.Model):
+class Rating(models.Model):
     """Represents the rating of a ticket by one person at one time
     """
     _name = 'anytracker.rating'
     _order = 'time desc'
-    _columns = {
-        'complexity_id': fields.many2one('anytracker.complexity', 'Complexity'),
-        'ticket_id': fields.many2one(
-            'anytracker.ticket', 'Ticket', required=True, ondelete="cascade"),
-        'user_id': fields.many2one('res.users', 'User', required=True),
-        'time': fields.datetime('Date', required=True),
-    }
+
+    complexity_id = fields.Many2one('anytracker.complexity', 'Complexity')
+    ticket_id = fields.Many2one('anytracker.ticket', 'Ticket', required=True, ondelete="cascade")
+    user_id = fields.Many2one('res.users', 'User', required=True)
+    time = fields.Datetime('Date', required=True)
 
 
-class Ticket(orm.Model):
+class Ticket(models.Model):
     """Add complexity and risk functionnality to tickets
     Risk is based on complexities. Each complexity has a risk value,
     and the risk is copied on the ticket
     """
     _inherit = 'anytracker.ticket'
 
-    def _get_my_rating(self, cr, uid, ids, field_name, args, context=None):
+    @api.one
+    def _get_my_rating(self):
         """get my latest rating for this ticket
         """
-        if not context:
-            context = {}
-        ar_pool = self.pool.get('anytracker.rating')
-        ratings = {}
-        for ticket_id in ids:
-            ratings[ticket_id] = False
-            rating_ids = ar_pool.search(
-                cr, uid,
-                [('user_id', '=', uid),
-                 ('ticket_id', '=', ticket_id)],
-                order='time DESC, id DESC',
-                context=context)
-            if not rating_ids:
-                continue
-            rating = ar_pool.browse(cr, uid, rating_ids[0])
+        ar_pool = self.env['anytracker.rating']
+        ratings = False
+        rating_ids = ar_pool.search(
+            [('user_id', '=', self._uid),
+             ('ticket_id', '=', self.ids[0])],
+            order='time DESC, id DESC')
+        if rating_ids:
+            rating = ar_pool.browse(rating_ids[0])
             if rating.complexity_id:
-                ratings[ticket_id] = (rating.complexity_id.id, rating.complexity_id.name)
-        return ratings
+                ratings = rating.complexity_id.id
+        self.my_rating = ratings
 
-    def _set_my_rating(self, cr, uid, ticket_id, name, value, fnct_inv_arg, context):
-        """set my rating
-        """
-        if value is not False:
-            self.pool.get('anytracker.rating').create(cr, uid, {
-                'complexity_id': value,
-                'ticket_id': ticket_id,
-                'user_id': uid,
-                'time': time.strftime('%Y-%m-%d %H:%M:%S')})
+    # def _set_my_rating(self, cr, uid, ticket_id, name, value, fnct_inv_arg, context):
+    #     """set my rating
+    #     """
+    #     if value is not False:
+    #         self.pool.get('anytracker.rating').create(cr, uid, {
+    #             'complexity_id': value,
+    #             'ticket_id': ticket_id,
+    #             'user_id': uid,
+    #             'time': time.strftime('%Y-%m-%d %H:%M:%S')})
 
     def _get_color(self, cr, uid, ids, field_name, args, context=None):
         """get the color of the rating with highest risk
@@ -127,7 +117,7 @@ class Ticket(orm.Model):
             res_risk[ticket.id] = (risk_mean(latest_person_risk.values())
                                    if latest_person_risk else 0.5)
             res_rating[ticket.id] = (sum(latest_person_rating.values()
-                                         )/len(latest_person_rating)
+                                         ) / len(latest_person_rating)
                                      if latest_person_rating else 0)
         return res_risk, res_rating
 
@@ -189,7 +179,7 @@ class Ticket(orm.Model):
         if 'my_rating' in values or 'parent_id' in values:
             old_values = {v['id']: v for v in
                           self.read(cr, uid, ids, ['risk', 'rating', 'parent_id', 'project_id'],
-                          context, load='_classic_write')}
+                                    context, load='_classic_write')}
             old_parents = [v['parent_id'] for v in old_values.values()]
         res = super(Ticket, self).write(cr, uid, ids, values, context)
         if 'my_rating' in values or 'parent_id' in values:
@@ -256,34 +246,30 @@ class Ticket(orm.Model):
                     self.write(cr, uid, parent.id, {'risk': risk, 'rating': rating})
                 parent = parent.parent_id
 
-    _columns = {
-        'rating_ids': fields.one2many('anytracker.rating', 'ticket_id', 'Ratings'),
-        'my_rating': fields.function(
-            _get_my_rating, fnct_inv=_set_my_rating, type='many2one',
-            relation='anytracker.complexity',
-            string="My Rating"),
-        'risk': fields.float('Risk', group_operator="avg",),
-        'color': fields.function(
-            _get_color, type='integer',
-            relation='anytracker.complexity',
-            string='Color'),
-        'rating': fields.float('Rating', group_operator="sum",),
-    }
+    rating_ids = fields.One2many('anytracker.rating', 'ticket_id', 'Ratings')
+    my_rating = fields.Many2many('anytracker.complexity',
+                                 compute='_get_my_rating',
+                                 string="My Rating")
+    risk = fields.Float('Risk', group_operator="avg", )
+    color = fields.Integer(
+        compute='_get_color',
+        relation='anytracker.complexity',
+        string='Color')
+    rating = fields.Float('Rating', group_operator="sum", )
 
     _defaults = {
         'risk': 0.5,
     }
 
 
-class Method(orm.Model):
+class Method(models.Model):
     _inherit = 'anytracker.method'
-    _columns = {
-        'complexity_ids': fields.one2many(
-            'anytracker.complexity',
-            'method_id',
-            'Complexities',
-            help="The complexities associated to this method"),
-    }
+
+    complexity_ids = fields.One2many(
+        'anytracker.complexity',
+        'method_id',
+        'Complexities',
+        help="The complexities associated to this method")
 
     def copy(self, cr, uid, method_id, default, context=None):
         """ Customize the method copy

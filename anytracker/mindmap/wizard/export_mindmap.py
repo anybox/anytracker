@@ -1,5 +1,5 @@
-from openerp.osv import fields
-from openerp.osv import orm
+from openerp import models, fields, api, _
+from openerp.exceptions import except_orm, Warning, RedirectWarning
 from .mindmap_parse import FreemindWriterHandler
 from .mindmap_parse import FreemindParser
 import StringIO
@@ -7,18 +7,17 @@ from base64 import b64encode
 
 
 # TODO complexity icon, mindmapfile to binary?, richtext content generation
-class export_mindmap_wizard(orm.TransientModel):
+class export_mindmap_wizard(models.TransientModel):
     _name = 'export.mindmap.wizard'
     _description = 'export mindmap .mm file for generate by anytracker tree'
-    _columns = {
-        'ticket_id': fields.many2one('anytracker.ticket', 'Ticket', required=True),
-        'mindmap_file': fields.char('filename to download', 256, required=True),
-        'green_complexity': fields.many2one('anytracker.complexity', 'green complexity',
-                                            required=True),
-        'orange_complexity': fields.many2one('anytracker.complexity', 'orange complexity',
-                                             required=True),
-        'red_complexity': fields.many2one('anytracker.complexity', 'red complexity', required=True),
-    }
+
+    ticket_id = fields.Many2one('anytracker.ticket', 'Ticket', required=True)
+    mindmap_file = fields.Char('filename to download', siez=256, required=True)
+    green_complexity = fields.Many2one('anytracker.complexity', 'green complexity',
+                                       required=True)
+    orange_complexity = fields.Many2one('anytracker.complexity', 'orange complexity',
+                                        required=True)
+    red_complexity = fields.Many2one('anytracker.complexity', 'red complexity', required=True)
 
     _defaults = dict(mindmap_file='mindmap.mm')
 
@@ -32,12 +31,12 @@ class export_mindmap_wizard(orm.TransientModel):
         for wizard in self.browse(cr, uid, ids, context=context):
             complexity_dict = {
                 'green_complexity_id':
-                wizard.green_complexity.id
-                or any_tick_complexity_pool.search(cr, uid, [('value', '=', 3)])[0],
+                    wizard.green_complexity.id
+                    or any_tick_complexity_pool.search(cr, uid, [('value', '=', 3)])[0],
                 'orange_complexity_id': wizard.orange_complexity.id
-                or any_tick_complexity_pool.search(cr, uid, [('value', '=', 21)])[0],
+                                        or any_tick_complexity_pool.search(cr, uid, [('value', '=', 21)])[0],
                 'red_complexity_id': wizard.red_complexity.id
-                or any_tick_complexity_pool.search(cr, uid, [('value', '=', 3)])[0],
+                                     or any_tick_complexity_pool.search(cr, uid, [('value', '=', 3)])[0],
             }
             ticket_id = wizard.ticket_id and wizard.ticket_id.id or False
             if not ticket_id:

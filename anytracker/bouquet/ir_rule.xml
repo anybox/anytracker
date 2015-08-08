@@ -1,15 +1,17 @@
-<?xml version="1.0"?>
-<openerp><data>
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
 
-<record id="property_rule_bouquets_participants" model="ir.rule">
-    <field name="name">Bouquet only for participant in one of the tickets</field>
-    <field model="ir.model" name="model_id" ref="model_anytracker_bouquet"/>
-    <field name="domain_force">['|', ('ticket_ids', '=', False), ('participant_ids', 'in', user.id)]</field> <!-- ticket_ids=False is to allow creation (but makes sense also in general) -->
-    <field name="groups" eval="[(6, 0, [ref('anytracker.group_customer'), ref('anytracker.group_member')])]"/>
-    <field name="perm_create" eval="True"/>
-    <field name="perm_write" eval="True"/>
-    <field name="perm_read" eval="True"/>
-    <field name="perm_unlink" eval="True"/>
-</record>
-
-</data></openerp>
+        <record id="property_rule_bouquets_participants_1" model="ir.rule">
+            <field name="name">Bouquet only for participant in one of the tickets</field>
+            <field name="model_id" ref="model_anytracker_bouquet"/>
+            <field name="domain_force">['|', ('ticket_ids', '=', False), ('participant_ids', 'in', user.id)]</field>
+            <field name="groups" eval="[(6, 0, [ref('anytracker.group_customer'), ref('anytracker.group_member')])]"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+<!-- ticket_ids=False is to allow creation (but makes sense also in general) -->
+    </data>
+</openerp>

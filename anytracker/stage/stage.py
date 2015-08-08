@@ -1,43 +1,41 @@
 # coding: utf-8
-from openerp.osv import orm
-from openerp.osv import fields
-from tools.translate import _
+from openerp import models, fields, api, _
+from openerp.exceptions import except_orm, Warning, RedirectWarning
 from openerp import SUPERUSER_ID
 
 
-class Stage(orm.Model):
+class Stage(models.Model):
     """Stage of a ticket.
     Correspond to kanban columns
     """
     _name = 'anytracker.stage'
     _order = 'sequence'
-    _columns = {
-        'name': fields.char('name', size=64, required=True, translate=True),
-        'description': fields.text('Description', translate=True),
-        'state': fields.char('state', size=64, required=True),
-        'method_id': fields.many2one('anytracker.method', 'Project method',
-                                     required=True, ondelete='cascade'),
-        'sequence': fields.integer('Sequence', help='Sequence'),
-        'force_rating': fields.boolean(
-            'Force rating', help='Forbid entering this stage without a rating on the ticket'),
-        'forbidden_complexity_ids': fields.many2many(
-            'anytracker.complexity',
-            'anytracker_stage_forbidden_complexities',
-            'stage_id', 'complexity_id',
-            'Forbidden complexities', help='complexities forbidden for this stage'),
-        'progress': fields.float(
-            'Progress', help='Progress value of the ticket reaching this stage'),
-        'groups_allowed': fields.many2many('res.groups',
-                                           'anytracker_stage_res_groups_rel',
-                                           'res_group_id',
-                                           'anytracker_stage_id',
-                                           'Authorized groups to move ticket to this stage'),
-    }
+
+    name = fields.Char('name', size=64, required=True, translate=True)
+    description = fields.Text('Description', translate=True)
+    state = fields.Char('state', size=64, required=True)
+    method_id = fields.Many2one('anytracker.method', 'Project method',
+                                required=True, ondelete='cascade')
+    sequence = fields.Integer('Sequence', help='Sequence')
+    force_rating = fields.Boolean(
+        'Force rating', help='Forbid entering this stage without a rating on the ticket')
+    forbidden_complexity_ids = fields.Many2many(
+        'anytracker.complexity',
+        'anytracker_stage_forbidden_complexities',
+        'stage_id', 'complexity_id',
+        'Forbidden complexities', help='complexities forbidden for this stage')
+    progress = fields.Float(
+        'Progress', help='Progress value of the ticket reaching this stage')
+    groups_allowed = fields.Many2many('res.groups',
+                                      'anytracker_stage_res_groups_rel',
+                                      'res_group_id',
+                                      'anytracker_stage_id',
+                                      'Authorized groups to move ticket to this stage')
 
     _defaults = {'groups_allowed': False}
 
 
-class Ticket(orm.Model):
+class Ticket(models.Model):
     """ Add stage and progress functionality to tickets
     Progress is based on stages. Each stage has a progress,
     and the progress is copied on the ticket
@@ -68,10 +66,10 @@ class Ticket(orm.Model):
         # we only fold empty and forbidden columns (TODO: replace progress with state)
         folds = {
             s['id']:
-            bool(s['groups_allowed']
-                 and not groups.intersection(set(s['groups_allowed']))
-                 and not tickets.search(cr, uid, [('stage_id', '=', s['id']),
-                                                  ('id', 'child_of', active_id.id)]))
+                bool(s['groups_allowed']
+                     and not groups.intersection(set(s['groups_allowed']))
+                     and not tickets.search(cr, uid, [('stage_id', '=', s['id']),
+                                                      ('id', 'child_of', active_id.id)]))
             for s in stages_data}
         return [(s['id'], s['name']) for s in stages_data], folds
 
@@ -82,7 +80,7 @@ class Ticket(orm.Model):
         for ticket in self.browse(cr, uid, ids, context):
             method = ticket.project_id.method_id
             if not method:
-                raise orm.except_orm(_('Warning !'), _('No method defined in the project.'))
+                raise except_orm(_('Warning !'), _('No method defined in the project.'))
             stage_id = ticket.stage_id.id
             stage_ids = stages.search(cr, uid, [('method_id', '=', method.id)])
             if stage_id == stage_ids[0]:  # first stage
@@ -90,7 +88,7 @@ class Ticket(orm.Model):
             elif stage_id not in stage_ids:  # no stage
                 continue
             else:
-                next_stage = stage_ids[stage_ids.index(stage_id)-1]
+                next_stage = stage_ids[stage_ids.index(stage_id) - 1]
             self.write(cr, uid, [ticket.id], {'stage_id': next_stage}, context)
 
     def stage_next(self, cr, uid, ids, context=None):
@@ -100,42 +98,43 @@ class Ticket(orm.Model):
         for ticket in self.browse(cr, uid, ids, context):
             method = ticket.project_id.method_id
             if not method:
-                raise orm.except_orm(_('Warning !'), _('No method defined in the project.'))
+                raise except_orm(_('Warning !'), _('No method defined in the project.'))
             stage_id = ticket.stage_id.id
             stage_ids = stages.search(cr, uid, [('method_id', '=', method.id)])
             if stage_id == stage_ids[-1]:  # last stage
-                raise orm.except_orm(_('Warning !'), _("You're already in the last stage"))
+                raise except_orm(_('Warning !'), _("You're already in the last stage"))
             elif stage_id not in stage_ids:  # no stage
                 next_stage = stage_ids[0]
             else:
-                next_stage = stage_ids[stage_ids.index(stage_id)+1]
+                next_stage = stage_ids[stage_ids.index(stage_id) + 1]
             self.write(cr, uid, [ticket.id], {'stage_id': next_stage}, context)
 
-    def create(self, cr, uid, values, context=None):
+    @api.model
+    def create(self, values):
         """select the default stage if parent is selected lately
         """
         if not values.get('stage_id'):
             if values.get('parent_id'):
-                method = self.browse(cr, uid, values.get('parent_id')).method_id
+                method = self.parent_id.method_id
             else:
-                methods = self.pool.get('anytracker.method')
-                method = methods.browse(cr, uid, values['method_id'])
+                methods = self.env['anytracker.method']
+                method = methods.browse(values['method_id'])
             values['stage_id'] = method.get_first_stage()[method.id]
-        stages = self.pool.get('anytracker.stage')
-        values['progress'] = (stages.browse(cr, uid, values['stage_id']).progress
+        stages = self.env['anytracker.stage']
+        values['progress'] = (stages.browse(values['stage_id']).progress
                               if values['stage_id'] else 0.0)
-        ticket_id = super(Ticket, self).create(cr, uid, values, context)
+        ticket_id = super(Ticket, self).create(values)
         # loop up to the root
-        ticket = self.browse(cr, uid, ticket_id, context)
-        parent = ticket.parent_id
+        # ticket = self.browse(ticket_id)
+        parent = self.parent_id
         while parent:
-            child_ids = self.search(cr, uid, [('id', 'child_of', parent.id),
-                                              ('type.has_children', '=', False),
-                                              ('id', '!=', parent.id)])
-            if ticket.id not in child_ids:
-                child_ids.append(ticket.id)
+            child_ids = self.search([('id', 'child_of', parent.id),
+                                     ('type.has_children', '=', False),
+                                     ('id', '!=', parent.id)])
+            if self.id not in child_ids:
+                child_ids.append(self.id)
             children = len(child_ids)
-            new_progress = (parent.progress*(children-1)+(ticket.stage_id.progress or 0))/children
+            new_progress = (parent.progress * (children - 1) + (self.stage_id.progress or 0)) / children
             parent.write({'progress': new_progress})
             parent = parent.parent_id
         return ticket_id
@@ -154,7 +153,7 @@ class Ticket(orm.Model):
                                                   ('id', '!=', parent.id)])
                 children = len(child_ids)
                 if children:
-                    new_progress = (parent.progress*(children+1)-ticket_progress)/children
+                    new_progress = (parent.progress * (children + 1) - ticket_progress) / children
                     parent.write({'progress': new_progress})
                 parent = parent.parent_id
             return ticket_id
@@ -180,8 +179,8 @@ class Ticket(orm.Model):
                                            load='_classic_write')['groups_allowed'])
             user_groups = set(self.user_base_groups(cr, uid))
             if stage_groups and not stage_groups.intersection(user_groups):
-                raise orm.except_orm("Operation forbidden",
-                                     "You can't move this ticket to this stage")
+                raise except_orm("Operation forbidden",
+                                 "You can't move this ticket to this stage")
 
         # save the previous progress
         if 'stage_id' in values:
@@ -201,14 +200,14 @@ class Ticket(orm.Model):
             # check stage enforcements
             stage = self.pool.get('anytracker.stage').browse(cr, uid, stage_id, context)
             if not ticket.rating_ids and stage.force_rating and not ticket.type.has_children:
-                raise orm.except_orm(_('Warning !'),
-                                     _('You must rate the ticket "%s" to enter the "%s" stage'
-                                       % (ticket.name, stage.name)))
+                raise except_orm(_('Warning !'),
+                                 _('You must rate the ticket "%s" to enter the "%s" stage'
+                                   % (ticket.name, stage.name)))
             if ticket.my_rating.id in [i.id for i in (stage.forbidden_complexity_ids or [])]:
-                    raise orm.except_orm(
-                        _('Warning !'),
-                        _('The ticket "%s" is rated "%s" so it cannot enter this stage'
-                          % (ticket.name, ticket.my_rating.name)))
+                raise except_orm(
+                    _('Warning !'),
+                    _('The ticket "%s" is rated "%s" so it cannot enter this stage'
+                      % (ticket.name, ticket.my_rating.name)))
             # set all children as well
             super(Ticket, self).write(cr, uid, ticket.id, {'stage_id': stage_id}, context)
             self.write(cr, uid, [i.id for i in ticket.child_ids], {'stage_id': stage_id}, context)
@@ -226,7 +225,7 @@ class Ticket(orm.Model):
                 if ticket.id not in child_ids:
                     child_ids.append(ticket.id)
                 progression = (ticket.stage_id.progress
-                               - (old_progress[ticket.id]or 0.0)) / len(child_ids)
+                               - (old_progress[ticket.id] or 0.0)) / len(child_ids)
                 new_progress = parent.progress + progression
                 parent.write({'progress': new_progress})
                 parent = parent.parent_id
@@ -276,25 +275,22 @@ class Ticket(orm.Model):
     def _constant_one(self, cr, uid, ids, *a, **kw):
         return {i: 1 for i in ids}
 
-    _columns = {
-        'stage_id': fields.many2one(
-            'anytracker.stage',
-            'Stage',
-            select=True,
-            domain="[('method_id','=',method_id)]"),
-        'progress': fields.float(
-            'Progress',
-            select=True,
-            group_operator="avg"),
-        # this field can be used to count tickets if the only available operation
-        # on them is to sum field values (shameless hack for charts)
-        'constant_one': fields.function(
-            _constant_one, type='integer',
-            obj='anytracker.ticket',
-            string='Constant one',
-            store=True,
-            invisible=True),
-    }
+    stage_id = fields.Many2one(
+        'anytracker.stage',
+        'Stage',
+        select=True,
+        domain="[('method_id','=',method_id)]")
+    progress = fields.Float(
+        'Progress',
+        select=True,
+        group_operator="avg")
+    # this field can be used to count tickets if the only available operation
+    # on them is to sum field values (shameless hack for charts)
+    constant_one = fields.Integer(compute='_constant_one',
+                                  obj='anytracker.ticket',
+                                  string='Constant one',
+                                  store=True,
+                                  invisible=True)
 
     _group_by_full = {
         'stage_id': _read_group_stage_ids,
@@ -306,18 +302,19 @@ class Ticket(orm.Model):
     }
 
 
-class Method(orm.Model):
+class Method(models.Model):
     _inherit = 'anytracker.method'
-    _columns = {
-        'stage_ids': fields.one2many(
-            'anytracker.stage',
-            'method_id',
-            'Stages',
-            help="The stages associated to this method"),
-    }
+
+    stage_ids = fields.One2many(
+        'anytracker.stage',
+        'method_id',
+        'Stages',
+        help="The stages associated to this method")
 
     def get_first_stage(self, cr, uid, ids, context=None):
         """ Return the id of the first stage of a method"""
+        if ids == []:
+            ids = self.search(cr, uid, [])
         res = {}
         for method in self.browse(cr, uid, ids, context):
             stages = [(s.progress, s.id) for s in method.stage_ids]

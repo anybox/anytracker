@@ -1,35 +1,33 @@
 # coding: utf-8
-from openerp.osv import orm
-from openerp.osv import fields
-from tools.translate import _
+from openerp import models, fields, api, _
+from openerp.exceptions import except_orm, Warning, RedirectWarning
 
 
-class Stage(orm.Model):
+class Stage(models.Model):
     """Add notifying config to the stage
     """
     _inherit = 'anytracker.stage'
-    _columns = {
-        'notify': fields.boolean(
-            u'Notify project members',
-            help=u"Notify project members when a ticket enter this stage"),
-        'notify_template_id': fields.many2one(
-            'email.template',
-            u'Email template'),
-        'notify_urgent': fields.boolean(
-            u'Urgent notification',
-            help=u"Immediate notification (don't wait for email scheduler"),
-        'notify_sms': fields.boolean(
-            u'SMS notification',
-            help=u"NOT YET IMPLEMENTED (Enable SMS notification)"),
-        'notify_multiple': fields.boolean(
-            u'Notify multiple times',
-            help=(u"By default notifications are sent only once. "
-                  u"By checking this box you can force "
-                  u"Anytracker to send the notification each time the ticket reaches this stage")),
-    }
+
+    notify = fields.Boolean(
+        u'Notify project members',
+        help=u"Notify project members when a ticket enter this stage")
+    notify_template_id = fields.Many2one(
+        'email.template',
+        u'Email template')
+    notify_urgent = fields.Boolean(
+        u'Urgent notification',
+        help=u"Immediate notification (don't wait for email scheduler")
+    notify_sms = fields.Boolean(
+        u'SMS notification',
+        help=u"NOT YET IMPLEMENTED (Enable SMS notification)")
+    notify_multiple = fields.Boolean(
+        u'Notify multiple times',
+        help=(u"By default notifications are sent only once. "
+              u"By checking this box you can force "
+              u"Anytracker to send the notification each time the ticket reaches this stage"))
 
 
-class Ticket(orm.Model):
+class Ticket(models.Model):
     """ Add notification feature
     """
 
@@ -47,7 +45,7 @@ class Ticket(orm.Model):
             return False
         # no mail template
         if not ticket.stage_id.notify_template_id:
-            raise orm.except_orm(
+            raise except_orm(
                 _(u'Warning !'),
                 _(u'No email template selected in the "%s" stage of the "%s" method'
                   % (ticket.stage_id.name, ticket.method_id.name)))
@@ -91,11 +89,9 @@ class Ticket(orm.Model):
                 context=context)
         return res
 
-    _columns = {
-        'notified_stage_ids': fields.many2many(
-            'anytracker.stage',
-            'anytracker_ticket_notif_rel',
-            'ticket_id',
-            'stage_id',
-            'Notified stages'),
-    }
+    notified_stage_ids = fields.Many2many(
+        'anytracker.stage',
+        'anytracker_ticket_notif_rel',
+        'ticket_id',
+        'stage_id',
+        'Notified stages')
