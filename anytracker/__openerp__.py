@@ -23,7 +23,7 @@
 {
     'name': 'Anytracker',
     'version': '0.3',
-    'author': 'Anybox - Khchine5',
+    'author': 'Anybox',
     'website': 'http://anybox.fr',
     'category': 'Project Management',
     'sequence': 150,
