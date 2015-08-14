@@ -46,7 +46,7 @@
     <field name="priority" eval="16"/>
     <field name="arch" type="xml">
         <xpath expr="//field[@name='id']" position="after">
-            <field name="stage_id" widget="selection"/>
+            <field name="stage_id"/>
         </xpath>
         <xpath expr="//search/group[1]" postion="inside">
                 <filter name="tickets_by_stage"
