@@ -4,6 +4,8 @@ Anytracker
 Anytracker is an open-source agile/lean project management tool available as an
 Odoo module, developped and used by `Anybox <http://anybox.fr>`_.
 
+The project is hosted on Bitbucket as a `Mercurial`_ repository: https://bitbucket.org/anybox/anytracker/
+
 It provides:
 
 - Hierarchical ticket management
