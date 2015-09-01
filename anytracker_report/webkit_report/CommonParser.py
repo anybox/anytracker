@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from openerp.report import report_sxw
-from tools.translate import _
+from openerp.tools.translate import _
 from datetime import datetime
 from openerp.tools import misc
-from osv import osv
+from openerp.osv import osv
 import pytz
 
 
