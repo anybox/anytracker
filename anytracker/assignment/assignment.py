@@ -73,11 +73,11 @@ class Ticket(orm.Model):
     def _set_assignment(self, cr, uid, ticket_id, name, value, fnct_inv_arg, context):
         """assign a ticket to a user for the current stage
         """
-        ticket = self.browse(cr, uid, ticket_id, context)
-        stage_id = (ticket.stage_id.id
-                    or self._default_stage(cr, uid, context={'active_id': ticket_id}))
+        # ticket = self.browse(cr, uid, ticket_id, context)
+        # stage_id = (ticket.stage_id.id
+        #             or self._default_stage(cr, uid, context={'active_id': ticket_id}))
         self.pool.get('anytracker.assignment').create(cr, uid, {
-            'stage_id': stage_id,
+            # 'stage_id': stage_id,
             'ticket_id': ticket_id,
             'user_id': value,
             })
