@@ -48,7 +48,7 @@ class Ticket(orm.Model):
         return {'value': {'has_deadline': False}}
 
     _columns = {
-        'has_deadline': fields.related('priority_id', 'deadline', type="boolean"),
+        'has_deadline': fields.related('priority_id', 'deadline', type="boolean", readonly=True),
         'deadline': fields.date('Deadline'),
         'priority_id': fields.many2one('anytracker.priority', 'Priority', required=False),
         'priority': fields.function(
