@@ -171,9 +171,10 @@ class Ticket(orm.Model):
         tickets = self.read(cr, uid, ids, ['parent_id'], load='_classic_write')
         for ticket in tickets:
             # check if the old parent had other children
-            children = self.read(cr, uid, ticket['parent_id'], ['child_ids'])
-            if len(children['child_ids']) == 1:
-                self.write(cr, uid, ticket['parent_id'], {'rating': 0.0, 'risk': 0.5})
+            if ticket['parent_id']:
+                parent_children = self.read(cr, uid, ticket['parent_id'], ['child_ids'])
+                if len(parent_children['child_ids']) == 1:
+                    self.write(cr, uid, ticket['parent_id'], {'rating': 0.0, 'risk': 0.5})
         super(Ticket, self).unlink(cr, uid, ids, context)
         # recompute the remaining
         remaining = self.search(cr, uid, [('id', 'in', [v['parent_id'] for v in tickets])])
