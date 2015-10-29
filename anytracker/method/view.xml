@@ -9,7 +9,7 @@
     <field name="priority" eval="16"/>
     <field name="arch" type="xml">
         <xpath expr="//field[@name='id']" position="after">
-            <field name="method_id" widget="selection"/>
+            <field name="method_id"/>
         </xpath>
     </field>
 </record>
