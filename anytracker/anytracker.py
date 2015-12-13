@@ -105,6 +105,27 @@ class Ticket(orm.Model):
             res[i] = u' / '.join([b['name'] for b in breadcrumb])
         return res
 
+    def _formatted_rparent_breadcrumb(self, cr, uid, ids, field_name, args, context=None):
+        """A formatted breadcrumbs of parent, relative to context:active_id
+
+        context:active_id is notably available in the Kanban view spawned by Hierarchy action.
+
+        :returns: False for each id if ``active_id`` could not be read from context.
+        """
+        logger.debug("_formatted_rparent_breadcrumb for %d tickets", len(ids))
+        if context is None:
+            active_id = None
+        else:
+            active_id = context.get('active_id')
+        if active_id is None:
+            return {i: False for i in ids}
+
+        return {i:  u' / '.join(b['name'] for b in bc[:-1])
+                for i, bc in self.get_breadcrumb(cr, uid, ids,
+                                                 under_node_id=active_id,
+                                                 context=context).iteritems()
+                }
+
     def _get_root(self, cr, uid, ticket_id, context=None):
         """Return the real root ticket (not the project_id of the ticket)
         """
@@ -376,6 +397,11 @@ class Ticket(orm.Model):
         'breadcrumb': fields.function(
             _formatted_breadcrumb,
             fnct_search=_search_breadcrumb,
+            type='char',
+            obj='anytracker.ticket',
+            string='Location'),
+        'relative_parent_breadcrumbs': fields.function(
+            _formatted_rparent_breadcrumb,
             type='char',
             obj='anytracker.ticket',
             string='Location'),
