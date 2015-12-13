@@ -1,6 +1,7 @@
 # coding: utf-8
 import re
 import logging
+from collections import defaultdict
 from lxml import html
 from openerp.osv import fields
 from openerp.osv import orm
@@ -81,20 +82,22 @@ class Ticket(orm.Model):
         :params under_node_id: if supplied, only the part of the breadcrumbs strictly under
                                this node will be returned.
         """
-        res = {}
-        for ticket_id in [int(i) for i in ids]:
-            cr.execute("WITH RECURSIVE parent(id, parent_id, name) "
-                       "AS (SELECT 0, %s, text('') "
-                       "    UNION "
-                       "    SELECT t.id, t.parent_id, t.name "
-                       "    FROM parent p, anytracker_ticket t "
-                       "    WHERE t.id = p.parent_id AND t.id != %s) "
-                       "SELECT id, parent_id, name FROM parent WHERE id != 0",
-                       (ticket_id, under_node_id))
+        cr.execute("WITH RECURSIVE parent(id, parent_id, requested_id, name) "
+                   "AS (SELECT 0, id, id, text('') "
+                   "    FROM anytracker_ticket t WHERE t.id in %s "
+                   "    UNION "
+                   "    SELECT t.id, t.parent_id, p.requested_id, t.name "
+                   "    FROM parent p, anytracker_ticket t "
+                   "    WHERE t.id = p.parent_id AND t.id != %s) "
+                   "SELECT requested_id, id, parent_id, name FROM parent WHERE id != 0",
+                   (tuple(ids), under_node_id))
 
-            res[ticket_id] = [dict(zip(('id', 'parent_id', 'name'), line))
-                              for line in reversed(cr.fetchall())]
-        return res
+        raw = defaultdict(list)
+        for f in cr.fetchall():
+            raw[f[0]].append(f[1:])
+        return {tid: [dict(zip(('id', 'parent_id', 'name'), line))
+                      for line in reversed(t_lines)]
+                for tid, t_lines in raw.iteritems()}
 
     def _formatted_breadcrumb(self, cr, uid, ids, field_name, args, context=None):
         """ format the breadcrumb
@@ -131,11 +134,11 @@ class Ticket(orm.Model):
         """
         if not ticket_id:
             return False
-        ticket = self.read(cr, uid, ticket_id, ['parent_id'], context,
+        ticket = self.read(cr, uid, ticket_id, ['parent_id'], context=context,
                            load='_classic_write')
         parent_id = ticket.get('parent_id', False)
         if parent_id:
-            breadcrumb = self.get_breadcrumb(cr, uid, [parent_id], context)[parent_id]
+            breadcrumb = self.get_breadcrumb(cr, uid, [parent_id], context=context)[parent_id]
             if not breadcrumb:
                 breadcrumb = [self.read(cr, uid, parent_id, ['name', 'parent_id'])]
             project_id = breadcrumb[0]['id']
