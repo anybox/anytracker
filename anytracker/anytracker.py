@@ -75,21 +75,23 @@ class Ticket(orm.Model):
             res[ticket['id']] = d[:limit] + u'(…)' if len(d) > limit else d
         return res
 
-    def get_breadcrumb(self, cr, uid, ids, context=None):
-        """ get all the parents up to the root ticket
+    def get_breadcrumb(self, cr, uid, ids, under_node_id=0, context=None):
+        """Get all the parents up to the root ticket.
+
+        :params under_node_id: if supplied, only the part of the breadcrumbs strictly under
+                               this node will be returned.
         """
         res = {}
         for ticket_id in [int(i) for i in ids]:
-            cr.execute("WITH RECURSIVE parent(id, parent_id, name) as "
-                       "(select 0, %s, text('') UNION SELECT t.id, t.parent_id, t.name "
-                       " FROM parent p, anytracker_ticket t WHERE t.id=p.parent_id) "
-                       "SELECT id, parent_id, name FROM parent WHERE id!=0", (ticket_id,))
+            cr.execute("WITH RECURSIVE parent(id, parent_id, name) "
+                       "AS (SELECT 0, %s, text('') "
+                       "    UNION "
+                       "    SELECT t.id, t.parent_id, t.name "
+                       "    FROM parent p, anytracker_ticket t "
+                       "    WHERE t.id = p.parent_id AND t.id != %s) "
+                       "SELECT id, parent_id, name FROM parent WHERE id != 0",
+                       (ticket_id, under_node_id))
 
-            # The same using parent_store. Actually slower for our typical trees:
-            # cr.execute("select b.id, b.parent_id, b.name "
-            #           "from anytracker_ticket a join anytracker_ticket b "
-            #           "on a.parent_left >= b.parent_left and a.parent_right<=b.parent_right "
-            #           "and a.id=%s order by b.parent_left", (ticket_id,))
             res[ticket_id] = [dict(zip(('id', 'parent_id', 'name'), line))
                               for line in reversed(cr.fetchall())]
         return res
@@ -99,7 +101,7 @@ class Ticket(orm.Model):
         TODO : format in the view (in js)
         """
         res = {}
-        for i, breadcrumb in self.get_breadcrumb(cr, uid, ids, context).items():
+        for i, breadcrumb in self.get_breadcrumb(cr, uid, ids, context=context).items():
             res[i] = u' / '.join([b['name'] for b in breadcrumb])
         return res
 
