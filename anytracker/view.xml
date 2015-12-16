@@ -155,7 +155,7 @@
                 <field name="name"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <div>
+                        <div> 
                             <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
                             <div class="oe_module_vignette">
                                 <div class="oe_module_desc">
@@ -202,12 +202,12 @@
       <field name="name"/>
       <field name="icon"/>
       <field name="sequence"/>
+      <field name="relative_parent_breadcrumbs"/>
       <field name="description"/>
       <field name="shortened_description"/>
       <field name="has_attachment"/>
       <templates>
         <t t-name="ticket_details">
-            <div><i><b><field name="breadcrumb"/></b><span> </span>(#<b><field name="number"/></b>)</i></div>
             <div><t t-raw="record.description.raw_value"/></div>
         </t>
         <t t-name="kanban-box">
@@ -222,7 +222,13 @@
                      class="at_kanban_ticket_number">
                     <field name="number"/>
                   </a>
-                  <span class="at_kanban_ticket_title" tooltip="ticket_details">
+                    <t t-if="record.relative_parent_breadcrumbs.raw_value">
+                      <span class="at_kanban_breadcrumbs">
+                        <field name="relative_parent_breadcrumbs"/>
+                      </span>
+                    </t>
+                  <span class="at_kanban_ticket_title"
+                        tooltip="ticket_details">
                     <field name="name"/>
                   </span>
                 </h4>

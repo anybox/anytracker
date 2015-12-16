@@ -1,6 +1,7 @@
 # coding: utf-8
 import re
 import logging
+from collections import defaultdict
 from lxml import html
 from openerp.osv import fields
 from openerp.osv import orm
@@ -75,44 +76,69 @@ class Ticket(orm.Model):
             res[ticket['id']] = d[:limit] + u'(…)' if len(d) > limit else d
         return res
 
-    def get_breadcrumb(self, cr, uid, ids, context=None):
-        """ get all the parents up to the root ticket
-        """
-        res = {}
-        for ticket_id in [int(i) for i in ids]:
-            cr.execute("WITH RECURSIVE parent(id, parent_id, name) as "
-                       "(select 0, %s, text('') UNION SELECT t.id, t.parent_id, t.name "
-                       " FROM parent p, anytracker_ticket t WHERE t.id=p.parent_id) "
-                       "SELECT id, parent_id, name FROM parent WHERE id!=0", (ticket_id,))
+    def get_breadcrumb(self, cr, uid, ids, under_node_id=0, context=None):
+        """Get all the parents up to the root ticket.
 
-            # The same using parent_store. Actually slower for our typical trees:
-            # cr.execute("select b.id, b.parent_id, b.name "
-            #           "from anytracker_ticket a join anytracker_ticket b "
-            #           "on a.parent_left >= b.parent_left and a.parent_right<=b.parent_right "
-            #           "and a.id=%s order by b.parent_left", (ticket_id,))
-            res[ticket_id] = [dict(zip(('id', 'parent_id', 'name'), line))
-                              for line in reversed(cr.fetchall())]
-        return res
+        :params under_node_id: if supplied, only the part of the breadcrumbs strictly under
+                               this node will be returned.
+        """
+        cr.execute("WITH RECURSIVE parent(id, parent_id, requested_id, name) "
+                   "AS (SELECT 0, id, id, text('') "
+                   "    FROM anytracker_ticket t WHERE t.id in %s "
+                   "    UNION "
+                   "    SELECT t.id, t.parent_id, p.requested_id, t.name "
+                   "    FROM parent p, anytracker_ticket t "
+                   "    WHERE t.id = p.parent_id AND t.id != %s) "
+                   "SELECT requested_id, id, parent_id, name FROM parent WHERE id != 0",
+                   (tuple(ids), under_node_id))
+
+        raw = defaultdict(list)
+        for f in cr.fetchall():
+            raw[f[0]].append(f[1:])
+        return {tid: [dict(zip(('id', 'parent_id', 'name'), line))
+                      for line in reversed(t_lines)]
+                for tid, t_lines in raw.iteritems()}
 
     def _formatted_breadcrumb(self, cr, uid, ids, field_name, args, context=None):
         """ format the breadcrumb
         TODO : format in the view (in js)
         """
         res = {}
-        for i, breadcrumb in self.get_breadcrumb(cr, uid, ids, context).items():
+        for i, breadcrumb in self.get_breadcrumb(cr, uid, ids, context=context).items():
             res[i] = u' / '.join([b['name'] for b in breadcrumb])
         return res
+
+    def _formatted_rparent_breadcrumb(self, cr, uid, ids, field_name, args, context=None):
+        """A formatted breadcrumbs of parent, relative to context:active_id
+
+        context:active_id is notably available in the Kanban view spawned by Hierarchy action.
+
+        :returns: False for each id if ``active_id`` could not be read from context.
+        """
+        logger.debug("_formatted_rparent_breadcrumb for %d tickets", len(ids))
+        if context is None:
+            active_id = None
+        else:
+            active_id = context.get('active_id')
+        if active_id is None:
+            return {i: False for i in ids}
+
+        return {i:  u' / '.join(b['name'] for b in bc[:-1])
+                for i, bc in self.get_breadcrumb(cr, uid, ids,
+                                                 under_node_id=active_id,
+                                                 context=context).iteritems()
+                }
 
     def _get_root(self, cr, uid, ticket_id, context=None):
         """Return the real root ticket (not the project_id of the ticket)
         """
         if not ticket_id:
             return False
-        ticket = self.read(cr, uid, ticket_id, ['parent_id'], context,
+        ticket = self.read(cr, uid, ticket_id, ['parent_id'], context=context,
                            load='_classic_write')
         parent_id = ticket.get('parent_id', False)
         if parent_id:
-            breadcrumb = self.get_breadcrumb(cr, uid, [parent_id], context)[parent_id]
+            breadcrumb = self.get_breadcrumb(cr, uid, [parent_id], context=context)[parent_id]
             if not breadcrumb:
                 breadcrumb = [self.read(cr, uid, parent_id, ['name', 'parent_id'])]
             project_id = breadcrumb[0]['id']
@@ -374,6 +400,11 @@ class Ticket(orm.Model):
         'breadcrumb': fields.function(
             _formatted_breadcrumb,
             fnct_search=_search_breadcrumb,
+            type='char',
+            obj='anytracker.ticket',
+            string='Location'),
+        'relative_parent_breadcrumbs': fields.function(
+            _formatted_rparent_breadcrumb,
             type='char',
             obj='anytracker.ticket',
             string='Location'),

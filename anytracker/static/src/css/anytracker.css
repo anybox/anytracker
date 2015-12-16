@@ -15,3 +15,17 @@
     padding-right: 0.07em;
     color: #354235;
 }
+
+.at_kanban_breadcrumbs {
+    padding_right: 0.7em;
+}
+
+.at_kanban_breadcrumbs + .at_kanban_ticket_title{
+    display: block;
+}
+
+.at_kanban_breadcrumbs:after {
+    font-size: 120%;
+    line-height: 100%;
+    content: "⟶";
+}

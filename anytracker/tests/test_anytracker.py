@@ -192,6 +192,58 @@ class TestAnytracker(SharedSetupTransactionCase):
                           self.partners.write, cr, self.customer_id,
                           [customer.company_id.partner_id.id], {'email': 'test@test.fr'})
 
+    def test_breadcrumbs(self):
+        """Test extraction of ticket paths."""
+        cr, cid, tickets = self.cr, self.customer_id, self.tickets
+        # create a project, a node and two tickets in the node
+        project_id = tickets.create(
+            cr, self.manager_id,
+            dict(name='Proj',
+                 method_id=self.ref('anytracker.method_test'),
+                 participant_ids=[(6, 0, [cid, self.member_id, self.manager_id])]))
+
+        node1_id = tickets.create(cr, cid, dict(name="Node1", parent_id=project_id))
+        t11_id = tickets.create(cr, cid, dict(name="Ticket11", parent_id=node1_id))
+        t12_id = tickets.create(cr, cid, dict(name="Ticket12", parent_id=node1_id))
+
+        self.assertEqual(tickets.get_breadcrumb(cr, cid, [t11_id, t12_id]),
+                         {t11_id: [dict(id=project_id, parent_id=None, name="Proj"),
+                                   dict(id=node1_id, parent_id=project_id, name="Node1"),
+                                   dict(id=t11_id, parent_id=node1_id, name="Ticket11"),
+                                   ],
+                          t12_id: [dict(id=project_id, parent_id=None, name="Proj"),
+                                   dict(id=node1_id, parent_id=project_id, name="Node1"),
+                                   dict(id=t12_id, parent_id=node1_id, name="Ticket12"),
+                                   ],
+                          })
+
+        # Now relative breadcrumbs
+        self.assertEqual(tickets.get_breadcrumb(cr, cid, [t11_id, t12_id],
+                                                under_node_id=project_id),
+                         {t11_id: [dict(id=node1_id, parent_id=project_id, name="Node1"),
+                                   dict(id=t11_id, parent_id=node1_id, name="Ticket11"),
+                                   ],
+                          t12_id: [dict(id=node1_id, parent_id=project_id, name="Node1"),
+                                   dict(id=t12_id, parent_id=node1_id, name="Ticket12"),
+                                   ],
+                          })
+        self.assertEqual(tickets.get_breadcrumb(cr, cid, [t11_id, t12_id],
+                                                under_node_id=node1_id),
+                         {t11_id: [dict(id=t11_id, parent_id=node1_id, name="Ticket11")],
+                          t12_id: [dict(id=t12_id, parent_id=node1_id, name="Ticket12")],
+                          })
+
+        # Adding a node to test with branches of different lengths
+        n13_id = tickets.create(cr, cid, dict(name="Node13", parent_id=node1_id))
+        t131_id = tickets.create(cr, cid, dict(name="Ticket131", parent_id=n13_id))
+        self.assertEqual(tickets.get_breadcrumb(cr, cid, [t11_id, t131_id],
+                                                under_node_id=node1_id),
+                         {t11_id: [dict(id=t11_id, parent_id=node1_id, name="Ticket11")],
+                          t131_id: [dict(id=n13_id, parent_id=node1_id, name="Node13"),
+                                    dict(id=t131_id, parent_id=n13_id, name="Ticket131"),
+                                    ],
+                          })
+
     def test_move_tickets(self):
         """ Check that we can move a ticket to another node or project
         and that everything is still consistent
