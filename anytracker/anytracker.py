@@ -425,16 +425,21 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     def _anytracker_search_users(self, operator, value):
+        """ used in an ir_rule, so that customers only see users involved in their tickets
+        """
+        import pdb; pdb.set_trace()
+        #  TODO
         # assert (len(domain) == 1 and domain[0][0] == 'anytracker_user_ids')
         # user_id = domain[0][2]
         # cr.execute('select distinct u.partner_id from res_users u, '
         #            'anytracker_ticket_assignment_rel m, anytracker_ticket_assignment_rel n '
         #            'where m.user_id=%s and u.id=n.user_id and n.ticket_id=m.ticket_id;',
         #            (user_id,))
+        # return [('id', domain[0][1], tuple(a[0] for a in cr.fetchall()))]
         return [('name', operator, value)]
 
     anytracker_user_ids = fields.One2many('res.users',
-                                          'user_id',
+                                          'partner_id',
                                           search='_anytracker_search_users',
                                           string='Allowed users')
 
