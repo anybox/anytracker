@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from openerp.report import report_sxw
-from tools.translate import _
+from openerp import _
 from datetime import datetime
 from openerp.tools import misc
-from osv import osv
+from openerp.exceptions import except_orm
 import pytz
 
 
@@ -20,7 +20,7 @@ class CommonParser(report_sxw.rml_parse):
             return pytz.timezone(server_tz).localize(datetime.now()).astimezone(
                 pytz.timezone(timezone)).strftime(format)
         except:
-            raise osv.except_osv(_('Timezone error or date format invalid!'),
-                                 _('Please set your timezone before to generate this report.') +
-                                 _(' One of those values is not valid: timezone= %r - format= %r')
-                                 % (timezone, format))
+            raise except_orm(_('Timezone error or date format invalid!'),
+                             _('Please set your timezone before to generate this report.') +
+                             _(' One of those values is not valid: timezone= %r - format= %r')
+                             % (timezone, format))

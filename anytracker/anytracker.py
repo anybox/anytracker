@@ -361,7 +361,7 @@ class Ticket(models.Model):
         compute='_formatted_breadcrumb')
     duration = fields.Selection(
         [(0, '< half a day'), (None, 'Will be computed'), (1, 'Half a day')],
-        string='duration'),
+        string='duration')
     child_ids = fields.One2many(
         'anytracker.ticket',
         'parent_id',
