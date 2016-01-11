@@ -44,7 +44,7 @@ class TestMethod(SharedSetupTransactionCase):
         ).id
 
     def test_method_by_project(self):
-        """ Check created analytic lines from a ticket
+        """ Check specific methods for projects
         """
         # we create a project with a team of 3 people
         project = self.TICKET.sudo(self.manager_id).create(
