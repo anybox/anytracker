@@ -10,46 +10,62 @@ class Priority(models.Model):
     """
     _name = 'anytracker.priority'
     _description = 'Priority of Ticket by method'
-
-    name = fields.Char('Priority name', required=True, size=64, translate=True)
-    description = fields.Text('Priority description', translate=True)
-    seq = fields.Integer('Priority', help='a low value is higher priority')
-    active = fields.Boolean('Active', help='if check, this object is always available')
-    method_id = fields.Many2one('anytracker.method', string='Method',
-                                required=True, ondelete='cascade')
-    deadline = fields.Boolean('Force to choose a deadline on the ticket?')
-    date = fields.Date('Milestone')
-
-    _defaults = {
-        'active': True,
-    }
-
     _order = 'method_id, seq'
+
+    name = fields.Char(
+        'Priority name',
+        required=True,
+        size=64,
+        translate=True)
+    description = fields.Text(
+        'Priority description',
+        translate=True)
+    seq = fields.Integer(
+        'Priority',
+        help='a low value is higher priority')
+    active = fields.Boolean(
+        'Active',
+        default=True,
+        help='if check, this object is always available')
+    method_id = fields.Many2one(
+        'anytracker.method',
+        string='Method',
+        required=True,
+        ondelete='cascade')
+    deadline = fields.Boolean(
+        'Force to choose a deadline on the ticket?')
+    date = fields.Date(
+        'Milestone')
 
 
 class Ticket(models.Model):
     _inherit = 'anytracker.ticket'
 
-    def _get_priority(self, cr, uid, ids, fname, args, context=None):
-        res = {}
-        for ticket in self.browse(cr, uid, ids, context=context):
-            res[ticket.id] = ticket.priority_id.seq if ticket.priority_id else 0
-        return res
+    def _get_priority(self):
+        for t in self:
+            t.priority = t.priority_id.seq if t.priority_id else 0
 
-    def onchange_priority(self, cr, uid, ids, prio_id=None, context=None):
-        if not prio_id:
-            return {}
-        priority_obj = self.pool.get('anytracker.priority')
-        priority = priority_obj.read(cr, uid, prio_id, ['deadline'])
-        if priority['deadline']:
-            return {'value': {'has_deadline': True}}
-        return {'value': {'has_deadline': False}}
+    @api.onchange('priority_id')
+    def onchange_priority(self):
+        if self.priority_id.deadline:
+            self.has_deadline = True
+        else:
+            self.has_deadline = False
 
-    has_deadline = fields.Boolean('priority_id.deadline', type="boolean")
-    deadline = fields.Date('Deadline')
-    priority_id = fields.Many2one('anytracker.priority', 'Priority', required=False)
+    has_deadline = fields.Boolean(
+        'priority_id.deadline',
+        type="boolean")
+    deadline = fields.Date(
+        'Deadline')
+    priority_id = fields.Many2one(
+        'anytracker.priority',
+        'Priority',
+        required=False)
     priority = fields.Integer(
-        compute='_get_priority', method=True, string='Priority', store=True)
+        compute='_get_priority',
+        method=True,
+        string='Priority',
+        store=True)
 
 
 class Method(models.Model):
@@ -59,4 +75,5 @@ class Method(models.Model):
         'anytracker.priority',
         'method_id',
         string='Priorities',
+        copy=True,
         help="The priorities associated to this method")

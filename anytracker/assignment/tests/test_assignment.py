@@ -9,61 +9,50 @@ class TestStage(SharedSetupTransactionCase):
     _data_files = (join('..', '..', 'tests', 'data.xml'),)
 
     @classmethod
-    def initTestData(self):
-        super(TestStage, self).initTestData()
-        cr, uid = self.cr, self.uid
-        self.tickets = self.registry('anytracker.ticket')
-        self.users = self.registry('res.users')
-        self.member_id = self.users.create(cr, uid,
-                                           {'name': 'test member',
-                                            'login': 'test',
-                                            'groups_id': [(6, 0,
-                                                          [self.ref('anytracker.group_member')])]})
-
-    def createProject(self, participant_ids):
-        cr, uid = self.cr, self.uid
-        test_method = self.ref('anytracker.method_test')
-        if isinstance(participant_ids, int) or isinstance(participant_ids, long):
-            participant_ids = [participant_ids]
-        project_id = self.tickets.create(cr, uid,
-                                         {'name': 'Test',
-                                          'participant_ids': [(6, 0, participant_ids)],
-                                          'method_id': test_method})
-        return project_id
-
-    def createLeafTicket(self, name, parent_id):
-        cr, uid = self.cr, self.uid
-        ticket_id = self.tickets.create(cr, uid,
-                                        {'name': name,
-                                         'parent_id': parent_id, })
-        return ticket_id
+    def initTestData(cls):
+        super(TestStage, cls).initTestData()
+        cls.tickets = cls.env['anytracker.ticket']
+        cls.users = cls.env['res.users']
+        cls.ref = classmethod(lambda cls, xid: cls.env.ref(xid).id)
+        cls.member_id = cls.users.create(
+            {'name': 'test member',
+             'login': 'test',
+             'groups_id': [(6, 0,
+                           [cls.ref('anytracker.group_member')])]}).id
 
     def test_delete_assigned_ticket(self):
         """ Check we can delete an assigned ticket (#4171)
         """
-        cr, uid = self.cr, self.uid
         # create a project and a ticket
-        ticket_id = self.createLeafTicket('test assign', self.createProject([self.member_id]))
+        project = self.tickets.create({
+            'name': 'Test',
+            'participant_ids': [(6, 0, [self.member_id])],
+            'method_id': self.ref('anytracker.method_test')})
+        ticket = self.tickets.create({
+            'name': 'test assign',
+            'parent_id': project.id})
         # assign the ticket to the user
-        self.tickets.write(cr, uid, ticket_id, {'assigned_user_id': self.member_id})
+        ticket.write({'assigned_user_id': self.member_id})
         # check the user is assigned
-        assigned_user_id = self.tickets.browse(cr, uid, ticket_id).assigned_user_id.id
-        self.assertEquals(assigned_user_id, self.member_id)
+        self.assertEquals(ticket.assigned_user_id.id, self.member_id)
         # Check we can delete the ticket
-        self.tickets.unlink(cr, uid, [ticket_id])
+        ticket.unlink()
 
     def test_unassign(self):
         """ Check we can unassign a ticket
         """
-        cr, uid = self.cr, self.uid
         # create a project and a ticket
-        ticket_id = self.createLeafTicket('test assign', self.createProject([self.member_id]))
+        project = self.tickets.create({
+            'name': 'Test',
+            'participant_ids': [(6, 0, [self.member_id])],
+            'method_id': self.ref('anytracker.method_test')})
+        ticket = self.tickets.create({
+            'name': 'test assign',
+            'parent_id': project.id})
         # assign the ticket to the user
-        self.tickets.write(cr, uid, ticket_id, {'assigned_user_id': self.member_id})
+        ticket.write({'assigned_user_id': self.member_id})
         # check the user is assigned
-        assigned_user_id = self.tickets.browse(cr, uid, ticket_id).assigned_user_id.id
-        self.assertEquals(assigned_user_id, self.member_id)
+        self.assertEquals(ticket.assigned_user_id.id, self.member_id)
         # check we can unassign
-        self.tickets.write(cr, uid, ticket_id, {'assigned_user_id': False})
-        assigned_user_id = self.tickets.browse(cr, uid, ticket_id).assigned_user_id.id
-        self.assertEquals(assigned_user_id, False)
+        ticket.write({'assigned_user_id': False})
+        self.assertEquals(ticket.assigned_user_id.id, False)

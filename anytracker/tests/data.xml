@@ -90,7 +90,6 @@
     </record>
     <!-- test complexities -->
     <record model="anytracker.complexity" id="complexity5">
-      <field name="color" eval="0"/>
       <field name="description">cmplx5</field>
       <field name="method_id" ref="anytracker.method_test2"/>
       <field name="name">cmplx5</field>
@@ -99,7 +98,6 @@
       <field name="color" eval="1"/>
     </record>
     <record model="anytracker.complexity" id="complexity6">
-      <field name="color" eval="0"/>
       <field name="description">cmplx6</field>
       <field name="method_id" ref="anytracker.method_test2"/>
       <field name="name">cmplx6</field>
@@ -108,7 +106,6 @@
       <field name="color" eval="2"/>
     </record>
     <record model="anytracker.complexity" id="complexity7">
-      <field name="color" eval="0"/>
       <field name="description">cmplx7</field>
       <field name="method_id" ref="anytracker.method_test2"/>
       <field name="name">cmplx7</field>
@@ -117,7 +114,6 @@
       <field name="color" eval="3"/>
     </record>
     <record model="anytracker.complexity" id="complexity8">
-      <field name="color" eval="0"/>
       <field name="description">cmplx8</field>
       <field name="method_id" ref="anytracker.method_test2"/>
       <field name="name">cmplx8</field>

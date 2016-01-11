@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 from anybox.testing.openerp import SharedSetupTransactionCase
 from openerp import modules
-from openerp.osv import orm
+from openerp.exceptions import except_orm
 import base64
 
 
 def get_mindmap_binary():
-    fp = open(modules.get_module_resource('anytracker', 'mindmap/tests/mock_mindmap.mm'), 'rb')
-    return base64.b64encode(fp.read())
+    with open(modules.get_module_resource(
+              'anytracker', 'mindmap/tests/mock_mindmap.mm'), 'rb') as fp:
+        return base64.b64encode(fp.read())
 
 
 class TestImportExportMindmap(SharedSetupTransactionCase):
@@ -18,58 +19,56 @@ class TestImportExportMindmap(SharedSetupTransactionCase):
     @classmethod
     def initTestData(cls):
         super(TestImportExportMindmap, cls).initTestData()
-        cls.tickets = cls.registry('anytracker.ticket')
-        cls.wiz_import = cls.registry('import.mindmap.wizard')
-        cls.wiz_export = cls.registry('export.mindmap.wizard')
-        cls.green = cls.ref('anytracker.complexity_implementation_green')
-        cls.red = cls.ref('anytracker.complexity_implementation_red')
-        cls.orange = cls.ref('anytracker.complexity_implementation_orange')
-        cls.maintenance = cls.ref('anytracker.method_maintenance')
-        cls.main_ticket = cls.ref('anytracker.anytracker_ticket-droit_dacces_application_mlf')
+        cls.TICKET = cls.env['anytracker.ticket']
+        cls.WIZIMP = cls.env['import.mindmap.wizard']
+        cls.WIZEXP = cls.env['export.mindmap.wizard']
+        cls.green = cls.env.ref('anytracker.complexity_implementation_green')
+        cls.red = cls.env.ref('anytracker.complexity_implementation_red')
+        cls.orange = cls.env.ref('anytracker.complexity_implementation_orange')
+        cls.maintenance = cls.env.ref('anytracker.method_maintenance')
+        cls.main_ticket = cls.env.ref(
+            'anytracker.anytracker_ticket-droit_dacces_application_mlf')
 
     def create_wizard_import(self, **kw):
-        values = dict(ticket_id=False, import_method='insert',
-                      mindmap_content=get_mindmap_binary(), green_complexity=self.green,
-                      orange_complexity=self.orange, red_complexity=self.red,
-                      method_id=self.maintenance)
-        if kw:
-            values.update(kw)
-        return self.wiz_import.create(self.cr, self.uid, values)
+        values = {
+            'ticket_id': False,
+            'import_method': 'insert',
+            'mindmap_content': get_mindmap_binary(),
+            'green_complexity': self.green.id,
+            'orange_complexity': self.orange.id,
+            'red_complexity': self.red.id,
+            'method_id': self.maintenance.id}
+        values.update(kw)
+        return self.WIZIMP.create(values)
 
     def create_wizard_export(self, **kw):
-        values = dict(ticket_id=self.main_ticket, mindmap_file='mock.mm',
-                      green_complexity=self.green, orange_complexity=self.orange,
-                      red_complexity=self.red)
-        if kw:
-            values.update(kw)
-        return self.wiz_export.create(self.cr, self.uid, values)
+        values = {
+            'ticket_id': self.main_ticket.id,
+            'mindmap_file': 'mock.mm',
+            'green_complexity': self.green.id,
+            'orange_complexity': self.orange.id,
+            'red_complexity': self.red.id}
+        values.update(kw)
+        return self.WIZEXP.create(values)
 
     def test_wizard_export_mindmap(self):
-        cr, uid = self.cr, self.uid
-        wiz_id = self.create_wizard_export()
-        self.wiz_export.execute_export(cr, uid, wiz_id)
+        self.create_wizard_export().execute_export()
 
     def test_wizard_import_mindmap(self):
-        cr, uid = self.cr, self.uid
-        wiz_id = self.create_wizard_import()
-        self.wiz_import.execute_import(cr, uid, wiz_id)
+        self.create_wizard_import().execute_import()
 
     def test_import_mindmap(self):
-        cr, uid = self.cr, self.uid
-        wiz_id = self.create_wizard_import()
-        self.wiz_import.execute_import(cr, uid, wiz_id)
-        ticket_id = self.tickets.search(
-            cr, uid, [('name', '=', u"Droit d'accés application mlf (test)"),
-                      ('parent_id', '=', False)])[0]
-        ticket_ids = self.tickets.search(cr, uid, [('parent_id', 'child_of', ticket_id)])
-        self.assertEqual(len(ticket_ids), 6)
+        self.create_wizard_import().execute_import()
+        ticket = self.TICKET.search([
+            ('name', '=', u"Droit d'accés application mlf (test)"),
+            ('parent_id', '=', False)])[0]
+        tickets = self.TICKET.search([('parent_id', 'child_of', ticket.id)])
+        self.assertEqual(len(tickets), 6)
 
     def test_bug_with_update_import_method_and_no_ticket_id(self):
-        cr, uid = self.cr, self.uid
-        wiz_id = self.create_wizard_import(import_method='update')
         try:
-            self.wiz_import.execute_import(cr, uid, wiz_id)
+            self.create_wizard_import(import_method='update').execute_import()
             self.fail()
-        except orm.except_orm:
+        except except_orm:
             return
         self.fail()

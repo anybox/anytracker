@@ -7,132 +7,79 @@ class TestNotify(SharedSetupTransactionCase):
     _module_ns = 'anytracker'
     _data_files = (join('..', '..', 'tests', 'data.xml'),)
 
-    def setUp(self):
-        """Prepare to test notifications.
-
-        Based on the fact that if mail is not actually sent, it will pile up
-        in a queue. We just count the number of mails awaiting delivery
-        (and disable any sending for test robustness and to avoid inadvertantly
-        spamming innocent bystanders).
-        """
-        super(TestNotify, self).setUp()
-        # GR I'm not using *args, **kwargs because OpenERP does not respect
-        # the rules that make it work consistently
-        self.sent_mails = []
-
-        def dont_send_but_log(cr, uid, ids, auto_commit=False,
-                              recipient_ids=None, context=None):
-            self.sent_mails.extend(ids)
-
-        self.orig_send_method = self.mails.send
-        self.mails.send = dont_send_but_log
-
-    def tearDown(self):
-        del self.sent_mails
-        self.mails.send = self.orig_send_method
-        super(TestNotify, self).tearDown()
-
     @classmethod
     def initTestData(cls):
         super(TestNotify, cls).initTestData()
-        cr, uid = cls.cr, cls.uid
-        cls.tickets = cls.registry('anytracker.ticket')
-        cls.notifys = cls.registry('anytracker.complexity')
-        cls.user = cls.registry('res.users')
-        cls.ratings = cls.registry('anytracker.rating')
-        cls.stages = cls.registry('anytracker.stage')
-        cls.mails = cls.registry('mail.mail')
-        cls.member_id = cls.user.create(
-            cr, uid,
+        cls.ref = classmethod(lambda cls, xid: cls.env.ref(xid).id)
+        cls.TICKET = cls.env['anytracker.ticket']
+        cls.USER = cls.env['res.users']
+        cls.STAGE = cls.env['anytracker.stage']
+        cls.MAIL = cls.env['mail.mail']
+
+        cls.member_id = cls.USER.create(
             {'name': 'Member',
              'login': 'member',
-             'groups_id': [(6, 0,
-                           [cls.ref('anytracker.group_member'),
-                            cls.ref('base.group_user')])]})
-        cls.customer_id = cls.user.create(
-            cr, uid,
+             'groups_id':
+                [(6, 0, [cls.ref('anytracker.group_member'),
+                         cls.ref('base.group_user')])]}
+        ).id
+        cls.customer_id = cls.USER.create(
             {'name': 'Customer',
              'login': 'customer',
-             'groups_id': [(6, 0,
-                           [cls.ref('anytracker.group_customer')])]})
-
-    def createProject(self, participant_ids):
-        cr, uid = self.cr, self.uid
-        method = self.ref('anytracker.method_test')
-        if isinstance(participant_ids, int) or isinstance(participant_ids, long):
-            participant_ids = [participant_ids]
-        project_id = self.tickets.create(cr, uid,
-                                         {'name': 'Test',
-                                          'participant_ids': [(6, 0, participant_ids)],
-                                          'method_id': method})
-        return project_id
+             'groups_id': [(6, 0, [cls.ref('anytracker.group_customer')])]}
+        ).id
 
     def test_notify(self):
         """ Check notifications.
         """
-        cr, uid = self.cr, self.uid
         # create a project with a team of 3 people
-        project_id = self.createProject([self.customer_id, self.member_id])
+        project = self.TICKET.create({
+            'name': 'Test',
+            'participant_ids': [(6, 0, [self.customer_id, self.member_id])],
+            'method_id': self.ref('anytracker.method_test')})
         # we set the todo column as notifying
-        self.stages.write(cr, uid,
-                          [self.ref('anytracker.stage_test_todo')],
-                          {'notify': True,
-                           'notify_multiple': True,
-                           'notify_template_id': self.ref('anytracker.email_template_test')})
+        self.STAGE.browse(self.ref('anytracker.stage_test_todo')).write({
+            'notify': True,
+            'notify_multiple': True,
+            'notify_template_id': self.ref('anytracker.email_template_test')})
         # we check the number of mails in the queue
-        # GR we could use self.sent_mails, now
-        nb_mails = self.mails.search(cr, uid, [], count=True)
+        nb_mails = self.MAIL.search([], count=True)
         # create a ticket
-        ticket_id = self.tickets.create(cr, uid,
-                                        {'name': 'notifying ticket',
-                                         'parent_id': project_id, },
-                                        context={'active_id': project_id})
+        ticket = self.TICKET.with_context({'active_id': project.id}).create({
+            'name': 'notifying ticket',
+            'parent_id': project.id, })
         # we should now have one more message
-        # GR we could use self.sent_mails, now
-        self.assertEquals(self.mails.search(cr, uid, [], count=True) - nb_mails, 1)
+        self.assertEquals(self.MAIL.search([], count=True) - nb_mails, 1)
 
         # now we move the ticket to another column which should notify as well
-        self.tickets.write(cr, uid, [ticket_id],
-                           {'stage_id': self.ref('anytracker.stage_test_todo')})
-        self.assertEquals(self.mails.search(cr, uid, [], count=True) - nb_mails, 2)
+        ticket.write({'stage_id': self.ref('anytracker.stage_test_todo')})
+        self.assertEquals(self.MAIL.search([], count=True) - nb_mails, 2)
 
         # If we move the column to the initial column it won't notify again
-        self.tickets.write(cr, uid, [ticket_id],
-                           {'stage_id': self.ref('anytracker.stage_test_draft')})
-        # GR we could use self.sent_mails, now
-        self.assertEquals(self.mails.search(cr, uid, [], count=True) - nb_mails, 2)
+        ticket.write({'stage_id': self.ref('anytracker.stage_test_draft')})
+        self.assertEquals(self.MAIL.search([], count=True) - nb_mails, 2)
 
-        # if we move the ticket to the ever-notifying column, it will notify again
-        self.tickets.write(cr, uid, [ticket_id],
-                           {'stage_id': self.ref('anytracker.stage_test_todo')})
-        self.assertEquals(self.mails.search(cr, uid, [], count=True) - nb_mails, 3)
+        # if we move ticket to the ever-notifying column, it will notify again
+        ticket.write({'stage_id': self.ref('anytracker.stage_test_todo')})
+        self.assertEquals(self.MAIL.search([], count=True) - nb_mails, 3)
 
         # if we move the ticket to a non-notifying column, it won't notify
-        self.tickets.write(cr, uid, [ticket_id],
-                           {'stage_id': self.ref('anytracker.stage_test_done')})
-        # GR we could use self.sent_mails, now
-        self.assertEquals(self.mails.search(cr, uid, [], count=True) - nb_mails, 3)
+        ticket.write({'stage_id': self.ref('anytracker.stage_test_done')})
+        self.assertEquals(self.MAIL.search([], count=True) - nb_mails, 3)
 
-        # we set the 1st column as urgent and we set a sender email so that email is sent
-        self.stages.write(cr, uid,
-                          self.ref('anytracker.stage_test_draft'),
-                          {'notify_urgent': True})
-        self.user.write(cr, uid, self.member_id, {'email': 'test@example.com'})
+        # we set the 1st column as urgent & set an email so that email is sent
+        self.STAGE.browse(self.ref('anytracker.stage_test_draft')).write({
+            'notify_urgent': True})
+        self.USER.browse(self.member_id).write({'email': 'test@example.com'})
         # then we create another ticket
-        urgent_ticket_id = self.tickets.create(cr, uid,
-                                               {'name': 'urgent notifying ticket',
-                                                'parent_id': project_id, },
-                                               context={'active_id': project_id})
-        # GR we could use self.sent_mails, now
-        self.assertEquals(self.mails.search(cr, uid, [], count=True) - nb_mails, 4)
-        self.assertEquals(
-            len(self.tickets.browse(cr, uid, urgent_ticket_id).notified_stage_ids), 1)
+        urgent = self.TICKET.with_context({'active_id': project.id}).create({
+            'name': 'urgent notifying ticket',
+            'parent_id': project.id, })
+        self.assertEquals(self.MAIL.search([], count=True) - nb_mails, 4)
+        self.assertEquals(len(urgent.notified_stage_ids), 1)
 
-        # we move forth and back the ticket, we shouldn't have another notification
-        self.tickets.write(cr, uid, [ticket_id],
-                           {'stage_id': self.ref('anytracker.stage_test_done')})
-        self.tickets.write(cr, uid, [ticket_id],
-                           {'stage_id': self.ref('anytracker.stage_test_draft')})
-        self.assertEquals(self.mails.search(cr, uid, [], count=True) - nb_mails, 4)
-        self.assertEquals(
-            len(self.tickets.browse(cr, uid, urgent_ticket_id).notified_stage_ids), 1)
+        # we move forth and back the ticket, we shouldn't have more notif
+        ticket.write({'stage_id': self.ref('anytracker.stage_test_done')})
+        ticket.write({'stage_id': self.ref('anytracker.stage_test_draft')})
+        self.assertEquals(self.MAIL.search([], count=True) - nb_mails, 4)
+        self.assertEquals(len(urgent.notified_stage_ids), 1)
