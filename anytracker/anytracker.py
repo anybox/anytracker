@@ -63,6 +63,7 @@ class Ticket(models.Model):
             ticket.shortened_description = (d[:limit] + u'(…)'
                                             if len(d) > limit else d)
 
+    @api.multi
     def get_breadcrumb(self):
         """ get all the parents up to the root ticket
         """
