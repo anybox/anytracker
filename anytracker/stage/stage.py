@@ -1,5 +1,5 @@
 # coding: utf-8
-from openerp import models, fields, _
+from openerp import models, fields, api, _
 from openerp.exceptions import except_orm
 from openerp import SUPERUSER_ID
 
@@ -61,6 +61,7 @@ class Ticket(models.Model):
 
     _inherit = 'anytracker.ticket'
 
+    @api.multi
     def _read_group_stage_ids(self, domain, read_group_order=None,
                               access_rights_uid=None, context=None):
         """return all stage names for the group_by directive, so that the kanban
