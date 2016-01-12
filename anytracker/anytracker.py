@@ -250,6 +250,7 @@ class Ticket(models.Model):
             return {}
         self.method_id = self.parent_id.method_id.id
 
+    @api.model
     def fields_view_get(self, view_id=None, view_type='form',
                         toolbar=False, submenu=False):
         """ Allow managers to set an empy parent_id (a project)
