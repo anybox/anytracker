@@ -115,6 +115,7 @@ class Ticket(models.Model):
              "being displayed here for logging purposes only.",
         readonly=True)
 
+    @api.multi
     def assign_to_me(self):
         """Assign the ticket_id and sub-tickets to current user.
         """

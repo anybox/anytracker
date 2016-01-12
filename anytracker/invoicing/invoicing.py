@@ -1,5 +1,5 @@
 # coding: utf-8
-from openerp import models, fields, _
+from openerp import models, fields, api, _
 from openerp.exceptions import except_orm
 import logging
 from datetime import datetime, timedelta
@@ -14,6 +14,7 @@ class Ticket(models.Model):
 
     _inherit = 'anytracker.ticket'
 
+    @api.multi
     def create_analytic_line(self):
         """ Create an analytic line for each ticket
         """
@@ -126,6 +127,7 @@ class Bouquet(models.Model):
     """
     _inherit = "anytracker.bouquet"
 
+    @api.multi
     def create_analytic_lines(self):
         """ Create analytic lines of for all tickets of the bouquet
         """

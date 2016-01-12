@@ -90,6 +90,7 @@ class Ticket(models.Model):
             for s in stages}
         return [(s.id, s.name) for s in stages], folds
 
+    @api.multi
     def stage_previous(self):
         """move the ticket to the previous stage
         """
@@ -106,9 +107,10 @@ class Ticket(models.Model):
             elif stage not in stages:  # no stage
                 continue
             else:
-                next_stage = stages[stages.index(stage) - 1]
-            ticket.write({'stage_id': next_stage})
+                next_stage = stages[list(stages).index(stage) - 1]
+            ticket.write({'stage_id': next_stage.id})
 
+    @api.multi
     def stage_next(self):
         """move the ticket to the next stage
         """
@@ -126,8 +128,8 @@ class Ticket(models.Model):
             elif stage not in stages:  # no stage
                 next_stage = stages[0]
             else:
-                next_stage = stages[stages.index(stage) + 1]
-            ticket.write({'stage_id': next_stage})
+                next_stage = stages[list(stages).index(stage) + 1]
+            ticket.write({'stage_id': next_stage.id})
 
     def create(self, values):
         """select the default stage if parent is selected lately
