@@ -62,19 +62,20 @@ Or, if you installed nose in your buildout
 
   $ ./bin/nosetests -d dbname -- addons-anytracker/anytracker/
 
-Credits, contributing
-=====================
+Authors
+=======
 
 Contributors:
 
 - Christophe Combelles
-- Florent Jouatte
-- Georges Racinet
-- Jean-Sébastien Suzanne
+- Pierre Verkest
+- Hamza Khchine
 - Simon André
+- Florent Jouatte
+- Jean-Sébastien Suzanne
+- Georges Racinet
 - Colin Goutte
 - Clovis Nzouendjou Nana
-- Pierre Verkest
 
 Other contributions (with tests) are welcome from anyone through Bitbucket pull requests.
 
