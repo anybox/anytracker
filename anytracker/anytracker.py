@@ -118,9 +118,11 @@ class Ticket(models.Model):
             values['project_id'] = root_id
             for ticket in self:
                 if ticket.id == values['parent_id']:
-                    raise except_orm(_('Error'),
-                                     _(u"Think of yourself. Can you be your own parent?"))
-                # if reparenting to False, propagate the current ticket as project for children
+                    raise except_orm(
+                        _('Error'),
+                        _(u"Think of yourself. Can you be your own parent?"))
+                # if reparenting to False,
+                # propagate the current ticket as project for children
                 project_id = root_id or ticket.id
                 # set the project_id of me and all the children
                 children = self.search([('id', 'child_of', ticket.id)])
@@ -135,19 +137,22 @@ class Ticket(models.Model):
 
         # replace ticket numbers with permalinks
         if 'description' in values:
-            values['description'] = add_permalinks(self.env.cr.dbname, values['description'])
+            values['description'] = add_permalinks(
+                self.env.cr.dbname, values['description'])
 
         # don't allow to set a node as ticket if it has children
         if values.get('type'):
+            type_id = values['type']
             for ticket in self:
-                if ticket.child_ids and not TYPE.browse(values.get('type')).has_children:
+                if ticket.child_ids and not TYPE.browse(type_id).has_children:
                     del values['type']
 
         res = super(Ticket, self).write(values)
         if 'parent_id' in values:
             for ticket in self:
                 method_id = (ticket.parent_id.method_id.id
-                             if values['parent_id'] is not False else ticket.method_id.id)
+                             if values['parent_id'] is not False
+                             else ticket.method_id.id)
                 super(Ticket, children).write({'method_id': method_id})
         # correct the parent to be a node
         if 'parent_id' in values:
@@ -155,7 +160,8 @@ class Ticket(models.Model):
             if types:
                 self.browse(values['parent_id']).write({'type': types[0].id})
 
-        # Needed for the ir_rule, because it involves an sql request for _search_allowed_partners
+        # Needed for the ir_rule,
+        # because it involves an sql request for _search_allowed_partners
         if values.get('participant_ids'):
             self.env.invalidate_all()
 
@@ -176,7 +182,8 @@ class Ticket(models.Model):
         values.update({
             'number': SEQUENCE.sudo().next_by_code('anytracker.ticket')})
         if values.get('parent_id'):
-            values['project_id'] = self.browse(values['parent_id']).project_id.id
+            values['project_id'] = self.browse(
+                values['parent_id']).project_id.id
 
         # project creation: auto-assign the 'node' type
         if not values.get('parent_id') and types:
@@ -184,7 +191,8 @@ class Ticket(models.Model):
 
         # replace ticket numbers with permalinks
         if 'description' in values:
-            values['description'] = add_permalinks(self.env.cr.dbname, values['description'])
+            values['description'] = add_permalinks(
+                self.env.cr.dbname, values['description'])
 
         ticket = super(Ticket, self).create(values)
 
@@ -197,7 +205,8 @@ class Ticket(models.Model):
 
         # subscribe project members
         if ticket.project_id.participant_ids:
-            ticket.message_subscribe_users(ticket.project_id.participant_ids.ids)
+            ticket.message_subscribe_users(
+                ticket.project_id.participant_ids.ids)
 
         return ticket
 
@@ -232,15 +241,14 @@ class Ticket(models.Model):
 
     def _nb_children(self):
         for ticket in self:
-            nb_children = ticket.search([('id', 'child_of', ticket.id)], count=True)
+            nb_children = ticket.search([
+                ('id', 'child_of', ticket.id)], count=True)
             ticket.nb_children = nb_children
 
     def _search_breadcrumb(self, operator, value):
         """Use the 'name' in the search function for the parent,
-        instead of 'breadcrum' which is implicitly used because of the _rec_name
+        instead of 'breadcrum' which is implicitly used because of _rec_name
         """
-        # assert (len(domain) == 1 and len(domain[0]) == 3)  # handle just this case
-        # (f, o, v) = domain[0]
         return [('name', operator, value)]
 
     @api.multi
@@ -268,19 +276,19 @@ class Ticket(models.Model):
             try:
                 node = doc.xpath("//field[@name='parent_id']")[0]
             except:
-                logger.error("It seems you're using a broken version of OpenERP")
+                logger.error("It seems you're using a broken version of Odoo")
                 return fvg
             orm.transfer_modifiers_to_node({'required': not allow}, node)
             fvg['arch'] = etree.tostring(doc)
         return fvg
 
+    @api.model
     def name_search(self, name, args=None, operator='ilike', limit=100):
         """
             Overwrite the name_search function to search a ticket
             with their name or thier number
         """
-        if not args:
-            args = []
+        args = args or []
         if name and operator in ('=', 'ilike', '=ilike', 'like', '=like'):
             tickets = []
             if name.isdigit():
@@ -292,8 +300,7 @@ class Ticket(models.Model):
                                       limit=limit)
             if len(tickets) > 0:
                 return tickets.name_get()
-        return super(Ticket, self).name_search(name, args, operator=operator,
-                                               limit=limit)
+        return super(Ticket, self.browse()).name_search()
 
     def trash(self):
         """ Trash the ticket
@@ -315,9 +322,10 @@ class Ticket(models.Model):
             starts = STAGE.search([('method_id', '=', ticket.method_id.id),
                                    ('progress', '=', 0)])
             if len(starts) != 1:
-                raise except_orm(_('Configuration error !'),
-                                 _('One and only one stage should have a 0% progress'))
-            # write stage in a separate line to let it recompute progress and risk
+                raise except_orm(
+                    _('Configuration error !'),
+                    _('One and only one stage should have a 0% progress'))
+            # write stage in a separate line to recompute progress & risk
             ticket.write({'stage_id': starts[0].id})
         self.recompute_parents()
 
@@ -421,7 +429,8 @@ class Ticket(models.Model):
         'state': 'running',
     }
 
-    _sql_constraints = [('number_uniq', 'unique(number)', 'Number must be unique!')]
+    _sql_constraints = [
+        ('number_uniq', 'unique(number)', 'Number must be unique!')]
 
 
 class ResPartner(models.Model):
@@ -430,25 +439,30 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     def _search_allowed_partners(self, operator, user_id):
-        """ used in an ir_rule, so that customers only see users involved in their tickets.
+        """ used in an ir_rule,
+        so that customers only see users involved in their tickets.
         'involved' means that they are assigned the same tickets.
         (not sure about the relevancy of the "assignment" criterion)
         """
         cr = self.env.cr
         # list of partners corresponding to users
         # which are assigned to the same tickets than the provided user
-        cr.execute('select distinct u.partner_id from res_users u, '
-                   'anytracker_ticket_assignment_rel m, anytracker_ticket_assignment_rel n '
-                   'where m.user_id=%s and u.id=n.user_id and n.ticket_id=m.ticket_id;',
-                   (user_id,))
+        cr.execute(
+            'SELECT distinct u.partner_id FROM res_users u, '
+            'anytracker_ticket_assignment_rel m, '
+            'anytracker_ticket_assignment_rel n '
+            'WHERE m.user_id=%s AND u.id=n.user_id '
+            'AND n.ticket_id=m.ticket_id;',
+            (user_id,))
         return [('id', operator, tuple(a[0] for a in cr.fetchall()))]
 
     # gives the list of users authorized to access this partner
-    anytracker_user_ids = fields.One2many('res.users',
-                                          'partner_id',
-                                          compute=lambda *a, **kw: None,  # mandatory for search
-                                          search='_search_allowed_partners',
-                                          string='Users allowed to access this partner')
+    anytracker_user_ids = fields.One2many(
+        'res.users',
+        'partner_id',
+        compute=lambda *a, **kw: None,  # mandatory for search
+        search='_search_allowed_partners',
+        string='Users allowed to access this partner')
 
 
 class MailMessage(models.Model):

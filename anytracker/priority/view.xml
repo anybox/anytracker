@@ -59,7 +59,7 @@
     <field name="priority" eval="16"/>
     <field name="arch" type="xml">
         <xpath expr="//group[@id='extend']" position="inside">
-            <field name="priority_id" domain="[('method_id', '=', method_id)]" on_change="onchange_priority(priority_id)" attrs="{'invisible': [('parent_id','=',False)]}"/>
+            <field name="priority_id" domain="[('method_id', '=', method_id)]" attrs="{'invisible': [('parent_id','=',False)]}"/>
             <field name="has_deadline" invisible="1"/>
             <field name="deadline" attrs="{'invisible': ['|',('has_deadline','=',False),('parent_id','=',False)], 'required': [('has_deadline','=',True)]}"/>
         </xpath>

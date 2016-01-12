@@ -120,7 +120,6 @@
                         <group>
                             <group>
                                 <field name="parent_id" colspan="4" nolabel="1" placeholder="Project (or parent ticket)"
-                                       on_change="onchange_parent(parent_id)"
                                        domain="['|',('type.has_children', '=', True), ('parent_id','=',False)]"
                                        context="{'tree_view_ref': 'anytracker.just_names'}">
                                 </field>
