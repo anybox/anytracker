@@ -120,4 +120,5 @@ class Ticket(models.Model):
         """Assign the ticket_id and sub-tickets to current user.
         """
         for ticket in self:
-            ticket.write({'assigned_user_id': self.env.user.id})
+            if ticket.assigned_user_id != self.env.user:
+                ticket.write({'assigned_user_id': self.env.user.id})
