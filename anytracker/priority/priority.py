@@ -45,6 +45,7 @@ class Ticket(models.Model):
         for t in self:
             t.priority = t.priority_id.seq if t.priority_id else 0
 
+    @api.one
     @api.onchange('priority_id')
     def onchange_priority(self):
         if self.priority_id.deadline:

@@ -41,6 +41,8 @@ class Ticket(models.Model):
         """ Return the latest assignment of the ticket for the current stage
         If the assignment stage is not the ticket stage, take an older one.
         """
+        if not self.ids:
+            return
         # Join in sql with a single request
         sql = ('SELECT '
                't.id t_id, t.stage_id t_stage_id, a.id a_id, '

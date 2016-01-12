@@ -242,6 +242,7 @@ class Ticket(models.Model):
         # (f, o, v) = domain[0]
         return [('name', operator, value)]
 
+    @api.multi
     @api.onchange('parent_id')
     def onchange_parent(self):
         """ Fill the method when changing parent
