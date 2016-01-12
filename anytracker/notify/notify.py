@@ -67,6 +67,7 @@ class Ticket(models.Model):
             force_send=ticket.stage_id.notify_urgent)
         return ticket
 
+    @api.multi
     def write(self, values):
         """ Notify on write
         """
