@@ -1,3 +1,6 @@
+.oe_breadcrumb_title, span.oe_fade, .oe_breadcrumb_item {
+    display: inline !important;
+}
 .openerp .oe_form_sheet_width {
     max-width: 960px;
 }
