@@ -85,6 +85,7 @@ class Ticket(models.Model):
             result.append(analine.id)
         return result
 
+    @api.model
     def cron(self):
         super(Ticket, self).cron()
         # tickets to invoice
