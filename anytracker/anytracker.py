@@ -381,8 +381,7 @@ class Ticket(models.Model):
         compute=_get_permalink,
         string='Permalink', )
     description = fields.Text(
-        string='Description',
-        required=False)
+        string='Description')
     create_date = fields.Datetime(
         string='Creation Time')
     write_date = fields.Datetime(
@@ -411,8 +410,7 @@ class Ticket(models.Model):
     child_ids = fields.One2many(
         'anytracker.ticket',
         'parent_id',
-        string='Sub-tickets',
-        required=False)
+        string='Sub-tickets')
     nb_children = fields.Integer(
         string='# of children',
         help='Number of children',
@@ -422,12 +420,10 @@ class Ticket(models.Model):
         'anytracker_ticket_assignment_rel',
         'ticket_id',
         'user_id',
-        string='Participant',
-        required=False)
+        string='Participant')
     parent_id = fields.Many2one(
         'anytracker.ticket',
         string='Parent',
-        required=False,
         default=_default_parent_id,
         ondelete='cascade')
     project_id = fields.Many2one(

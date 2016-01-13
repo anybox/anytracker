@@ -33,7 +33,7 @@ class Ticket(models.Model):
             res[ticket.id] = ticket.importance_id.seq if ticket.importance_id else 0
         return res
 
-    importance_id = fields.Many2one('anytracker.importance', 'Importance', required=False)
+    importance_id = fields.Many2one('anytracker.importance', 'Importance')
     importance = fields.Integer(
         compute='_get_importance', method=True, string='Importance',
         type='integer', store=True)
