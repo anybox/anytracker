@@ -235,7 +235,7 @@ class Ticket(models.Model):
     def _subnode_ids(self):
         """Return the list of children that are themselves nodes."""
         for ticket in self:
-            ticket.subnode_ids = ticket.search([
+            ticket.subnode_ids = self.search([
                 ('parent_id', '=', ticket.id),
                 ('type.has_children', '=', True)])
 
@@ -346,7 +346,7 @@ class Ticket(models.Model):
         default=_default_type,
         required=True)
     permalink = fields.Char(
-        compute='_get_permalink',
+        compute=_get_permalink,
         string='Permalink', )
     description = fields.Text(
         string='Description',
@@ -359,14 +359,14 @@ class Ticket(models.Model):
         'anytracker.ticket',
         readonly=True,
         string='Sub-nodes',
-        compute='_subnode_ids')
+        compute=_subnode_ids)
     shortened_description = fields.Text(
         string='Description',
-        compute='_shortened_description')
+        compute=_shortened_description)
     breadcrumb = fields.Char(
         search='_search_breadcrumb',
         string='Location',
-        compute='_formatted_breadcrumb')
+        compute=_formatted_breadcrumb)
     duration = fields.Selection(
         [(0, '< half a day'),
          (None, 'Will be computed'),
@@ -381,7 +381,7 @@ class Ticket(models.Model):
     nb_children = fields.Integer(
         string='# of children',
         help='Number of children',
-        compute='_nb_children')
+        compute=_nb_children)
     participant_ids = fields.Many2many(
         'res.users',
         'anytracker_ticket_assignment_rel',
@@ -423,7 +423,7 @@ class Ticket(models.Model):
     has_attachment = fields.Boolean(
         string='Has attachment ?',
         store=True,
-        compute='_has_attachment')
+        compute=_has_attachment)
 
     _defaults = {
         'state': 'running',
