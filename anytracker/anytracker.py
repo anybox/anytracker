@@ -6,6 +6,7 @@ from openerp.osv import orm
 from openerp import models, fields, api, _
 from openerp.exceptions import except_orm
 from lxml import etree
+from collections import defaultdict
 
 logger = logging.getLogger(__file__)
 
@@ -26,12 +27,22 @@ class Type(models.Model):
     """
     _name = 'anytracker.ticket.type'
 
-    name = fields.Char('Title', size=255, required=True)
-    code = fields.Char('Code', size=255, required=True)
-    description = fields.Text('Description')
-    has_children = fields.Boolean('Can have children')
-    default = fields.Boolean('Default for new tickets')
-    icon = fields.Binary('Icon in the kanban')
+    name = fields.Char(
+        'Title',
+        size=255,
+        required=True)
+    code = fields.Char(
+        'Code',
+        size=255,
+        required=True)
+    description = fields.Text(
+        'Description')
+    has_children = fields.Boolean(
+        'Can have children')
+    default = fields.Boolean(
+        'Default for new tickets')
+    icon = fields.Binary(
+        'Icon in the kanban')
 
 
 class Ticket(models.Model):
@@ -64,33 +75,54 @@ class Ticket(models.Model):
                                             if len(d) > limit else d)
 
     @api.multi
-    def get_breadcrumb(self):
+    def get_breadcrumb(self, under_node_id=0):
         """ get all the parents up to the root ticket
+
+        :params under_node_id:
+            if supplied, only the part of the breadcrumbs strictly under
+            this node will be returned.
         """
         cr = self.env.cr
-        sql = ("WITH RECURSIVE parent(id, parent_id, name) as "
-               "(select 0, %s, text('') UNION SELECT t.id, t.parent_id, t.name"
-               " FROM parent p, anytracker_ticket t WHERE t.id=p.parent_id) "
-               "SELECT id, parent_id, name FROM parent WHERE id!=0")
-        cr.execute(sql, (self.id,))
-        # The same using parent_store. Actually slower for our typical trees:
-        # cr.execute(
-        #     "select b.id, b.parent_id, b.name "
-        #     "from anytracker_ticket a join anytracker_ticket b "
-        #     "on a.parent_left >= b.parent_left "
-        #     " and a.parent_right<=b.parent_right "
-        #     " and a.id=%s order by b.parent_left", (ticket_id,))
-        res = [dict(zip(('id', 'parent_id', 'name'), line))
-               for line in reversed(cr.fetchall())]
-        return res
+        sql = ("WITH RECURSIVE parent(id, parent_id, requested_id, name) "
+               "AS (SELECT 0, id, id, text('') "
+               "    FROM anytracker_ticket t WHERE t.id in %s "
+               "    UNION "
+               "    SELECT t.id, t.parent_id, p.requested_id, t.name "
+               "    FROM parent p, anytracker_ticket t "
+               "    WHERE t.id = p.parent_id AND t.id != %s) "
+               "SELECT requested_id, id, parent_id, name "
+               "    FROM parent WHERE id != 0")
+        cr.execute(sql, (tuple(self.ids), under_node_id))
+        raw = defaultdict(list)
+        for f in cr.fetchall():
+            raw[f[0]].append(f[1:])
+        return {tid: [dict(zip(('id', 'parent_id', 'name'), line))
+                      for line in reversed(t_lines)]
+                for tid, t_lines in raw.iteritems()}
 
     def _formatted_breadcrumb(self):
         """ format the breadcrumb
         TODO : format in the view (in js)
         """
+        breadcrumbs = self.get_breadcrumb()
         for ticket in self:
-            breadcrumb = ticket.get_breadcrumb()
-            ticket.breadcrumb = u' / '.join([b['name'] for b in breadcrumb])
+            ticket.breadcrumb = u' / '.join(
+                [b['name'] for b in breadcrumbs[ticket.id]])
+
+    def _formatted_rparent_breadcrumb(self):
+        """A formatted breadcrumbs of parent, relative to context:active_id
+
+        :returns:
+            False for each id if ``active_id`` could not be read from context.
+        """
+        active_id = self.env.context.get('active_id')
+        if active_id is None:
+            return
+        breadcrumbs = self.get_breadcrumb(under_node_id=active_id)
+        for ticket in self:
+            breadcrumb = breadcrumbs[ticket.id]
+            ticket.relative_parent_breadcrumbs = u' / '.join(
+                b['name'] for b in breadcrumb[:-1])
 
     def _get_root(self):
         """Return the real root ticket (not the project_id of the ticket)
@@ -367,6 +399,9 @@ class Ticket(models.Model):
         search='_search_breadcrumb',
         string='Location',
         compute=_formatted_breadcrumb)
+    relative_parent_breadcrumbs = fields.Char(
+        string='Location',
+        compute=_formatted_rparent_breadcrumb)
     duration = fields.Selection(
         [(0, '< half a day'),
          (None, 'Will be computed'),

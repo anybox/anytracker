@@ -374,3 +374,68 @@ class TestAnytracker(SharedSetupTransactionCase):
         self.assertEquals(node.type.code, 'node')
         self.assertEquals(ticket1.type.code, 'ticket')
         self.assertEquals(ticket2.type.code, 'ticket')
+
+    def test_breadcrumbs(self):
+        """Test extraction of ticket paths."""
+        # create a project, a node and two tickets in the node
+        project = self.TICKET.sudo(self.manager_id).create(
+            {'name': 'Proj',
+             'method_id': self.ref('anytracker.method_test'),
+             'participant_ids':
+                [(6, 0, [self.customer_id, self.member_id, self.manager_id])]})
+
+        node1 = self.TICKET.sudo(self.customer_id).create({
+            'name': "Node1",
+            'parent_id': project.id})
+        t11 = self.TICKET.sudo(self.customer_id).create({
+            'name': "Ticket11",
+            'parent_id': node1.id})
+        t12 = self.TICKET.sudo(self.customer_id).create({
+            'name': "Ticket12",
+            'parent_id': node1.id})
+
+        self.assertEqual(
+            (t11 + t12).sudo(self.customer_id).get_breadcrumb(),
+            {t11.id: [dict(id=project.id, parent_id=None, name="Proj"),
+                      dict(id=node1.id, parent_id=project.id, name="Node1"),
+                      dict(id=t11.id, parent_id=node1.id, name="Ticket11"),
+                      ],
+             t12.id: [dict(id=project.id, parent_id=None, name="Proj"),
+                      dict(id=node1.id, parent_id=project.id, name="Node1"),
+                      dict(id=t12.id, parent_id=node1.id, name="Ticket12"),
+                      ],
+             })
+
+        # Now relative breadcrumbs
+        self.assertEqual(
+            (t11 + t12).sudo(self.customer_id
+                             ).get_breadcrumb(under_node_id=project.id),
+            {t11.id: [dict(id=node1.id, parent_id=project.id, name="Node1"),
+                      dict(id=t11.id, parent_id=node1.id, name="Ticket11"),
+                      ],
+             t12.id: [dict(id=node1.id, parent_id=project.id, name="Node1"),
+                      dict(id=t12.id, parent_id=node1.id, name="Ticket12"),
+                      ],
+             })
+        self.assertEqual(
+            (t11 + t12).sudo(self.customer_id
+                             ).get_breadcrumb(under_node_id=node1.id),
+            {t11.id: [dict(id=t11.id, parent_id=node1.id, name="Ticket11")],
+             t12.id: [dict(id=t12.id, parent_id=node1.id, name="Ticket12")],
+             })
+
+        # Adding a node to test with branches of different lengths
+        n13 = self.TICKET.sudo(self.customer_id).create({
+            'name': "Node13",
+            'parent_id': node1.id})
+        t131 = self.TICKET.sudo(self.customer_id).create({
+            'name': "Ticket131",
+            'parent_id': n13.id})
+        self.assertEqual(
+            (t11 + t131).sudo(self.customer.id
+                              ).get_breadcrumb(under_node_id=node1.id),
+            {t11.id: [dict(id=t11.id, parent_id=node1.id, name="Ticket11")],
+             t131.id: [dict(id=n13.id, parent_id=node1.id, name="Node13"),
+                       dict(id=t131.id, parent_id=n13.id, name="Ticket131"),
+                       ],
+             })

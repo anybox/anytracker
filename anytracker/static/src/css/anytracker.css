@@ -1,3 +1,6 @@
+.openerp .oe_form_sheet_width {
+    max-width: 960px;
+}
 .oe_kanban_project {
     min-height: 0px;
 }
@@ -7,11 +10,15 @@
     padding-left: 0.16em;
 }
 
-/* the goal is to help distinguish from the title :
-   slightly bigger and darker than title's #4C4C4C
-   with a barely noticeable touch of green for the optimism */
 .at_kanban_ticket_number {
-    font-size: 100%;
-    padding-right: 0.07em;
+    font-size: 110%;
+    padding-right: 0.3em;
     color: #354235;
+
+}
+.at_kanban_breadcrumbs {
+    display: block;
+    line-height: 1em;
+    padding-bottom: 3px;
+
 }

@@ -24,9 +24,6 @@
     <field name="inherit_id" ref="anytracker.ticket_view_search"/>
     <field name="priority" eval="16"/>
     <field name="arch" type="xml">
-        <xpath expr="//field[@name='id']" position="after">
-            <field name="priority_id" widget="selection"/>
-        </xpath>
         <xpath expr="//search/group[1]" postion="inside">
             <filter name="tickets_by_priority"
                     string="Priority"

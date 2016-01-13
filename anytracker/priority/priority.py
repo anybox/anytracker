@@ -55,6 +55,7 @@ class Ticket(models.Model):
 
     has_deadline = fields.Boolean(
         'priority_id.deadline',
+        readonly=True,
         type="boolean")
     deadline = fields.Date(
         'Deadline')

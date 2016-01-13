@@ -208,7 +208,7 @@ class Ticket(models.Model):
         if 'my_rating' in values and 'parent_id' not in values:
             parents = self.browse(v['parent_id'] for v in old_values)
             parents.recompute_parents()
-        elif 'parent_id' in values and values['parent_id']:
+        elif values.get('parent_id'):
             # We reparented, we recompute the subnodes
             old_proj_ids = [v['project_id'] for v in old_values]
             new_proj_ids = self.browse(self.ids).project_id.ids

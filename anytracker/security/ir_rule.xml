@@ -5,8 +5,7 @@
         <record id="anytracker_rule_tickets_participants" model="ir.rule">
             <field name="name">Tickets only for participants</field>
             <field name="model_id" ref="model_anytracker_ticket"/>
-            <field name="domain_force">['|', ('project_id.participant_ids', 'in', user.id),
-                ('parent_id.participant_ids', 'in', user.id)]
+            <field name="domain_force">['|', '|', ('project_id.participant_ids', 'in', user.id), ('parent_id.participant_ids', 'in', user.id), ('participant_ids', 'in', user.id)]
             </field>
             <field name="groups" eval="[(4, ref('anytracker.group_customer')),(4, ref('anytracker.group_member'))]"/>
         </record>

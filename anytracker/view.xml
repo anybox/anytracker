@@ -217,23 +217,12 @@
                     <field name="name"/>
                     <field name="icon"/>
                     <field name="sequence"/>
+                    <field name="relative_parent_breadcrumbs"/>
                     <field name="description"/>
                     <field name="shortened_description"/>
                     <field name="has_attachment"/>
                     <templates>
                         <t t-name="ticket_details">
-                            <div>
-                                <i>
-                                    <b>
-                                        <field name="breadcrumb"/>
-                                    </b>
-                                    <span></span>(#
-                                    <b>
-                                        <field name="number"/>
-                                    </b>
-                                    )
-                                </i>
-                            </div>
                             <div>
                                 <t t-raw="record.description.raw_value"/>
                             </div>
@@ -242,6 +231,11 @@
                             <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_card oe_kanban_project oe_kanban_global_click">
 
                                 <div class="oe_kanban_content">
+                                    <small class="at_kanban_breadcrumbs">
+                                        <t t-if="record.relative_parent_breadcrumbs.raw_value">
+                                            <field name="relative_parent_breadcrumbs"/>
+                                        </t>
+                                    </small>
                                     <h4>
                                         <t t-if="record.icon.raw_value">
                                             <img t-attf-src="#{'data:image;base64,' + record.icon.raw_value}"/>
@@ -250,9 +244,10 @@
                                            class="at_kanban_ticket_number">
                                             <field name="number"/>
                                         </a>
-                                        <span class="at_kanban_ticket_title" tooltip="ticket_details">
+                                      <span class="at_kanban_ticket_title"
+                                            tooltip="ticket_details">
                                             <field name="name"/>
-                                        </span>
+                                      </span>
                                     </h4>
 
                                     <div>
