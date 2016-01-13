@@ -133,7 +133,7 @@ class Ticket(models.Model):
             breadcrumb = self.parent_id.get_breadcrumb()
             if not breadcrumb:
                 breadcrumb = [self.parent_id.read(['name', 'parent_id'])]
-            project_id = breadcrumb['id']
+            project_id = breadcrumb[self.parent_id.id][0]['id']
         else:
             # if no parent, we are the project
             project_id = self.id
