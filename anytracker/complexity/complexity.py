@@ -288,12 +288,13 @@ class Method(models.Model):
         copy=True,
         help="The complexities associated to this method")
 
-    def copy(self, default):
+    def copy(self, default=None):
         """ Customize the method copy
         """
+        default = default or {}
         STAGE = self.env['anytracker.stage']
         COMPLEXITY = self.env['anytracker.complexity']
-        new_method = super(Method, self).copy(default)
+        new_method = super(Method, self).copy(default=default)
         # update forbidden complexities for new stages
         for old_stage in self.stage_ids:
             new_stages = STAGE.search([('state', '=', old_stage.state),

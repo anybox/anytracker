@@ -41,9 +41,10 @@ class Method(models.Model):
         project.write({'method_id': new_method.id})
         return new_method
 
-    def copy(self, default):
+    def copy(self, default=None):
+        default = default or {}
         default.update({'name': self.name + ' (specific)'})
-        return super(Method, self).copy(default)
+        return super(Method, self).copy(default=default)
 
 
 class Ticket(models.Model):
