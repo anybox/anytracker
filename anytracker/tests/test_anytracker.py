@@ -432,7 +432,7 @@ class TestAnytracker(SharedSetupTransactionCase):
             'name': "Ticket131",
             'parent_id': n13.id})
         self.assertEqual(
-            (t11 + t131).sudo(self.customer.id
+            (t11 + t131).sudo(self.customer_id
                               ).get_breadcrumb(under_node_id=node1.id),
             {t11.id: [dict(id=t11.id, parent_id=node1.id, name="Ticket11")],
              t131.id: [dict(id=n13.id, parent_id=node1.id, name="Node13"),

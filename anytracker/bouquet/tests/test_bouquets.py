@@ -47,7 +47,7 @@ class TestBouquets(SharedSetupTransactionCase):
         self.assertRecord(self.bouquet_obj, self.bouquet.id,
                           {'ticket_ids': set(self.tickets.ids),
                            'nb_tickets': len(self.tickets.ids),
-                           'project_ids': set([self.project]),
+                           'project_ids': set([self.project.id]),
                            }, list_to_set=True)
 
     def test_create_read_perm(self):
@@ -85,7 +85,7 @@ class TestBouquets(SharedSetupTransactionCase):
         self.assertRecord(
             self.bouquet_obj,
             self.bouquet.id,
-            {'project_ids': set([self.project, project])},
+            {'project_ids': set([self.project.id, project.id])},
             list_to_set=True)
 
         for uid in (self.member_id, self.customer_id):

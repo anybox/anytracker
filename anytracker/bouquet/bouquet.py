@@ -33,7 +33,7 @@ class Bouquet(models.Model):
 
     def _project_ids(self):
         for bouquet in self:
-            projects = list({t.project_id for t in bouquet.ticket_ids})
+            projects = list({t.project_id.id for t in bouquet.ticket_ids})
             bouquet.project_ids = projects
 
     name = fields.Char(
