@@ -449,16 +449,13 @@ class Ticket(models.Model):
         [('running', 'Running'),
          ('trashed', 'Trashed')],
         string='State',
+        default='running',
         required=True)
     icon = fields.Binary('anytracker.ticket.type', related='type.icon', )
     has_attachment = fields.Boolean(
         string='Has attachment ?',
         store=True,
         compute=_has_attachment)
-
-    _defaults = {
-        'state': 'running',
-    }
 
     _sql_constraints = [
         ('number_uniq', 'unique(number)', 'Number must be unique!')]
