@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+<template id="report_anytracker_bouquet">
+    <t t-call="report.external_layout">
+        <div class="page">
+            <style type="text/css" scoped="">
+                * {
+                    font-family:helvetica;
+                    font-size:12;
+                }
+                h1 {
+                    font-family: Arial, sans-serif, "Times New Roman", Times, serif;
+                    font-weight: bold;
+                    color: #475674;
+                    font-size: 24px;
+                    text-align: center;
+                }
+
+                h2 {
+                    font-family: Arial, sans-serif, "Times New Roman", Times, serif;
+                    font-weight: bold;
+                    background: #DEF05B;
+                    color: #475674;
+                    font-size: 18px;
+                    padding: 2px;
+                }
+
+                h3 {
+                    font-family: Arial, sans-serif, "Times New Roman", Times, serif;
+                    font-weight: bold;
+                    font-style: italic;
+                    color: #475674;
+                    font-size: 14px;
+                }
+                /* Force adding break page at the end of the div */
+                div.page-break-after {
+                    page-break-after: always;
+                }
+
+                /* Force adding break page at the beginning of the div */
+                div.page-break-before {
+                    page-break-before: always;
+                }
+
+                /* Eviter d'avoir un élément sur plusieurs pages */
+                div.avoid-page-break {
+                    page-break-inside: avoid;
+                }
+
+
+                p, td {
+                    font-family: "Times New Roman", Times, serif;
+                    font-size: 12px;
+                }
+
+                span.small {
+                    font-size: 12px;
+                }
+
+                /* Usuful to display m2m or tag likes */
+                span.tag{
+                    display: inline-block;
+                    border: solid 1px #F2F2F2;
+                    padding: 0px 2px 0px 2px;
+                }
+
+                span.float-right {
+                    float: right;
+                }
+
+                /* table css */
+                table.content {
+                    width: 100%;
+                    border-collapse: collapse;
+                }
+                table.content > thead {
+                    border-bottom:1px solid #444444;
+                }
+                table.content > tbody > tr {
+                    border-top:0.5px solid #9C9C9C;
+                }
+                table.content > tfoot {
+                    border-top:1px solid #444444;
+                }
+                table.content > thead > tr > th,
+                table.content > tfoot > tr > th
+                 {
+                    font-family: Arial, sans-serif, "Times New Roman", Times, serif;
+                    font-weight: bold;
+                    font-size: 14px;
+                    text-align: center;
+                }
+                .align-right {
+                    text-align: right;
+                    padding-right: 8px;
+                }
+            </style>
+            <div class="row avoid-page-break" t-if="len(docs)>1">
+                <h1>Selected Bouquets</h1>
+                <h2 style="margin-top: 100px;">Bouquets summary</h2>
+                <table class="content">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Projects</th>
+                            <th>Rating</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-set="rating_sum" t-value="0"/>
+                        <t t-foreach="docs" t-as="bouquet">
+                            <tr>
+                                <td><span t-esc="bouquet.name"/></td>
+                                <td>
+                                    <t t-foreach="bouquet.project_ids" t-as="project">
+                                        <span class="tag" t-esc="project.name"></span>
+                                    </t>
+                                </td>
+                                <td class="align-right">
+                                    <t t-set="rating_sum" t-value="rating_sum+bouquet.bouquet_rating"/>
+                                    <span t-esc="bouquet.bouquet_rating"/>
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="2" class="align-right">
+                                Total Rating
+                            </th>
+                            <th class="align-right">
+                                <span t-esc="rating_sum"></span>
+                            </th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div> <!-- end avoid-page-break -->
+            <t t-foreach="docs" t-as="bouquet">
+                <div class="page-break-before">
+                    <div class="avoid-page-break">
+                        <h1 t-esc="bouquet.name"/>
+                        <t t-foreach="bouquet.project_ids" t-as="project">
+                            <span class="small tag" t-esc="project.name"/>
+                        </t>
+                        <span class="small float-right">Rating: <t t-esc="bouquet.bouquet_rating"/></span>
+                        <t t-if="bouquet.description">
+                            <h2>Bouquet description</h2>
+                            <p class="description" t-raw="bouquet.description"/>
+                        </t>
+
+                        <t t-if="len(bouquet.ticket_ids) > 1">
+                            <h2>Tickets</h2>
+                            <table class="content">
+                                <thead>
+                                    <tr>
+                                        <th>Number</th>
+                                        <th>Name</th>
+                                        <th>Location</th>
+                                        <th>Rating</th>
+                                        <th>Stage</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-set="rating_sum" t-value="0"/>
+                                    <t t-foreach="bouquet.ticket_ids" t-as="ticket">
+                                        <tr>
+                                            <td><span t-esc="ticket.number"/></td>
+                                            <td><span t-esc="ticket.name"/></td>
+                                            <td><span t-esc="ticket.breadcrumb"/></td>
+                                            <td class="align-right">
+                                                <span t-esc="ticket.rating"
+                                                      t-set="rating_sum" t-value="rating_sum+ticket.rating"/>
+                                            </td>
+                                            <td><span t-esc="ticket.stage_id.name"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th colspan="3" class="align-right">
+                                            Total Rating
+                                        </th>
+                                        <th class="align-right">
+                                            <span t-esc="rating_sum"/>
+                                        </th>
+                                        <th></th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </t>
+                        <t t-foreach="bouquet.ticket_ids" t-as="ticket">
+                            <div class="avoid-page-break">
+                                <h2>
+                                    <span>#<t t-esc="ticket.number"/></span>: <t t-esc="ticket.name"/>
+                                    <span class="float-right">rating: <t t-esc="ticket.rating"/></span>
+                                </h2>
+                                <span class="small">Location <t t-esc="ticket.breadcrumb"/></span>
+                                <span class="small float-right">Stage: <t t-esc="ticket.stage_id.name"/></span>
+                                
+                                <h3>Description</h3>
+                                <div class="description" t-if="ticket.description" t-raw="ticket.description">
+                                </div>
+                            </div>  <!-- end avoid-page-break -->
+                        </t>
+                    </div>  <!-- end avoid-page-break -->
+                </div>  <!-- end breaking page: page-break-before -->
+            </t>
+        </div>
+    </t>
+</template>
+
+<report id="report_bouquet"
+        name="anytracker.report_anytracker_bouquet"
+        file="anytracker.bouquet"
+        model="anytracker.bouquet"
+        report_type="qweb-pdf"
+        string="Bouquets"
+        groups="group_customer,group_member"
+/>
+
+</data></openerp>

@@ -22,7 +22,7 @@
 
 {
     'name': 'Anytracker',
-    'version': '0.3',
+    'version': '8.0',
     'author': 'Anybox',
     'website': 'http://anybox.fr',
     'category': 'Project Management',
@@ -94,6 +94,8 @@ Or, if you installed nose in your buildout
         'priority/view.xml',
         'bouquet/view.xml',
         'invoicing/view.xml',
+        'report/ticket.xml',
+        'report/bouquet.xml',
         # model access:
         'security/ir.model.access.csv',
         'method/ir.model.access.csv',

@@ -4,8 +4,8 @@
         <template id="assets_backend" name="anytracker_assets" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
                 <link rel="stylesheet" href="/anytracker/static/src/css/anytracker.css"/>
-                <script type="text/javascript" src="/anytracker/static/src/js/jquery.md5.js"/>
-                <script type="text/javascript" src="/anytracker/static/src/js/anytracker.js"/>
+                <script type="text/javascript" src="/anytracker/static/src/js/jquery.md5.js"></script>
+                <script type="text/javascript" src="/anytracker/static/src/js/anytracker.js"></script>
             </xpath>
         </template>
 
