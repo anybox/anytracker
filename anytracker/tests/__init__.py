@@ -7,7 +7,6 @@ from . import test_anytracker
 from ..invoicing.tests import test_invoicing
 from ..mindmap.tests import test_import_export_mindmap
 from ..method.tests import test_method
-from ..report.tests import test_report_bouquet, test_report_ticket
 
 fast_suite = [
     test_bouquets,
@@ -19,6 +18,4 @@ fast_suite = [
     test_invoicing,
     test_import_export_mindmap,
     test_method,
-    test_report_bouquet,
-    test_report_ticket,
 ]
