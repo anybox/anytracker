@@ -1,0 +1,15 @@
+syntax: glob
+bin/
+develop-eggs/
+etc/
+parts/
+openerp-command/
+openerp-addons/
+openerp-web/
+upgrade.log
+sandbox/
+dumps/
+standalone-addons/
+
+.installed.cfg
+*.pyc
