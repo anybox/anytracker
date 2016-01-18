@@ -500,3 +500,25 @@ class MailMessage(models.Model):
         if values.get('model') == 'anytracker.ticket' and 'body' in values:
             values['body'] = add_permalinks(cr.dbname, values['body'])
         return super(MailMessage, self).create(cr, uid, values, context)
+
+
+class ResUsers(models.Model):
+    _inherit = 'res.users'
+
+    @api.multi
+    def write(self, values):
+        """ When setting an account as customer,
+            unset all other groups except portal"""
+        group_customer = self.env.ref('anytracker.group_customer').id
+        group_portal = self.env.ref('base.group_portal').id
+        sel_groups = [v for v in values.items()
+                      if v[0].startswith('sel_groups_')]
+        if any(['_' + str(group_customer) in g[0]
+               and g[1] and group_customer == g[1]
+               for g in sel_groups]):
+            values = {k: v for k, v in values.items()
+                      if not k.startswith('sel_groups_')
+                      and not k.startswith('_in_group')}
+            values['groups_id'] = [(6, 0, [group_customer, group_portal])]
+        res = super(ResUsers, self).write(values)
+        return res
