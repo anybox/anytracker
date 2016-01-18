@@ -8,3 +8,10 @@ syntax: glob
 *.\#*
 *~
 *.orig
+bin/
+develop-eggs/
+etc/
+parts/
+upgrade.log
+sandbox/
+.installed.cfg
