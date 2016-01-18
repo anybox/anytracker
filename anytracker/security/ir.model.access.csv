@@ -10,3 +10,4 @@ acc_anytracker_customer_attachments,Attachments for customers,base.model_ir_atta
 acc_anytracker_customer_groups,Groups for customers,base.model_res_groups,group_customer,1,0,0,0
 acc_anytracker_customer_types,Types for customers,model_anytracker_ticket_type,group_customer,1,0,0,0
 acc_anytracker_manager_types,Types for managers,model_anytracker_ticket_type,group_manager,1,1,1,1
+acc_anytracker_customer_menu,Menus for customers,base.model_ir_ui_menu,group_customer,1,0,0,0
