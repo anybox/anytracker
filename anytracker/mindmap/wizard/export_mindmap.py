@@ -37,7 +37,6 @@ class export_mindmap_wizard(models.TransientModel):
         '''Launch export of nn file to mindmap'''
         COMPLEXITY = self.env['anytracker.complexity']
         DOWNLOADWIZ = self.env['serve.mindmap.wizard']
-        XMLID = self.env['ir.model.data']
         for wizard in self:
             wizard.complexity_dict = {
                 'green_complexity_id':
@@ -60,13 +59,12 @@ class export_mindmap_wizard(models.TransientModel):
                 'mindmap_filename': wizard.mindmap_file})
             fp.close()
 
-            _, res = XMLID.get_object_reference('anytracker',
-                                                'view_serve_mindmap_form')
+            view_id = self.env.ref('anytracker.view_serve_mindmap_form').id
             return {
                 'name': 'Download mindmap wizard',
                 'view_type': 'form',
                 'view_mode': 'form',
-                'view_id': res,
+                'view_id': view_id,
                 'res_model': 'serve.mindmap.wizard',
                 'context': "{}",
                 'type': 'ir.actions.act_window',
