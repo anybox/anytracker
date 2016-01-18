@@ -496,10 +496,11 @@ class ResPartner(models.Model):
 class MailMessage(models.Model):
     _inherit = 'mail.message'
 
-    def create(self, cr, uid, values, context=None):
+    @api.model
+    def create(self, values):
         if values.get('model') == 'anytracker.ticket' and 'body' in values:
-            values['body'] = add_permalinks(cr.dbname, values['body'])
-        return super(MailMessage, self).create(cr, uid, values, context)
+            values['body'] = add_permalinks(self.env.cr.dbname, values['body'])
+        return super(MailMessage, self).create(values)
 
 
 class ResUsers(models.Model):
