@@ -333,6 +333,7 @@ class Method(models.Model):
 
     def get_first_stage(self):
         """ Return the id of the first stage of a method"""
-        assert(len(self) == 1)
+        if len(self) == 0:
+            return False
         stages = [(s.progress, s.id) for s in self.stage_ids]
         return sorted(stages)[0][1] if len(stages) else False
