@@ -175,6 +175,7 @@ class Ticket(models.Model):
                     node.write({'risk': risk, 'rating': rating})
         return True
 
+    @api.multi
     def unlink(self):
         parent_ids = self.parent_id.ids
         for ticket in self:
