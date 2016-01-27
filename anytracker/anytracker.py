@@ -334,6 +334,7 @@ class Ticket(models.Model):
                 return tickets.name_get()
         return super(Ticket, self.browse()).name_search()
 
+    @api.multi
     def trash(self):
         """ Trash the ticket
         set active = False, and move to the last stage
@@ -345,6 +346,7 @@ class Ticket(models.Model):
             'stage_id': False})
         self.recompute_parents()
 
+    @api.multi
     def reactivate(self):
         """ reactivate a trashed ticket
         """
