@@ -241,7 +241,7 @@
                                             <img t-attf-src="#{'data:image;base64,' + record.icon.raw_value}"/>
                                         </t>
                                         <a t-attf-href="#{record.permalink.value}"
-                                           class="at_kanban_ticket_number">
+                                           onclick="event.preventDefault()" class="at_kanban_ticket_number">
                                             <field name="number"/>
                                         </a>
                                       <span class="at_kanban_ticket_title"
