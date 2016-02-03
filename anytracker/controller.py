@@ -59,7 +59,7 @@ class UrlDirection(http.Controller):
             'id': segments[0],
         }
         base_url = '/'
-        url = urljoin(base_url, "?%s#%s" % (urlencode(query), urlencode(fragment)))
+        url = urljoin(base_url, "web?%s#%s" % (urlencode(query), urlencode(fragment)))
         redirect = werkzeug.utils.redirect(url, 302)
         redirect.autocorrect_location_header = False
         return redirect
