@@ -41,7 +41,7 @@ class UrlDirection(http.Controller):
             'model': 'anytracker.ticket',
             'id': str(ticket_id),
         }
-        base_url = '/'
+        base_url = '/web/'
         url = urljoin(base_url, "?%s#%s" % (urlencode(query), urlencode(fragment)))
         redirect = werkzeug.utils.redirect(url, 302)
         # redirect.autocorrect_location_header = False
@@ -58,7 +58,7 @@ class UrlDirection(http.Controller):
             'model': 'anytracker.bouquet',
             'id': segments[0],
         }
-        base_url = '/'
+        base_url = '/web/'
         url = urljoin(base_url, "?%s#%s" % (urlencode(query), urlencode(fragment)))
         redirect = werkzeug.utils.redirect(url, 302)
         redirect.autocorrect_location_header = False
