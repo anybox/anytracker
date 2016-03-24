@@ -103,3 +103,16 @@ class TestStage(SharedSetupTransactionCase):
         ticket2.unlink()
         self.assertEquals(ticket1.progress, 5.0)
         self.assertEquals(project.progress, 5.0)
+
+    def test_create_node(self):
+        """ticket 7089"""
+        project = self.TICKET.create(
+            {'name': 'Ticket7089 bug project',
+             'participant_ids': [(6, 0, [self.member_id, self.customer_id])],
+             'method_id': self.ref('anytracker.method_test')})
+        self.TICKET.create(
+            {'name': 'Ticket7089 bug node',
+             'type': self.ref('anytracker.anytracker_ticket_type_project'),
+             'parent_id': project.id,
+             'participant_ids': [(6, 0, [self.member_id, self.customer_id])],
+             'method_id': self.ref('anytracker.method_test')})

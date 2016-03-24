@@ -152,7 +152,7 @@ class Ticket(models.Model):
                                      ('type.has_children', '=', False),
                                      ('id', '!=', parent.id)])
             if ticket not in child_ids:
-                child_ids.append(ticket)
+                child_ids += ticket
             children = len(child_ids)
             new_progress = (parent.progress * (children - 1)
                             + (ticket.stage_id.progress or 0)) / children
