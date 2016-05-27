@@ -167,6 +167,12 @@ class Ticket(models.Model):
                     ('active', '=', not values['active'])])
                 super(Ticket, children).write({'active': values['active']})
 
+        if 'participant_ids' in values:
+            if len(self) > 1:
+                raise except_orm(
+                    _('Error !'),
+                    _('You can modify participants for 1 ticket at a time'))
+            participant_ids = set(self.participant_ids.ids)
         # replace ticket numbers with permalinks
         if 'description' in values:
             values['description'] = add_permalinks(
@@ -192,9 +198,15 @@ class Ticket(models.Model):
             if types:
                 self.browse(values['parent_id']).write({'type': types[0].id})
 
-        # Needed for the ir_rule,
-        # because it involves an sql request for _search_allowed_partners
-        if values.get('participant_ids'):
+        if 'participant_ids' in values:
+            # subscribe new participants, unsubscribe old ones
+            new_p_ids = set(self.participant_ids.ids)
+            added_users = new_p_ids - participant_ids
+            removed_users = participant_ids - new_p_ids
+            self.message_unsubscribe_users(removed_users)
+            self.message_subscribe_users(added_users)
+            # Needed for the ir_rule,
+            # because it involves an sql request for _search_allowed_partners
             self.env.invalidate_all()
 
         return res
@@ -221,6 +233,13 @@ class Ticket(models.Model):
         if not values.get('parent_id') and types:
             values['type'] = types[0].id
 
+        # add myself to the project at creation
+        if not values.get('parent_id'):
+            p_ids = values.get('participant_ids', [(6, 0, [])])
+            if self.env.uid not in p_ids:
+                values['participant_ids'] = [
+                    (6, 0, [self.env.uid] + p_ids[0][2])]
+
         # replace ticket numbers with permalinks
         if 'description' in values:
             values['description'] = add_permalinks(
@@ -235,10 +254,16 @@ class Ticket(models.Model):
         if 'parent_id' in values and values['parent_id'] and types:
             ticket.browse(values['parent_id']).write({'type': types[0].id})
 
-        # subscribe project members
+        # subscribe the followers of the parent,
+        # or the participants if this is a project
+        # This allows to subscribe or unsubscribe to ticket subtrees
         if ticket.project_id.participant_ids:
-            ticket.message_subscribe_users(
-                ticket.project_id.participant_ids.ids)
+            if ticket.parent_id:
+                ticket.message_subscribe(
+                    ticket.parent_id.message_follower_ids.ids)
+            else:
+                ticket.message_subscribe_users(
+                    ticket.participant_ids.ids)
 
         return ticket
 
@@ -368,6 +393,39 @@ class Ticket(models.Model):
         To be overloaded by submodules
         """
         return
+
+    @api.multi
+    def message_subscribe_users(self, user_ids=None, subtype_ids=None):
+        if self._name == 'anytracker.ticket':
+            for ticket in self:
+                children = self.search([('id', 'child_of', ticket.id)])
+                super(Ticket, children).message_subscribe_users(
+                    user_ids, subtype_ids)
+        else:
+            super(Ticket, self).message_subscribe_users(user_ids, subtype_ids)
+
+    @api.multi
+    def message_unsubscribe_users(self, user_ids=None):
+        if self._name == 'anytracker.ticket':
+            for ticket in self:
+                children = self.search([('id', 'child_of', ticket.id)])
+                super(Ticket, children).message_unsubscribe_users(user_ids)
+        else:
+            super(Ticket, self).message_unsubscribe_users(user_ids)
+
+    @api.multi
+    def join_project(self):
+        for ticket in self:
+            if ticket.parent_id:
+                continue
+            ticket.write({'participant_ids': [(4, self.env.uid)]})
+
+    @api.multi
+    def leave_project(self):
+        for ticket in self:
+            if ticket.parent_id:
+                continue
+            ticket.write({'participant_ids': [(3, self.env.uid)]})
 
     name = fields.Char(
         string='Title',

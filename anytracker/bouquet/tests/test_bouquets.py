@@ -16,11 +16,13 @@ class TestBouquets(SharedSetupTransactionCase):
         cls.member_id = USER.create({
             'name': 'anytracker member',
             'login': 'at.user',
+             'email': 'member@localhost',
             'groups_id': [(6, 0, [cls.ref('anytracker.group_member')])],
         }).id
         cls.customer_id = USER.create({
             'name': "anytracker customer",
             'login': 'at.cust',
+             'email': 'customer@localhost',
             'groups_id': [(6, 0, [cls.ref('anytracker.group_customer')])],
         }).id
         cls.project = cls.TICKET.create({
@@ -76,7 +78,7 @@ class TestBouquets(SharedSetupTransactionCase):
         """A user participating in any project related to the bouquet
         must have right perm.
         """
-        project = self.TICKET.create({
+        project = self.TICKET.sudo(self.member_id).create({
             'name': "Another Project",  # no participants
             'method_id': self.ref('anytracker.method_scrum')})
         self.ticket1.sudo().write({'parent_id': project.id})
@@ -88,23 +90,30 @@ class TestBouquets(SharedSetupTransactionCase):
             {'project_ids': set([self.project.id, project.id])},
             list_to_set=True)
 
-        for uid in (self.member_id, self.customer_id):
-            self.uid = uid
-
-            # bouquet is still visible by user,
-            # although one of its tickets is not
-            self.assertEqual(
-                self.searchUnique(self.bouquet_obj, []),
-                self.bouquet.id)
-            self.assertNoRecord(
-                self.ticket_obj,
-                [('id', '=', self.ticket1.id)])
+        # bouquet is still visible by the member,
+        # although one of its tickets is not
+        self.uid = self.member_id
+        self.assertEqual(
+            self.searchUnique(self.bouquet_obj, []),
+            self.bouquet.id)
+        self.assertEqual(
+            1, len(self.TICKET.search([('id', '=', self.ticket1.id)])))
+        # bouquet is still visible by the customer,
+        # although one of its tickets is not
+        self.uid = self.customer_id
+        self.assertEqual(
+            self.searchUnique(self.bouquet_obj, []),
+            self.bouquet.id)
+        self.assertNoRecord(
+            self.ticket_obj,
+            [('id', '=', self.ticket1.id)])
 
     def test_participant_ids(self):
         # just a very simple case, but better than nothing
         self.assertRecord(
             self.bouquet_obj, self.bouquet.id,
-            {'participant_ids': set([self.member_id, self.customer_id])},
+            {'participant_ids':
+                set([self.admin_id, self.member_id, self.customer_id])},
             list_to_set=True)
 
     def test_get_rating(self):

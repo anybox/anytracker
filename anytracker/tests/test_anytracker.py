@@ -155,7 +155,7 @@ class TestAnytracker(SharedSetupTransactionCase):
     def test_customer_access(self):
         """ Protect sensitive data
         """
-        project = self.TICKET.create(
+        project = self.TICKET.sudo(self.member_id).create(
             {'name': 'Partner access test',
              'participant_ids': [(6, 0, [
                  self.customer_id, self.member_id, self.manager_id])],

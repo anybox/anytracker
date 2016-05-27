@@ -1,4 +1,5 @@
 from anybox.testing.openerp import SharedSetupTransactionCase
+from openerp.exceptions import except_orm
 from os.path import join
 
 
@@ -19,13 +20,23 @@ class TestNotify(SharedSetupTransactionCase):
         cls.member_id = cls.USER.create(
             {'name': 'Member',
              'login': 'member',
+             'email': 'member@localhost',
              'groups_id':
                 [(6, 0, [cls.ref('anytracker.group_member'),
                          cls.ref('base.group_user')])]}
         ).id
+        cls.member2_id = cls.USER.create(
+            {'name': 'Member2',
+             'login': 'member2',
+             'email': 'member2@localhost',
+             'groups_id': [(6, 0,
+                           [cls.ref('anytracker.group_member'),
+                            cls.ref('base.group_user')])]}
+        ).id
         cls.customer_id = cls.USER.create(
             {'name': 'Customer',
              'login': 'customer',
+             'email': 'customer@localhost',
              'groups_id': [(6, 0, [cls.ref('anytracker.group_customer')])]}
         ).id
 
@@ -83,3 +94,55 @@ class TestNotify(SharedSetupTransactionCase):
         ticket.write({'stage_id': self.ref('anytracker.stage_test_draft')})
         self.assertEquals(self.MAIL.search([], count=True) - nb_mails, 4)
         self.assertEquals(len(urgent.notified_stage_ids), 1)
+
+    def test_participants(self):
+        """ability for members to freely join and leave the projects
+        """
+        # the member creates a project with himself as a participant
+        project = self.TICKET.sudo(self.member_id).create(
+            {'name': 'Project1',
+             'method_id': self.ref('anytracker.method_test')})
+        # we check the number of followers (users notified)
+        self.assertEquals(len(project.message_follower_ids), 1)
+
+        # the member adds the customer
+        project.sudo(self.member_id).write(
+            {'participant_ids': [(6, 0, [self.customer_id, self.member_id])]})
+        self.assertEquals(len(project.message_follower_ids), 2)
+
+        # the customer is not allowed to add participants
+        #self.assertRaises(
+        #    except_orm,
+        #    project.sudo(self.member_id).write,
+        #    {'participant_ids': [(6, 0, [self.customer_id, self.member_id])]})
+        #self.assertEquals(len(project.message_follower_ids), 2)
+
+        # the member2 choose to join the project again, he's notified
+        project.sudo(self.member2_id).join_project()
+        self.assertEquals(len(project.message_follower_ids), 3)
+
+        # the customer creates a ticket
+        ticket = self.TICKET.sudo(self.customer_id).with_context(
+            {'active_id': project.id}).create({
+                'name': 'notifying ticket',
+                'parent_id': project.id, })
+        self.assertEquals(len(ticket.message_follower_ids), 3)
+
+        # the member2 chooses to leave the project, he's no more notified
+        project.sudo(self.member2_id).leave_project()
+        self.assertEquals(len(project.message_follower_ids), 2)
+        self.assertEquals(len(ticket.message_follower_ids), 2)
+
+        # the member2 chooses to receive notifications on the project
+        project.sudo(self.member2_id).message_subscribe_users(
+            [self.member2_id])
+        self.assertEquals(len(project.message_follower_ids), 3)
+        self.assertEquals(len(ticket.message_follower_ids), 3)
+
+        # the customer creates a ticket
+        ticket2 = self.TICKET.sudo(self.customer_id).with_context(
+            {'active_id': project.id}).create({
+                'name': 'notifying ticket',
+                'parent_id': project.id, })
+        # member2 is notified, even if not participant
+        self.assertEquals(len(ticket2.message_follower_ids), 3)
