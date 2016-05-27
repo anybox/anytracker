@@ -29,6 +29,11 @@
                             domain="[('parent_id','=',False)]"
                             help="Show only toplevel tickets. They correspond to projects"/>
                     <separator/>
+                    <filter name="isparticipant"
+                            string="I'm a member"
+                            domain="['|', '|', ('project_id.participant_ids', 'in', uid), ('parent_id.participant_ids', 'in', uid), ('participant_ids', 'in', uid)]"
+                            help="Only ticket whose project I'm member of"/>
+                    <separator/>
                     <filter name="unfinished"
                             string="Unfinished"
                             domain="[('progress', '&lt;', 100.0)]"
@@ -329,8 +334,11 @@
             <field name="view_mode">kanban,tree,form</field>
             <field name="view_id" ref="tickets_kanban2"/>
             <field name="domain">[('id', 'child_of', active_id), ('id', '!=', active_id)]</field>
-            <field name="context">{'search_default_filter_tasks': 1, 'search_default_unfinished': 1, 'group_by':
-                'stage_id'}
+            <field name="context">{
+                'search_default_filter_tasks': 1,
+                'search_default_isparticipant': 1,
+                'search_default_unfinished': 1,
+                'group_by': 'stage_id'}
             </field>
         </record>
         <record id="ir_value_hierarchy_line_select" model="ir.values">
@@ -346,8 +354,8 @@
             <field name="res_model">anytracker.ticket</field>
             <field name="view_type">tree</field>
             <field name="view_id" ref="tickets_hierarchy"/>
-            <field name="domain">[('parent_id', '=', False)]</field>
-            <field name="help">To create a new ticket, open the tree below and click on the relevant parent ticket, then
+            <field name="domain">[('parent_id', '=', False),'|', '|', ('project_id.participant_ids', 'in', uid), ('parent_id.participant_ids', 'in', uid), ('participant_ids', 'in', uid)]</field>
+            <field name="help">To create a new ticket, open the tree below and click on the relevant node, then
                 click on "Create"
             </field>
         </record>
@@ -366,7 +374,10 @@
             <field name="view_mode">tree,form</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="tickets_kanban2"/>
-            <field name="context">{'tree_view_ref': 'node_view_tree', 'search_default_filter_projects': 1,
+            <field name="context">{
+                'tree_view_ref': 'node_view_tree',
+                'search_default_isparticipant': 1,
+                'search_default_filter_projects': 1,
                 'search_default_unfinished': 1}
             </field>
         </record>
@@ -376,7 +387,11 @@
             <field name="view_mode">tree,form</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="node_view_tree"/>
-            <field name="context">{'search_default_filter_nodes': 1, 'search_default_unfinished': 1}</field>
+            <field name="context">{
+                'search_default_filter_nodes': 1,
+                'search_default_isparticipant': 1,
+                'search_default_unfinished': 1}
+            </field>
         </record>
         <record model="ir.actions.act_window" id="act_all_tasks">
             <field name="name">Tickets</field>
@@ -384,7 +399,11 @@
             <field name="view_mode">tree,form</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="ticket_tree"/>
-            <field name="context">{'search_default_filter_tasks': 1, 'search_default_unfinished': 1}</field>
+            <field name="context">{
+                'search_default_filter_tasks': 1,
+                'search_default_isparticipant': 1,
+                'search_default_unfinished': 1}
+            </field>
         </record>
         <record model="ir.actions.act_window" id="act_trash">
             <field name="name">Trash</field>
