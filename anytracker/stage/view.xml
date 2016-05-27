@@ -120,11 +120,6 @@
     <field name="inherit_id" ref="node_view_tree" />
     <field name="arch" type="xml">
         <xpath expr="/tree/field[@name='breadcrumb']" position="after">
-            <field name="stage_id"/>
-              <button name="stage_previous" string=""
-                      type="object" icon="gtk-go-back" />
-              <button name="stage_next" string=""
-                type="object" icon="gtk-go-forward" />
             <field name="progress" string="Progress" widget="progressbar"/>
         </xpath>
     </field>

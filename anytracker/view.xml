@@ -88,6 +88,11 @@
                     <field name="number"/>
                     <field name="breadcrumb"/>
                     <field name="method_id"/>
+                    <field name="is_participant" invisible="True"/>
+                    <button name="join_project" string="Click to join the project" type="object" icon="STOCK_NO"
+                            attrs="{'invisible': [('is_participant', '=', True)]}" />
+                    <button name="leave_project" string="Click to leave the project" type="object" icon="STOCK_YES"
+                            attrs="{'invisible': [('is_participant', '=', False)]}"/>
                     <field name="parent_id" invisible="1"/>
                     <field name="create_date"/>
                     <field name="write_date"/>
@@ -164,6 +169,11 @@
                             </page>
                             <page string="Participants" attrs="{'invisible': [('parent_id', '!=', False)]}"
                                   groups="anytracker.group_member">
+                                    <field name="is_participant" invisible="True"/>
+                                    <button name="join_project" string="Join the project" type="object"
+                                            attrs="{'invisible': [('is_participant', '=', True)]}" />
+                                    <button name="leave_project" string="Leave the project" type="object"
+                                            attrs="{'invisible': [('is_participant', '=', False)]}"/>
                                 <field name="participant_ids" colspan="4" widget="many2many_kanban">
                                     <kanban quick_create="false" create="true">
                                         <field name="name"/>

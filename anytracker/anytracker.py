@@ -413,6 +413,11 @@ class Ticket(models.Model):
         else:
             super(Ticket, self).message_unsubscribe_users(user_ids)
 
+    def _is_participant(self):
+        uid = self.env.uid
+        for ticket in self:
+            ticket.is_participant = uid in ticket.participant_ids.ids
+
     @api.multi
     def join_project(self):
         for ticket in self:
@@ -481,6 +486,9 @@ class Ticket(models.Model):
         'ticket_id',
         'user_id',
         string='Participant')
+    is_participant = fields.Boolean(
+        'Is participant',
+        compute=_is_participant)
     parent_id = fields.Many2one(
         'anytracker.ticket',
         string='Parent',
