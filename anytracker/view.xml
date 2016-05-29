@@ -90,9 +90,9 @@
                     <field name="method_id"/>
                     <field name="is_participant" invisible="True"/>
                     <button name="join_project" string="Click to join the project" type="object" icon="STOCK_NO"
-                            attrs="{'invisible': [('is_participant', '=', True)]}" />
+                            attrs="{'invisible': ['|', ('is_participant', '=', True), ('parent_id', '!=', False)]}"/>
                     <button name="leave_project" string="Click to leave the project" type="object" icon="STOCK_YES"
-                            attrs="{'invisible': [('is_participant', '=', False)]}"/>
+                            attrs="{'invisible': ['|', ('is_participant', '=', False), ('parent_id', '!=', False)]}"/>
                     <field name="parent_id" invisible="1"/>
                     <field name="create_date"/>
                     <field name="write_date"/>
