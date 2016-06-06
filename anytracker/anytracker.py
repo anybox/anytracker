@@ -120,9 +120,12 @@ class Ticket(models.Model):
             return
         breadcrumbs = self.get_breadcrumb(under_node_id=active_id)
         for ticket in self:
-            breadcrumb = breadcrumbs[ticket.id]
-            ticket.relative_parent_breadcrumbs = u' / '.join(
-                b['name'] for b in breadcrumb[:-1])
+            if ticket.id in breadcrumbs:
+                breadcrumb = breadcrumbs[ticket.id]
+                ticket.relative_parent_breadcrumbs = u' / '.join(
+                    b['name'] for b in breadcrumb[:-1])
+            else:
+                ticket.relative_parent_breadcrumbs = u'(breadcrumb ERROR please report!)'
 
     def _get_root(self):
         """Return the real root ticket (not the project_id of the ticket)
