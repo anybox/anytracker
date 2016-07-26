@@ -1,7 +1,7 @@
 ##############################################################################
 #
 #    anytracker module for OpenERP, Ticket module
-#    Copyright (C) 2012-2013 Anybox (<http://www.anybox.fr>)
+#    Copyright (C) 2012-2013 Anybox (<https://anybox.fr>)
 #
 #    This file is a part of anytracker
 #
@@ -24,7 +24,7 @@
     'name': 'Anytracker',
     'version': '8.0',
     'author': 'Anybox',
-    'website': 'http://anybox.fr',
+    'website': 'https://anybox.fr',
     'category': 'Project Management',
     'sequence': 150,
     'depends': [
@@ -55,10 +55,6 @@
 - Modifications history tracking
 - Ticket invoicing through an analytic account
 
-Anytracker includes some icons from the "fam fam fam silk" set,
-provided under the terms of the Creative Commons Attribution 2.5 license at
-http://www.famfamfam.com/lab/icons/silk/
-
 You can launch tests from a buildout with:
 
   $ ./bin/openerp_command run-tests -d dbname -m anytracker
@@ -67,6 +63,9 @@ Or, if you installed nose in your buildout
 
   $ ./bin/nosetests -d dbname -- addons-anytracker/anytracker/
 
+Note: Anytracker includes some icons from the "fam fam fam silk" set,
+provided under the terms of the Creative Commons Attribution 2.5 license at
+http://www.famfamfam.com/lab/icons/silk/
 ''',
     'data': [
         # groups:

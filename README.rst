@@ -2,13 +2,14 @@ Anytracker
 ==========
 
 Anytracker is an open-source agile/lean project management tool available as an
-Odoo module, developped and used by `Anybox <http://anybox.fr>`_.
+Odoo module, developped and used by `Anybox <https://anybox.fr>`_.
 
 The project is hosted on Bitbucket as a Mercurial repository: https://bitbucket.org/anybox/anytracker/
 
 It provides:
 
 - Hierarchical ticket management
+- Ticket Typing
 - Kanban view at any level with breadcrumb
 - Customer access with clean project separation
 - Freemind import/export
@@ -50,7 +51,8 @@ Few dependencies
 This tools has been kept separate and independant as most as possible from
 standard Odoo modules. It allowed us to evolve from OpenERP 6.0 to latest
 versions without too much work and easy migration path. Dependency on a few
-standard Odoo modules has only been introduced recently for invoicing features.
+standard Odoo modules has only been introduced recently for invoicing features,
+and might be removed again in the future.
 
 
 Tests
@@ -60,16 +62,18 @@ You can run the tests from a buildout with:
 
   $ ./bin/openerp_command run-tests -d dbname -m anytracker
 
-Or, if you installed nose in your buildout
+Or better, if you installed nose in your buildout
 
   $ ./bin/nosetests -d dbname -- addons-anytracker/anytracker/
 
-Authors
-=======
-
-Contributors:
+Author
+======
 
 - Christophe Combelles
+
+Contributors
+============
+
 - Pierre Verkest
 - Hamza Khchine
 - Simon André
