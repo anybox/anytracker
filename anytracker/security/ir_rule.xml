@@ -7,7 +7,7 @@
             <field name="model_id" ref="model_anytracker_ticket"/>
             <field name="domain_force">['|', '|', ('project_id.participant_ids', 'in', user.id), ('parent_id.participant_ids', 'in', user.id), ('participant_ids', 'in', user.id)]
             </field>
-            <field name="groups" eval="[(4, ref('anytracker.group_customer'))]"/>
+            <field name="groups" eval="[(4, ref('anytracker.group_customer')),(4, ref('anytracker.group_partner'))]"/>
         </record>
         <record id="anytracker_rule_tickets_manager" model="ir.rule">
             <field name="name">Anytracker manager</field>
@@ -21,7 +21,7 @@
             <field name="domain_force">['|', ('anytracker_user_ids', 'in', user.id), ('id', '=',
                 user.company_id.partner_id.id)]
             </field>
-            <field name="groups" eval="[(4, ref('anytracker.group_customer'))]"/>
+            <field name="groups" eval="[(4, ref('anytracker.group_customer')),(4, ref('anytracker.group_partner'))]"/>
             <field name="perm_create" eval="False"/>
             <field name="perm_write" eval="False"/>
             <field name="perm_read" eval="True"/>

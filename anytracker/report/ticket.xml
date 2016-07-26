@@ -165,7 +165,7 @@
         model="anytracker.ticket"
         report_type="qweb-pdf"
         string="Tickets"
-        groups="group_customer,group_member"
+        groups="group_customer,group_member,group_partner"
 />
 
 </data></openerp>

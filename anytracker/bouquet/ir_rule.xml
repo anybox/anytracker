@@ -6,7 +6,7 @@
             <field name="name">Bouquet only for participant in one of the tickets</field>
             <field name="model_id" ref="model_anytracker_bouquet"/>
             <field name="domain_force">['|', ('ticket_ids', '=', False), ('participant_ids', 'in', user.id)]</field>
-            <field name="groups" eval="[(4,ref('anytracker.group_customer')),(4, ref('anytracker.group_member'))]"/>
+            <field name="groups" eval="[(4,ref('anytracker.group_customer')),(4, ref('anytracker.group_partner')),(4, ref('anytracker.group_member'))]"/>
             <field name="perm_create" eval="True"/>
             <field name="perm_write" eval="True"/>
             <field name="perm_read" eval="True"/>

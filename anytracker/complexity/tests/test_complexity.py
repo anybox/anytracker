@@ -33,6 +33,12 @@ class TestComplexity(SharedSetupTransactionCase):
                            [cls.ref('base.group_user'),
                             cls.ref('anytracker.group_manager')])]}
         ).id
+        cls.partner_id = USER.create(
+            {'name': 'Partner',
+             'login': 'partner',
+             'groups_id': [(6, 0,
+                           [cls.ref('anytracker.group_partner')])]}
+        ).id
         cls.customer_id = USER.create(
             {'name': 'Customer',
              'login': 'customer',
@@ -41,19 +47,21 @@ class TestComplexity(SharedSetupTransactionCase):
         ).id
 
     def test_rating(self):
-        """ Simple rating scenario: a manager or member can rate, not a customer.
+        """ Simple rating scenario: a manager or member or partner can rate, not a customer.
         """
-        # create a project with a team of 3 people, and a ticket
+        # create a project with a team of 4 people, and a ticket
         project = self.TICKET.create({
             'name': 'test project',
             'participant_ids': [(6, 0, [
-                self.customer_id, self.member_id, self.manager_id])],
+                self.customer_id, self.partner_id, self.member_id, self.manager_id])],
             'method_id': self.ref('anytracker.method_test')})
         ticket = self.TICKET.create({
             'name': 'Test simple ticket',
             'parent_id': project.id})
         # a member can rate
         ticket.sudo(self.member_id).write({'my_rating': self.complexity2})
+        # a partner can rate
+        ticket.sudo(self.partner_id).write({'my_rating': self.complexity2})
         # a manager can rate
         ticket.sudo(self.manager_id).write({'my_rating': self.complexity2})
         # a customer cannot rate

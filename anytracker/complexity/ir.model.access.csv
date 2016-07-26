@@ -2,5 +2,6 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 "acc_anytracker_complexity_customer","Complexity access for customer","model_anytracker_complexity","group_customer",1,0,0,0
 "acc_anytracker_complexity_manager","Complexity access for manager","model_anytracker_complexity","group_manager",1,1,1,1
 "acc_anytracker_rating_customer","Rating access for customer","model_anytracker_rating","group_customer",1,0,0,0
+"acc_anytracker_rating_partner","Rating access for partner","model_anytracker_rating","group_partner",1,0,1,0
 "acc_anytracker_rating_member","Rating access for member","model_anytracker_rating","group_member",1,0,1,0
 "acc_anytracker_rating_manager","Rating access for manager","model_anytracker_rating","group_manager",1,1,1,1

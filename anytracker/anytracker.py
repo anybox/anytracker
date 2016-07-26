@@ -580,16 +580,18 @@ class ResUsers(models.Model):
     def __init_groups_for_customers(self, values):
         """if the 'customer' group is selected, we """
         group_customer = self.env.ref('anytracker.group_customer').id
+        group_partner = self.env.ref('anytracker.group_partner').id
         group_portal = self.env.ref('base.group_portal').id
         sel_groups = [v for v in values.items()
                       if v[0].startswith('sel_groups_')]
-        if any(['_' + str(group_customer) in g[0]
-               and g[1] and group_customer == g[1]
-               for g in sel_groups]):
-            values = {k: v for k, v in values.items()
-                      if not k.startswith('sel_groups_')
-                      and not k.startswith('_in_group')}
-            values['groups_id'] = [(6, 0, [group_customer, group_portal])]
+        for group_id in (group_customer, group_partner):
+            if any(['_' + str(group_id) in g[0]
+                   and g[1] and group_id == g[1]
+                   for g in sel_groups]):
+                values = {k: v for k, v in values.items()
+                          if not k.startswith('sel_groups_')
+                          and not k.startswith('_in_group')}
+                values['groups_id'] = [(6, 0, [group_id, group_portal])]
         return values
 
     @api.model

@@ -168,7 +168,7 @@
                                 </field>
                             </page>
                             <page string="Participants" attrs="{'invisible': [('parent_id', '!=', False)]}"
-                                  groups="anytracker.group_member">
+                                  groups="anytracker.group_member,anytracker.group_partner">
                                     <field name="is_participant" invisible="True"/>
                                     <button name="join_project" string="Join the project" type="object"
                                             attrs="{'invisible': [('is_participant', '=', True)]}" />
@@ -196,14 +196,14 @@
                                 </field>
                             </page>
 
-                            <page string="History" groups="anytracker.group_member">
-                                <group groups="anytracker.group_member">
+                            <page string="History" groups="anytracker.group_member,anytracker.group_partner">
+                                <group groups="anytracker.group_member,anytracker.group_partner">
                                     <field name="history_ids" nolabel="1" colspan="4" readonly="1"
-                                           groups="anytracker.group_member">
+                                           groups="anytracker.group_member,anytracker.group_partner">
                                         <tree string="History">
-                                            <field name="create_uid" groups="anytracker.group_member"/>
-                                            <field name="create_date" groups="anytracker.group_member"/>
-                                            <field name="modification" groups="anytracker.group_member"/>
+                                            <field name="create_uid" groups="anytracker.group_member,anytracker.group_partner"/>
+                                            <field name="create_date" groups="anytracker.group_member,anytracker.group_partner"/>
+                                            <field name="modification" groups="anytracker.group_member,anytracker.group_partner"/>
                                         </tree>
                                     </field>
                                 </group>

@@ -217,7 +217,7 @@
         model="anytracker.bouquet"
         report_type="qweb-pdf"
         string="Bouquets"
-        groups="group_customer,group_member"
+        groups="group_customer,group_member,group_partner"
 />
 
 </data></openerp>

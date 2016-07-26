@@ -25,10 +25,16 @@ class TestBouquets(SharedSetupTransactionCase):
              'email': 'customer@localhost',
             'groups_id': [(6, 0, [cls.ref('anytracker.group_customer')])],
         }).id
+        cls.partner_id = USER.create({
+            'name': "anytracker partner",
+            'login': 'at.part',
+             'email': 'partner@localhost',
+            'groups_id': [(6, 0, [cls.ref('anytracker.group_partner')])],
+        }).id
         cls.project = cls.TICKET.create({
             'name': "Main test project",
             'method_id': cls.ref('anytracker.method_scrum'),
-            'participant_ids': [(6, 0, [cls.member_id, cls.customer_id])],
+            'participant_ids': [(6, 0, [cls.member_id, cls.customer_id, cls.partner_id])],
         })
         cls.ticket1 = cls.TICKET.create({
             'name': "First ticket",
@@ -54,7 +60,7 @@ class TestBouquets(SharedSetupTransactionCase):
 
     def test_create_read_perm(self):
         """Switch to non-privileged user to check access."""
-        for uid in (self.member_id, self.customer_id):
+        for uid in (self.member_id, self.customer_id, self.partner_id):
             self.uid = uid
             # if this fails, fix the main part of Anytracker first
             # (no other unit tests at this time of writing):
@@ -107,13 +113,21 @@ class TestBouquets(SharedSetupTransactionCase):
         self.assertNoRecord(
             self.ticket_obj,
             [('id', '=', self.ticket1.id)])
+        # same for partner
+        self.uid = self.partner_id
+        self.assertEqual(
+            self.searchUnique(self.bouquet_obj, []),
+            self.bouquet.id)
+        self.assertNoRecord(
+            self.ticket_obj,
+            [('id', '=', self.ticket1.id)])
 
     def test_participant_ids(self):
         # just a very simple case, but better than nothing
         self.assertRecord(
             self.bouquet_obj, self.bouquet.id,
             {'participant_ids':
-                set([self.admin_id, self.member_id, self.customer_id])},
+                set([self.admin_id, self.member_id, self.customer_id, self.partner_id])},
             list_to_set=True)
 
     def test_get_rating(self):
