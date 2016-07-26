@@ -22,10 +22,16 @@
     <field name="model">anytracker.importance</field>
     <field name="arch" type="xml">
         <form string="Importance">
-            <field name="seq"/>
-            <field name="name"/>
-            <field name="method_id" widget="selection"/>
-            <field name="active"/>
+          <group col="2" colspan="2">
+            <group col="2" colspan="2">
+              <field name="name" select="1"/>
+              <field name="description"/>
+            </group>
+            <group col="2" colspan="2">
+              <field name="seq"/>
+              <field name="active"/>
+            </group>
+          </group>
         </form>
     </field>
 </record>
