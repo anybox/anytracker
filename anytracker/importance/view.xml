@@ -55,7 +55,7 @@
     <field name="model">anytracker.ticket</field>
     <field name="inherit_id" ref="anytracker.ticket_view_search"/>
     <field name="arch" type="xml">
-        <xpath expr="//search/group[1]" postion="inside">
+        <xpath expr="//search/group[1]" position="inside">
             <filter name="tickets_by_importance"
                     string="Importance"
                     context="{'group_by': ['importance_id']}"
