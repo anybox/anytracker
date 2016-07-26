@@ -17,7 +17,6 @@
         <group col="2" colspan="2">
           <field name="value"/>
           <field name="color" />
-          <field name="method_id" widget="selection"/>
           <field name="risk"/>
         </group>
       </group>
