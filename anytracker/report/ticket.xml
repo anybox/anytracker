@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+<template id="report_anytracker_ticket">
+    <t t-call="report.external_layout">
+        <div class="page">
+        <style type="text/css" scoped="">
+            * {
+                font-family:helvetica;
+                font-size:12;
+            }
+            h1 {
+                font-family: Arial, sans-serif, "Times New Roman", Times, serif;
+                font-weight: bold;
+                color: #475674;
+                font-size: 24px;
+                text-align: center;
+            }
+
+            h2 {
+                font-family: Arial, sans-serif, "Times New Roman", Times, serif;
+                font-weight: bold;
+                background: #DEF05B;
+                color: #475674;
+                font-size: 18px;
+                padding: 2px;
+            }
+
+            h3 {
+                font-family: Arial, sans-serif, "Times New Roman", Times, serif;
+                font-weight: bold;
+                font-style: italic;
+                color: #475674;
+                font-size: 14px;
+            }
+            /* Force adding break page at the end of the div */
+            div.page-break-after {
+                page-break-after: always;
+            }
+
+            /* Force adding break page at the beginning of the div */
+            div.page-break-before {
+                page-break-before: always;
+            }
+
+            /* Eviter d'avoir un élément sur plusieurs pages */
+            div.avoid-page-break {
+                page-break-inside: avoid;
+            }
+
+
+            p, td {
+                font-family: "Times New Roman", Times, serif;
+                font-size: 12px;
+            }
+
+            span.small {
+                font-size: 12px;
+            }
+
+            /* Usuful to display m2m or tag likes */
+            span.tag{
+                display: inline-block;
+                border: solid 1px #F2F2F2;
+                padding: 0px 2px 0px 2px;
+            }
+
+            span.float-right {
+                float: right;
+            }
+
+            /* table css */
+            table.content {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            table.content > thead {
+                border-bottom:1px solid #444444;
+            }
+            table.content > tbody > tr {
+                border-top:0.5px solid #9C9C9C;
+            }
+            table.content > tfoot {
+                border-top:1px solid #444444;
+            }
+            table.content > thead > tr > th,
+            table.content > tfoot > tr > th
+             {
+                font-family: Arial, sans-serif, "Times New Roman", Times, serif;
+                font-weight: bold;
+                font-size: 14px;
+                text-align: center;
+            }
+            .align-right {
+                text-align: right;
+                padding-right: 8px;
+            }
+        </style>
+        <div class="row" t-if="len(docs)>1">
+
+            <h1>Selected tickets</h1>
+            <table class="content" style="margin-top:85px">
+                <thead>
+                    <tr>
+                        <th>Number</th>
+                        <th>Name</th>
+                        <th>Location</th>
+                        <th>Rating</th>
+                        <th>Stage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-set="rating_sum" t-value="0"/>
+                    <t t-foreach="docs" t-as="ticket">
+                        <tr>
+                            <td><span t-esc="ticket.number"/></td>
+                            <td><span t-esc="ticket.name"/></td>
+                            <td><span t-esc="ticket.breadcrumb"/></td>
+                            <td class="align-right">
+                                <t t-set="rating_sum" t-value="rating_sum+ticket.rating"/>
+                                <span t-esc="ticket.rating"/>
+                            </td>
+                            <td>
+                                 <span t-esc="ticket.stage_id.name"/>
+                            </td>
+                        </tr>
+                    </t>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="3" class="align-right">
+                            Total rating
+                        </th>
+                        <th class="align-right">
+                            <span t-esc="rating_sum"/>
+                        </th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div> <!-- end avoid-page-break -->
+    <t t-foreach="docs" t-as="ticket">
+        <div class="page-break-before">
+            <h2>
+                <span> <t t-esc="ticket.number"/>: <t t-esc="ticket.name"/></span>
+                <span class="float-right">rating: <t t-esc="ticket.rating"/></span>
+            </h2>
+            <span class="small">Location: <t t-esc="ticket.breadcrumb"/></span>
+            <span class="small float-right">Stage: <t t-esc="ticket.stage_id.name"/></span>
+            
+            <h3>Description</h3>
+            <t t-if="ticket.description">
+                <div t-raw="ticket.description"/>
+            </t>
+        </div>  <!-- end breaking page: page-break-before -->
+    </t>
+    </div>
+  </t>
+</template>
+
+<report id="report_ticket"
+        name="anytracker.report_anytracker_ticket"
+        file="anytracker.ticket"
+        model="anytracker.ticket"
+        report_type="qweb-pdf"
+        string="Tickets"
+        groups="group_customer,group_member,group_partner"
+/>
+
+</data></openerp>

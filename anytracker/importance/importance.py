@@ -1,23 +1,21 @@
 # -*- coding: utf-8 -*-
-from openerp.osv import orm
-from openerp.osv import fields
+from openerp import models, fields, api, _
+from openerp.exceptions import except_orm, Warning, RedirectWarning
 
 
-class Importance(orm.Model):
+class Importance(models.Model):
     """For a task, importance is the added value for the customer,
     For an issue, it is the the impact
     """
     _name = 'anytracker.importance'
     _description = 'Importance of Ticket by method'
 
-    _columns = {
-        'name': fields.char('Label of the importance', required=True, size=64, translate=True),
-        'description': fields.text('Description of the importance', translate=True),
-        'seq': fields.integer('Importance'),
-        'active': fields.boolean('Active', help='if check, this object is always available'),
-        'method_id': fields.many2one('anytracker.method', 'Method',
-                                     required=True, ondelete='cascade'),
-    }
+    name = fields.Char('Label of the importance', required=True, size=64, translate=True)
+    description = fields.Text('Description of the importance', translate=True)
+    seq = fields.Integer('Importance')
+    active = fields.Boolean('Active', help='if check, this object is always available')
+    method_id = fields.Many2one('anytracker.method', 'Method',
+                                required=True, ondelete='cascade')
 
     _defaults = {
         'active': True,
@@ -26,7 +24,7 @@ class Importance(orm.Model):
     _order = 'method_id, seq'
 
 
-class Ticket(orm.Model):
+class Ticket(models.Model):
     _inherit = 'anytracker.ticket'
 
     def _get_importance(self, cr, uid, ids, fname, args, context=None):
@@ -35,20 +33,17 @@ class Ticket(orm.Model):
             res[ticket.id] = ticket.importance_id.seq if ticket.importance_id else 0
         return res
 
-    _columns = {
-        'importance_id': fields.many2one('anytracker.importance', 'Importance', required=False),
-        'importance': fields.function(
-            _get_importance, method=True, string='Importance',
-            type='integer', store=True),
-    }
+    importance_id = fields.Many2one('anytracker.importance', 'Importance')
+    importance = fields.Integer(
+        compute='_get_importance', method=True, string='Importance',
+        type='integer', store=True)
 
 
-class Method(orm.Model):
+class Method(models.Model):
     _inherit = 'anytracker.method'
-    _columns = {
-        'importance_ids': fields.one2many(
-            'anytracker.importance',
-            'method_id',
-            'Importances',
-            help="The importances associated to this method"),
-    }
+
+    importance_ids = fields.One2many(
+        'anytracker.importance',
+        'method_id',
+        'Importances',
+        help="The importances associated to this method")

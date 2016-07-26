@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-from openerp.osv import fields
-from openerp.osv import orm
-from tools.translate import _
+from openerp import models, fields, _
+from openerp.exceptions import except_orm
 from xml import sax
 from datetime import datetime
 from cStringIO import StringIO
@@ -9,52 +8,48 @@ from base64 import b64decode
 import time
 
 
-class import_mindmap_wizard(orm.TransientModel):
+class import_mindmap_wizard(models.TransientModel):
     _name = 'import.mindmap.wizard'
     _description = 'Import mindmap .mm file into anytracker tree'
-    _columns = {
-        'ticket_id': fields.many2one(
-            'anytracker.ticket', 'Ticket',
-            help="Ticket that will be updated"),
-        'import_method': fields.selection(
-            [('update', 'Update the ticket tree'),
-             ('insert', 'Insert under the ticket')],
-            'Import method',
-            required=True,
-            help="You can either update a tree or insert the mindmap under an existing ticket"
-        ),
-        'mindmap_content': fields.binary(_('File'), required=True),
-        'green_complexity': fields.many2one(
-            'anytracker.complexity',
-            'green complexity',
-            required=True),
-        'orange_complexity': fields.many2one(
-            'anytracker.complexity',
-            'orange complexity',
-            required=True),
-        'red_complexity': fields.many2one(
-            'anytracker.complexity',
-            'red complexity',
-            required=True),
-        'method_id': fields.many2one('anytracker.method', 'Project method', required=True),
-    }
-    _defaults = {
-        'import_method': 'insert'
-    }
 
-    def execute_import(self, cr, uid, ids, context=None):
+    ticket_id = fields.Many2one(
+        'anytracker.ticket', 'Ticket',
+        help="Ticket that will be updated")
+    import_method = fields.Selection(
+        [('update', 'Update the ticket tree'),
+         ('insert', 'Insert under the ticket')],
+        'Import method',
+        required=True,
+        default='insert',
+        help=_("You can either update a tree or insert "
+               "the mindmap under an existing ticket"))
+    mindmap_content = fields.Binary(
+        _('File'),
+        required=True)
+    green_complexity = fields.Many2one(
+        'anytracker.complexity',
+        'green complexity',
+        required=True)
+    orange_complexity = fields.Many2one(
+        'anytracker.complexity',
+        'orange complexity',
+        required=True)
+    red_complexity = fields.Many2one(
+        'anytracker.complexity',
+        'red complexity',
+        required=True)
+    method_id = fields.Many2one(
+        'anytracker.method',
+        'Project method',
+        required=True)
+
+    def execute_import(self):
         '''Launch import of nn file from mindmap'''
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        for wizard in self.browse(cr, uid, ids, context=context):
-            complexity_dict = {'green_complexity_id': wizard.green_complexity.id or False,
-                               'orange_complexity_id': wizard.orange_complexity.id or False,
-                               'red_complexity_id': wizard.red_complexity.id or False,
-                               }
-            content_handler = FreemindContentHandler(cr, uid, self.pool, wizard, complexity_dict)
+        for wizard in self:
+            handler = FreemindContentHandler(wizard)
             error_handler = FreemindErrorHandler()
             sax.parse(StringIO(b64decode(wizard.mindmap_content)),
-                      content_handler, error_handler)
+                      handler, error_handler)
         return {'type': 'ir.actions.act_window_close'}
 
 
@@ -63,26 +58,26 @@ class FreemindContentHandler(sax.ContentHandler):
 
     rich_content_buffer = None
 
-    def __init__(self, cr, uid, pool, wizard, complexity_dict):
-        '''get element for access to openobject pool and db cursor'''
-        self.cr = cr
-        self.uid = uid
-        self.pool = pool
-        self.wizard = wizard
-        self.import_method = wizard.import_method
-        self.ticket_id = wizard.ticket_id.id if wizard.ticket_id else False
+    def __init__(self, wizard):
+        self.wiz = wizard
+        self.TICKET = self.wiz.env['anytracker.ticket']
+        self.TICKET = self.TICKET.with_context({'import_mindmap': True})
+        self.ticket = self.wiz.ticket_id
         self.parent_ids = []
         self.updated_ticket_ids = []
-        self.complexity_dict = complexity_dict
-        self.context = self.pool.get('res.users').context_get(cr, uid)
-        self.context['import_mindmap'] = True
-        stages = wizard.method_id.stage_ids
-        self.initial_stage = sorted(stages,
-                                    key=lambda x: x and x.sequence)[0].id if stages else False
+        self.complexity_dict = {
+            'green_complexity_id': wizard.green_complexity.id or False,
+            'orange_complexity_id': wizard.orange_complexity.id or False,
+            'red_complexity_id': wizard.red_complexity.id or False}
+        self.initial_stage = sorted(
+            wizard.method_id.stage_ids,
+            key=lambda x: x and x.sequence
+            )[0].id if wizard.method_id.stage_ids else False
 
     def startElement(self, name, attrs):
+        """TOO COMPLEX (cyclomatic 18) !!!
+        """
         names = attrs.getNames()
-        ticket_pool = self.pool.get('anytracker.ticket')
         if name == 'node':
             text_name = ''
             if 'TEXT' in names:
@@ -91,30 +86,34 @@ class FreemindContentHandler(sax.ContentHandler):
                 text_name = ''
             if len(self.parent_ids) == 0:
                 # first ticket
-                if self.import_method == 'insert':
-                    self.parent_id = self.ticket_id
-                elif self.import_method == 'update':
-                    if not self.ticket_id:
-                        raise orm.except_orm(
+                if self.wiz.import_method == 'insert':
+                    self.parent = self.ticket
+                elif self.wiz.import_method == 'update':
+                    if not self.ticket:
+                        raise except_orm(
                             _('Error'),
                             _("To be able to use update method, "
                               "you should set a parent ticket "
                               "on the export wizard"))
-                    ticket = ticket_pool.browse(self.cr, self.uid, self.ticket_id, self.context)
-                    self.parent_id = ticket.parent_id.id if ticket.parent_id else False
+                    self.parent = self.ticket.parent_id
                 else:
                     raise Exception('Bad import method')
             else:
-                self.parent_id = self.parent_ids[-1:][0]['orm_id']
+                self.parent = self.TICKET.browse(
+                    self.parent_ids[-1:][0]['orm_id'])
 
-            modified_mindmap = datetime.fromtimestamp(int(attrs.getValue('MODIFIED'))/1000.0)
-            modified_mindmap = datetime.strftime(modified_mindmap, '%Y-%m-%d %H:%M:%S')
-            created_mindmap = datetime.fromtimestamp(int(attrs.getValue('CREATED'))/1000.0)
-            created_mindmap = datetime.strftime(created_mindmap, '%Y-%m-%d %H:%M:%S')
+            modified_mindmap = datetime.fromtimestamp(
+                int(attrs.getValue('MODIFIED')) / 1000.0)
+            modified_mindmap = datetime.strftime(
+                modified_mindmap, '%Y-%m-%d %H:%M:%S')
+            created_mindmap = datetime.fromtimestamp(
+                int(attrs.getValue('CREATED')) / 1000.0)
+            created_mindmap = datetime.strftime(
+                created_mindmap, '%Y-%m-%d %H:%M:%S')
             id_mindmap = attrs.getValue('ID')
             vals = {
                 'name': text_name,
-                'parent_id': self.parent_id,
+                'parent_id': self.parent.id,
                 'id_mindmap': id_mindmap,
                 'modified_mindmap': modified_mindmap,
                 'created_mindmap': created_mindmap,
@@ -127,19 +126,18 @@ class FreemindContentHandler(sax.ContentHandler):
                 ('id_mindmap', '=', id_mindmap),
                 ('created_mindmap', '=', created_mindmap),
             ]
-            if self.parent_id:
-                domain.append(('parent_id', '=', self.parent_id))
-            elif self.ticket_id:
-                domain.append(('id', '=', self.ticket_id))
-            orm_id = ticket_pool.search(self.cr, self.uid, domain,
-                                        context=self.context)
-            if (not orm_id) or (not self.parent_id and not self.ticket_id):
-                vals['method_id'] = self.wizard.method_id.id,
-                orm_id = ticket_pool.create(self.cr, self.uid, vals, context=self.context)
+            if self.parent:
+                domain.append(('parent_id', '=', self.parent.id))
+            elif self.ticket:
+                domain.append(('id', '=', self.ticket.id))
+            orm_id = self.TICKET.search(domain)
+            if (not orm_id) or (not self.parent and not self.ticket):
+                vals['method_id'] = self.wiz.method_id.id,
+                orm_id = self.TICKET.create(vals).id
             else:
-                assert self.import_method == 'update', "Found existing ticket, but "
+                assert self.wiz.import_method == 'update', "Found ticket, but "
                 "import method is not update"
-                ticket_pool.write(self.cr, self.uid, orm_id, vals, context=self.context)
+                self.TICKET.browse(orm_id).write(vals)
                 orm_id = orm_id[0]
             self.parent_ids.append({'id': id_mindmap, 'orm_id': orm_id})
             self.updated_ticket_ids.append(orm_id)
@@ -160,7 +158,7 @@ class FreemindContentHandler(sax.ContentHandler):
             else:
                 complexity_id = False
             if complexity_id:
-                self.pool.get('anytracker.rating').create(
+                self.wiz.env['anytracker.rating'].create(
                     self.cr, self.uid,
                     {'ticket_id': self.parent_ids[-1:][0]['orm_id'],
                      'complexity_id': complexity_id,
@@ -177,7 +175,6 @@ class FreemindContentHandler(sax.ContentHandler):
             self.rich_content_buffer[-1] += content.replace('\n', ' ')
 
     def endElement(self, name):
-        ticket_pool = self.pool.get('anytracker.ticket')
         if self.rich_content_buffer:
             self.rich_content_buffer[-1] = self.rich_content_buffer[-1].strip()
         if name == 'p':
@@ -186,26 +183,25 @@ class FreemindContentHandler(sax.ContentHandler):
             if len(self.parent_ids) != 0:
                 self.parent_ids.pop()
         if name == 'richcontent':
-            ticket_pool.write(
-                self.cr, self.uid,
-                self.parent_ids[-1:][0]['orm_id'],
-                {'description': ''.join(self.rich_content_buffer)},
-                context=self.context)
+            self.TICKET.browse(self.parent_ids[-1:][0]['orm_id']).write(
+                {'description': ''.join(self.rich_content_buffer)})
             self.rich_content_buffer = False
         if self.rich_content_buffer:
             self.rich_content_buffer.append('')
 
     def endDocument(self):
-        ticket_obj = self.pool.get('anytracker.ticket')
         first_ticket_id = self.updated_ticket_ids[0]
-        if self.ticket_id and self.ticket_id != first_ticket_id and self.import_method == 'update':
-            raise orm.except_orm(_('Error'), _('You try to update the wrong main ticket'))
+        if (self.ticket
+                and self.ticket.id != first_ticket_id
+                and self.wiz.import_method == 'update'):
+            raise except_orm(_('Error'),
+                             _('You try to update the wrong main ticket'))
         domain = [
             ('id', 'child_of', first_ticket_id),  # children of main ticket
             ('id', 'not in', self.updated_ticket_ids),  # ticket not updated
         ]
-        deleted_ticket_ids = ticket_obj.search(self.cr, self.uid, domain, context=self.context)
-        ticket_obj.unlink(self.cr, self.uid, deleted_ticket_ids, context=self.context)
+        deleted_ticket_ids = self.TICKET.search(domain)
+        self.TICKET.browse(deleted_ticket_ids).unlink()
 
 
 class FreemindErrorHandler(sax.ErrorHandler):
@@ -213,15 +209,15 @@ class FreemindErrorHandler(sax.ErrorHandler):
 
     def error(self, exception):
         "Handle a recoverable error."
-        raise orm.except_orm(_('Error !'),
-                             exception.args[0])
+        raise except_orm(_('Error !'),
+                         exception.args[0])
 
     def fatalError(self, exception):
         "Handle a non-recoverable error."
-        raise orm.except_orm(_('Error !'),
-                             exception.args[0])
+        raise except_orm(_('Error !'),
+                         exception.args[0])
 
     def warning(self, exception):
         "Handle a warning."
-        raise orm.except_orm(_('Warning !'),
-                             exception.args[0])
+        raise except_orm(_('Warning !'),
+                         exception.args[0])

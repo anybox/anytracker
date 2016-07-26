@@ -1,5 +1,6 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 acc_anytracker_ticket_customer,Ticket access for customers,model_anytracker_ticket,group_customer,1,1,1,0
+acc_anytracker_ticket_partner,Ticket access for partners,model_anytracker_ticket,group_partner,1,1,1,1
 acc_anytracker_ticket_member,Ticket access for members,model_anytracker_ticket,group_member,1,1,1,1
 acc_anytracker_mail_message_customer,Message creation for customer,mail.model_mail_message,group_customer,1,1,1,0
 acc_anytracker_mail_notification_customer,Mail notification for customer,mail.model_mail_notification,group_customer,1,1,1,0
@@ -10,3 +11,4 @@ acc_anytracker_customer_attachments,Attachments for customers,base.model_ir_atta
 acc_anytracker_customer_groups,Groups for customers,base.model_res_groups,group_customer,1,0,0,0
 acc_anytracker_customer_types,Types for customers,model_anytracker_ticket_type,group_customer,1,0,0,0
 acc_anytracker_manager_types,Types for managers,model_anytracker_ticket_type,group_manager,1,1,1,1
+acc_anytracker_customer_menu,Menus for customers,base.model_ir_ui_menu,group_customer,1,0,0,0

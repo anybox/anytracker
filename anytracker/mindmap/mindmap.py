@@ -1,19 +1,24 @@
 # coding: utf-8
-from openerp.osv import orm
-from openerp.osv import fields
+from openerp import models, fields
 
 
-class Ticket(orm.Model):
+class Ticket(models.Model):
+    # TODO: We shoudn't have to add fields in this model for that!!
     _inherit = 'anytracker.ticket'
-    _columns = {
-        'id_mindmap': fields.char('ID MindMap', size=64),
-        'created_mindmap': fields.datetime('Created MindMap'),
-        'modified_mindmap': fields.datetime('Modified MindMap'),
-        'modified_openerp': fields.datetime('Modified OpenERP'),
-    }
 
-    def makeTreeData(self, cr, uid, ids, context=None):
-        '''Return all ticket of a tree so ordered'''
+    id_mindmap = fields.Char(
+        'ID MindMap',
+        size=64)
+    created_mindmap = fields.Datetime(
+        'Created MindMap')
+    modified_mindmap = fields.Datetime(
+        'Modified MindMap')
+    modified_openerp = fields.Datetime(
+        'Modified OpenERP')
+
+    def makeTreeData(self):
+        '''Return all ticket of a tree so ordered
+        '''
         data_to_retrieve = ['description',
                             'modified_mindmap',
                             'child_ids',
@@ -25,16 +30,16 @@ class Ticket(orm.Model):
                             'name']
 
         def makeRecursTree(ticket_branch):
-            ticket_ids = self.search(cr, uid, [('parent_id', '=', ticket_branch['id'])])
-            for ticket_id in ticket_ids:
+            tickets = self.search([('parent_id', '=', ticket_branch['id'])])
+            for ticket in tickets:
                 if 'child' not in ticket_branch:
                     ticket_branch['child'] = []
-                ticket_branch['child'].append(
-                    self.read(cr, uid, ticket_id, data_to_retrieve, context)
-                )
-                makeRecursTree(ticket_branch['child'][len(ticket_branch['child'])-1])
+                ticket_branch['child'].append(ticket.read(data_to_retrieve)[0])
+                makeRecursTree(
+                    ticket_branch['child'][len(ticket_branch['child']) - 1])
+
         ticket_tree = []
-        for ticket_tree_data in self.read(cr, uid, ids, data_to_retrieve, context):
+        for ticket_tree_data in self.read(data_to_retrieve):
             ticket_tree.append(ticket_tree_data)
             ticket_tree_data = makeRecursTree(ticket_tree_data)
         return ticket_tree

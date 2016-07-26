@@ -9,13 +9,21 @@
 <record id="group_customer" model="res.groups">
     <field name="name">Customer</field>
     <field name="category_id" ref="module_category_anytracker"/>
+    <field name="implied_ids" eval="[(4, ref('base.group_portal'))]"/>
 </record>
 
-<!-- project member -->
+<!-- partner -->
+<record id="group_partner" model="res.groups">
+    <field name="name">Partner</field>
+    <field name="category_id" ref="module_category_anytracker"/>
+    <field name="implied_ids" eval="[(4, ref('group_customer'))]"/>
+</record>
+
+<!-- internal member -->
 <record id="group_member" model="res.groups">
     <field name="name">Member</field>
     <field name="category_id" ref="module_category_anytracker"/>
-    <field name="implied_ids" eval="[(4, ref('group_customer'))]"/>
+    <field name="implied_ids" eval="[(4, ref('group_partner'))]"/>
 </record>
 
 <!-- manager -->

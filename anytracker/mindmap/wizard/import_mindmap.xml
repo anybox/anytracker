@@ -46,7 +46,7 @@
         <menuitem id="menu_freemind"
           name="Freemind"
           sequence="200"
-          groups="group_member"
+          groups="group_member,group_partner"
           parent="tabmenu_anytracker"/>
         <menuitem id="menu_import_mindmap_wizard"
             name="Import..."

@@ -1,21 +1,19 @@
 # -*- coding: utf-8 -*-
 from xml.sax.saxutils import XMLGenerator
-import random
+from random import randint
 import time
 
 
 class FreemindParser(object):
     '''Parse openerp project'''
-    def __init__(self, cr, uid, pool, handler, ticket_id, complexity_dict):
+    def __init__(self, handler, wizard):
+        self.wiz = wizard
         self.handler = handler
-        self.pool = pool
-        self.ticket_id = ticket_id
-        self.complexity_dict = complexity_dict
+        self.complexity_dict = self.wiz.complexity_dict  # TODO unused?
 
-    def parse(self, cr, uid):
-        ticket_osv = self.pool.get('anytracker.ticket')
+    def parse(self):
         self.handler.startDocument()
-        ticket_tree_ids = ticket_osv.makeTreeData(cr, uid, [self.ticket_id])
+        ticket_tree_ids = self.wiz.ticket_id.makeTreeData()
 
         def recurs_ticket(ticket_d):
             ticket_write = ticket_d.copy()
@@ -26,6 +24,7 @@ class FreemindParser(object):
                 for ticket in ticket_d['child']:
                     recurs_ticket(ticket)
             self.handler.endElement('node')
+
         recurs_ticket(ticket_tree_ids[0])
         self.handler.endDocument()
         return True
@@ -35,16 +34,16 @@ def gMF(date):
     '''getMindmapDateFormat
 
     input: OpenERP string date/time format
-    output: str of decimal representation of Epoch-based timestamp milliseconds, rounded.
+    output: str of decimal repr of Epoch-based timestamp milliseconds, rounded.
     '''
-    timestamp = time.mktime(time.strptime(date, '%Y-%m-%d %H:%M:%S')) if date else time.time()
+    timestamp = time.mktime(time.strptime(date, '%Y-%m-%d %H:%M:%S')
+                            ) if date else time.time()
     return '%d' % (timestamp * 1000)
 
 
 class FreemindWriterHandler(XMLGenerator):
     '''For generate .mm file'''
-    def __init__(self, cr, uid, pool, fp):
-        self.pool = pool
+    def __init__(self, fp):
         self.padding = 0
         XMLGenerator.__init__(self, fp, 'UTF-8')
 
@@ -59,12 +58,12 @@ class FreemindWriterHandler(XMLGenerator):
         self._write(stopElement.decode())
 
     def startElement(self, tag, attrs={}):
-        attrs_write = {'CREATED': gMF(attrs['created_mindmap']),
-                       'MODIFIED': gMF(max(attrs['modified_mindmap'],
-                                           attrs['modified_openerp'])),
-                       'ID': attrs['id_mindmap'] or 'ID_' + str(random.randint(1, 10**10)),
-                       'TEXT': attrs['name'],
-                       }
+        attrs_write = {
+            'CREATED': gMF(attrs['created_mindmap']),
+            'MODIFIED': gMF(max(attrs['modified_mindmap'],
+                                attrs['modified_openerp'])),
+            'ID': attrs['id_mindmap'] or 'ID_' + str(randint(1, 10**10)),
+            'TEXT': attrs['name']}
         XMLGenerator.startElement(self, tag, attrs_write)
 
     def endElement(self, tag):

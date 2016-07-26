@@ -23,7 +23,7 @@
 ###############################################################################
 {
     'name': 'Live Anytracker',
-    'version': '1.0.0',
+    'version': '8.0',
     'sequence': 150,
     'category': 'Anybox',
     'description': """
@@ -35,7 +35,7 @@
         'web_live',
         'anytracker',
     ],
-    'installable': True,
+    'installable': False,  # unported
     'application': False,
     'auto_install': False,
     'license': 'AGPL-3',

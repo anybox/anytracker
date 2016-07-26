@@ -1,433 +1,490 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp><data>
+<openerp>
+    <data>
+        <template id="assets_backend" name="anytracker_assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" href="/anytracker/static/src/css/anytracker.css"/>
+                <script type="text/javascript" src="/anytracker/static/src/js/jquery.md5.js"></script>
+                <script type="text/javascript" src="/anytracker/static/src/js/anytracker.js"></script>
+            </xpath>
+        </template>
 
-<!-- Search tickets -->
-<record id="ticket_view_search" model="ir.ui.view">
-  <field name="name">Search tickets</field>
-  <field name="model">anytracker.ticket</field>
-  <field name="priority" eval="8"/>
-  <field name="arch" type="xml">
-  <search string="Search tickets">
-    <filter name="filter_tasks"
-            string="Tasks"
-            domain="[('type.has_children','=',False)]"
-            help="Show only leaf tickets. They correspond to tasks"/>
-    <filter name="filter_nodes"
-            string="Nodes"
-            domain="[('type.has_children','=',True)]"
-            help="Show only tickets which have sub-tickets. They are used to gather tickets by nodes"/>
-    <filter name="filter_projects"
-            string="Projects"
-            domain="[('parent_id','=',False)]"
-            help="Show only toplevel tickets. They correspond to projects"/>
-    <separator/>
-    <filter name="unfinished"
-            string="Unfinished"
-            domain="[('progress', '&lt;', 100.0)]"
-            help="Show unfinished tickets"/>
-    <filter name="trash"
-            string="Trash"
-            domain="[('active', '=', False), ('state', '=', 'trashed')]"
-            help="Show trashed tickets"/>
-    <separator/>
-    <group string="Group by...">
-      <filter name="tickets_by_project"
-            string="Project"
-            context="{'group_by': ['project_id']}"
-            help="Group tickets by project"/>
-      <filter name="tickets_by_node"
-            string="Node"
-            context="{'group_by': ['parent_id']}"
-            help="Group tickets by node"/>
-    </group>
-    <field name="number" select="True"/>
-    <field name="name" select="True"/>
-    <field name="description"/>
-    <field name="project_id"/>
-    <field name="type"/>
-    <field name="id" invisible="1"/>
-  </search>
-  </field>
-</record>
+        <!-- Search tickets -->
+        <record id="ticket_view_search" model="ir.ui.view">
+            <field name="name">Search tickets</field>
+            <field name="model">anytracker.ticket</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <search string="Search tickets">
+                    <filter name="filter_tasks"
+                            string="Tasks"
+                            domain="[('type.has_children','=',False)]"
+                            help="Show only leaf tickets. They correspond to tasks"/>
+                    <filter name="filter_nodes"
+                            string="Nodes"
+                            domain="[('type.has_children','=',True)]"
+                            help="Show only tickets which have sub-tickets. They are used to gather tickets by nodes"/>
+                    <filter name="filter_projects"
+                            string="Projects"
+                            domain="[('parent_id','=',False)]"
+                            help="Show only toplevel tickets. They correspond to projects"/>
+                    <separator/>
+                    <filter name="isparticipant"
+                            string="I'm a member"
+                            domain="['|', '|', ('project_id.participant_ids', 'in', uid), ('parent_id.participant_ids', 'in', uid), ('participant_ids', 'in', uid)]"
+                            help="Only ticket whose project I'm member of"/>
+                    <separator/>
+                    <filter name="unfinished"
+                            string="Unfinished"
+                            domain="[('progress', '&lt;', 100.0)]"
+                            help="Show unfinished tickets"/>
+                    <filter name="trash"
+                            string="Trash"
+                            domain="[('active', '=', False), ('state', '=', 'trashed')]"
+                            help="Show trashed tickets"/>
+                    <separator/>
+                    <group string="Group by...">
+                        <filter name="tickets_by_project"
+                                string="Project"
+                                context="{'group_by': ['project_id']}"
+                                help="Group tickets by project"/>
+                        <filter name="tickets_by_node"
+                                string="Node"
+                                context="{'group_by': ['parent_id']}"
+                                help="Group tickets by node"/>
+                    </group>
+                    <field name="number" select="True"/>
+                    <field name="name" select="True"/>
+                    <field name="description"/>
+                    <field name="project_id"/>
+                    <field name="type"/>
+                    <field name="id" invisible="1"/>
+                </search>
+            </field>
+        </record>
 
-<!-- Ticket list -->
-<record id="ticket_tree" model="ir.ui.view">
-  <field name="name">Tickets</field>
-  <field name="model">anytracker.ticket</field>
-  <field name="priority" eval="10"/>
-  <field name="arch" type="xml">
-    <tree string="Ticket treeview">
-      <field name="number"/>
-      <field name="breadcrumb"/>
-      <field name="parent_id" invisible="1"/>
-      <field name="create_date"/>
-      <field name="write_date"/>
-    </tree>
-  </field>
-</record>
-<!-- Projects or node list -->
-<record id="node_view_tree" model="ir.ui.view">
-  <field name="name">Nodes</field>
-  <field name="model">anytracker.ticket</field>
-  <field name="priority" eval="10"/>
-  <field name="arch" type="xml">
-    <tree string="Ticket treeview">
-      <field name="number"/>
-      <field name="breadcrumb"/>
-      <field name="method_id"/>
-      <field name="parent_id" invisible="1"/>
-      <field name="create_date"/>
-      <field name="write_date"/>
-    </tree>
-  </field>
-</record>
+        <!-- Ticket list -->
+        <record id="ticket_tree" model="ir.ui.view">
+            <field name="name">Tickets</field>
+            <field name="model">anytracker.ticket</field>
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+                <tree string="Ticket treeview">
+                    <field name="number"/>
+                    <field name="breadcrumb"/>
+                    <field name="parent_id" invisible="1"/>
+                    <field name="create_date"/>
+                    <field name="write_date"/>
+                </tree>
+            </field>
+        </record>
+        <!-- Projects or node list -->
+        <record id="node_view_tree" model="ir.ui.view">
+            <field name="name">Nodes</field>
+            <field name="model">anytracker.ticket</field>
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+                <tree string="Ticket treeview">
+                    <field name="number"/>
+                    <field name="breadcrumb"/>
+                    <field name="method_id"/>
+                    <field name="is_participant" invisible="True"/>
+                    <button name="join_project" string="Click to join the project" type="object" icon="STOCK_NO"
+                            attrs="{'invisible': ['|', ('is_participant', '=', True), ('parent_id', '!=', False)]}"/>
+                    <button name="leave_project" string="Click to leave the project" type="object" icon="STOCK_YES"
+                            attrs="{'invisible': ['|', ('is_participant', '=', False), ('parent_id', '!=', False)]}"/>
+                    <field name="parent_id" invisible="1"/>
+                    <field name="create_date"/>
+                    <field name="write_date"/>
+                </tree>
+            </field>
+        </record>
 
-<!-- Short list view to ease parent selection (should be replaced by dynatree) -->
-<record id="just_names" model="ir.ui.view">
-  <field name="name">Tickets</field>
-  <field name="model">anytracker.ticket</field>
-  <field name="priority" eval="20"/>
-  <field name="arch" type="xml">
-    <tree string="Ticket treeview">
-      <field name="number"/>
-      <field name="breadcrumb"/>
-      <field name="project_id" invisible="1"/>
-      <field name="parent_id" invisible="1"/>
-    </tree>
-  </field>
-</record>
+        <!-- Short list view to ease parent selection (should be replaced by dynatree) -->
+        <record id="just_names" model="ir.ui.view">
+            <field name="name">Tickets</field>
+            <field name="model">anytracker.ticket</field>
+            <field name="priority" eval="20"/>
+            <field name="arch" type="xml">
+                <tree string="Ticket treeview">
+                    <field name="number"/>
+                    <field name="breadcrumb"/>
+                    <field name="project_id" invisible="1"/>
+                    <field name="parent_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
 
-<!-- Ticket form -->
-<record id="ticket_view_form" model="ir.ui.view">
-  <field name="name">ticket.form</field>
-  <field name="model">anytracker.ticket</field>
-  <field name="priority" eval="10"/>
-  <field name="arch" type="xml">
-    <form version="7.0" string="Ticket">
-      <header>
-        <button name="trash" string="Trash" type="object" states="running"/>
-        <button name="reactivate" string="Reactivate" type="object" states="trashed"/>
-      </header>
-    <sheet>
-        <group>
-            <group>
-                <field name="parent_id" colspan="4" nolabel="1" placeholder="Project (or parent ticket)"
-                       on_change="onchange_parent(parent_id)" domain="['|',('type.has_children', '=', True), ('parent_id','=',False)]"
-                       context="{'tree_view_ref': 'anytracker.just_names'}">
-                </field>
-                <h1>
-                    <field name="name" default_focus="1" placeholder="Ticket title"/>
-                </h1>
-            </group>
-            <group id="extend">
-                <field name="type" widget="selection"/>
-                <field name="number" readonly="1" />
-                <field name="method_id" attrs="{'invisible': [('parent_id', '!=', False)]}"
-                       domain="['|', ('project_id', '=', False), ('project_id', '=', id)]"/>
-                <field name="project_method_id" invisible="1"/>
-                <field name="rating" readonly="True"/>
-                <field name="active" invisible="1"/>
-                <field name="state" invisible="1"/>
-            </group>
-        </group>
+        <!-- Ticket form -->
+        <record id="ticket_view_form" model="ir.ui.view">
+            <field name="name">ticket.form</field>
+            <field name="model">anytracker.ticket</field>
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+                <form version="7.0" string="Ticket">
+                    <header>
+                        <button name="trash" string="Trash" type="object" states="running"/>
+                        <button name="reactivate" string="Reactivate" type="object" states="trashed"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="parent_id" colspan="4" nolabel="1" placeholder="Project (or parent ticket)"
+                                       domain="['|',('type.has_children', '=', True), ('parent_id','=',False)]"
+                                       context="{'tree_view_ref': 'anytracker.just_names'}">
+                                </field>
+                                <h1>
+                                    <field name="name" default_focus="1" placeholder="Ticket title"/>
+                                </h1>
+                            </group>
+                            <group id="extend">
+                                <field name="type" widget="selection"/>
+                                <field name="number" readonly="1"/>
+                                <field name="method_id" attrs="{'invisible': [('parent_id', '!=', False)]}"
+                                       domain="['|', ('project_id', '=', False), ('project_id', '=', id)]"/>
+                                <field name="project_method_id" invisible="1"/>
+                                <field name="rating" readonly="True"/>
+                                <field name="active" invisible="1"/>
+                                <field name="state" invisible="1"/>
+                            </group>
+                        </group>
 
-      <notebook>
-        <page string="Description">
-            <field name="description" colspan="4" widget="html" nolabel="1"/>
-        </page>
-        <page string="Sub-tickets">
-          <field name="child_ids" nolabel="1" context="{'default_parent_id': active_id}">
-            <tree>
-                <field name="number"/>
-                <field name="name"/>
-                <field name="stage_id"/>
-                <field name="progress"/>
-                <field name="rating"/>
-                <field name="risk"/>
-                <field name="importance_id"/>
-                <field name="priority_id"/>
-            </tree>
-          </field>
-        </page>
-        <page string="Participants" attrs="{'invisible': [('parent_id', '!=', False)]}" groups="anytracker.group_member">
-          <field name="participant_ids" colspan="4" widget="many2many_kanban">
-            <kanban quick_create="false" create="true">
-                <field name="name"/>
-                <templates>
-                    <t t-name="kanban-box">
-                        <div> 
-                            <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
-                            <div class="oe_module_vignette">
-                                <div class="oe_module_desc">
-                                    <field name="name"/>
+                        <notebook>
+                            <page string="Description">
+                                <field name="description" colspan="4" widget="html" nolabel="1"/>
+                            </page>
+                            <page string="Sub-tickets">
+                                <field name="child_ids" nolabel="1" context="{'default_parent_id': active_id}">
+                                    <tree>
+                                        <field name="number"/>
+                                        <field name="name"/>
+                                        <field name="stage_id"/>
+                                        <field name="progress"/>
+                                        <field name="rating"/>
+                                        <field name="risk"/>
+                                        <field name="importance_id"/>
+                                        <field name="priority_id"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Participants" attrs="{'invisible': [('parent_id', '!=', False)]}"
+                                  groups="anytracker.group_member,anytracker.group_partner">
+                                    <field name="is_participant" invisible="True"/>
+                                    <button name="join_project" string="Join the project" type="object"
+                                            attrs="{'invisible': [('is_participant', '=', True)]}" />
+                                    <button name="leave_project" string="Leave the project" type="object"
+                                            attrs="{'invisible': [('is_participant', '=', False)]}"/>
+                                <field name="participant_ids" colspan="4" widget="many2many_kanban">
+                                    <kanban quick_create="false" create="true">
+                                        <field name="name"/>
+                                        <templates>
+                                            <t t-name="kanban-box">
+                                                <div>
+                                                    <a t-if="! read_only_mode" type="delete"
+                                                       style="position: absolute; right: 0; padding: 4px; diplay: inline-block">
+                                                        X
+                                                    </a>
+                                                    <div class="oe_module_vignette">
+                                                        <div class="oe_module_desc">
+                                                            <field name="name"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </t>
+                                        </templates>
+                                    </kanban>
+                                </field>
+                            </page>
+
+                            <page string="History" groups="anytracker.group_member,anytracker.group_partner">
+                                <group groups="anytracker.group_member,anytracker.group_partner">
+                                    <field name="history_ids" nolabel="1" colspan="4" readonly="1"
+                                           groups="anytracker.group_member,anytracker.group_partner">
+                                        <tree string="History">
+                                            <field name="create_uid" groups="anytracker.group_member,anytracker.group_partner"/>
+                                            <field name="create_date" groups="anytracker.group_member,anytracker.group_partner"/>
+                                            <field name="modification" groups="anytracker.group_member,anytracker.group_partner"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"
+                               help="Follow this ticket to track the events associated with it and its subtickets"
+                               groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Ticket Kanban View  -->
+        <record model="ir.ui.view" id="tickets_kanban2">
+            <field name="name">Anytracker - tickets</field>
+            <field name="model">anytracker.ticket</field>
+            <field name="arch" type="xml">
+                <kanban version="7.0" class="oe_background_grey">
+                    <field name="color"/>
+                    <field name="number"/>
+                    <field name="permalink"/>
+                    <field name="name"/>
+                    <field name="icon"/>
+                    <field name="sequence"/>
+                    <field name="relative_parent_breadcrumbs"/>
+                    <field name="description"/>
+                    <field name="shortened_description"/>
+                    <field name="has_attachment"/>
+                    <templates>
+                        <t t-name="ticket_details">
+                            <div>
+                                <t t-raw="record.description.raw_value"/>
+                            </div>
+                        </t>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_card oe_kanban_project oe_kanban_global_click">
+
+                                <div class="oe_kanban_content">
+                                    <small class="at_kanban_breadcrumbs">
+                                        <t t-if="record.relative_parent_breadcrumbs.raw_value">
+                                            <field name="relative_parent_breadcrumbs"/>
+                                        </t>
+                                    </small>
+                                    <h4>
+                                        <t t-if="record.icon.raw_value">
+                                            <img t-attf-src="#{'data:image;base64,' + record.icon.raw_value}"/>
+                                        </t>
+                                        <a t-attf-href="#{record.permalink.value}"
+                                           onclick="event.preventDefault()" class="at_kanban_ticket_number">
+                                            <field name="number"/>
+                                        </a>
+                                      <span class="at_kanban_ticket_title"
+                                            tooltip="ticket_details">
+                                            <field name="name"/>
+                                      </span>
+                                    </h4>
+
+                                    <div>
+                                        <t t-raw="record.shortened_description.raw_value"/>
+                                    </div>
+
+                                    <div class="oe_kanban_bottom_left" style="margin-top: 0.5em">
+                                        <t groups="anytracker.group_customer">
+                                            <a string="Edit" icon="gtk-edit" type="edit"/>
+                                        </t>
+                                        <t t-if="record.has_attachment.raw_value">
+                                            <img src="/anytracker/static/src/img/paperclip.png"/>
+                                        </t>
+                                        <div class="oe_dropdown_toggle oe_dropdown_kanban"
+                                             groups="anytracker.group_customer">
+                                            <span class="oe_e">í</span>
+                                            <ul class="oe_dropdown_menu">
+                                                <t t-if="widget.view.is_action_enabled('edit')">
+                                                    <li>
+                                                        <a type="edit">Edit ticket</a>
+                                                    </li>
+                                                </t>
+                                            </ul>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </t>
-                </templates>
-            </kanban>
-          </field>
-        </page>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
 
-        <page string="History" groups="anytracker.group_member">
-        <group groups="anytracker.group_member">
-          <field name="history_ids" nolabel="1" colspan="4" readonly="1" groups="anytracker.group_member">
-            <tree string="History">
-              <field name="create_uid" groups="anytracker.group_member"/>
-              <field name="create_date" groups="anytracker.group_member"/>
-              <field name="modification" groups="anytracker.group_member"/>
-            </tree>
-          </field>
-        </group>
-        </page>
-      </notebook>
-      </sheet>
-      <div class="oe_chatter">
-          <field name="message_follower_ids" widget="mail_followers" help="Follow this project to automatically track the events associated to tasks and issues of this project." groups="base.group_user"/>
-          <field name="message_ids" widget="mail_thread"/>
-      </div>
-    </form>
-  </field>
-</record>
+        <!-- Ticket type -->
+        <record id="view_type_form" model="ir.ui.view">
+            <field name="name">anytracker.ticket.type.form</field>
+            <field name="model">anytracker.ticket.type</field>
+            <field name="type">form</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <form string="Type" version="7.0">
+                    <sheet>
+                        <group>
+                            <h1>
+                                <field name="name" select="1" placeholder="Ticket type"/>
+                            </h1>
+                        </group>
+                        <group>
+                            <field name="code"/>
+                            <field name="has_children"/>
+                            <field name="default"/>
+                            <field name="icon"/>
+                            <field name="description"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
 
-<!-- Ticket Kanban View  -->
-<record model="ir.ui.view" id="tickets_kanban2">
-  <field name="name">Anytracker - tickets</field>
-  <field name="model">anytracker.ticket</field>
-  <field name="arch" type="xml">
-    <kanban version="7.0" class="oe_background_grey">
-      <field name="color"/>
-      <field name="number"/>
-      <field name="permalink"/>
-      <field name="name"/>
-      <field name="icon"/>
-      <field name="sequence"/>
-      <field name="relative_parent_breadcrumbs"/>
-      <field name="description"/>
-      <field name="shortened_description"/>
-      <field name="has_attachment"/>
-      <templates>
-        <t t-name="ticket_details">
-            <div><t t-raw="record.description.raw_value"/></div>
-        </t>
-        <t t-name="kanban-box">
-          <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_card oe_kanban_project oe_kanban_global_click">
-
-            <div class="oe_kanban_content">
-                <h4>
-                  <t t-if="record.icon.raw_value">
-                      <img t-attf-src="#{'data:image;base64,' + record.icon.raw_value}"/>
-                  </t>
-                  <a t-attf-href="#{record.permalink.value}"
-                     class="at_kanban_ticket_number">
-                    <field name="number"/>
-                  </a>
-                    <t t-if="record.relative_parent_breadcrumbs.raw_value">
-                      <span class="at_kanban_breadcrumbs">
-                        <field name="relative_parent_breadcrumbs"/>
-                      </span>
-                    </t>
-                  <span class="at_kanban_ticket_title"
-                        tooltip="ticket_details">
+        <!-- hierarchical view for the tickets -->
+        <record id="tickets_hierarchy" model="ir.ui.view">
+            <field name="name">anytracker.ticket.hierarchy</field>
+            <field name="model">anytracker.ticket</field>
+            <field name="field_parent">subnode_ids</field>
+            <field name="arch" type="xml">
+                <tree string="Tickets hierarchy">
                     <field name="name"/>
-                  </span>
-                </h4>
+                    <field name="nb_children"/>
+                </tree>
+            </field>
+        </record>
 
-                <div>
-                  <t t-raw="record.shortened_description.raw_value"/>
-                </div>
+        <!-- allow to click in the hierarchical view -->
+        <!-- Still impossible to open directly in the form view :'( -->
+        <record id="action_hierarchy_line_select" model="ir.actions.act_window">
+            <field name="name">Tickets</field>
+            <field name="res_model">anytracker.ticket</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_id" ref="tickets_kanban2"/>
+            <field name="domain">[('id', 'child_of', active_id), ('id', '!=', active_id)]</field>
+            <field name="context">{
+                'search_default_filter_tasks': 1,
+                'search_default_isparticipant': 1,
+                'search_default_unfinished': 1,
+                'group_by': 'stage_id'}
+            </field>
+        </record>
+        <record id="ir_value_hierarchy_line_select" model="ir.values">
+            <field name="key2">tree_but_open</field>
+            <field name="model">anytracker.ticket</field>
+            <field name="name">Open ticket</field>
+            <field name="value" eval="'ir.actions.act_window,%d'%action_hierarchy_line_select"/>
+        </record>
 
-                <div class="oe_kanban_bottom_left" style="margin-top: 0.5em">
-                  <t groups="anytracker.group_customer">
-                    <a string="Edit" icon="gtk-edit" type="edit"/>
-                  </t>
-                  <t t-if="record.has_attachment.raw_value">
-                      <img src="/anytracker/static/src/img/paperclip.png"/>
-                  </t>
-                  <div class="oe_dropdown_toggle oe_dropdown_kanban"
-                       groups="anytracker.group_customer">
-                    <span class="oe_e">í</span>
-                    <ul class="oe_dropdown_menu">
-                      <t t-if="widget.view.is_action_enabled('edit')">
-                        <li><a type="edit">Edit ticket</a></li>
-                      </t>
-                    </ul>
-                  </div>
-                </div>
-            </div>
-          </div>
-        </t>
-      </templates>
-    </kanban>
-  </field>
-</record>
+        <!-- ACTIONS -->
+        <record model="ir.actions.act_window" id="action_kanbans">
+            <field name="name">Hierarchy</field>
+            <field name="res_model">anytracker.ticket</field>
+            <field name="view_type">tree</field>
+            <field name="view_id" ref="tickets_hierarchy"/>
+            <field name="domain">[('parent_id', '=', False),'|', '|', ('project_id.participant_ids', 'in', uid), ('parent_id.participant_ids', 'in', uid), ('participant_ids', 'in', uid)]</field>
+            <field name="help">To create a new ticket, open the tree below and click on the relevant node, then
+                click on "Create"
+            </field>
+        </record>
 
-<!-- Ticket type -->
-<record id="view_type_form" model="ir.ui.view">
-    <field name="name">anytracker.ticket.type.form</field>
-    <field name="model">anytracker.ticket.type</field>
-    <field name="type">form</field>
-    <field name="priority" eval="8"/>
-    <field name="arch" type="xml">
-    <form string="Type" version="7.0">
-    <sheet>
-        <group>
-        <h1><field name="name" select="1" placeholder="Ticket type"/></h1>
-        </group>
-        <group>
-        <field name="code"/>
-        <field name="has_children"/>
-        <field name="default"/>
-        <field name="icon"/>
-        <field name="description"/>
-        </group>
-    </sheet>
-    </form>
-    </field>
-</record>
+        <record model="ir.actions.act_window" id="tickets_action_form">
+            <field name="name">Anytracker - Ticket</field>
+            <field name="res_model">anytracker.ticket</field>
+            <field name="view_mode">tree,form,kanban</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="ticket_view_form"/>
+        </record>
 
-<!-- hierarchical view for the tickets -->
-<record id="tickets_hierarchy" model="ir.ui.view">
-  <field name="name">anytracker.ticket.hierarchy</field>
-  <field name="model">anytracker.ticket</field>
-  <field name="field_parent">subnode_ids</field>
-  <field name="arch" type="xml">
-    <tree string="Tickets hierarchy">
-      <field name="name"/>
-      <field name="nb_children"/>
-    </tree>
-  </field>
-</record>
+        <record model="ir.actions.act_window" id="act_all_projects">
+            <field name="name">Projects</field>
+            <field name="res_model">anytracker.ticket</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="tickets_kanban2"/>
+            <field name="context">{
+                'tree_view_ref': 'node_view_tree',
+                'search_default_isparticipant': 1,
+                'search_default_filter_projects': 1,
+                'search_default_unfinished': 1}
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="act_all_nodes">
+            <field name="name">Nodes</field>
+            <field name="res_model">anytracker.ticket</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="node_view_tree"/>
+            <field name="context">{
+                'search_default_filter_nodes': 1,
+                'search_default_isparticipant': 1,
+                'search_default_unfinished': 1}
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="act_all_tasks">
+            <field name="name">Tickets</field>
+            <field name="res_model">anytracker.ticket</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="ticket_tree"/>
+            <field name="context">{
+                'search_default_filter_tasks': 1,
+                'search_default_isparticipant': 1,
+                'search_default_unfinished': 1}
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="act_trash">
+            <field name="name">Trash</field>
+            <field name="res_model">anytracker.ticket</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="ticket_tree"/>
+            <field name="context">{'search_default_trash': 1}</field>
+        </record>
+        <record model="ir.actions.act_window" id="act_open_types_view">
+            <field name="name">Ticket types</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">anytracker.ticket.type</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
 
-<!-- allow to click in the hierarchical view -->
-<!-- Still impossible to open directly in the form view :'( -->
-<record id="action_hierarchy_line_select" model="ir.actions.act_window">
-    <field name="name">Tickets</field>
-    <field name="res_model">anytracker.ticket</field>
-    <field name="view_type">form</field>
-    <field name="view_mode">kanban,tree,form</field>
-    <field name="view_id" ref="tickets_kanban2"/>
-    <field name="domain">[('id', 'child_of', active_id), ('id', '!=', active_id)]</field>
-    <field name="context">{'search_default_filter_tasks': 1, 'search_default_unfinished': 1, 'group_by': 'stage_id'}</field>
-</record>
-<record id="ir_value_hierarchy_line_select" model="ir.values">
-    <field name="key2">tree_but_open</field>
-    <field name="model">anytracker.ticket</field>
-    <field name="name">Open ticket</field>
-    <field name="value" eval="'ir.actions.act_window,%d'%action_hierarchy_line_select"/>
-</record>
+        <!-- server action to create a specific method for a project -->
+        <record id="action_set_specific_method" model="ir.actions.server">
+            <field name="name">Create specific method</field>
+            <field name="model_id" ref="model_anytracker_ticket"/>
+            <field name="state">code</field>
+            <field name="code">action = obj.set_custom_method()</field>
+        </record>
 
-<!-- ACTIONS -->
-<record model="ir.actions.act_window" id="action_kanbans">
-  <field name="name">Hierarchy</field>
-  <field name="res_model">anytracker.ticket</field>
-  <field name="view_type">tree</field>
-  <field name="view_id" ref="tickets_hierarchy"/>
-  <field name="domain">[('parent_id', '=', False)]</field>
-  <field name="help">To create a new ticket, open the tree below and click on the relevant parent ticket, then click on "Create"</field>
-</record>
+        <record model="ir.values" id="set_specific_method">
+            <field name="model_id" ref="model_anytracker_ticket"/>
+            <field name="name">Create specific method</field>
+            <field name="key2">client_action_multi</field>
+            <field name="value" eval="'ir.actions.server,%d'%action_set_specific_method"/>
+            <field name="model">anytracker.ticket</field>
+        </record>
 
-<record model="ir.actions.act_window" id="tickets_action_form">
-  <field name="name">Anytracker - Ticket</field>
-  <field name="res_model">anytracker.ticket</field>
-  <field name="view_mode">tree,form,kanban</field>
-  <field name="view_type">form</field>
-  <field name="view_id" ref="ticket_view_form"/>
-</record>
+        <!-- MENUITEMS -->
+        <menuitem id="tabmenu_anytracker"
+                  name="Anytracker"
+                  sequence="11"/>
+        <menuitem id="menu_anytracker"
+                  name="Anytracker"
+                  parent="tabmenu_anytracker"
+                  sequence="0"/>
+        <menuitem id="menu_hierarchy"
+                  parent="menu_anytracker"
+                  sequence="10"
+                  action="action_kanbans"/>
+        <menuitem id="menu_all_projects"
+                  parent="menu_anytracker"
+                  sequence="20"
+                  action="act_all_projects"/>
+        <menuitem id="menu_all_nodes"
+                  parent="menu_anytracker"
+                  sequence="30"
+                  action="act_all_nodes"/>
+        <menuitem id="menu_all_tasks"
+                  parent="menu_anytracker"
+                  sequence="40"
+                  action="act_all_tasks"/>
+        <menuitem id="menu_trash"
+                  parent="menu_anytracker"
+                  sequence="60"
+                  action="act_trash"/>
+        <menuitem id="menu_configuration"
+                  name="Configuration"
+                  sequence="200"
+                  groups="group_manager"
+                  parent="tabmenu_anytracker"/>
+        <menuitem id="menu_types"
+                  parent="menu_configuration"
+                  sequence="20"
+                  action="act_open_types_view"/>
 
-<record model="ir.actions.act_window" id="act_all_projects">
-  <field name="name">Projects</field>
-  <field name="res_model">anytracker.ticket</field>
-  <field name="view_mode">tree,form</field>
-  <field name="view_type">form</field>
-  <field name="view_id" ref="tickets_kanban2"/>
-  <field name="context">{'tree_view_ref': 'node_view_tree', 'search_default_filter_projects': 1, 'search_default_unfinished': 1}</field>
-</record>
-<record model="ir.actions.act_window" id="act_all_nodes">
-  <field name="name">Nodes</field>
-  <field name="res_model">anytracker.ticket</field>
-  <field name="view_mode">tree,form</field>
-  <field name="view_type">form</field>
-  <field name="view_id" ref="node_view_tree"/>
-  <field name="context">{'search_default_filter_nodes': 1, 'search_default_unfinished': 1}</field>
-</record>
-<record model="ir.actions.act_window" id="act_all_tasks">
-  <field name="name">Tickets</field>
-  <field name="res_model">anytracker.ticket</field>
-  <field name="view_mode">tree,form</field>
-  <field name="view_type">form</field>
-  <field name="view_id" ref="ticket_tree"/>
-  <field name="context">{'search_default_filter_tasks': 1, 'search_default_unfinished': 1}</field>
-</record>
-<record model="ir.actions.act_window" id="act_trash">
-  <field name="name">Trash</field>
-  <field name="res_model">anytracker.ticket</field>
-  <field name="view_mode">tree,form</field>
-  <field name="view_type">form</field>
-  <field name="view_id" ref="ticket_tree"/>
-  <field name="context">{'search_default_trash': 1}</field>
-</record>
-<record model="ir.actions.act_window" id="act_open_types_view">
-    <field name="name">Ticket types</field>
-    <field name="type">ir.actions.act_window</field>
-    <field name="res_model">anytracker.ticket.type</field>
-    <field name="view_type">form</field>
-    <field name="view_mode">tree,form</field>
-</record>
-
-<!-- server action to create a specific method for a project -->
-<record id="action_set_specific_method" model="ir.actions.server">
-    <field name="name">Create specific method</field>
-    <field name="model_id" ref="model_anytracker_ticket"/>
-    <field name="state">code</field>
-    <field name="code">action = obj.set_custom_method()</field>
-</record>
-
-<record model="ir.values" id="set_specific_method">
-    <field name="model_id" ref="model_anytracker_ticket"/>
-    <field name="name">Create specific method</field>
-    <field name="key2">client_action_multi</field>
-    <field name="value" eval="'ir.actions.server,%d'%action_set_specific_method" />
-    <field name="model">anytracker.ticket</field>
-</record>
-
-<!-- MENUITEMS -->
-<menuitem id="tabmenu_anytracker"
-  name="Anytracker"
-  sequence="11"/>
-<menuitem id="menu_anytracker"
-  name="Anytracker"
-  parent="tabmenu_anytracker"
-  sequence="0"/>
-    <menuitem id="menu_hierarchy"
-      parent="menu_anytracker"
-      sequence="10"
-      action="action_kanbans" />
-    <menuitem id="menu_all_projects"
-      parent="menu_anytracker"
-      sequence="20"
-      action="act_all_projects" />
-    <menuitem id="menu_all_nodes"
-      parent="menu_anytracker"
-      sequence="30"
-      action="act_all_nodes" />
-    <menuitem id="menu_all_tasks"
-      parent="menu_anytracker"
-      sequence="40"
-      action="act_all_tasks" />
-    <menuitem id="menu_trash"
-      parent="menu_anytracker"
-      sequence="60"
-      action="act_trash" />
-<menuitem id="menu_configuration"
-  name="Configuration"
-  sequence="200"
-  groups="group_manager"
-  parent="tabmenu_anytracker"/>
-<menuitem id="menu_types"
-    parent="menu_configuration"
-    sequence="20"
-    action="act_open_types_view"/>
-
-</data> </openerp>
+    </data>
+</openerp>
 

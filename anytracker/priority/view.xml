@@ -24,7 +24,7 @@
     <field name="inherit_id" ref="anytracker.ticket_view_search"/>
     <field name="priority" eval="16"/>
     <field name="arch" type="xml">
-        <xpath expr="//search/group[1]" postion="inside">
+        <xpath expr="//search/group[1]" position="inside">
             <filter name="tickets_by_priority"
                     string="Priority"
                     context="{'group_by': ['priority_id']}"
@@ -56,7 +56,7 @@
     <field name="priority" eval="16"/>
     <field name="arch" type="xml">
         <xpath expr="//group[@id='extend']" position="inside">
-            <field name="priority_id" domain="[('method_id', '=', method_id)]" on_change="onchange_priority(priority_id)" attrs="{'invisible': [('parent_id','=',False)]}"/>
+            <field name="priority_id" domain="[('method_id', '=', method_id)]" attrs="{'invisible': [('parent_id','=',False)]}"/>
             <field name="has_deadline" invisible="1"/>
             <field name="deadline" attrs="{'invisible': ['|',('has_deadline','=',False),('parent_id','=',False)], 'required': [('has_deadline','=',True)]}"/>
         </xpath>
