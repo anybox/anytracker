@@ -507,8 +507,10 @@ class Ticket(models.Model):
         'res.users',
         string='Requester')
     parent_left = fields.Integer(
+        select=True,
         string='Parent Left', )
     parent_right = fields.Integer(
+        select=True,
         string='Parent Right', )
     sequence = fields.Integer(
         string='sequence')
