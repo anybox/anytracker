@@ -186,8 +186,7 @@ class TestAnytracker(SharedSetupTransactionCase):
         self.assertRaises(except_orm, mb_partner.read, ['email'])
         # The customer can read but not write the partner linked to its company
         customer = self.USER.sudo(self.customer_id).browse(self.customer_id)
-        self.assertEquals(customer.company_id.partner_id.email,
-                          'contact@anybox.fr')
+        self.assertEquals('@' in customer.company_id.partner_id.email, True)
         self.assertRaises(except_orm, customer.company_id.partner_id.write,
                           {'email': 'test@test.fr'})
 
