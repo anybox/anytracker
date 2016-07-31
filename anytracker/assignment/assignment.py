@@ -22,8 +22,7 @@ class Assignment(models.Model):
         ondelete='cascade')
     stage_id = fields.Many2one(
         'anytracker.stage',
-        string='Stage',
-        required=True)
+        string='Stage')
     date = fields.Datetime(
         string='Date',
         default=lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
