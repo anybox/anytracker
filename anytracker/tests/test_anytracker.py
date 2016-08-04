@@ -85,14 +85,15 @@ class TestAnytracker(SharedSetupTransactionCase):
                  self.customer_id, self.member_id, self.manager_id])],
              'method_id': self.ref('anytracker.method_test')})
 
-        self.assertEqual(self.TICKET.search([('fulltext', 'ilike', 'foo')]),
-                         project)
-        self.assertEqual(self.TICKET.search([('fulltext', 'ilike', 'bar')]),
-                         project)
-        self.assertEqual(self.TICKET.search([('fulltext', 'ilike', str(project.number))]),
-                         project)
+        self.assertTrue(
+            project in self.TICKET.search([('fulltext', 'ilike', 'foo')]))
+        self.assertTrue(
+            project in self.TICKET.search([('fulltext', 'ilike', 'bar')]))
+        number = str(project.number)
+        self.assertTrue(
+            project in self.TICKET.search([('fulltext', 'ilike', number)]))
         self.assertEqual(
-            len(self.TICKET.search([('fulltext', 'ilike', 'nomatch')])),
+            len(self.TICKET.search([('fulltext', 'ilike', '###nomatch###')])),
             0)
 
     def test_disable_project(self):
