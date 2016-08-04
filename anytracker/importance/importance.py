@@ -36,6 +36,7 @@ class Importance(models.Model):
 
     _order = 'method_id, seq DESC'
 
+    @api.multi
     def write(self, vals):
         """ in case the sequence is changed,
         we must change all the stored importances on tickets

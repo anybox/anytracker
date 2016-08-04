@@ -40,6 +40,7 @@ class Priority(models.Model):
         "Default",
         help="Default priority for new tickets")
 
+    @api.multi
     def write(self, vals):
         """ in case the sequence is changed,
         we must change all the stored priorities on tickets
