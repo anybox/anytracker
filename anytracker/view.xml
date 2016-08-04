@@ -53,8 +53,9 @@
                                 context="{'group_by': ['parent_id']}"
                                 help="Group tickets by node"/>
                     </group>
+                    <field name="fulltext" select="True"/>
                     <field name="number" select="True"/>
-                    <field name="name" select="True"/>
+                    <field name="name"/>
                     <field name="description"/>
                     <field name="project_id"/>
                     <field name="type"/>

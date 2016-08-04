@@ -77,6 +77,24 @@ class TestAnytracker(SharedSetupTransactionCase):
         for j in range(len(ticket_id_by_number)):
             self.assertEquals(ticket_id_by_number[j], ticket)
 
+    def test_fulltext(self):
+        project = self.TICKET.create(
+            {'name': 'Foo',
+             'description': 'Bar',
+             'participant_ids': [(6, 0, [
+                 self.customer_id, self.member_id, self.manager_id])],
+             'method_id': self.ref('anytracker.method_test')})
+
+        self.assertEqual(self.TICKET.search([('fulltext', 'ilike', 'foo')]),
+                         project)
+        self.assertEqual(self.TICKET.search([('fulltext', 'ilike', 'bar')]),
+                         project)
+        self.assertEqual(self.TICKET.search([('fulltext', 'ilike', str(project.number))]),
+                         project)
+        self.assertEqual(
+            len(self.TICKET.search([('fulltext', 'ilike', 'nomatch')])),
+            0)
+
     def test_disable_project(self):
         """ Set a node as inactive, and check all subtickets are also inactive
         """

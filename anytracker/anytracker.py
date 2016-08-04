@@ -437,6 +437,17 @@ class Ticket(models.Model):
                 continue
             ticket.write({'participant_ids': [(3, self.env.uid)]})
 
+    def _compute_fulltext(self):
+        """Used only to force fulltext into a function field."""
+        return ''
+
+    def _search_fulltext(self, operator, value):
+        return ['|', '|',
+                ('name', operator, value),
+                ('description', operator, value),
+                ('number', operator, value),
+                ]
+
     name = fields.Char(
         string='Title',
         required=True)
@@ -452,6 +463,10 @@ class Ticket(models.Model):
         string='Permalink', )
     description = fields.Text(
         string='Description')
+    fulltext = fields.Text(
+        compute='_compute_fulltext',
+        search='_search_fulltext',
+        store=False)
     create_date = fields.Datetime(
         string='Creation Time')
     write_date = fields.Datetime(
