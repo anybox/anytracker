@@ -19,7 +19,8 @@ class Importance(models.Model):
         'Description of the importance',
         translate=True)
     seq = fields.Integer(
-        'Importance')
+        'Importance',
+        help="A higher value is higher importance")
     active = fields.Boolean(
         'Active',
         default=True,
@@ -33,7 +34,18 @@ class Importance(models.Model):
         "Default",
         help="Default importance for new tickets")
 
-    _order = 'method_id, seq'
+    _order = 'method_id, seq DESC'
+
+    def write(self, vals):
+        """ in case the sequence is changed,
+        we must change all the stored importances on tickets
+        """
+        seq = vals.get('seq')
+        if seq:
+            self.env['anytracker.ticket'].search(
+                [('importance_id', '=', self.id)]).write(
+                    {'importance': seq})
+        return super(Importance, self).write(vals)
 
 
 class Ticket(models.Model):

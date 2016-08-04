@@ -75,3 +75,7 @@ class TestImportance(SharedSetupTransactionCase):
             ('method_id', '=', self.ref('anytracker.method_test')),
             ('type', '=', 'ticket')])
         self.assertEquals([t.importance for t in tickets], [20, 0, -1])
+        # in case we change the seq of an importance,
+        # the stored field should change as well
+        self.IMPORTANCE.browse(self.importance_nice).write({'seq': -2})
+        self.assertEquals(ticket.importance, -2)

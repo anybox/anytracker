@@ -46,7 +46,7 @@ class Rating(models.Model):
     """Represents the rating of a ticket by one person at one time
     """
     _name = 'anytracker.rating'
-    _order = 'time desc'
+    _order = 'time DESC'
 
     complexity_id = fields.Many2one(
         'anytracker.complexity',

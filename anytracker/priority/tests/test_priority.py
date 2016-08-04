@@ -37,6 +37,7 @@ class TestPriority(SharedSetupTransactionCase):
             'parent_id': project.id})
         # we check that a default priority has been set
         self.assertEquals(ticket.priority_id.name, 'NORMAL')
+        self.assertEquals(ticket.priority, 10)
         # the customer sets another priority
         ticket.sudo(self.customer_id).write({'priority_id': self.prio_urgent})
         self.assertEquals(ticket.priority_id.seq, 30)
@@ -71,3 +72,7 @@ class TestPriority(SharedSetupTransactionCase):
             ('method_id', '=', self.ref('anytracker.method_test')),
             ('type', '=', 'ticket')])
         self.assertEquals([t.priority for t in tickets], [20, 0, -1])
+        # in case we change the seq of a priority,
+        # the stored field should change as well
+        self.PRIORITY.browse(self.prio_normal).write({'seq': -2})
+        self.assertEquals(ticket.priority, -2)

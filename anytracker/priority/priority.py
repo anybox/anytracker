@@ -10,7 +10,7 @@ class Priority(models.Model):
     """
     _name = 'anytracker.priority'
     _description = 'Priority of Ticket by method'
-    _order = 'method_id, seq'
+    _order = 'method_id, seq DESC'
 
     name = fields.Char(
         'Priority name',
@@ -22,7 +22,7 @@ class Priority(models.Model):
         translate=True)
     seq = fields.Integer(
         'Priority',
-        help='a low value is higher priority')
+        help='a higher value is higher priority')
     active = fields.Boolean(
         'Active',
         default=True,
@@ -39,6 +39,17 @@ class Priority(models.Model):
     default = fields.Boolean(
         "Default",
         help="Default priority for new tickets")
+
+    def write(self, vals):
+        """ in case the sequence is changed,
+        we must change all the stored priorities on tickets
+        """
+        seq = vals.get('seq')
+        if seq:
+            self.env['anytracker.ticket'].search(
+                [('priority_id', '=', self.id)]).write(
+                    {'priority': seq})
+        return super(Priority, self).write(vals)
 
 
 class Ticket(models.Model):
