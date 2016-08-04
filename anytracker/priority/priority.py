@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from openerp import models, fields, api, _
-from openerp.exceptions import except_orm, Warning, RedirectWarning
+from openerp.exceptions import except_orm
 
 
 class Priority(models.Model):
@@ -36,6 +36,9 @@ class Priority(models.Model):
         'Force to choose a deadline on the ticket?')
     date = fields.Date(
         'Milestone')
+    default = fields.Boolean(
+        "Default",
+        help="Default priority for new tickets")
 
 
 class Ticket(models.Model):
@@ -44,7 +47,7 @@ class Ticket(models.Model):
     @api.depends('priority_id')
     def _get_priority(self):
         for t in self:
-            t.priority = t.priority_id.seq if t.priority_id else 0
+            t.priority = t.priority_id.seq if t.priority_id else None
 
     @api.multi
     @api.onchange('priority_id')
@@ -53,6 +56,29 @@ class Ticket(models.Model):
             self.has_deadline = True
         else:
             self.has_deadline = False
+
+    @api.model
+    def create(self, values):
+        """select the default priority
+        """
+        METHOD = self.env['anytracker.method']
+        PRIORITY = self.env['anytracker.priority']
+        if not values.get('priority_id'):
+            if values.get('parent_id'):
+                method = self.browse(values.get('parent_id')).method_id
+            else:
+                method = METHOD.browse(values['method_id'])
+            priorities = PRIORITY.search([
+                ('method_id', '=', method.id),
+                ('default', '=', True)])
+            if len(priorities) > 1:
+                raise except_orm(
+                    _('Anytracker Configuration Error'),
+                    _("Two priorities are configured as the default one "
+                      "in the '{}' method".format(method.name)))
+            if len(priorities) == 1:
+                values['priority_id'] = priorities[0].id
+        return super(Ticket, self).create(values)
 
     has_deadline = fields.Boolean(
         'priority_id.deadline',

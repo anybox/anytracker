@@ -49,7 +49,7 @@ class Ticket(models.Model):
     _name = 'anytracker.ticket'
     _description = "Anytracker tickets"
     _rec_name = 'breadcrumb'
-    _order = 'priority ASC, importance DESC, sequence ASC, create_date DESC'
+    _order = 'priority DESC, importance DESC, sequence ASC, create_date DESC'
     _parent_store = True
     _inherit = ['mail.thread']
 

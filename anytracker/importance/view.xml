@@ -10,6 +10,7 @@
         <tree string="Importances">
             <field name="seq"/>
             <field name="name"/>
+            <field name="default"/>
             <field name="method_id"/>
             <field name="active"/>
         </tree>
@@ -25,6 +26,7 @@
           <group col="2" colspan="2">
             <group col="2" colspan="2">
               <field name="name" select="1"/>
+              <field name="default"/>
               <field name="description"/>
             </group>
             <group col="2" colspan="2">

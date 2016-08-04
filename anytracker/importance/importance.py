@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from openerp import models, fields, api
+from openerp import models, fields, api, _
+from openerp.exceptions import except_orm
 
 
 class Importance(models.Model):
@@ -21,16 +22,16 @@ class Importance(models.Model):
         'Importance')
     active = fields.Boolean(
         'Active',
+        default=True,
         help='if check, this object is always available')
     method_id = fields.Many2one(
         'anytracker.method',
         'Method',
         required=True,
         ondelete='cascade')
-
-    _defaults = {
-        'active': True,
-    }
+    default = fields.Boolean(
+        "Default",
+        help="Default importance for new tickets")
 
     _order = 'method_id, seq'
 
@@ -41,7 +42,7 @@ class Ticket(models.Model):
     @api.depends('importance_id')
     def _get_importance(self):
         for t in self:
-            t.importance = t.importance_id.seq if t.importance_id else 0
+            t.importance = t.importance_id.seq if t.importance_id else None
 
     importance_id = fields.Many2one(
         'anytracker.importance',
@@ -51,6 +52,29 @@ class Ticket(models.Model):
         string='Importance',
         type='integer',
         store=True)
+
+    @api.model
+    def create(self, values):
+        """select the default importance
+        """
+        METHOD = self.env['anytracker.method']
+        IMPORTANCE = self.env['anytracker.importance']
+        if not values.get('importance_id'):
+            if values.get('parent_id'):
+                method = self.browse(values.get('parent_id')).method_id
+            else:
+                method = METHOD.browse(values['method_id'])
+            importances = IMPORTANCE.search([
+                ('method_id', '=', method.id),
+                ('default', '=', True)])
+            if len(importances) > 1:
+                raise except_orm(
+                    _('Anytracker Configuration Error'),
+                    _("Two importances are configured as the default one "
+                      "in the '{}' method".format(method.name)))
+            if len(importances) == 1:
+                values['importance_id'] = importances[0].id
+        return super(Ticket, self).create(values)
 
 
 class Method(models.Model):
