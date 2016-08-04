@@ -41,6 +41,7 @@ class Priority(models.Model):
 class Ticket(models.Model):
     _inherit = 'anytracker.ticket'
 
+    @api.depends('priority_id')
     def _get_priority(self):
         for t in self:
             t.priority = t.priority_id.seq if t.priority_id else 0
@@ -64,7 +65,6 @@ class Ticket(models.Model):
         'Priority')
     priority = fields.Integer(
         compute='_get_priority',
-        method=True,
         string='Priority',
         store=True)
 

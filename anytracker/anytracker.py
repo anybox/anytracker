@@ -64,6 +64,7 @@ class Ticket(models.Model):
                 ticket.has_attachment = False
             ticket.has_attachment = True
 
+    @api.depends('description')
     def _shortened_description(self):
         """shortened description used in the list view and kanban view
         """
@@ -416,6 +417,7 @@ class Ticket(models.Model):
         else:
             super(Ticket, self).message_unsubscribe_users(user_ids)
 
+    @api.depends('participant_ids')
     def _is_participant(self):
         uid = self.env.uid
         for ticket in self:
