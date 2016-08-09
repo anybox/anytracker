@@ -69,7 +69,7 @@ class Ticket(models.Model):
         'anytracker.priority',
         'Priority')
     priority = fields.Integer(
-        compute='_get_priority',
+        compute='_priority',
         string='Priority',
         store=True)
     priority_color = fields.Char(
@@ -77,7 +77,7 @@ class Ticket(models.Model):
         compute='_priority_color')
 
     @api.depends('priority_id')
-    def _get_priority(self):
+    def _priority(self):
         for t in self:
             if t.priority_id:
                 t.priority = t.priority_id.seq

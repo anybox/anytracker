@@ -60,7 +60,7 @@ class Ticket(models.Model):
         'anytracker.importance',
         'Importance')
     importance = fields.Integer(
-        compute='_get_importance',
+        compute='_importance',
         string='Importance',
         type='integer',
         store=True)
@@ -69,7 +69,7 @@ class Ticket(models.Model):
         compute='_importance_color')
 
     @api.depends('importance_id')
-    def _get_importance(self):
+    def _importance(self):
         for t in self:
             t.importance = t.importance_id.seq if t.importance_id else None
 

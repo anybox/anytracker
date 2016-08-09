@@ -16,7 +16,7 @@
         </group>
         <group col="2" colspan="2">
           <field name="value"/>
-          <field name="color" />
+          <field name="color" widget="color"/>
           <field name="risk"/>
         </group>
       </group>
@@ -67,6 +67,7 @@
                         <field name="name"/>
                         <field name="description"/>
                         <field name="value"/>
+                        <field name="color" widget="color"/>
                         <field name="risk"/>
                     </tree>
                 </field>
@@ -116,11 +117,12 @@
     <field name="arch" type="xml">
       <xpath expr="/kanban/field[last()]" position="after">
         <field name="rating"/>
+        <field name="highest_rating"/>
       </xpath>
       <xpath expr="//div[@class='oe_kanban_bottom_left']" position="inside">
           <t t-if="record.rating.raw_value != 0">
             <div style="border-radius: 8px; border: solid 1px rgba(0, 0, 0, .2);;">
-                <span title="Rating"><t t-esc="record.rating.raw_value"/></span>
+                <span t-attf-title="#{record.highest_rating.value}"><t t-esc="record.rating.raw_value"/></span>
             </div>
           </t>
       </xpath>

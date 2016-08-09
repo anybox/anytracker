@@ -244,7 +244,7 @@
                             </div>
                         </t>
                         <t t-name="kanban-box">
-                            <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_card oe_kanban_project oe_kanban_global_click">
+                            <div t-attf-class="oe_kanban_card oe_kanban_project oe_kanban_global_click" t-attf-style="background: #{record.color.raw_value};">
 
                                 <div class="oe_kanban_content">
                                     <small class="at_kanban_breadcrumbs">
