@@ -33,6 +33,9 @@
     vertical-align: top;
     margin-bottom: 0.5em;
     line-height: 1em;
+    width: 16px;
+    margin-left: -1px;
+    text-align: center;
 }
 .oe_kanban_bottom_left div {
     width: 16px;
