@@ -39,6 +39,9 @@ class Priority(models.Model):
     default = fields.Boolean(
         "Default",
         help="Default priority for new tickets")
+    color = fields.Char(
+        "Color",
+        help="Color (in any CSS format) used to represent this priority")
 
     @api.multi
     def write(self, vals):
@@ -56,10 +59,28 @@ class Priority(models.Model):
 class Ticket(models.Model):
     _inherit = 'anytracker.ticket'
 
+    has_deadline = fields.Boolean(
+        'priority_id.deadline',
+        readonly=True,
+        type="boolean")
+    deadline = fields.Date(
+        'Deadline')
+    priority_id = fields.Many2one(
+        'anytracker.priority',
+        'Priority')
+    priority = fields.Integer(
+        compute='_get_priority',
+        string='Priority',
+        store=True)
+    priority_color = fields.Char(
+        string='Priority color',
+        compute='_priority_color')
+
     @api.depends('priority_id')
     def _get_priority(self):
         for t in self:
-            t.priority = t.priority_id.seq if t.priority_id else None
+            if t.priority_id:
+                t.priority = t.priority_id.seq
 
     @api.multi
     @api.onchange('priority_id')
@@ -92,19 +113,10 @@ class Ticket(models.Model):
                 values['priority_id'] = priorities[0].id
         return super(Ticket, self).create(values)
 
-    has_deadline = fields.Boolean(
-        'priority_id.deadline',
-        readonly=True,
-        type="boolean")
-    deadline = fields.Date(
-        'Deadline')
-    priority_id = fields.Many2one(
-        'anytracker.priority',
-        'Priority')
-    priority = fields.Integer(
-        compute='_get_priority',
-        string='Priority',
-        store=True)
+    @api.depends('priority_id')
+    def _priority_color(self):
+        for t in self:
+            t.priority_color = t.priority_id.color if t.priority_id else False
 
 
 class Method(models.Model):

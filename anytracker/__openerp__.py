@@ -29,6 +29,7 @@
     'sequence': 150,
     'depends': [
         'web',
+        'web_widget_color',
         'base',
         'email_template',
         'analytic',

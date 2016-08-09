@@ -122,7 +122,7 @@
             <field name="model">anytracker.ticket</field>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
-                <form version="7.0" string="Ticket">
+                <form string="Ticket">
                     <header>
                         <button name="trash" string="Trash" type="object" states="running"/>
                         <button name="reactivate" string="Reactivate" type="object" states="trashed"/>
@@ -226,7 +226,7 @@
             <field name="name">Anytracker - tickets</field>
             <field name="model">anytracker.ticket</field>
             <field name="arch" type="xml">
-                <kanban version="7.0" class="oe_background_grey">
+                <kanban class="oe_background_grey">
                     <field name="color"/>
                     <field name="number"/>
                     <field name="permalink"/>
@@ -270,12 +270,16 @@
                                         <t t-raw="record.shortened_description.raw_value"/>
                                     </div>
 
-                                    <div class="oe_kanban_bottom_left" style="margin-top: 0.5em">
+                                    <div class="oe_kanban_bottom_left">
                                         <t groups="anytracker.group_customer">
+                                          <div>
                                             <a string="Edit" icon="gtk-edit" type="edit"/>
+                                          </div>
                                         </t>
                                         <t t-if="record.has_attachment.raw_value">
+                                          <div>
                                             <img src="/anytracker/static/src/img/paperclip.png"/>
+                                          </div>
                                         </t>
                                         <div class="oe_dropdown_toggle oe_dropdown_kanban"
                                              groups="anytracker.group_customer">
@@ -304,7 +308,7 @@
             <field name="type">form</field>
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
-                <form string="Type" version="7.0">
+                <form string="Type">
                     <sheet>
                         <group>
                             <h1>

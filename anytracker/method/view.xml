@@ -22,7 +22,7 @@
             <field name="model">anytracker.method</field>
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
-                <form version="7.0" string="Method">
+                <form string="Method">
                     <header>
                     </header>
                     <sheet string="Method">

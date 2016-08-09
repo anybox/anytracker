@@ -9,6 +9,7 @@ class Importance(models.Model):
     """
     _name = 'anytracker.importance'
     _description = 'Importance of Ticket by method'
+    _order = 'method_id, seq DESC'
 
     name = fields.Char(
         'Label of the importance',
@@ -33,6 +34,9 @@ class Importance(models.Model):
     default = fields.Boolean(
         "Default",
         help="Default importance for new tickets")
+    color = fields.Char(
+        "Color",
+        help="Color (in any CSS format) used to represent this importance")
 
     _order = 'method_id, seq DESC'
 
@@ -52,11 +56,6 @@ class Importance(models.Model):
 class Ticket(models.Model):
     _inherit = 'anytracker.ticket'
 
-    @api.depends('importance_id')
-    def _get_importance(self):
-        for t in self:
-            t.importance = t.importance_id.seq if t.importance_id else None
-
     importance_id = fields.Many2one(
         'anytracker.importance',
         'Importance')
@@ -65,6 +64,14 @@ class Ticket(models.Model):
         string='Importance',
         type='integer',
         store=True)
+    importance_color = fields.Char(
+        string='Importance color',
+        compute='_importance_color')
+
+    @api.depends('importance_id')
+    def _get_importance(self):
+        for t in self:
+            t.importance = t.importance_id.seq if t.importance_id else None
 
     @api.model
     def create(self, values):
@@ -88,6 +95,12 @@ class Ticket(models.Model):
             if len(importances) == 1:
                 values['importance_id'] = importances[0].id
         return super(Ticket, self).create(values)
+
+    @api.depends('importance_id')
+    def _importance_color(self):
+        for t in self:
+            if t.importance_id:
+                t.importance_color = t.importance_id.color
 
 
 class Method(models.Model):

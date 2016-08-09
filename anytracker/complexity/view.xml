@@ -109,6 +109,7 @@
     </field>
 </record>
 
+<!-- Add the rating info on the kanban ticket -->
 <record id="tickets_kanban_complexity" model="ir.ui.view">
     <field name="model">anytracker.ticket</field>
     <field name="inherit_id" ref="anytracker.tickets_kanban2"/>
@@ -116,8 +117,12 @@
       <xpath expr="/kanban/field[last()]" position="after">
         <field name="rating"/>
       </xpath>
-      <xpath expr="//div[@class='oe_kanban_bottom_left']//a[last()]" position="after">
-          <t t-if="record.rating.raw_value != 0"><span style="margin: 0 0.5em"><field name="rating"/></span></t>
+      <xpath expr="//div[@class='oe_kanban_bottom_left']" position="inside">
+          <t t-if="record.rating.raw_value != 0">
+            <div style="border-radius: 8px; border: solid 1px rgba(0, 0, 0, .2);;">
+                <span title="Rating"><t t-esc="record.rating.raw_value"/></span>
+            </div>
+          </t>
       </xpath>
     </field>
 </record>

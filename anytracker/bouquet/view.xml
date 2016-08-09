@@ -7,7 +7,7 @@
   <field name="model">anytracker.bouquet</field>
   <field name="priority" eval="10"/>
   <field name="arch" type="xml">
-    <form version="7.0" string="Bouquet">
+    <form string="Bouquet">
       <header>
       </header>
     <sheet>

@@ -5,7 +5,7 @@
     max-width: 960px;
 }
 .oe_kanban_project {
-    min-height: 0px;
+    min-height: 0px !important;
 }
 
 .oe_kanban_gravatar {
@@ -24,4 +24,22 @@
     line-height: 1em;
     padding-bottom: 3px;
 
+}
+.oe_kanban_bottom_left div a img {
+    position: absolute;
+}
+.oe_kanban_bottom_left div span {
+    display: inline-block;
+    vertical-align: top;
+    margin-bottom: 0.5em;
+    line-height: 1em;
+}
+.oe_kanban_bottom_left div {
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    vertical-align: middle;
+}
+.oe_kanban_bottom_left div:first-child {
+    margin-right: 0 !important;
 }
