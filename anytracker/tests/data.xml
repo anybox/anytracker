@@ -7,7 +7,7 @@
     </record>
     <!-- test complexities -->
     <record model="anytracker.complexity" id="complexity1">
-      <field name="color" eval="0"/>
+      <field name="color">white</field>
       <field name="description">cmplx1</field>
       <field name="method_id" ref="anytracker.method_test"/>
       <field name="name">cmplx1</field>
@@ -15,7 +15,7 @@
       <field name="value" eval="1.0"/>
     </record>
     <record model="anytracker.complexity" id="complexity2">
-      <field name="color" eval="0"/>
+      <field name="color">white</field>
       <field name="description">cmplx2</field>
       <field name="method_id" ref="anytracker.method_test"/>
       <field name="name">cmplx2</field>
@@ -23,7 +23,7 @@
       <field name="value" eval="2.0"/>
     </record>
     <record model="anytracker.complexity" id="complexity3">
-      <field name="color" eval="0"/>
+      <field name="color">white</field>
       <field name="description">cmplx3</field>
       <field name="method_id" ref="anytracker.method_test"/>
       <field name="name">cmplx3</field>
@@ -31,7 +31,7 @@
       <field name="value" eval="4.0"/>
     </record>
     <record model="anytracker.complexity" id="complexity4">
-      <field name="color" eval="0"/>
+      <field name="color">white</field>
       <field name="description">cmplx4</field>
       <field name="method_id" ref="anytracker.method_test"/>
       <field name="name">cmplx4</field>
@@ -95,7 +95,7 @@
       <field name="name">cmplx5</field>
       <field name="risk" eval="0.0"/>
       <field name="value" eval="1.5"/>
-      <field name="color" eval="1"/>
+      <field name="color">green</field>
     </record>
     <record model="anytracker.complexity" id="complexity6">
       <field name="description">cmplx6</field>
@@ -103,7 +103,7 @@
       <field name="name">cmplx6</field>
       <field name="risk" eval="0.25"/>
       <field name="value" eval="2.5"/>
-      <field name="color" eval="2"/>
+      <field name="color">blue</field>
     </record>
     <record model="anytracker.complexity" id="complexity7">
       <field name="description">cmplx7</field>
@@ -111,7 +111,7 @@
       <field name="name">cmplx7</field>
       <field name="risk" eval="0.45"/>
       <field name="value" eval="4.5"/>
-      <field name="color" eval="3"/>
+      <field name="color">orange</field>
     </record>
     <record model="anytracker.complexity" id="complexity8">
       <field name="description">cmplx8</field>
@@ -119,7 +119,7 @@
       <field name="name">cmplx8</field>
       <field name="risk" eval="1.0"/>
       <field name="value" eval="7.5"/>
-      <field name="color" eval="4"/>
+      <field name="color">red</field>
     </record>
     <!-- test stages -->
     <record id="stage_test_draft2" model="anytracker.stage">

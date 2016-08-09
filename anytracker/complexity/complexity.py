@@ -1,5 +1,5 @@
 from openerp import models, fields, api
-from time import strftime
+from datetime import datetime
 from itertools import groupby
 
 
@@ -101,9 +101,10 @@ class Ticket(models.Model):
                 'complexity_id': ratings[ticket.id],
                 'ticket_id': ticket.id,
                 'user_id': ticket.env.uid,
-                'time': strftime('%Y-%m-%d %H:%M:%S')})
+                'time': datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')})
 
-    @api.depends('highest_rating')
+    @api.depends('rating_ids', 'my_rating', 'parent_id',
+                 'child_ids', 'highest_rating')
     def _color(self):
         """get the color of the rating with highest risk
         """
@@ -126,9 +127,9 @@ class Ticket(models.Model):
                 # keep the latest of each user
                 latests = [j[1].next() for j in grouped]
                 # keep the highest
-                highest = list(reversed(sorted(latests, key=lambda x: x[1])))
-                if highest:
-                    ticket.highest_rating = highest[0][2]
+                highests = list(reversed(sorted(latests, key=lambda x: x[1])))
+                if highests:
+                    ticket.highest_rating = highests[0][2]
 
     def compute_risk_and_rating(self, ids):
         """compute the risk and rating of a leaf ticket,
