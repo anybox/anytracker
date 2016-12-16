@@ -4,6 +4,7 @@ from . import controller
 from . import history
 from . import method
 from . import stage
+from . import tagging
 from . import complexity
 from . import importance
 from . import mindmap

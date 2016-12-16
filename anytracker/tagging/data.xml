@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <!-- Implementation project -->
+        <record id="tag_tempsfrac" model="anytracker.tag">
+            <field name="name">Temps Fractionné</field>
+        </record>
+    </data>
+</openerp>
