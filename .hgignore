@@ -15,3 +15,6 @@ parts/
 upgrade.log
 sandbox/
 .installed.cfg
+bootstrap.py
+community-addons/
+upgrade.py
