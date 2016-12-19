@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- Tag tree setting view -->
+        <record id="view_tag_form" model="ir.ui.view">
+            <field name="name">Tag</field>
+            <field name="model">anytracker.tag</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <tree string="Tags" editable="top">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Search tickets by tag -->
+        <record id="tag_ticket_view_search" model="ir.ui.view">
+            <field name="name">anytracker.ticket.search</field>
+            <field name="model">anytracker.ticket</field>
+            <field name="inherit_id" ref="anytracker.ticket_view_search"/>
+            <field name="priority" eval="16"/>
+            <field name="arch" type="xml">
+                <xpath expr="//search" position="inside">
+                    <field name="tags"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Add tag in the ticket form -->
+        <record id="view_ticket_form_with_tag_readonly" model="ir.ui.view">
+            <field name="name">Ticket</field>
+            <field name="model">anytracker.ticket</field>
+            <field name="inherit_id" ref="ticket_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/sheet/group/group/h1" position='after'>
+                    <field name="tags"
+                           widget="many2many_tags"
+                           placeholder="Optional tags"
+                           readonly="1"
+                           colspan="2"
+                           nolabel="1"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- Member group get the field editable -->
+        <record id="view_ticket_form_with_tag_member_editable" model="ir.ui.view">
+            <field name="name">Member tag editable</field>
+            <field name="model">anytracker.ticket</field>
+            <field name="inherit_id" ref="view_ticket_form_with_tag_readonly"/>
+            <field name="groups_id" eval="[(6, 0, [ref('group_member') ])]"/>
+            <field name="arch" type="xml">
+                <field name="tags" position="attributes">
+                    <attribute name="readonly">0</attribute>
+                </field>
+            </field>
+        </record>
+    </data>
+</openerp>
+
