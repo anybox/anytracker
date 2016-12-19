@@ -76,7 +76,6 @@ http://www.famfamfam.com/lab/icons/silk/
         'complexity/data.xml',
         'data.xml',
         'stage/data.xml',
-        'tagging/data.xml',
         'importance/data.xml',
         'notify/data.xml',
         'priority/data.xml',

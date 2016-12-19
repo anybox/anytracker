@@ -27,7 +27,7 @@
             </field>
         </record>
 
-        <!-- Add a tab in the ticket form -->
+        <!-- Add tag in the ticket form -->
         <record id="view_ticket_form_with_tag_readonly" model="ir.ui.view">
             <field name="name">Ticket</field>
             <field name="model">anytracker.ticket</field>
@@ -36,6 +36,7 @@
                 <xpath expr="/form/sheet/group/group/h1" position='after'>
                     <field name="tags"
                            widget="many2many_tags"
+                           placeholder="Optional tags"
                            readonly="1"
                            colspan="2"
                            nolabel="1"/>
