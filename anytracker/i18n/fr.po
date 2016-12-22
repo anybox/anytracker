@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-12-19 14:33+0000\n"
-"PO-Revision-Date: 2016-12-19 16:05+0100\n"
+"PO-Revision-Date: 2016-12-22 12:58+0100\n"
 "Last-Translator: Christophe Combelles <ccomb@free.fr>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -765,7 +765,7 @@ msgstr "Abonnés"
 #. module: anytracker
 #: help:anytracker.stage,force_rating:0
 msgid "Forbid entering this stage without a rating on the ticket"
-msgstr "Interdire cette étape s'il le ticket n'est pas évalué"
+msgstr "Interdire cette étape si le ticket n'est pas évalué"
 
 #. module: anytracker
 #: view:anytracker.stage:anytracker.view_stage_form
@@ -2112,7 +2112,7 @@ msgstr "Étape de ticket"
 #: view:anytracker.stage:anytracker.view_stage_form
 msgid "Ticket that have the following complexities can't be move to this stage"
 msgstr ""
-"Les tickets qui ont cette complexité ne peut pas être déplacés vers cette "
+"Les tickets qui ont cette complexité ne peuvent pas être déplacés vers cette "
 "étape"
 
 #. module: anytracker
