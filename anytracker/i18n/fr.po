@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-01-14 17:59+0000\n"
-"PO-Revision-Date: 2016-01-14 20:48+0200\n"
+"POT-Creation-Date: 2016-12-19 14:33+0000\n"
+"PO-Revision-Date: 2016-12-22 12:58+0100\n"
 "Last-Translator: Christophe Combelles <ccomb@free.fr>\n"
 "Language-Team: \n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: \n"
-"Language: fr\n"
 "X-Generator: Poedit 1.6.10\n"
 
 #. module: anytracker
@@ -25,19 +25,14 @@ msgstr ""
 "Non critique, mais serait bien de l'avoir si ça ne coûte pas trop cher."
 
 #. module: anytracker
-#: model:anytracker.complexity,name:0
-msgid "1 jour"
-msgstr "1 jour"
+#: field:anytracker.ticket,nb_children:0
+msgid "# of children"
+msgstr "Nb d'enfants"
 
 #. module: anytracker
 #: model:anytracker.complexity,name:anytracker.complexity_scrum_13
 msgid "13"
 msgstr "13"
-
-#. module: anytracker
-#: model:anytracker.complexity,name:0
-msgid "15 min"
-msgstr "15 min"
 
 #. module: anytracker
 #: model:anytracker.complexity,name:anytracker.complexity_gtd_now
@@ -50,24 +45,14 @@ msgid "21"
 msgstr "21"
 
 #. module: anytracker
-#: model:anytracker.complexity,name:0
-msgid "2h"
-msgstr "2h"
-
-#. module: anytracker
-#: model:anytracker.complexity,name:0
-msgid "4h"
-msgstr "4h"
-
-#. module: anytracker
 #: selection:anytracker.ticket,duration:0
 msgid "< half a day"
 msgstr "< demi-journée"
 
 #. module: anytracker
-#: model:anytracker.stage,name:0
-msgid "A faire"
-msgstr "A faire"
+#: help:anytracker.importance,seq:0
+msgid "A higher value is higher importance"
+msgstr "une valeur supérieure est de plus haute priorité"
 
 #. module: anytracker
 #: model:email.template,body_html:anytracker.email_template_ticket_new
@@ -82,13 +67,8 @@ msgid ""
 "            "
 msgstr ""
 "Un nouveau ticket n°${object.number} a été créé dans Anytracker par ${user."
-"name}. Il est maintenant à l'étape ${object.stage_id.name}\n"
-"\n"
-"\n"
-"${object.name}\n"
-"--\n"
-"${object.description or ''}\n"
-"            "
+"name}. Il est maintenant à l'étape ${object.stage_id.name}<br/><br/><br/>"
+"${object.name}<br/>--<br/>${object.description}<br/>            "
 
 #. module: anytracker
 #: model:anytracker.priority,name:anytracker.priority_gtd_asap
@@ -102,6 +82,16 @@ msgid "ASAP!!!"
 msgstr "ASAP!!!"
 
 #. module: anytracker
+#: field:res.users,property_account_payable:0
+msgid "Account Payable"
+msgstr "Dette"
+
+#. module: anytracker
+#: field:res.users,property_account_receivable:0
+msgid "Account Receivable"
+msgstr "Créance"
+
+#. module: anytracker
 #: model:anytracker.stage,name:anytracker.stage_maintenance_ack
 msgid "Acknowledged"
 msgstr "Reconnu"
@@ -111,6 +101,11 @@ msgstr "Reconnu"
 #: field:anytracker.ticket,active:0
 msgid "Active"
 msgstr "Actif"
+
+#. module: anytracker
+#: field:anytracker.bouquet,participant_ids:0
+msgid "All participating users"
+msgstr "Tous les participants"
 
 #. module: anytracker
 #: model:anytracker.stage,name:anytracker.stage_implementation_analysis
@@ -157,6 +152,13 @@ msgid "Anytracker - Ticket"
 msgstr "Anytracker - Tickets"
 
 #. module: anytracker
+#: code:addons/anytracker/importance/importance.py:92
+#: code:addons/anytracker/priority/priority.py:109
+#, python-format
+msgid "Anytracker Configuration Error"
+msgstr "Erreur de configuration Anytracker"
+
+#. module: anytracker
 #: model:ir.model,name:anytracker.model_anytracker_ticket
 msgid "Anytracker tickets"
 msgstr "Tickets Anytracker"
@@ -182,6 +184,11 @@ msgstr "Assigné à moi"
 #: field:anytracker.ticket,assigned_user_id:0
 msgid "Assigned user"
 msgstr "Utilisateur assigné"
+
+#. module: anytracker
+#: field:anytracker.ticket,assigned_user_email:0
+msgid "Assigned user email"
+msgstr "E-mail de l'utilisateur affecté"
 
 #. module: anytracker
 #: help:anytracker.assignment,date:0
@@ -281,6 +288,15 @@ msgid "Change log"
 msgstr "Liste des nouveautés"
 
 #. module: anytracker
+#: help:res.users,vat_subjected:0
+msgid ""
+"Check this box if the partner is subjected to the VAT. It will be used for "
+"the VAT legal statement."
+msgstr ""
+"Cochez cette case si le partenaire est soumis à la TVA. Ils sera utilisé "
+"pour les éditions légales."
+
+#. module: anytracker
 #: help:anytracker.ticket,analytic_account_id:0
 msgid ""
 "Choose the analytic account or project on which to create analytic lines to "
@@ -295,14 +311,19 @@ msgid "Classified"
 msgstr "Classé"
 
 #. module: anytracker
+#: view:anytracker.ticket:anytracker.node_view_tree
+msgid "Click to join the project"
+msgstr "Cliquez pour rejoindre le projet"
+
+#. module: anytracker
+#: view:anytracker.ticket:anytracker.node_view_tree
+msgid "Click to leave the project"
+msgstr "Cliquez pour quitter le projet"
+
+#. module: anytracker
 #: view:anytracker.quickrating:anytracker.view_quickrating_form
 msgid "Close"
 msgstr "Fermer"
-
-#. module: anytracker
-#: model:anytracker.stage,name:0
-msgid "Clôturé"
-msgstr "Clôturé"
 
 #. module: anytracker
 #: view:anytracker.method:anytracker.view_method_form
@@ -312,9 +333,30 @@ msgid "Code"
 msgstr "Code"
 
 #. module: anytracker
-#: field:anytracker.complexity,color:0
+#: field:anytracker.complexity,color:0 field:anytracker.importance,color:0
+#: field:anytracker.priority,color:0 field:anytracker.ticket,color:0
 msgid "Color"
 msgstr "Couleur"
+
+#. module: anytracker
+#: help:anytracker.complexity,color:0
+msgid "Color (in any CSS format) used to represent this complexity"
+msgstr "Color (in any CSS format) used to represent this complexity"
+
+#. module: anytracker
+#: help:anytracker.importance,color:0
+msgid "Color (in any CSS format) used to represent this importance"
+msgstr "Color (in any CSS format) used to represent this importance"
+
+#. module: anytracker
+#: help:anytracker.priority,color:0
+msgid "Color (in any CSS format) used to represent this priority"
+msgstr "Color (in any CSS format) used to represent this priority"
+
+#. module: anytracker
+#: field:res.users,ref_companies:0
+msgid "Companies that refers to partner"
+msgstr "Compagnies liés au partenaire"
 
 #. module: anytracker
 #: model:anytracker.complexity,name:anytracker.complexity_maintenance_complex
@@ -353,7 +395,7 @@ msgid "Configuration"
 msgstr "Configuration"
 
 #. module: anytracker
-#: code:addons/anytracker/anytracker.py:358
+#: code:addons/anytracker/anytracker.py:389
 #, python-format
 msgid "Configuration error !"
 msgstr "Erreur de configuration !"
@@ -362,6 +404,11 @@ msgstr "Erreur de configuration !"
 #: field:anytracker.ticket,constant_one:0
 msgid "Constant one"
 msgstr "Constant one"
+
+#. module: anytracker
+#: field:res.users,contract_ids:0 field:res.users,contracts_count:0
+msgid "Contracts"
+msgstr "Contrats"
 
 #. module: anytracker
 #: model:anytracker.importance,name:anytracker.importance_implementation_could
@@ -408,7 +455,7 @@ msgstr "Mindmap créé"
 #: field:anytracker.method,create_uid:0 field:anytracker.priority,create_uid:0
 #: field:anytracker.quickrating,create_uid:0
 #: field:anytracker.rating,create_uid:0 field:anytracker.stage,create_uid:0
-#: field:anytracker.ticket,create_uid:0
+#: field:anytracker.tag,create_uid:0 field:anytracker.ticket,create_uid:0
 #: field:anytracker.ticket.type,create_uid:0
 #: field:export.mindmap.wizard,create_uid:0
 #: field:import.mindmap.wizard,create_uid:0
@@ -429,6 +476,7 @@ msgstr "Créés par moi"
 #: field:anytracker.priority,create_date:0
 #: field:anytracker.quickrating,create_date:0
 #: field:anytracker.rating,create_date:0 field:anytracker.stage,create_date:0
+#: field:anytracker.tag,create_date:0
 #: field:anytracker.ticket.type,create_date:0
 #: field:export.mindmap.wizard,create_date:0
 #: field:import.mindmap.wizard,create_date:0
@@ -463,6 +511,11 @@ msgid "Customer"
 msgstr "Client"
 
 #. module: anytracker
+#: field:res.users,property_payment_term:0
+msgid "Customer Payment Term"
+msgstr "Échéance de paiement client"
+
+#. module: anytracker
 #: field:anytracker.assignment,date:0 field:anytracker.rating,time:0
 msgid "Date"
 msgstr "Date"
@@ -473,9 +526,32 @@ msgid "Date of the last message posted on the record."
 msgstr "Date du dernier message envoyé sur ce document"
 
 #. module: anytracker
+#: help:res.users,last_reconciliation_date:0
+msgid ""
+"Date on which the partner accounting entries were fully reconciled last "
+"time. It differs from the last date where a reconciliation has been made for "
+"this partner, as here we depict the fact that nothing more was to be "
+"reconciled at this date. This can be achieved in 2 different ways: either "
+"the last unreconciled debit/credit entry of this partner was reconciled, "
+"either the user pressed the button \"Nothing more to reconcile\" during the "
+"manual reconciliation process."
+msgstr ""
+"Date à laquelle les entrées comptables du partenaire ont été lettrées la "
+"dernière fois. Elle diffère de la dernière date à laquelle a eu lieu le "
+"lettrage pour ce partenaire, car rien de plus n'a été lettré à cette date. "
+"Ceci peut arriver de deux façons : soit la dernière entrée débit/crédit de "
+"ce partenaire était lettrée, soit l'utilisateur a appuyé sur \"plus rien à "
+"lettrer\" pendant le lettrage manuel."
+
+#. module: anytracker
 #: field:anytracker.ticket,deadline:0
 msgid "Deadline"
 msgstr "Échéance"
+
+#. module: anytracker
+#: field:anytracker.importance,default:0 field:anytracker.priority,default:0
+msgid "Default"
+msgstr "Défaut"
 
 #. module: anytracker
 #: field:anytracker.ticket.type,default:0
@@ -483,15 +559,20 @@ msgid "Default for new tickets"
 msgstr "Par défaut pour les nouveaux tickets"
 
 #. module: anytracker
+#: help:anytracker.importance,default:0
+msgid "Default importance for new tickets"
+msgstr "Importance par défaut pour les nouveaux tickets"
+
+#. module: anytracker
+#: help:anytracker.priority,default:0
+msgid "Default priority for new tickets"
+msgstr "Priorité par défaut pour les nouveaux tickets"
+
+#. module: anytracker
 #: model:anytracker.stage,name:anytracker.stage_implementation_delivered
 #: model:anytracker.stage,name:anytracker.stage_maintenance_delivered
 msgid "Delivered"
 msgstr "Livré"
-
-#. module: anytracker
-#: model:anytracker.stage,name:0
-msgid "Demande"
-msgstr "Demande"
 
 #. module: anytracker
 #: model:anytracker.stage,name:anytracker.stage_implementation_deployed
@@ -508,6 +589,7 @@ msgstr "Déployé"
 #: field:anytracker.stage,description:0
 #: view:anytracker.ticket:anytracker.ticket_view_form
 #: field:anytracker.ticket,description:0
+#: field:anytracker.ticket,shortened_description:0
 #: field:anytracker.ticket.type,description:0
 #: view:website:anytracker.report_anytracker_bouquet
 #: view:website:anytracker.report_anytracker_ticket
@@ -535,7 +617,25 @@ msgid "Detail"
 msgstr "Détail"
 
 #. module: anytracker
-#: model:anytracker.stage,name:0
+#: field:anytracker.assignment,display_name:0
+#: field:anytracker.bouquet,display_name:0
+#: field:anytracker.complexity,display_name:0
+#: field:anytracker.history,display_name:0
+#: field:anytracker.importance,display_name:0
+#: field:anytracker.method,display_name:0
+#: field:anytracker.priority,display_name:0
+#: field:anytracker.quickrating,display_name:0
+#: field:anytracker.rating,display_name:0
+#: field:anytracker.stage,display_name:0 field:anytracker.tag,display_name:0
+#: field:anytracker.ticket,display_name:0
+#: field:anytracker.ticket.type,display_name:0
+#: field:export.mindmap.wizard,display_name:0
+#: field:import.mindmap.wizard,display_name:0
+#: field:serve.mindmap.wizard,display_name:0
+msgid "Display Name"
+msgstr "Nom d'affichage"
+
+#. module: anytracker
 #: model:anytracker.stage,name:anytracker.stage_gtd_done
 msgid "Done"
 msgstr "Terminé"
@@ -582,12 +682,7 @@ msgid "Email template"
 msgstr "Template de courriel"
 
 #. module: anytracker
-#: model:anytracker.stage,name:0
-msgid "En cours"
-msgstr "En cours"
-
-#. module: anytracker
-#: code:addons/anytracker/anytracker.py:154
+#: code:addons/anytracker/anytracker.py:158
 #: code:addons/anytracker/history/history.py:121
 #: code:addons/anytracker/invoicing/invoicing.py:28
 #: code:addons/anytracker/invoicing/invoicing.py:34
@@ -599,6 +694,7 @@ msgid "Error"
 msgstr "Erreur"
 
 #. module: anytracker
+#: code:addons/anytracker/anytracker.py:177
 #: code:addons/anytracker/mindmap/wizard/import_mindmap.py:212
 #: code:addons/anytracker/mindmap/wizard/import_mindmap.py:217
 #, python-format
@@ -644,6 +740,11 @@ msgid "Finished"
 msgstr "Fini"
 
 #. module: anytracker
+#: field:res.users,property_account_position:0
+msgid "Fiscal Position"
+msgstr "Position fiscale"
+
+#. module: anytracker
 #: model:anytracker.stage,name:anytracker.stage_maintenance_todo
 msgid "Fixing"
 msgstr "En cours"
@@ -651,11 +752,10 @@ msgstr "En cours"
 #. module: anytracker
 #: view:anytracker.ticket:anytracker.ticket_view_form
 msgid ""
-"Follow this project to automatically track the events associated to tasks "
-"and issues of this project."
+"Follow this ticket to track the events associated with it and its subtickets"
 msgstr ""
-"Suivre ce projet pour être notifié automatiquement des événements associés "
-"aux tâches et problèmes de ce projet"
+"Suivez ce ticket pour être informé des événements associé à lui et ses "
+"enfants"
 
 #. module: anytracker
 #: field:anytracker.ticket,message_follower_ids:0
@@ -665,7 +765,7 @@ msgstr "Abonnés"
 #. module: anytracker
 #: help:anytracker.stage,force_rating:0
 msgid "Forbid entering this stage without a rating on the ticket"
-msgstr "Interdire cette étape s'il le ticket n'est pas évalué"
+msgstr "Interdire cette étape si le ticket n'est pas évalué"
 
 #. module: anytracker
 #: view:anytracker.stage:anytracker.view_stage_form
@@ -688,6 +788,16 @@ msgstr "Forcer à choisir une date limite sur le ticket ?"
 #: model:ir.ui.menu,name:anytracker.menu_freemind
 msgid "Freemind"
 msgstr "Freemind"
+
+#. module: anytracker
+#: help:anytracker.bouquet,nb_tickets:0
+msgid "Full number of tickets in this bouquet"
+msgstr "Nombre total de tickets dans ce bouquet"
+
+#. module: anytracker
+#: field:anytracker.ticket,fulltext:0
+msgid "Fulltext"
+msgstr "Fulltext"
 
 #. module: anytracker
 #: model:anytracker.importance,name:anytracker.importance_gtd_wishlist
@@ -767,6 +877,11 @@ msgid "Hierarchy"
 msgstr "Hierarchie"
 
 #. module: anytracker
+#: field:anytracker.ticket,highest_rating:0
+msgid "Highest Rating"
+msgstr "Total des évaluations"
+
+#. module: anytracker
 #: view:anytracker.ticket:anytracker.ticket_view_form
 #: field:anytracker.ticket,history_ids:0
 msgid "History"
@@ -822,14 +937,19 @@ msgid "I know this issue is complex"
 msgstr "Je sais que ce problème est complexe"
 
 #. module: anytracker
+#: view:anytracker.ticket:anytracker.ticket_view_search
+msgid "I'm a member"
+msgstr "Je suis membre"
+
+#. module: anytracker
 #: field:anytracker.assignment,id:0 field:anytracker.bouquet,id:0
 #: field:anytracker.complexity,id:0 field:anytracker.history,id:0
 #: field:anytracker.importance,id:0 field:anytracker.method,id:0
 #: field:anytracker.priority,id:0 field:anytracker.quickrating,id:0
 #: field:anytracker.rating,id:0 field:anytracker.stage,id:0
-#: field:anytracker.ticket,id:0 field:anytracker.ticket.type,id:0
-#: field:export.mindmap.wizard,id:0 field:import.mindmap.wizard,id:0
-#: field:serve.mindmap.wizard,id:0
+#: field:anytracker.tag,id:0 field:anytracker.ticket,id:0
+#: field:anytracker.ticket.type,id:0 field:export.mindmap.wizard,id:0
+#: field:import.mindmap.wizard,id:0 field:serve.mindmap.wizard,id:0
 msgid "ID"
 msgstr "ID"
 
@@ -857,11 +977,6 @@ msgstr "Notification immédiate (ne pas attendre le planificateur)"
 #: view:import.mindmap.wizard:anytracker.view_import_mindmap_form
 msgid "Import file"
 msgstr "Import de fichier"
-
-#. module: anytracker
-#: model:ir.model,name:anytracker.model_import_freemind_wizard
-msgid "Import freemind .mm file into anytracker tree"
-msgstr "Importer un fichier Freemind .mm dans l'arborescence Anytracker"
 
 #. module: anytracker
 #: field:import.mindmap.wizard,import_method:0
@@ -894,6 +1009,11 @@ msgid "Importance"
 msgstr "Importance"
 
 #. module: anytracker
+#: field:anytracker.ticket,importance_color:0
+msgid "Importance color"
+msgstr "Importance"
+
+#. module: anytracker
 #: model:ir.model,name:anytracker.model_anytracker_importance
 msgid "Importance of Ticket by method"
 msgstr "Importance des tickets par méthode"
@@ -909,7 +1029,6 @@ msgstr ""
 "premier."
 
 #. module: anytracker
-#: view:anytracker.importance:anytracker.view_anytracker_importance_tree
 #: view:anytracker.method:anytracker.method_view_form_with_importances
 #: field:anytracker.method,importance_ids:0
 msgid "Importances"
@@ -949,9 +1068,19 @@ msgid "Invoiced?"
 msgstr "Facturé ?"
 
 #. module: anytracker
+#: field:res.users,invoice_ids:0
+msgid "Invoices"
+msgstr "Factures"
+
+#. module: anytracker
 #: view:anytracker.ticket:anytracker.invoicing_ticket_view_form
 msgid "Invoicing"
 msgstr "Facturation"
+
+#. module: anytracker
+#: field:anytracker.priority,discount_id:0
+msgid "Invoicing ratio"
+msgstr "Ratio de facturation"
 
 #. module: anytracker
 #: field:anytracker.ticket,message_is_follower:0
@@ -959,9 +1088,24 @@ msgid "Is a Follower"
 msgstr "Est abonné"
 
 #. module: anytracker
+#: field:anytracker.ticket,is_participant:0
+msgid "Is participant"
+msgstr "Est participant"
+
+#. module: anytracker
 #: model:anytracker.complexity,description:anytracker.complexity_gtd_action
 msgid "It's a simple action I can do today"
 msgstr "C'est une action simple que je peux faire aujourd'hui"
+
+#. module: anytracker
+#: view:anytracker.ticket:anytracker.ticket_view_form
+msgid "Join the project"
+msgstr "Rejoindre le projet"
+
+#. module: anytracker
+#: field:res.users,journal_item_count:0
+msgid "Journal Items"
+msgstr "Entrées de journal"
 
 #. module: anytracker
 #: field:anytracker.importance,name:0
@@ -974,6 +1118,25 @@ msgid "Last Message Date"
 msgstr "Date du dernier message"
 
 #. module: anytracker
+#: field:anytracker.assignment,__last_update:0
+#: field:anytracker.bouquet,__last_update:0
+#: field:anytracker.complexity,__last_update:0
+#: field:anytracker.history,__last_update:0
+#: field:anytracker.importance,__last_update:0
+#: field:anytracker.method,__last_update:0
+#: field:anytracker.priority,__last_update:0
+#: field:anytracker.quickrating,__last_update:0
+#: field:anytracker.rating,__last_update:0
+#: field:anytracker.stage,__last_update:0 field:anytracker.tag,__last_update:0
+#: field:anytracker.ticket,__last_update:0
+#: field:anytracker.ticket.type,__last_update:0
+#: field:export.mindmap.wizard,__last_update:0
+#: field:import.mindmap.wizard,__last_update:0
+#: field:serve.mindmap.wizard,__last_update:0
+msgid "Last Modified on"
+msgstr "Modifié en dernier le"
+
+#. module: anytracker
 #: field:anytracker.assignment,write_uid:0
 #: field:anytracker.bouquet,write_uid:0
 #: field:anytracker.complexity,write_uid:0
@@ -982,7 +1145,7 @@ msgstr "Date du dernier message"
 #: field:anytracker.priority,write_uid:0
 #: field:anytracker.quickrating,write_uid:0
 #: field:anytracker.rating,write_uid:0 field:anytracker.stage,write_uid:0
-#: field:anytracker.ticket,write_uid:0
+#: field:anytracker.tag,write_uid:0 field:anytracker.ticket,write_uid:0
 #: field:anytracker.ticket.type,write_uid:0
 #: field:export.mindmap.wizard,write_uid:0
 #: field:import.mindmap.wizard,write_uid:0
@@ -998,12 +1161,22 @@ msgstr "Modifié en dernier par"
 #: field:anytracker.method,write_date:0 field:anytracker.priority,write_date:0
 #: field:anytracker.quickrating,write_date:0
 #: field:anytracker.rating,write_date:0 field:anytracker.stage,write_date:0
-#: field:anytracker.ticket.type,write_date:0
+#: field:anytracker.tag,write_date:0 field:anytracker.ticket.type,write_date:0
 #: field:export.mindmap.wizard,write_date:0
 #: field:import.mindmap.wizard,write_date:0
 #: field:serve.mindmap.wizard,write_date:0
 msgid "Last Updated on"
 msgstr "Modifié en dernier le"
+
+#. module: anytracker
+#: field:res.users,last_reconciliation_date:0
+msgid "Latest Full Reconciliation Date"
+msgstr "Dernière date de lettrage complet"
+
+#. module: anytracker
+#: view:anytracker.ticket:anytracker.ticket_view_form
+msgid "Leave the project"
+msgstr "Quitter le projet"
 
 #. module: anytracker
 #: model:anytracker.complexity,description:anytracker.complexity_gtd_now
@@ -1017,11 +1190,8 @@ msgid "Link value %s"
 msgstr "Valeur du lien %s"
 
 #. module: anytracker
-#: model:anytracker.stage,name:0
-msgid "Livré"
-msgstr "Livré"
-
-#. module: anytracker
+#: field:anytracker.ticket,breadcrumb:0
+#: field:anytracker.ticket,relative_parent_breadcrumbs:0
 #: view:website:anytracker.report_anytracker_bouquet
 #: view:website:anytracker.report_anytracker_ticket
 msgid "Location"
@@ -1152,6 +1322,11 @@ msgid "Must have"
 msgstr "Doit absolument être fait"
 
 #. module: anytracker
+#: field:anytracker.ticket,my_rating:0
+msgid "My Rating"
+msgstr "Mon évaluation"
+
+#. module: anytracker
 #: field:anytracker.quickrating,my_rating:0
 msgid "My rating"
 msgstr "Mon évaluation"
@@ -1233,11 +1408,6 @@ msgid "Nodes"
 msgstr "Noeuds"
 
 #. module: anytracker
-#: model:anytracker.importance,name:0
-msgid "Normal"
-msgstr "Normal"
-
-#. module: anytracker
 #: model:anytracker.importance,name:anytracker.importance_gtd_notimportant
 msgid "Not important"
 msgstr "Pas important"
@@ -1290,11 +1460,6 @@ msgstr ""
 "Informer les membres du projet lorsque le ticket entre dans cette étape"
 
 #. module: anytracker
-#: model:anytracker.stage,name:0
-msgid "Nouveau"
-msgstr "Nouveau"
-
-#. module: anytracker
 #: field:anytracker.ticket,number:0
 #: view:website:anytracker.report_anytracker_bouquet
 #: view:website:anytracker.report_anytracker_ticket
@@ -1307,15 +1472,25 @@ msgid "Number must be unique!"
 msgstr "Le numéro doit être unique !"
 
 #. module: anytracker
-#: model:anytracker.stage,name:0
-msgid "Ok to start"
-msgstr "À démarrer"
+#: help:anytracker.ticket,nb_children:0
+msgid "Number of children"
+msgstr "Nombre d'enfants"
 
 #. module: anytracker
-#: code:addons/anytracker/anytracker.py:359
+#: field:anytracker.bouquet,nb_tickets:0
+msgid "Number of tickets"
+msgstr "Nombre de tickets"
+
+#. module: anytracker
+#: code:addons/anytracker/anytracker.py:390
 #, python-format
 msgid "One and only one stage should have a 0% progress"
 msgstr "Une et une seule étape devrait avoir un avancement à 0%"
+
+#. module: anytracker
+#: view:anytracker.ticket:anytracker.ticket_view_search
+msgid "Only ticket whose project I'm member of"
+msgstr "Seulement les tickets des projets dont je fais partie"
 
 #. module: anytracker
 #: view:anytracker.stage:anytracker.view_stage_form
@@ -1329,15 +1504,15 @@ msgstr ""
 "champ n'est pas coché, aucune restriction s'applique."
 
 #. module: anytracker
+#: view:anytracker.ticket:anytracker.view_ticket_form_with_tag_readonly
+msgid "Optional tags"
+msgstr "Tags optionnels"
+
+#. module: anytracker
 #: model:anytracker.complexity,description:anytracker.complexity_implementation_orange
 #: model:anytracker.complexity,name:anytracker.complexity_implementation_orange
 msgid "Orange (should be less than 0.5 day but I'm not sure)"
 msgstr "Orange (moins que 0,5j, mais je ne suis pas sûr)"
-
-#. module: anytracker
-#: model:ir.model,name:anytracker.model_mail_mail
-msgid "Outgoing Mails"
-msgstr "Courriels sortants"
 
 #. module: anytracker
 #: field:anytracker.ticket,parent_id:0
@@ -1371,8 +1546,19 @@ msgstr "Participants"
 
 #. module: anytracker
 #: model:ir.model,name:anytracker.model_res_partner
+#: model:res.groups,name:anytracker.group_partner
 msgid "Partner"
 msgstr "Partenaire"
+
+#. module: anytracker
+#: field:res.users,debit_limit:0
+msgid "Payable Limit"
+msgstr "Limite de créance"
+
+#. module: anytracker
+#: field:anytracker.ticket,permalink:0
+msgid "Permalink"
+msgstr "Permalink"
 
 #. module: anytracker
 #: view:anytracker.quickrating:anytracker.view_quickrating_form
@@ -1391,6 +1577,11 @@ msgstr "Priorités"
 #: view:anytracker.ticket:anytracker.priority_ticket_view_search
 #: field:anytracker.ticket,priority:0 field:anytracker.ticket,priority_id:0
 msgid "Priority"
+msgstr "Priorité"
+
+#. module: anytracker
+#: field:anytracker.ticket,priority_color:0
+msgid "Priority color"
 msgstr "Priorité"
 
 #. module: anytracker
@@ -1460,6 +1651,7 @@ msgid "Project method"
 msgstr "Méthode du projet"
 
 #. module: anytracker
+#: field:anytracker.bouquet,project_ids:0
 #: view:anytracker.ticket:anytracker.ticket_view_search
 #: model:ir.actions.act_window,name:anytracker.act_all_projects
 #: model:ir.ui.menu,name:anytracker.menu_all_projects
@@ -1489,6 +1681,7 @@ msgid "Rate subtickets..."
 msgstr "Évaluer les sous tickets..."
 
 #. module: anytracker
+#: field:anytracker.bouquet,bouquet_rating:0
 #: view:anytracker.ticket:anytracker.tickets_hierarchy_with_complexity
 #: field:anytracker.ticket,rating:0
 #: view:website:anytracker.report_anytracker_bouquet
@@ -1506,11 +1699,6 @@ msgstr "Évaluation :"
 #: field:anytracker.ticket,rating_ids:0
 msgid "Ratings"
 msgstr "Évaluations"
-
-#. module: anytracker
-#: field:anytracker.priority,discount_id:0
-msgid "Ratio"
-msgstr "Ratio"
 
 #. module: anytracker
 #: view:anytracker.ticket:anytracker.ticket_view_form
@@ -1727,6 +1915,11 @@ msgid "State"
 msgstr "Étape"
 
 #. module: anytracker
+#: field:anytracker.ticket,subnode_ids:0
+msgid "Sub-nodes"
+msgstr "Sous-noeuds"
+
+#. module: anytracker
 #: view:anytracker.ticket:anytracker.ticket_view_form
 #: field:anytracker.ticket,child_ids:0
 msgid "Sub-tickets"
@@ -1738,14 +1931,29 @@ msgid "Summary"
 msgstr "Résumé"
 
 #. module: anytracker
+#: field:res.users,property_supplier_payment_term:0
+msgid "Supplier Payment Term"
+msgstr "Condition de paiement fournisseur"
+
+#. module: anytracker
+#: sql_constraint:anytracker.tag:0
+msgid "Tag name must be unique!"
+msgstr "Le nom du tag doit être unique !"
+
+#. module: anytracker
+#: view:anytracker.tag:anytracker.view_tag_form field:anytracker.ticket,tags:0
+msgid "Tags"
+msgstr "Tags"
+
+#. module: anytracker
 #: view:anytracker.ticket:anytracker.ticket_view_search
 msgid "Tasks"
 msgstr "Tâches"
 
 #. module: anytracker
-#: model:anytracker.stage,name:0
-msgid "Terminé"
-msgstr "Terminé"
+#: model:anytracker.tag,name:anytracker.tag_tempsfrac
+msgid "Temps Fractionné"
+msgstr "Temps Fractionné"
 
 #. module: anytracker
 #: help:anytracker.ticket,analytic_line_id:0
@@ -1756,6 +1964,14 @@ msgstr "La ligne analytique utilisée pour facturer le ticket"
 #: help:anytracker.method,complexity_ids:0
 msgid "The complexities associated to this method"
 msgstr "Les complexités associées à cette méthode"
+
+#. module: anytracker
+#: help:res.users,property_account_position:0
+msgid ""
+"The fiscal position will determine taxes and accounts used for the partner."
+msgstr ""
+"La position fiscale détermine les taxes et comptes utilisés pour le "
+"partenaire."
 
 #. module: anytracker
 #: help:anytracker.method,importance_ids:0
@@ -1785,10 +2001,28 @@ msgstr ""
 "Le ticket '%s' est évalué '%s' : il ne peut pas entrer dans cette étape"
 
 #. module: anytracker
-#: code:addons/anytracker/anytracker.py:155
+#: code:addons/anytracker/anytracker.py:159
 #, python-format
 msgid "Think of yourself. Can you be your own parent?"
 msgstr "Pensez à vous-même. Pourriez-vous être votre propre parent ?"
+
+#. module: anytracker
+#: help:res.users,property_account_payable:0
+msgid ""
+"This account will be used instead of the default one as the payable account "
+"for the current partner"
+msgstr ""
+"Ce compte sera utilisé à la place de celui par défaut comme compte de dette "
+"pour le partenaire"
+
+#. module: anytracker
+#: help:res.users,property_account_receivable:0
+msgid ""
+"This account will be used instead of the default one as the receivable "
+"account for the current partner"
+msgstr ""
+"Ce compte sera utilisé à la place de celui par défaut comme compte de "
+"créance pour le partenaire"
 
 #. module: anytracker
 #: help:anytracker.method,project_id:0
@@ -1802,6 +2036,24 @@ msgstr ""
 #: model:anytracker.priority,name:anytracker.priority_gtd_month
 msgid "This month"
 msgstr "Ce mois"
+
+#. module: anytracker
+#: help:res.users,property_supplier_payment_term:0
+msgid ""
+"This payment term will be used instead of the default one for purchase "
+"orders and supplier invoices"
+msgstr ""
+"Cette condition de paiement sera utilisée à la place de celle par défaut "
+"pour les commandes d'achat et factures fournisseurs"
+
+#. module: anytracker
+#: help:res.users,property_payment_term:0
+msgid ""
+"This payment term will be used instead of the default one for sale orders "
+"and customer invoices"
+msgstr ""
+"Cette condition de paiement sera utilisée à la place de celle par défaut "
+"pour les commandes de ventes et factures clients"
 
 #. module: anytracker
 #: model:anytracker.priority,name:anytracker.priority_gtd_week
@@ -1836,14 +2088,9 @@ msgid ""
 "${object.description or ''}\n"
 "            "
 msgstr ""
-"Le ticket n°${object.number} est maintenant à l'étape ${object.stage_id."
-"name}\n"
-"\n"
-"\n"
-"${object.name}\n"
-"--\n"
-"${object.description or ''}\n"
-"            "
+"Le ticket n°${object.number} est maintenant à l'étape ${object.stage_id.name}"
+"<br/><br/><br/>${object.name}<br/>--<br/>${object.description}<br/"
+">            "
 
 #. module: anytracker
 #: code:addons/anytracker/invoicing/invoicing.py:45
@@ -1865,7 +2112,7 @@ msgstr "Étape de ticket"
 #: view:anytracker.stage:anytracker.view_stage_form
 msgid "Ticket that have the following complexities can't be move to this stage"
 msgstr ""
-"Les tickets qui ont cette complexité ne peut pas être déplacés vers cette "
+"Les tickets qui ont cette complexité ne peuvent pas être déplacés vers cette "
 "étape"
 
 #. module: anytracker
@@ -1954,8 +2201,8 @@ msgstr ""
 #. module: anytracker
 #: model:ir.actions.act_window,help:anytracker.action_kanbans
 msgid ""
-"To create a new ticket, open the tree below and click on the relevant parent "
-"ticket, then\n"
+"To create a new ticket, open the tree below and click on the relevant node, "
+"then\n"
 "                click on \"Create\"\n"
 "            "
 msgstr ""
@@ -1975,9 +2222,34 @@ msgid "Today"
 msgstr "Aujourd'hui"
 
 #. module: anytracker
+#: field:res.users,total_invoiced:0
+msgid "Total Invoiced"
+msgstr "Total facturé"
+
+#. module: anytracker
+#: field:res.users,debit:0
+msgid "Total Payable"
+msgstr "Dette totale"
+
+#. module: anytracker
 #: view:website:anytracker.report_anytracker_bouquet
 msgid "Total Rating"
 msgstr "Total des évaluations"
+
+#. module: anytracker
+#: field:res.users,credit:0
+msgid "Total Receivable"
+msgstr "Créance totale"
+
+#. module: anytracker
+#: help:res.users,credit:0
+msgid "Total amount this customer owes you."
+msgstr "Montant total que ce client vous doit"
+
+#. module: anytracker
+#: help:res.users,debit:0
+msgid "Total amount you have to pay to this supplier."
+msgstr "Montant total que vous devez à ce fournisseur"
 
 #. module: anytracker
 #: view:website:anytracker.report_anytracker_ticket
@@ -2006,6 +2278,20 @@ msgstr "Trivial"
 #: model:anytracker.complexity,description:anytracker.complexity_maintenance_trivial
 msgid "Trivial bug, I can fix it immediately"
 msgstr "Problème trivial. Je peux le corriger immédiatement"
+
+#. module: anytracker
+#: code:addons/anytracker/importance/importance.py:94
+#, python-format
+msgid "Two importances are configured as the default one in the '{}' method"
+msgstr ""
+"Deux importances sont configurées comme importance par défaut dans la "
+"méthode '{}'"
+
+#. module: anytracker
+#: code:addons/anytracker/priority/priority.py:111
+#, python-format
+msgid "Two priorities are configured as the default one in the '{}' method"
+msgstr "Deux priorités sont configurées par défaut dans la méthode '{}'"
 
 #. module: anytracker
 #: field:anytracker.bouquet,type:0 field:anytracker.ticket,type:0
@@ -2063,11 +2349,6 @@ msgid "Update the ticket tree"
 msgstr "Mettre à jour l'arborescence"
 
 #. module: anytracker
-#: model:anytracker.importance,name:0
-msgid "Urgent"
-msgstr "Urgent"
-
-#. module: anytracker
 #: field:anytracker.stage,notify_urgent:0
 msgid "Urgent notification"
 msgstr "Notif. urgente"
@@ -2077,6 +2358,22 @@ msgstr "Notif. urgente"
 #: field:anytracker.rating,user_id:0
 msgid "User"
 msgstr "Utilisateur"
+
+#. module: anytracker
+#: model:ir.model,name:anytracker.model_res_users
+msgid "Users"
+msgstr "Utilisateurs"
+
+#. module: anytracker
+#: field:res.partner,anytracker_user_ids:0
+#: field:res.users,anytracker_user_ids:0
+msgid "Users allowed to access this partner"
+msgstr "Utilisateurs autorisés à accéder à ce partenaire"
+
+#. module: anytracker
+#: field:res.users,vat_subjected:0
+msgid "VAT Legal Statement"
+msgstr "Déclaration de TVA"
 
 #. module: anytracker
 #: model:anytracker.stage,name:anytracker.stage_implementation_checked
@@ -2090,11 +2387,6 @@ msgid "Value"
 msgstr "Valeur"
 
 #. module: anytracker
-#: model:anytracker.stage,name:0
-msgid "Vérifié"
-msgstr "Vérifié"
-
-#. module: anytracker
 #: code:addons/anytracker/mindmap/wizard/import_mindmap.py:222
 #: code:addons/anytracker/notify/notify.py:49
 #: code:addons/anytracker/stage/stage.py:101
@@ -2105,16 +2397,6 @@ msgstr "Vérifié"
 #, python-format
 msgid "Warning !"
 msgstr "Attention !"
-
-#. module: anytracker
-#: field:anytracker.ticket,website_message_ids:0
-msgid "Website Messages"
-msgstr "Messages du site web"
-
-#. module: anytracker
-#: help:anytracker.ticket,website_message_ids:0
-msgid "Website communication history"
-msgstr "Historique de communication du site web"
 
 #. module: anytracker
 #: selection:anytracker.ticket,duration:0
@@ -2142,6 +2424,12 @@ msgid ""
 msgstr ""
 "Vous pouvez soit mettre à jour l'arborescence, soit insérer l'arbre sous un "
 "ticket existant"
+
+#. module: anytracker
+#: code:addons/anytracker/anytracker.py:178
+#, python-format
+msgid "You can modify participants for 1 ticket at a time"
+msgstr "Vous pouvez modifier un seul participant à la fois"
 
 #. module: anytracker
 #: code:addons/anytracker/history/history.py:122
@@ -2173,7 +2461,7 @@ msgstr "Vous êtes déjà dans la dernière étape"
 msgid ""
 "[${object.project_id.name}] ${user.name} created a ticket #${object.number}"
 msgstr ""
-"[${object.project_id.name}] ${user.name} a créé le ticket n°#${object.number}"
+"[${object.project_id.name}] ${user.name} a créé le ticket n°${object.number}"
 
 #. module: anytracker
 #: view:anytracker.ticket:anytracker.invoicing_ticket_view_search
@@ -2190,8 +2478,13 @@ msgstr ""
 
 #. module: anytracker
 #: help:anytracker.priority,seq:0
-msgid "a low value is higher priority"
-msgstr "une petite valeur est en priorité haute"
+msgid "a higher value is higher priority"
+msgstr "Une valeur supérieure a une priorité plus haute"
+
+#. module: anytracker
+#: field:anytracker.ticket,icon:0
+msgid "anytracker.ticket.type"
+msgstr "anytracker.ticket.type"
 
 #. module: anytracker
 #: help:anytracker.stage,forbidden_complexity_ids:0
@@ -2227,11 +2520,6 @@ msgid "export file"
 msgstr "Export du fichier"
 
 #. module: anytracker
-#: model:ir.model,name:anytracker.model_export_freemind_wizard
-msgid "export freemind .mm file for generate by anytracker tree"
-msgstr "Export d'un fichier Freemind .mm pour un arbre Anytracker"
-
-#. module: anytracker
 #: model:ir.model,name:anytracker.model_export_mindmap_wizard
 msgid "export mindmap .mm file for generate by anytracker tree"
 msgstr "Export de fichier mindmap .mm pour génération d'un arbre Anytracker"
@@ -2259,7 +2547,7 @@ msgid "if check, this object is always available"
 msgstr "Si coché, l'objet est toujours disponible"
 
 #. module: anytracker
-#: field:anytracker.stage,name:0
+#: field:anytracker.stage,name:0 field:anytracker.tag,name:0
 msgid "name"
 msgstr "nom"
 
@@ -2316,3 +2604,216 @@ msgstr "ticket_id.breadcrumb"
 #: field:anytracker.quickrating,description:0
 msgid "ticket_id.description"
 msgstr "ticket_id.description"
+
+#~ msgid "# Meetings"
+#~ msgstr "Nb Reunions"
+
+#~ msgid "# Supplier Invoices"
+#~ msgstr "Nb Factures fournisseurs"
+
+#~ msgid "# Tasks"
+#~ msgstr "Nb Tâches"
+
+#~ msgid "# of Purchase Order"
+#~ msgstr "Nb de commandes fournisseurs"
+
+#~ msgid "# of Sales Order"
+#~ msgstr "Nb de commandes clients"
+
+#~ msgid "1 jour"
+#~ msgstr "1 jour"
+
+#~ msgid "15 min"
+#~ msgstr "15 min"
+
+#~ msgid "2h"
+#~ msgstr "2h"
+
+#~ msgid "4h"
+#~ msgstr "4h"
+
+#~ msgid "A faire"
+#~ msgstr "A faire"
+
+#~ msgid "Amount Due"
+#~ msgstr "Montant dû"
+
+#~ msgid "Amount Overdue"
+#~ msgstr "Montant en retard"
+
+#~ msgid "Backlog"
+#~ msgstr "Backlog"
+
+#~ msgid "Clôturé"
+#~ msgstr "Clôturé"
+
+#~ msgid "Customer Location"
+#~ msgstr "Emplacement client"
+
+#~ msgid "Customer Payment Promise"
+#~ msgstr "Promesse de paiement client"
+
+#~ msgid "Demande"
+#~ msgstr "Demande"
+
+#~ msgid "En cours"
+#~ msgstr "En cours"
+
+#~ msgid "Follow-up Responsible"
+#~ msgstr "Responsable du rappel paiement"
+
+#~ msgid "Icebox"
+#~ msgstr "Icebox"
+
+#~ msgid "Last notification marked as read from base Calendar"
+#~ msgstr "Dernière notification marquée comme lue depuis base Calendar"
+
+#~ msgid "Latest Follow-up Date"
+#~ msgstr "Dernière date de rappel paiement"
+
+#~ msgid "Latest Follow-up Level"
+#~ msgstr "Dernier niveau de rappel paiement"
+
+#~ msgid "Latest Follow-up Level without litigation"
+#~ msgstr "Dernier niveau de rappel paiement sans litige"
+
+#~ msgid "Latest date that the follow-up level of the partner was changed"
+#~ msgstr ""
+#~ "Dernière date à laquelle le niveau de rappel paiement a été changé pour "
+#~ "ce partenaire"
+
+#~ msgid "Leads and Opportunities"
+#~ msgstr "Leads et opportunitéés"
+
+#~ msgid "Livré"
+#~ msgstr "Livré"
+
+#~ msgid "Meetings"
+#~ msgstr "Réunions"
+
+#~ msgid "Next Action"
+#~ msgstr "Prochaine action"
+
+#~ msgid "Next Action Date"
+#~ msgstr "Date de prochaine action"
+
+#~ msgid "Normal"
+#~ msgstr "Normal"
+
+#~ msgid "Nouveau"
+#~ msgstr "Nouveau"
+
+#~ msgid "Ok to start"
+#~ msgstr "À démarrer"
+
+#~ msgid "Opportunity"
+#~ msgstr "Opportunité"
+
+#~ msgid ""
+#~ "Optionally you can assign a user to this field, which will make him "
+#~ "responsible for the action."
+#~ msgstr ""
+#~ "Optionnellement vous pouvez affecter un utilisateur à ce champ, ce qui le "
+#~ "rendra responsable de l'action"
+
+#~ msgid "Outgoing Mails"
+#~ msgstr "Courriels sortants"
+
+#~ msgid "Payment Note"
+#~ msgstr "Note de paiement"
+
+#~ msgid "Phonecalls"
+#~ msgstr "Appels tél"
+
+#~ msgid "Purchase Pricelist"
+#~ msgstr "Pricelist d'achat"
+
+#~ msgid "Ratio"
+#~ msgstr "Ratio"
+
+#~ msgid "Sales Order"
+#~ msgstr "Commande"
+
+#~ msgid "Supplier Location"
+#~ msgstr "Emplacement fourisseur"
+
+#~ msgid "Terminé"
+#~ msgstr "Terminé"
+
+#~ msgid "The maximum follow-up level"
+#~ msgstr "Le niveau max de rappel paiement"
+
+#~ msgid ""
+#~ "The maximum follow-up level without taking into account the account move "
+#~ "lines with litigation"
+#~ msgstr ""
+#~ "Le niveau maximum de rappel paiement prenant en compte les écritures avec "
+#~ "litige"
+
+#~ msgid ""
+#~ "This is the next action to be taken.  It will automatically be set when "
+#~ "the partner gets a follow-up level that requires a manual action. "
+#~ msgstr ""
+#~ "Prochaine action à réaliser. Elle sera automatiquement définie quand le "
+#~ "partenaire reçoit un niveau de rappel qui nécessite une action manuelle."
+
+#~ msgid ""
+#~ "This is when the manual follow-up is needed. The date will be set to the "
+#~ "current date when the partner gets a follow-up level that requires a "
+#~ "manual action. Can be practical to set manually e.g. to see if he keeps "
+#~ "his promises."
+#~ msgstr ""
+#~ "Ceci est quand le rappel manuel est nécessaire. La date sera définie à la "
+#~ "date en cours quand le partenaire reçoit un niveau de rappel qui "
+#~ "nécessite une action manuelle. Peut être pratique à définir manuellement, "
+#~ "par ex. pour voir s'il tient ses promesses."
+
+#~ msgid ""
+#~ "This pricelist will be used, instead of the default one, for purchases "
+#~ "from the current partner"
+#~ msgstr ""
+#~ "Cette pricelist sera utilisée à la place de celle par défaut, pour les "
+#~ "achats du partenaire en cours."
+
+#~ msgid ""
+#~ "This stock location will be used, instead of the default one, as the "
+#~ "destination location for goods you send to this partner"
+#~ msgstr ""
+#~ "Cet emplacement de stock sera utilisé à la place de celui par défaut, "
+#~ "comme emplacement de destination pour les biens que vous envoyez à ce "
+#~ "partenaire."
+
+#~ msgid ""
+#~ "This stock location will be used, instead of the default one, as the "
+#~ "source location for goods you receive from the current partner"
+#~ msgstr ""
+#~ "Cet emplacement de stock sera utilisé à la place de celui par défaut "
+#~ "comme emplacement source pour les biens que vous recevez du partenaire en "
+#~ "cours."
+
+#~ msgid "Urgent"
+#~ msgstr "Urgent"
+
+#~ msgid "Vérifié"
+#~ msgstr "Vérifié"
+
+#~ msgid "Website Messages"
+#~ msgstr "Messages du site web"
+
+#~ msgid "Website communication history"
+#~ msgstr "Historique de communication du site web"
+
+#~ msgid "Worst Due Date"
+#~ msgstr "Pire date d'échéance"
+
+#~ msgid "unknown"
+#~ msgstr "inconnu"
+
+#~ msgid "À vérifier"
+#~ msgstr "À vérifier"
+
+#~ msgid "Import freemind .mm file into anytracker tree"
+#~ msgstr "Importer un fichier Freemind .mm dans l'arborescence Anytracker"
+
+#~ msgid "export freemind .mm file for generate by anytracker tree"
+#~ msgstr "Export d'un fichier Freemind .mm pour un arbre Anytracker"

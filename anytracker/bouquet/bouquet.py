@@ -1,5 +1,5 @@
 import logging
-from openerp import models, fields
+from openerp import models, fields, api
 
 logger = logging.getLogger(__file__)
 
@@ -12,6 +12,7 @@ class Bouquet(models.Model):
     _description = u"Ticket Bouquet"
     _order = 'create_date DESC'
 
+    @api.depends('ticket_ids')
     def _get_rating(self):
         for bouquet in self:
             total = 0
@@ -31,6 +32,7 @@ class Bouquet(models.Model):
         for bouquet in self:
             bouquet.nb_tickets = res[bouquet.id]
 
+    @api.depends('ticket_ids')
     def _project_ids(self):
         for bouquet in self:
             projects = list({t.project_id.id for t in bouquet.ticket_ids})

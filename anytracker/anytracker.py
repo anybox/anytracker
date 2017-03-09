@@ -49,7 +49,7 @@ class Ticket(models.Model):
     _name = 'anytracker.ticket'
     _description = "Anytracker tickets"
     _rec_name = 'breadcrumb'
-    _order = 'priority ASC, importance DESC, sequence ASC, create_date DESC'
+    _order = 'priority DESC, importance DESC, sequence ASC, create_date DESC'
     _parent_store = True
     _inherit = ['mail.thread']
 
@@ -64,6 +64,7 @@ class Ticket(models.Model):
                 ticket.has_attachment = False
             ticket.has_attachment = True
 
+    @api.depends('description')
     def _shortened_description(self):
         """shortened description used in the list view and kanban view
         """
@@ -416,6 +417,7 @@ class Ticket(models.Model):
         else:
             super(Ticket, self).message_unsubscribe_users(user_ids)
 
+    @api.depends('participant_ids')
     def _is_participant(self):
         uid = self.env.uid
         for ticket in self:
@@ -435,6 +437,17 @@ class Ticket(models.Model):
                 continue
             ticket.write({'participant_ids': [(3, self.env.uid)]})
 
+    def _compute_fulltext(self):
+        """Used only to force fulltext into a function field."""
+        return ''
+
+    def _search_fulltext(self, operator, value):
+        return ['|', '|',
+                ('name', operator, value),
+                ('description', operator, value),
+                ('number', operator, value),
+                ]
+
     name = fields.Char(
         string='Title',
         required=True)
@@ -450,6 +463,10 @@ class Ticket(models.Model):
         string='Permalink', )
     description = fields.Text(
         string='Description')
+    fulltext = fields.Text(
+        compute='_compute_fulltext',
+        search='_search_fulltext',
+        store=False)
     create_date = fields.Datetime(
         string='Creation Time')
     write_date = fields.Datetime(

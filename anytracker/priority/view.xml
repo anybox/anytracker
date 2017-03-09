@@ -11,6 +11,8 @@
           <group col="2" colspan="2">
             <group col="2" colspan="2">
               <field name="name" select="1"/>
+              <field name="default"/>
+              <field name="color" widget="color"/>
               <field name="description"/>
             </group>
             <group col="2" colspan="2">
@@ -25,10 +27,8 @@
 
 <!-- search tickets by priority -->
 <record id="priority_ticket_view_search" model="ir.ui.view">
-    <field name="name">anytracker.ticket.search</field>
     <field name="model">anytracker.ticket</field>
     <field name="inherit_id" ref="anytracker.ticket_view_search"/>
-    <field name="priority" eval="16"/>
     <field name="arch" type="xml">
         <xpath expr="//search/group[1]" position="inside">
             <filter name="tickets_by_priority"
@@ -42,9 +42,7 @@
 
 <!-- Add a column in the ticket list -->
 <record id="priority_ticket_tree" model="ir.ui.view">
-    <field name="name">Tickets</field>
     <field name="model">anytracker.ticket</field>
-    <field name="priority" eval="16"/>
     <field name="inherit_id" ref="anytracker.ticket_tree"/>
     <field name="arch" type="xml">
         <xpath expr="//field[@name='breadcrumb']" position="after">
@@ -54,12 +52,10 @@
     </field>
 </record>
 
-<!-- Add a tab in the ticket form -->
+<!-- Add a field in the ticket form -->
 <record id="priority_ticket_view_form" model="ir.ui.view">
-    <field name="name">ticket.form</field>
     <field name="model">anytracker.ticket</field>
     <field name="inherit_id" ref="anytracker.ticket_view_form"/>
-    <field name="priority" eval="16"/>
     <field name="arch" type="xml">
         <xpath expr="//group[@id='extend']" position="inside">
             <field name="priority_id" domain="[('method_id', '=', method_id)]" attrs="{'invisible': [('parent_id','=',False)]}"/>
@@ -82,8 +78,9 @@
                         <field name="name"/>
                         <field name="description"/>
                         <field name="seq"/>
+                        <field name="default"/>
+                        <field name="color" widget="color"/>
                         <field name="deadline" string="Has deadline"/>
-                        <field name="date"/>
                     </tree>
                 </field>
             </page>
@@ -91,5 +88,19 @@
     </field>
 </record>
 
+<!-- Add the priority on the kanban ticket -->
+<record id="tickets_kanban_priority" model="ir.ui.view">
+    <field name="model">anytracker.ticket</field>
+    <field name="inherit_id" ref="anytracker.tickets_kanban2"/>
+    <field name="arch" type="xml">
+      <xpath expr="/kanban/field[last()]" position="after">
+        <field name="priority_color"/>
+        <field name="priority_id"/>
+      </xpath>
+      <xpath expr="//div[@class='oe_kanban_bottom_left']" position="inside">
+          <t t-if="record.priority_color.raw_value"><div t-attf-style="border-radius: 8px; background: #{record.priority_color.raw_value}; background-image: url('/anytracker/static/src/img/clock.png')" t-attf-title="#{record.priority_id.value}"></div></t>
+      </xpath>
+    </field>
+</record>
 </data>
 </openerp>

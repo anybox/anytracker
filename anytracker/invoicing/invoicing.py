@@ -142,7 +142,7 @@ class Priority(models.Model):
     _inherit = 'anytracker.priority'
 
     discount_id = fields.Many2one(
-        'hr_timesheet_invoice.factor', 'Ratio',
+        'hr_timesheet_invoice.factor', 'Invoicing ratio',
         help=u'set the invoicing ratio for tickets with this priority')
 
 

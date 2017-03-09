@@ -47,13 +47,15 @@ class TestComplexity(SharedSetupTransactionCase):
         ).id
 
     def test_rating(self):
-        """ Simple rating scenario: a manager or member or partner can rate, not a customer.
+        """ Simple rating scenario: a manager or member or partner can rate,
+        not a customer.
         """
         # create a project with a team of 4 people, and a ticket
         project = self.TICKET.create({
             'name': 'test project',
             'participant_ids': [(6, 0, [
-                self.customer_id, self.partner_id, self.member_id, self.manager_id])],
+                self.customer_id, self.partner_id,
+                self.member_id, self.manager_id])],
             'method_id': self.ref('anytracker.method_test')})
         ticket = self.TICKET.create({
             'name': 'Test simple ticket',
@@ -160,12 +162,12 @@ class TestComplexity(SharedSetupTransactionCase):
         self.assertEquals(ticket1.sudo(self.member_id).rating, 3.5)
         self.assertEquals(project.sudo(self.member_id).risk, 0.357738371066744)
         # the computed color should be 3 (complexity7)
-        self.assertEquals(ticket1.sudo(self.member_id).color, 3)
+        self.assertEquals(ticket1.sudo(self.member_id).color, 'orange')
         # add a risky complexity
         ticket1.sudo(self.manager_id).write({
             'my_rating': self.ref('anytracker.complexity8')})
         self.assertEquals(ticket1.sudo(self.member_id).risk, 1.0)
-        self.assertEquals(ticket1.sudo(self.member_id).color, 4)
+        self.assertEquals(ticket1.sudo(self.member_id).color, 'red')
 
     def test_rate_at_creation(self):
         """ check that a ticket rated at creation has a rating

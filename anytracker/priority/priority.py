@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from openerp import models, fields, api, _
-from openerp.exceptions import except_orm, Warning, RedirectWarning
+from openerp.exceptions import except_orm
 
 
 class Priority(models.Model):
@@ -10,7 +10,7 @@ class Priority(models.Model):
     """
     _name = 'anytracker.priority'
     _description = 'Priority of Ticket by method'
-    _order = 'method_id, seq'
+    _order = 'method_id, seq DESC'
 
     name = fields.Char(
         'Priority name',
@@ -22,7 +22,7 @@ class Priority(models.Model):
         translate=True)
     seq = fields.Integer(
         'Priority',
-        help='a low value is higher priority')
+        help='a higher value is higher priority')
     active = fields.Boolean(
         'Active',
         default=True,
@@ -36,22 +36,28 @@ class Priority(models.Model):
         'Force to choose a deadline on the ticket?')
     date = fields.Date(
         'Milestone')
+    default = fields.Boolean(
+        "Default",
+        help="Default priority for new tickets")
+    color = fields.Char(
+        "Color",
+        help="Color (in any CSS format) used to represent this priority")
+
+    @api.multi
+    def write(self, vals):
+        """ in case the sequence is changed,
+        we must change all the stored priorities on tickets
+        """
+        seq = vals.get('seq')
+        if seq:
+            self.env['anytracker.ticket'].search(
+                [('priority_id', '=', self.id)]).write(
+                    {'priority': seq})
+        return super(Priority, self).write(vals)
 
 
 class Ticket(models.Model):
     _inherit = 'anytracker.ticket'
-
-    def _get_priority(self):
-        for t in self:
-            t.priority = t.priority_id.seq if t.priority_id else 0
-
-    @api.multi
-    @api.onchange('priority_id')
-    def onchange_priority(self):
-        if self.priority_id.deadline:
-            self.has_deadline = True
-        else:
-            self.has_deadline = False
 
     has_deadline = fields.Boolean(
         'priority_id.deadline',
@@ -63,10 +69,54 @@ class Ticket(models.Model):
         'anytracker.priority',
         'Priority')
     priority = fields.Integer(
-        compute='_get_priority',
-        method=True,
+        compute='_priority',
         string='Priority',
         store=True)
+    priority_color = fields.Char(
+        string='Priority color',
+        compute='_priority_color')
+
+    @api.depends('priority_id')
+    def _priority(self):
+        for t in self:
+            if t.priority_id:
+                t.priority = t.priority_id.seq
+
+    @api.multi
+    @api.onchange('priority_id')
+    def onchange_priority(self):
+        if self.priority_id.deadline:
+            self.has_deadline = True
+        else:
+            self.has_deadline = False
+
+    @api.model
+    def create(self, values):
+        """select the default priority
+        """
+        METHOD = self.env['anytracker.method']
+        PRIORITY = self.env['anytracker.priority']
+        if not values.get('priority_id'):
+            if values.get('parent_id'):
+                method = self.browse(values.get('parent_id')).method_id
+            else:
+                method = METHOD.browse(values['method_id'])
+            priorities = PRIORITY.search([
+                ('method_id', '=', method.id),
+                ('default', '=', True)])
+            if len(priorities) > 1:
+                raise except_orm(
+                    _('Anytracker Configuration Error'),
+                    _("Two priorities are configured as the default one "
+                      "in the '{}' method".format(method.name)))
+            if len(priorities) == 1:
+                values['priority_id'] = priorities[0].id
+        return super(Ticket, self).create(values)
+
+    @api.depends('priority_id')
+    def _priority_color(self):
+        for t in self:
+            t.priority_color = t.priority_id.color if t.priority_id else False
 
 
 class Method(models.Model):

@@ -2,20 +2,6 @@
 <openerp>
 <data>
 
-<!-- importance list -->
-<record id="view_anytracker_importance_tree" model="ir.ui.view">
-    <field name="name">anytracker.importance.tree</field>
-    <field name="model">anytracker.importance</field>
-    <field name="arch" type="xml">
-        <tree string="Importances">
-            <field name="seq"/>
-            <field name="name"/>
-            <field name="method_id"/>
-            <field name="active"/>
-        </tree>
-    </field>
-</record>
-
 <!-- importance form -->
 <record id="view_anytracker_importance_form" model="ir.ui.view">
     <field name="name">anytracker.importance.form</field>
@@ -25,6 +11,8 @@
           <group col="2" colspan="2">
             <group col="2" colspan="2">
               <field name="name" select="1"/>
+              <field name="default"/>
+              <field name="color" widget="color"/>
               <field name="description"/>
             </group>
             <group col="2" colspan="2">
@@ -33,26 +21,6 @@
             </group>
           </group>
         </form>
-    </field>
-</record>
-
-<!-- Add a tab in the method form -->
-<record id="method_view_form_with_importances" model="ir.ui.view">
-    <field name="model">anytracker.method</field>
-    <field name="inherit_id" ref="view_method_form" />
-    <field name="arch" type="xml">
-        <xpath expr="//notebook" position="inside">
-            <page string="Importances">
-                <div>Importance represents either the impact of an issue, or the business value for a feature. It can help define what should be done first.</div>
-                <field name="importance_ids">
-                    <tree>
-                        <field name="name"/>
-                        <field name="description"/>
-                        <field name="seq"/>
-                    </tree>
-                </field>
-            </page>
-        </xpath>
     </field>
 </record>
 
@@ -71,7 +39,7 @@
     </field>
 </record>
 
-<!-- Add an importance column in the ticket list -->
+<!-- Add a column in the ticket list -->
 <record id="importance_ticket_tree" model="ir.ui.view">
     <field name="model">anytracker.ticket</field>
     <field name="inherit_id" ref="anytracker.ticket_tree"/>
@@ -94,5 +62,41 @@
     </field>
 </record>
 
+<!-- Add a tab in the method form -->
+<record id="method_view_form_with_importances" model="ir.ui.view">
+    <field name="model">anytracker.method</field>
+    <field name="inherit_id" ref="view_method_form" />
+    <field name="arch" type="xml">
+        <xpath expr="//notebook" position="inside">
+            <page string="Importances">
+                <div>Importance represents either the impact of an issue, or the business value for a feature. It can help define what should be done first.</div>
+                <field name="importance_ids">
+                    <tree>
+                        <field name="name"/>
+                        <field name="description"/>
+                        <field name="seq"/>
+                        <field name="default"/>
+                        <field name="color" widget="color"/>
+                    </tree>
+                </field>
+            </page>
+        </xpath>
+    </field>
+</record>
+
+<!-- Add the importance on the kanban ticket -->
+<record id="tickets_kanban_importance" model="ir.ui.view">
+    <field name="model">anytracker.ticket</field>
+    <field name="inherit_id" ref="anytracker.tickets_kanban2"/>
+    <field name="arch" type="xml">
+      <xpath expr="/kanban/field[last()]" position="after">
+        <field name="importance_color"/>
+        <field name="importance_id"/>
+      </xpath>
+      <xpath expr="//div[@class='oe_kanban_bottom_left']" position="inside">
+          <t t-if="record.importance_color.raw_value"><div t-attf-style="border-radius: 8px; background: #{record.importance_color.raw_value}; background-image: url('/anytracker/static/src/img/exclamation.png')" t-attf-title="#{record.importance_id.value}"></div></t>
+      </xpath>
+    </field>
+</record>
 </data>
 </openerp>

@@ -1,5 +1,6 @@
 from openerp import models, fields, api
-from time import strftime
+from datetime import datetime
+from itertools import groupby
 
 
 def risk_mean(risks):
@@ -30,8 +31,9 @@ class Complexity(models.Model):
     value = fields.Float(
         'Value',
         required=True)
-    color = fields.Integer(
-        'Color')
+    color = fields.Char(
+        "Color",
+        help="Color (in any CSS format) used to represent this complexity")
     method_id = fields.Many2one(
         'anytracker.method',
         'Project method',
@@ -46,7 +48,7 @@ class Rating(models.Model):
     """Represents the rating of a ticket by one person at one time
     """
     _name = 'anytracker.rating'
-    _order = 'time desc'
+    _order = 'time DESC'
 
     complexity_id = fields.Many2one(
         'anytracker.complexity',
@@ -99,19 +101,35 @@ class Ticket(models.Model):
                 'complexity_id': ratings[ticket.id],
                 'ticket_id': ticket.id,
                 'user_id': ticket.env.uid,
-                'time': strftime('%Y-%m-%d %H:%M:%S')})
+                'time': datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')})
 
-    @api.depends('rating_ids', 'my_rating', 'parent_id', 'child_ids')
-    def _get_color(self):
+    @api.depends('rating_ids', 'my_rating', 'parent_id',
+                 'child_ids', 'highest_rating')
+    def _color(self):
         """get the color of the rating with highest risk
         """
         for ticket in self:
-            colors = list((r.complexity_id.risk, r.complexity_id)
-                          for r in ticket.sudo().rating_ids)
-            if colors:
-                ticket.color = list(reversed(sorted(colors)))[0][1].color
+            if ticket.highest_rating:
+                ticket.color = ticket.highest_rating.color
             else:
-                ticket.color = 0
+                ticket.color = 'white'
+
+    @api.depends('rating_ids', 'my_rating', 'parent_id', 'child_ids')
+    def _highest_rating(self):
+        """get the rating of the highest risk of each person's latest rating
+        """
+        for ticket in self:
+            ratings = list((r.user_id, r.complexity_id.value, r.complexity_id)
+                           for r in ticket.sudo().rating_ids)
+            if ratings:
+                # group by user
+                grouped = groupby(ratings, lambda x: x[0])
+                # keep the latest of each user
+                latests = [j[1].next() for j in grouped]
+                # keep the highest
+                highests = list(reversed(sorted(latests, key=lambda x: x[1])))
+                if highests:
+                    ticket.highest_rating = highests[0][2]
 
     def compute_risk_and_rating(self, ids):
         """compute the risk and rating of a leaf ticket,
@@ -262,6 +280,10 @@ class Ticket(models.Model):
         'anytracker.rating',
         'ticket_id',
         'Ratings')
+    highest_rating = fields.Many2one(
+        'anytracker.complexity',
+        compute=_highest_rating,
+        string="Highest Rating")
     my_rating = fields.Many2one(
         'anytracker.complexity',
         compute=_get_my_rating,
@@ -271,8 +293,8 @@ class Ticket(models.Model):
         'Risk',
         group_operator="avg",
         default=0.5)
-    color = fields.Integer(
-        compute=_get_color,
+    color = fields.Char(
+        compute=_color,
         string='Color')
     rating = fields.Float(
         'Rating',
