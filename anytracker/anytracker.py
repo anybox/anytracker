@@ -486,12 +486,6 @@ class Ticket(models.Model):
     relative_parent_breadcrumbs = fields.Char(
         string='Location',
         compute=_formatted_rparent_breadcrumb)
-    duration = fields.Selection(
-        [(0, '< half a day'),
-         (None, 'Will be computed'),
-         (1, 'Half a day')],
-        default=0,
-        string='duration')
     child_ids = fields.One2many(
         'anytracker.ticket',
         'parent_id',
