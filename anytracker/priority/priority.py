@@ -60,9 +60,8 @@ class Ticket(models.Model):
     _inherit = 'anytracker.ticket'
 
     has_deadline = fields.Boolean(
-        'priority_id.deadline',
-        readonly=True,
-        type="boolean")
+        related='priority_id.deadline',
+        readonly=True)
     deadline = fields.Date(
         'Deadline')
     priority_id = fields.Many2one(
