@@ -93,7 +93,7 @@
     <field name="arch" type="xml">
         <xpath expr="/tree/field[@name='breadcrumb']" position="after">
             <field name="rating"/>
-            <button string="Rate subtickets" icon="gtk-execute" type="action" name="%(action_quickrating)d"/>
+            <button string="Rate subtickets" icon="gtk-select-color" type="action" name="%(action_quickrating)d"/>
             <field name="risk" string="Risk level" />
         </xpath>
     </field>
