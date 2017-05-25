@@ -166,6 +166,7 @@ class Ticket(models.Model):
                                      if latest_person_rating else 0)
         return res_risk, res_rating
 
+    @api.multi
     def recompute_subtickets(self):
         """recompute the overall risk and rating of the node, based on subtickets.
         And recompute sub-nodes as well
