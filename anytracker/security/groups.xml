@@ -12,6 +12,13 @@
     <field name="implied_ids" eval="[(4, ref('base.group_portal'))]"/>
 </record>
 
+<!-- customer that can assign tickets -->
+<record id="group_customer_assignment" model="res.groups">
+    <field name="name">Customer (Assign capable)</field>
+    <field name="category_id" ref="module_category_anytracker"/>
+    <field name="implied_ids" eval="[(4, ref('group_customer'))]"/>
+</record>
+
 <!-- partner -->
 <record id="group_partner" model="res.groups">
     <field name="name">Partner</field>
