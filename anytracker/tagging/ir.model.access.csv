@@ -1,4 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-"acc_anytracker_tag_customer","Tag access for customer","model_anytracker_tag","group_customer",1,0,0,0
-"acc_anytracker_tag_member","Tag access for member","model_anytracker_tag","group_member",1,1,1,1
-"acc_anytracker_tag_manager","Tag access for manager","model_anytracker_tag","group_manager",1,1,1,1
+"acc_anytracker_tag_customer","Tag access for customers","model_anytracker_tag","group_customer",1,0,0,0
+"acc_anytracker_tag_member","Tag access for members","model_anytracker_tag","group_member",1,1,1,1
+"acc_anytracker_tag_manager","Tag access for managers","model_anytracker_tag","group_manager",1,1,1,1
+"acc_anytracker_tag_partner","Tag access for partners","model_anytracker_tag","group_partner",1,1,1,1

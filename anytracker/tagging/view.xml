@@ -44,12 +44,12 @@
             </field>
         </record>
 
-        <!-- Member group get the field editable -->
-        <record id="view_ticket_form_with_tag_member_editable" model="ir.ui.view">
+        <!-- Member and Parner group get the field editable -->
+        <record id="view_ticket_form_with_tag_editable" model="ir.ui.view">
             <field name="name">Member tag editable</field>
             <field name="model">anytracker.ticket</field>
             <field name="inherit_id" ref="view_ticket_form_with_tag_readonly"/>
-            <field name="groups_id" eval="[(6, 0, [ref('group_member') ])]"/>
+            <field name="groups_id" eval="[(6, 0, [ref('group_member'),ref('group_partner')])]"/>
             <field name="arch" type="xml">
                 <field name="tags" position="attributes">
                     <attribute name="readonly">0</attribute>
