@@ -168,6 +168,20 @@
                                     </tree>
                                 </field>
                             </page>
+                             <page string="Depend On" groups="anytracker.group_member,anytracker.group_partner">
+                                <field name="dependant_tickets" nolabel="1"  >
+                                     <tree>
+                                        <field name="number"/>
+                                        <field name="name"/>
+                                        <field name="stage_id"/>
+                                        <field name="progress"/>
+                                        <field name="rating"/>
+                                        <field name="risk"/>
+                                        <field name="importance_id"/>
+                                        <field name="priority_id"/>
+                                    </tree>
+                                </field>
+                            </page>
                             <page string="Participants" attrs="{'invisible': [('parent_id', '!=', False)]}"
                                   groups="anytracker.group_member,anytracker.group_partner">
                                     <field name="is_participant" invisible="True"/>
@@ -313,6 +327,7 @@
             <field name="name">anytracker.ticket.hierarchy</field>
             <field name="model">anytracker.ticket</field>
             <field name="field_parent">subnode_ids</field>
+            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Tickets hierarchy">
                     <field name="name"/>
@@ -348,6 +363,7 @@
         <record model="ir.actions.act_window" id="action_kanbans">
             <field name="name">Hierarchy</field>
             <field name="res_model">anytracker.ticket</field>
+            <field name="view_mode">tree,form</field>
             <field name="view_type">tree</field>
             <field name="view_id" ref="tickets_hierarchy"/>
             <field name="domain">[('parent_id', '=', False),'|', '|', ('project_id.participant_ids', 'in', uid), ('parent_id.participant_ids', 'in', uid), ('participant_ids', 'in', uid)]</field>
