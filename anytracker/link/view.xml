@@ -2,7 +2,7 @@
 <openerp>
 <data>
 
-     <!-- Ticket type -->
+     <!-- link type -->
         <record id="view_link_type_form" model="ir.ui.view">
             <field name="name">anytracker.link.type.form</field>
             <field name="model">anytracker.link.type</field>
@@ -26,6 +26,25 @@
                 </form>
             </field>
         </record>
+    <!-- link  -->
+        <record id="view_link_form" model="ir.ui.view">
+            <field name="name">anytracker.link.form</field>
+            <field name="model">anytracker.link</field>
+            <field name="type">form</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <form string="Link">
+                    <sheet>
+                        <group>
+                            <h1>
+                                <field name="ticket_two" select="1" placeholder="Ticket type"/>
+                            </h1>
+                        </group>
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
 
     <!-- Add a tab in the ticket form -->
         <record id="view_ticket_with_link" model="ir.ui.view">
@@ -39,7 +58,7 @@
                         <field name="link_ids" nolabel="1" context="{'default_ticket_one':active_id}">
                              <tree string="Links" editable="bottom">
                                         <field name="ticket_one" invisible="True" />
-                                        <field name="number" />
+                                        <field name="number"  />
                                         <field name="ticket_two" string="link ticket"/>
                                         <field name="stage" />
                                         <field name="progress" widget="progressbar"  />
@@ -61,6 +80,8 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
+
+
 
         <menuitem id="menu_types_link"
                   parent="menu_configuration"

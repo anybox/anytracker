@@ -36,9 +36,14 @@ class Link(models.Model):
     @api.onchange('ticket_two')
     def _data_ticket_two(self):
         for rec in self:
-            self.stage = rec.ticket_two.stage_id.name if self.ticket_two else False
-            self.progress = rec.ticket_two.progress if self.ticket_two else False
-            self.number = rec.ticket_two.number if self.ticket_two else False
+            if rec.ticket_two:
+                self.stage = rec.ticket_two.stage_id.name
+                self.progress = rec.ticket_two.progress
+                self.number = rec.ticket_two.number
+            else:
+                self.stage = False
+                self.progress = False
+                self.number = False
 
     ticket_one =  fields.Many2one(
         'anytracker.ticket',
@@ -56,7 +61,7 @@ class Link(models.Model):
         'Type Link',
          required=False,
          ondelete='cascade')
-    number = fields.Integer(compute='_data_ticket_two', string="")
+    number = fields.Char(compute='_data_ticket_two', string="")
     progress = fields.Float(compute='_data_ticket_two', string="")
     stage = fields.Char(compute='_data_ticket_two', string="")
 
