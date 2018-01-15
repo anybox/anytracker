@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="0">
+        <!-- Implementation link type -->
+        <record id="link_type_clone" model="anytracker.link.type">
+            <field name="name">Clone</field>
+            <field name="state">actif</field>
+            <field name="description">Clone</field>
+        </record>
+        <record id="link_type_parent_clone" model="anytracker.link.type">
+            <field name="name">Parent Clone</field>
+            <field name="state">actif</field>
+            <field name="description">Parent Clone</field>
+        </record>
+        <record id="link_type_depend" model="anytracker.link.type">
+            <field name="name">Depend</field>
+            <field name="state">actif</field>
+            <field name="description">Depend</field>
+        </record>
+        <record id="link_type_parent_depend" model="anytracker.link.type">
+            <field name="name">Parent Depend</field>
+            <field name="state">actif</field>
+            <field name="description">Parent Depend</field>
+        </record>
+
+        <record id="link_type_clone" model="anytracker.link.type">
+            <field name="linktype_id" ref="link_type_parent_clone"/>
+        </record>
+        <record id="link_type_parent_clone" model="anytracker.link.type">
+            <field name="linktype_id" ref="link_type_clone"/>
+        </record>
+       <record id="link_type_depend" model="anytracker.link.type">
+            <field name="linktype_id" ref="link_type_parent_depend"/>
+        </record>
+        <record id="link_type_parent_depend" model="anytracker.link.type">
+            <field name="linktype_id" ref="link_type_depend"/>
+        </record>
+
+    </data>
+</openerp>

@@ -79,6 +79,7 @@ http://www.famfamfam.com/lab/icons/silk/
         'importance/data.xml',
         'notify/data.xml',
         'priority/data.xml',
+        'link/data.xml',
         # views
         'view.xml',
         'mindmap/wizard/import_mindmap.xml',
@@ -94,6 +95,7 @@ http://www.famfamfam.com/lab/icons/silk/
         'notify/view.xml',
         'priority/view.xml',
         'bouquet/view.xml',
+        'link/view.xml',
         'invoicing/view.xml',
         'report/ticket.xml',
         'report/bouquet.xml',

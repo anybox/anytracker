@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+     <!-- Ticket type -->
+        <record id="view_link_type_form" model="ir.ui.view">
+            <field name="name">anytracker.link.type.form</field>
+            <field name="model">anytracker.link.type</field>
+            <field name="type">form</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <form string="Type">
+                    <sheet>
+                        <group>
+                            <h1>
+                                <field name="name" select="1" placeholder="Ticket type"/>
+                            </h1>
+                        </group>
+                        <group>
+                            <field name="description"/>
+                            <field name="linktype_id"/>
+                            <field name="state"/>
+
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+    <!-- Add a tab in the ticket form -->
+        <record id="view_ticket_with_link" model="ir.ui.view">
+            <field name="name">Ticket</field>
+            <field name="model">anytracker.ticket</field>
+            <field name="inherit_id" ref="ticket_view_form" />
+            <field name="arch" type="xml">
+
+              <xpath expr="//notebook/page[@string='Sub-tickets']" position="after">
+                <page string="Link-with">
+                        <field name="link_ids" nolabel="1" context="{'default_ticket_one':active_id}">
+                             <tree string="Links" editable="bottom">
+                                        <field name="ticket_one" invisible="True" />
+                                        <field name="number" />
+                                        <field name="ticket_two" string="link ticket"/>
+                                        <field name="stage" />
+                                        <field name="progress" widget="progressbar"  />
+                                        <field name="linktype_id"/>
+
+                            </tree>
+                        </field>
+                </page>
+              </xpath>
+            </field>
+        </record>
+
+
+
+        <record model="ir.actions.act_window" id="act_open_types_link_view">
+            <field name="name">Link types</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">anytracker.link.type</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_types_link"
+                  parent="menu_configuration"
+                  sequence="20"
+                  action="act_open_types_link_view"/>
+
+
+
+</data>
+</openerp>
+

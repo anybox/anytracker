@@ -546,13 +546,7 @@ class Ticket(models.Model):
         string='Has attachment ?',
         store=True,
         compute=_has_attachment)
-    dependant_tickets = fields.Many2many(
-        comodel_name='anytracker.ticket',
-        relation='dependant_ticket',
-        column1='ticket',
-        column2='depend_on',
-        string='Dependant Tickets',
-    )
+
 
     _sql_constraints = [
         ('number_uniq', 'unique(number)', 'Number must be unique!')]

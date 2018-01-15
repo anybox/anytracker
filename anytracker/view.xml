@@ -168,20 +168,7 @@
                                     </tree>
                                 </field>
                             </page>
-                             <page string="Depend On" groups="anytracker.group_member,anytracker.group_partner">
-                                <field name="dependant_tickets" nolabel="1"  >
-                                     <tree>
-                                        <field name="number"/>
-                                        <field name="name"/>
-                                        <field name="stage_id"/>
-                                        <field name="progress"/>
-                                        <field name="rating"/>
-                                        <field name="risk"/>
-                                        <field name="importance_id"/>
-                                        <field name="priority_id"/>
-                                    </tree>
-                                </field>
-                            </page>
+
                             <page string="Participants" attrs="{'invisible': [('parent_id', '!=', False)]}"
                                   groups="anytracker.group_member,anytracker.group_partner">
                                     <field name="is_participant" invisible="True"/>
