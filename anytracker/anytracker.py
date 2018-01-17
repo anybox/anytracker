@@ -547,7 +547,6 @@ class Ticket(models.Model):
         store=True,
         compute=_has_attachment)
 
-
     _sql_constraints = [
         ('number_uniq', 'unique(number)', 'Number must be unique!')]
 

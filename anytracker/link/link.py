@@ -27,7 +27,7 @@ class LinkType(models.Model):
          ondelete='cascade')
 
 class Link(models.Model):
-    """Type of a link.
+    """Link.
     """
     _name = 'anytracker.link'
 
@@ -67,9 +67,7 @@ class Link(models.Model):
 
 
 class Ticket(models.Model):
-    """ Add stage and progress functionality to tickets
-    Progress is based on stages. Each stage has a progress,
-    and the progress is copied on the ticket
+    """ Add links
     """
 
     _inherit = 'anytracker.ticket'

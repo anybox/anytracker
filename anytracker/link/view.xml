@@ -37,7 +37,7 @@
                     <sheet>
                         <group>
                             <h1>
-                                <field name="ticket_two" select="1" placeholder="Ticket type"/>
+                                <field name="ticket_two" select="1" placeholder="Link Ticket"/>
                             </h1>
                         </group>
 
