@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-<data>
+    <data>
+    <record id="action_newlink" model="ir.actions.act_window">
+        <field name="name">New link</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">anytracker.link</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+         <field name="flags">{'action_buttons': True}</field>
+          <field name="context">{'default_ticket_one': active_id}</field>
+
+    </record>
 
      <!-- link type -->
         <record id="view_link_type_form" model="ir.ui.view">
@@ -26,46 +37,36 @@
                 </form>
             </field>
         </record>
-    <!-- link  -->
-        <record id="view_link_form" model="ir.ui.view">
-            <field name="name">anytracker.link.form</field>
-            <field name="model">anytracker.link</field>
-            <field name="type">form</field>
-            <field name="priority" eval="8"/>
-            <field name="arch" type="xml">
-                <form string="Link">
-                    <sheet>
-                        <group>
-                            <h1>
-                                <field name="ticket_two" select="1" placeholder="Link Ticket"/>
-                            </h1>
-                        </group>
-
-                    </sheet>
-                </form>
-            </field>
-        </record>
 
     <!-- Add a tab in the ticket form -->
         <record id="view_ticket_with_link" model="ir.ui.view">
             <field name="name">Ticket</field>
             <field name="model">anytracker.ticket</field>
-            <field name="inherit_id" ref="ticket_view_form" />
+            <field name="inherit_id" ref="anytracker.invoicing_ticket_view_form" />
             <field name="arch" type="xml">
 
               <xpath expr="//notebook/page[@string='Sub-tickets']" position="after">
                 <page string="Link-with">
-                        <field name="link_ids" nolabel="1" context="{'default_ticket_one':active_id}">
+
+                       <field name="all_links" nolabel="1" context="{'default_ticket_one':active_id}">
                              <tree string="Links" editable="bottom">
-                                        <field name="ticket_one" invisible="True" />
-                                        <field name="number"  />
+
+                                        <field name="number1"  />
+                                        <field name="ticket_one" string="link ticket"/>
+                                        <field name="stage1" />
+                                        <field name="progress1" widget="progressbar"  />
+                                        <field name="number2"  />
                                         <field name="ticket_two" string="link ticket"/>
-                                        <field name="stage" />
-                                        <field name="progress" widget="progressbar"  />
+                                        <field name="stage2" />
+                                        <field name="progress2" widget="progressbar"  />
                                         <field name="linktype_id"/>
+
+
 
                             </tree>
                         </field>
+                      <button string="Add link" icon="gtk-execute" type="action" name="%(action_newlink)d"/>
+
                 </page>
               </xpath>
             </field>
