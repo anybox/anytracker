@@ -1,18 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-    <record id="action_newlink" model="ir.actions.act_window">
-        <field name="name">New link</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">anytracker.link</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">form</field>
-        <field name="target">new</field>
-         <field name="flags">{'action_buttons': True}</field>
-          <field name="context">{'default_ticket_one': active_id}</field>
-
-    </record>
-
      <!-- link type -->
         <record id="view_link_type_form" model="ir.ui.view">
             <field name="name">anytracker.link.type.form</field>
@@ -29,9 +17,7 @@
                         </group>
                         <group>
                             <field name="description"/>
-                            <field name="linktype_id"/>
                             <field name="state"/>
-
                         </group>
                     </sheet>
                 </form>
@@ -47,25 +33,19 @@
 
               <xpath expr="//notebook/page[@string='Sub-tickets']" position="after">
                 <page string="Link-with">
-
-                       <field name="all_links" nolabel="1" context="{'default_ticket_one':active_id}">
-                             <tree string="Links" editable="bottom">
-
-                                        <field name="number1"  />
-                                        <field name="ticket_one" string="link ticket"/>
-                                        <field name="stage1" />
-                                        <field name="progress1" widget="progressbar"  />
-                                        <field name="number2"  />
-                                        <field name="ticket_two" string="link ticket"/>
-                                        <field name="stage2" />
-                                        <field name="progress2" widget="progressbar"  />
+                       <field name="all_links" context="{'active_ticket': active_id}" nolabel="1" >
+                             <tree string="Links" >
+                                        <field name="number"   />
+                                        <field name="name" string="link ticket"/>
+                                        <field name="stage" />
+                                        <field name="progress" widget="progressbar"  />
                                         <field name="linktype_id"/>
 
-
-
+                                 <button name="action_delete_link" type="object" string="Delete link" icon="gtk-remove"/>
+                                 <button name="action_open_link" type="object" string="Open link" icon="gtk-edit"/>
                             </tree>
                         </field>
-                      <button string="Add link" icon="gtk-execute" type="action" name="%(action_newlink)d"/>
+                      <button name="action_add_link" string="Add link" icon="gtk-add" type="object" />
 
                 </page>
               </xpath>

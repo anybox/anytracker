@@ -20,16 +20,52 @@ class LinkType(models.Model):
         'state',
         size=64,
         required=True)
-    linktype_id = fields.Many2one(
-        'anytracker.link.type',
-        'Reverse Link Type',
-         required=False,
-         ondelete='cascade')
+
 
 class Link(models.Model):
     """Link.
     """
     _name = 'anytracker.link'
+
+    def return_action_ticket(self):
+         return {
+            'type': 'ir.actions.client',
+            'tag': 'reload',
+            'name': _('Ticket'),
+            'res_model': 'anytracker.ticket',
+            'view_type': 'tree',
+            'view_mode': 'tree',
+            #'view_id': view_id,
+            'target': 'current',
+            'nodestroy': True,
+       }
+
+    @api.multi
+    def action_delete_link(self):
+        LINK_MODEL = self.env['anytracker.link']
+        for rec in self:
+            self.unlink()
+        return self.return_action_ticket()
+
+    @api.multi
+    def action_open_link(self):
+        assert len(self) == 1, 'This option should only be used for a single id at a time.'
+        # template = self.env.ref('account.email_template_edi_invoice', False)
+        id = self.id
+        return {
+            'name': self.id,
+            'res_model': 'anytracker.link',
+            'res_id': id,
+            'type': 'ir.actions.act_window',
+            'context': {},
+            'view_mode': 'form',
+            'view_type': 'form',
+            # 'view_id': self.env.ref('view_prod_order_form'),
+            'target': 'new',  # 'target': 'current',
+            'flags': {'form': {'action_buttons': True}}
+
+        }
+
 
     @api.one
     @api.depends('ticket_two')
@@ -37,21 +73,19 @@ class Link(models.Model):
     def _data_tickets(self):
         for rec in self:
             if rec.ticket_one:
-                self.stage1 = rec.ticket_one.stage_id.name
-                self.progress1 = rec.ticket_one.progress
-                self.number1 = rec.ticket_one.number
-            else:
-                self.stage1 = False
-                self.progress1 = False
-                self.number1 = False
+                 if rec.ticket_one.id!=rec._context['active_ticket']:
+                    self.name = rec.ticket_one.name
+                    self.number = rec.ticket_one.number
+                    self.stage = rec.ticket_one.stage_id.name
+                    self.progress = rec.ticket_one.progress
+
             if rec.ticket_two:
-                self.stage2 = rec.ticket_two.stage_id.name
-                self.progress2 = rec.ticket_two.progress
-                self.number2 = rec.ticket_two.number
-            else:
-                self.stage2 = False
-                self.progress2 = False
-                self.number2 = False
+                 if rec.ticket_two.id!=rec._context['active_ticket']:
+                    self.name = rec.ticket_two.name
+                    self.number = rec.ticket_two.number
+                    self.stage = rec.ticket_two.stage_id.name
+                    self.progress = rec.ticket_two.progress
+
 
     ticket_one =  fields.Many2one(
         'anytracker.ticket',
@@ -69,12 +103,12 @@ class Link(models.Model):
         'Type Link',
          required=False,
          ondelete='cascade')
-    number1 = fields.Char(compute='_data_tickets', string="")
-    progress1 = fields.Float(compute='_data_tickets', string="")
-    stage1 = fields.Char(compute='_data_tickets', string="")
-    number2 = fields.Char(compute='_data_tickets', string="")
-    progress2 = fields.Float(compute='_data_tickets', string="")
-    stage2 = fields.Char(compute='_data_tickets', string="")
+    name = fields.Char(compute='_data_tickets', string="")
+    number = fields.Char(compute='_data_tickets', string="")
+    progress = fields.Float(compute='_data_tickets', string="")
+    stage = fields.Char(compute='_data_tickets', string="")
+
+
 
 
 class Ticket(models.Model):
@@ -86,11 +120,27 @@ class Ticket(models.Model):
     def _getAllLink(self):
         all_link = False
         LINK_MODEL = self.env['anytracker.link']
-
         for rec in self:
             rec.all_links = LINK_MODEL.search(['|',('ticket_two', '=', rec.id),('ticket_one', '=', rec.id)])
 
+    @api.multi
+    def action_add_link(self):
+        assert len(self) == 1, 'This option should only be used for a single id at a time.'
+        # template = self.env.ref('account.email_template_edi_invoice', False)
+        id = self.id
+        return {
+            'name': "add new link",
+            'res_model': 'anytracker.link',
+            # 'res_id': id,
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'view_type': 'form',
+            'context': {'default_ticket_one': self.id},
+            # 'view_id': self.env.ref('view_prod_order_form'),
+            'target': 'new',  # 'target': 'current',
+            'flags': {'form': {'action_buttons': True}}
 
+        }
 
     link_ids = fields.One2many(
         'anytracker.link',
