@@ -110,6 +110,7 @@ http://www.famfamfam.com/lab/icons/silk/
         'notify/ir.model.access.csv',
         'priority/ir.model.access.csv',
         'bouquet/ir.model.access.csv',
+        'link/ir.model.access.csv',
         # security rules:
         'bouquet/ir_rule.xml',
         'security/ir_rule.xml',

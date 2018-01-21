@@ -33,7 +33,7 @@
 
               <xpath expr="//notebook/page[@string='Sub-tickets']" position="after">
                 <page string="Link-with">
-                       <field name="all_links" context="{'active_ticket': active_id}" nolabel="1" >
+                       <field name="all_links" context="{'active_id': active_id}" nolabel="1" >
                              <tree string="Links" >
                                         <field name="number"   />
                                         <field name="name" string="link ticket"/>
