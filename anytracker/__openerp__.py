@@ -94,6 +94,7 @@ http://www.famfamfam.com/lab/icons/silk/
         'notify/view.xml',
         'priority/view.xml',
         'bouquet/view.xml',
+        'link/view.xml',
         'invoicing/view.xml',
         'report/ticket.xml',
         'report/bouquet.xml',
