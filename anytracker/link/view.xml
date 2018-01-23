@@ -67,7 +67,7 @@
                                  />
                             </tree>
                         </field>
-                      <button name="action_add_link" string="Add link" icon="gtk-add" type="object" context="{'active_id': active_id}"
+                      <button name="action_add_link" string="Add link" icon="gtk-add" type="object"
                               groups="anytracker.group_member, anytracker.group_partner" />
 
                 </page>

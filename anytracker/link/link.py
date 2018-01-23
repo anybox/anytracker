@@ -66,23 +66,31 @@ class Link(models.Model):
         }
 
     @api.one
-    @api.depends('ticket_two')  # FIXME and ticket_one?
-    @api.onchange('ticket_two')  # FIXME and ticket_one?
+    @api.depends('ticket_two', 'ticket_one')
+    @api.onchange('ticket_two', 'ticket_one')
     def _data_tickets(self):
-        for link in self:
-            if link.ticket_one:
-                if link.ticket_one.id != self.env.context['active_id']:
-                    link.name = link.ticket_one.name
-                    link.number = link.ticket_one.number
-                    link.stage = link.ticket_one.stage_id.name
-                    link.progress = link.ticket_one.progress
 
-            if link.ticket_two:
-                if link.ticket_two.id != self.env.context['active_id']:
-                    link.name = link.ticket_two.name
-                    link.number = link.ticket_two.number
-                    link.stage = link.ticket_two.stage_id.name
-                    link.progress = link.ticket_two.progress
+        for link in self:
+            if 'active_id' in self.env.context and self.env.context['active_id']:
+                active_id = self.env.context['active_id']
+                if link.ticket_one:
+                    if link.ticket_one.id != active_id:
+                        link.name = link.ticket_one.name
+                        link.number = link.ticket_one.number
+                        link.stage = link.ticket_one.stage_id.name
+                        link.progress = link.ticket_one.progress
+
+                if link.ticket_two:
+                    if link.ticket_two.id != active_id:
+                        link.name = link.ticket_two.name
+                        link.number = link.ticket_two.number
+                        link.stage = link.ticket_two.stage_id.name
+                        link.progress = link.ticket_two.progress
+            else:
+                link.name = False
+                link.number = False
+                link.stage = False
+                link.progress = False
 
     ticket_one = fields.Many2one(
         'anytracker.ticket',
