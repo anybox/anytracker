@@ -11,12 +11,8 @@
                 <form string="Type">
                     <sheet>
                         <group>
-                            <h1>
-                                <field name="ticket_one" readonly="True" />
-                            </h1>
-                        </group>
-                        <group>
-                            <field name="ticket_two" string="linked ticket"/>
+                            <field name="ticket_one"  />
+                            <field name="ticket_two" />
                             <field name="linktype_id" string="type"/>
                         </group>
                     </sheet>
@@ -71,7 +67,7 @@
                                  />
                             </tree>
                         </field>
-                      <button name="action_add_link" string="Add link" icon="gtk-add" type="object"
+                      <button name="action_add_link" string="Add link" icon="gtk-add" type="object" context="{'active_id': active_id}"
                               groups="anytracker.group_member, anytracker.group_partner" />
 
                 </page>
