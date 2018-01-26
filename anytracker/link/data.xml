@@ -4,13 +4,11 @@
         <!-- Implementation link type -->
         <record id="link_type_clone" model="anytracker.link.type">
             <field name="name">Clone</field>
-            <field name="state">actif</field>
-            <field name="description">Clone</field>
+            <field name="description">Clone of an existing ticket</field>
         </record>
         <record id="link_type_depend" model="anytracker.link.type">
             <field name="name">Depend</field>
-            <field name="state">actif</field>
-            <field name="description">Depend</field>
+            <field name="description">Dependence between two or many ticket</field>
         </record>
     </data>
 </openerp>
