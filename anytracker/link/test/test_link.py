@@ -1,20 +1,20 @@
 # coding: utf-8
 from anybox.testing.openerp import SharedSetupTransactionCase
-from openerp.osv import orm
 from os.path import join
 
 
 class TestLink(SharedSetupTransactionCase):
-
-#TODO: En mode custommer ajouter un lien
-#TODO: En mode custommer si j'accede à un ticket ayant des liens vers un projet dont je ne suis pas membre lever une
-# exeption
-#TODO: En mode partner ajouter un lien
-#TODO: En mode member ajouter un lien
-#TODO: En mode custommer supprimer un lien
-#TODO: En mode partner supprimer un lien
-#TODO: En mode member supprimer un lien
-
+    """
+    # TODO: En mode custommer ajouter un lien
+    # TODO: En mode custommer si j'accede à un ticket ayant des liens vers
+            un projet dont je ne suis pas membre lever une
+    # exeption
+    # TODO: En mode partner ajouter un lien
+    # TODO: En mode member ajouter un lien
+    # TODO: En mode custommer supprimer un lien
+    # TODO: En mode partner supprimer un lien
+    # TODO: En mode member supprimer un lien
+    """
 
     _module_ns = 'anytracker'
     _data_files = (join('..', '..', 'tests', 'data.xml'),)
@@ -25,21 +25,21 @@ class TestLink(SharedSetupTransactionCase):
         cls.ref = classmethod(lambda cls, xid: cls.env.ref(xid).id)
         cls.TYPELINK = cls.env['anytracker.type.link']
         cls.LINK = cls.env['anytracker.link']
-        TICKET = cls.env['anytracker.ticket']
-        USER = cls.env['res.users']
-        cls.member_id = USER.create({
+        cls.TICKET = cls.env['anytracker.ticket']
+        cls.USER = cls.env['res.users']
+
+        cls.member_id = cls.USER.create({
             'name': 'test member',
             'login': 'test',
             'email': 'member@localhost',
-            'groups_id': [(6, 0,
-                           [cls.ref('anytracker.group_member')])]}
+            'groups_id': [(6, 0, [cls.ref('anytracker.group_member')])]}
         ).id
-        cls.customer_id = USER.create(
+        cls.customer_id = cls.USER.create(
             {'name': 'test customer stage',
              'login': 'test_customer_stage',
              'groups_id': [(6, 0, [cls.ref('anytracker.group_customer')])]}
         ).id
-        cls.partner_id = USER.create(
+        cls.partner_id = cls.USER.create(
             {'name': 'test partner stage',
              'login': 'test_partner_stage',
              'groups_id': [(6, 0, [cls.ref('anytracker.group_partner')])]}
@@ -67,7 +67,6 @@ class TestLink(SharedSetupTransactionCase):
             'name': 'Test Member 1',
             'parent_id': cls.projet_member, })
 
-
         cls.projet_member_2 = cls.TICKET.create({
             'name': 'Test Member 2',
             'parent_id': cls.projet_member, })
@@ -77,7 +76,8 @@ class TestLink(SharedSetupTransactionCase):
         link_custommer1 = self.TYPELINK.create({
             'name': 'type1',
             'description': 'type_description',
-            'state': 'actif' })
+            'state': 'actif',
+        })
 
         # Search by link type name
         link_type_by_name = self.TYPELINK.search([
