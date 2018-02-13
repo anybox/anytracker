@@ -25,13 +25,18 @@ class Link(models.Model):
     """Link.
     """
     _name = 'anytracker.link'
-    _description = ""  # TODO
+    _description = "The link is used to link 2 tickets. " \
+                   "For example it is useful to link use case ticket with few technical ticket" \
+                   "A ticket can be present in several links." \
+                   ""
 
     @api.one
     @api.depends('ticket_two', 'ticket_one')
     @api.onchange('ticket_two', 'ticket_one')
     def _data_tickets(self):
-        # TODO - Describe the goals of this function
+        # This function is used for ticket view  to display the list of active ticket links
+        # In the link,  the active ticket can be ticket_one or ticket_two, the goal is to display the ticket is not
+        # active ticket
 
         for link in self:
             if 'active_id' in self.env.context and self.env.context['active_id']:

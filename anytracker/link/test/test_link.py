@@ -1,20 +1,11 @@
 # coding: utf-8
 from anybox.testing.openerp import SharedSetupTransactionCase
+from openerp.osv import orm
+from openerp.exceptions import AccessError
 from os.path import join
 
 
 class TestLink(SharedSetupTransactionCase):
-    """
-    # TODO: En mode custommer ajouter un lien
-    # TODO: En mode custommer si j'accede à un ticket ayant des liens vers
-            un projet dont je ne suis pas membre lever une
-    # exeption
-    # TODO: En mode partner ajouter un lien
-    # TODO: En mode member ajouter un lien
-    # TODO: En mode custommer supprimer un lien
-    # TODO: En mode partner supprimer un lien
-    # TODO: En mode member supprimer un lien
-    """
 
     _module_ns = 'anytracker'
     _data_files = (join('..', '..', 'tests', 'data.xml'),)
@@ -23,28 +14,38 @@ class TestLink(SharedSetupTransactionCase):
     def initTestData(cls):
         super(TestLink, cls).initTestData()
         cls.ref = classmethod(lambda cls, xid: cls.env.ref(xid).id)
-        cls.TYPELINK = cls.env['anytracker.type.link']
+        cls.TYPELINK = cls.env['anytracker.link.type']
         cls.LINK = cls.env['anytracker.link']
-        cls.TICKET = cls.env['anytracker.ticket']
-        cls.USER = cls.env['res.users']
 
-        cls.member_id = cls.USER.create({
+        cls.TICKET = cls.env['anytracker.ticket']
+        USER = cls.env['res.users']
+
+        """
+        We have 3 persons: 1 member, 1 partner, 1 custommer
+        """
+        cls.member_id = USER.create({
             'name': 'test member',
             'login': 'test',
             'email': 'member@localhost',
-            'groups_id': [(6, 0, [cls.ref('anytracker.group_member')])]}
+            'groups_id': [(6, 0,
+                           [cls.ref('anytracker.group_member')])]}
         ).id
-        cls.customer_id = cls.USER.create(
+        cls.customer_id = USER.create(
             {'name': 'test customer stage',
              'login': 'test_customer_stage',
              'groups_id': [(6, 0, [cls.ref('anytracker.group_customer')])]}
         ).id
-        cls.partner_id = cls.USER.create(
+        cls.partner_id = USER.create(
             {'name': 'test partner stage',
              'login': 'test_partner_stage',
              'groups_id': [(6, 0, [cls.ref('anytracker.group_partner')])]}
         ).id
-
+        """
+            We have 2 projects: 
+               a user case project: custommer project 
+               a technical project: member project 
+        
+        """
         cls.projet_custommer = cls.TICKET.create({
             'name': 'Test Custommer',
             'participant_ids': [(6, 0, [cls.member_id, cls.customer_id])],
@@ -55,34 +56,115 @@ class TestLink(SharedSetupTransactionCase):
             'participant_ids': [(6, 0, [cls.member_id])],
             'method_id': cls.ref('anytracker.method_test')})
 
-        cls.projet_custommer_1 = cls.TICKET.create({
+        """
+            We create 
+        
+        """
+        cls.ticket_us_1 = cls.TICKET.create({
             'name': 'Test Custommer 1',
-            'parent_id': cls.projet_custommer, })
+            'parent_id': cls.projet_custommer.id, })
 
-        cls.projet_custommer_2 = cls.TICKET.create({
+        cls.env['res.partner'].sudo().create({'name': "A Partner"})
+
+        cls.ticket_us_2 = cls.TICKET.create({
             'name': 'Test Custommer 2',
-            'parent_id': cls.projet_custommer, })
+            'parent_id': cls.projet_custommer.id, })
 
-        cls.projet_member_1 = cls.TICKET.create({
+        cls.ticket_tech_1 = cls.TICKET.create({
             'name': 'Test Member 1',
-            'parent_id': cls.projet_member, })
+            'parent_id': cls.projet_member.id, })
 
-        cls.projet_member_2 = cls.TICKET.create({
+
+        cls.ticket_tech_2= cls.TICKET.create({
             'name': 'Test Member 2',
-            'parent_id': cls.projet_member, })
+            'parent_id': cls.projet_member.id, })
 
-    def test_create_type_link(self):
-        """ Create Link """
-        link_custommer1 = self.TYPELINK.create({
+    def test_create_type_link_by_partner(self):
+        """Partner not authorized to create type link"""
+        with self.assertRaises(AccessError):
+           self.TYPELINK.sudo(self.partner_id).create({
             'name': 'type1',
             'description': 'type_description',
-            'state': 'actif',
-        })
+           })
 
-        # Search by link type name
-        link_type_by_name = self.TYPELINK.search([
-            ('name', '=', link_custommer1.name)])
 
-        # Check result
-        for i in range(len(link_type_by_name)):
-            self.assertEquals(link_type_by_name[i], link_custommer1)
+
+    def test_create_type_link_admin(self):
+       """Admin can create Type Link"""
+       link_type1 = self.TYPELINK.sudo().create({
+           'name': 'type1',
+           'description': 'type_description',
+       })
+
+       # Search by link type name
+       link_type_by_name = self.TYPELINK.search([
+           ('name', '=', link_type1.name)])
+
+       # Check result
+       for i in range(len(link_type_by_name)):
+           self.assertEquals(link_type_by_name[i].name, link_type1.name)
+
+    def test_create_link_member(self):
+       """Member can create  Link by """
+       link_1 = self.LINK.sudo(self.member_id).create({
+           'ticket_one': self.ticket_us_1.id,
+           'ticket_two': self.ticket_tech_2.id,
+       })
+
+       # Search by link type name
+       link_by_id= self.LINK.with_context(active_id=self.ticket_us_1).sudo(self.member_id).search([
+           ('id', '=', link_1.id)])
+
+       # Check result
+       for i in range(len(link_by_id)):
+           self.assertEquals(link_by_id[i].name, self.ticket_tech_2.name)
+
+    def test_create_link_custommer(self):
+       """Custommer can not create link"""
+       with self.assertRaises(AccessError):
+           self.LINK.sudo(self.customer_id).create({
+               'ticket_one': self.ticket_us_1.id,
+               'ticket_two': self.ticket_us_2.id,
+           })
+
+    def test_read_authorized_link_custommer(self):
+       """Customer can read authorized link """
+       link_1 = self.LINK.sudo().create({
+           'ticket_one': self.ticket_us_1.id,
+           'ticket_two': self.ticket_us_2.id,
+       })
+
+       # Search by link type name
+       link_by_id = self.LINK.with_context(active_id=self.ticket_us_1).sudo(self.customer_id).search([
+           ('id', '=', link_1.id)])
+
+       # Check result
+       for i in range(len(link_by_id)):
+           self.assertEquals(link_by_id[i].name, self.ticket_us_2.name)
+
+    def test_read_unauthorized_link_custommer(self):
+       """Customer can not read unauthorized link """
+       link_1 = self.LINK.sudo().create({
+           'ticket_one': self.ticket_us_1.id,
+           'ticket_two': self.ticket_tech_2.id,
+       })
+
+       # Search by link type name
+       link_by_id = self.LINK.with_context(active_id=self.ticket_us_1).sudo(self.customer_id).search([
+           ('id', '=', link_1.id)])
+
+       # Check result
+       for i in range(len(link_by_id)):
+           with self.assertRaises(AccessError):
+             link_by_id[i].name
+
+
+
+
+           #TODO: En mode custommer si j'accede à un ticket ayant des liens vers un projet dont je ne suis pas membre lever une
+# exeption
+#TODO: En mode partner ajouter un lien
+#TODO: En mode member ajouter un lien
+#TODO: En mode custommer supprimer un lien
+#TODO: En mode partner supprimer un lien
+#TODO: En mode member supprimer un lien
