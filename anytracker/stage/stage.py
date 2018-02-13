@@ -67,9 +67,11 @@ class Ticket(models.Model):
         """return all stage names for the group_by directive, so that the kanban
         has all columns even if there is no ticket in a stage.
         """
+        access_rights_uid = access_rights_uid or self.env.uid
         # XXX improve the filter to handle categories
         STAGE = self.env['anytracker.stage']
-        ticket = self.browse(self.env.context.get('active_id'))
+        TICKET = self.env['anytracker.ticket']
+        ticket = TICKET.browse(self.env.context.get('active_id'))
         if not ticket.project_id:
             return [], {}
         method = ticket.project_id.method_id
@@ -83,8 +85,8 @@ class Ticket(models.Model):
             s.id:
                 bool(s.groups_allowed
                      and not groups.intersection(set(s.groups_allowed.ids))
-                     and not self.search([('stage_id', '=', s.id),
-                                          ('id', 'child_of', ticket.id)]))
+                     and not TICKET.search([('stage_id', '=', s.id),
+                                            ('id', 'child_of', ticket.id)]))
             for s in stages}
         return [(s.id, s.name) for s in stages], folds
 
@@ -101,8 +103,7 @@ class Ticket(models.Model):
             stages = STAGE.search([('method_id', '=', method.id)])
             stage = ticket.stage_id
             if stage == stages[0]:  # first stage
-                raise except_orm(_('Warning !'),
-                                 _("You're already in the first stage"))
+                next_stage = False
             elif stage not in stages:  # no stage
                 continue
             else:
@@ -139,7 +140,6 @@ class Ticket(models.Model):
             else:
                 METHOD = self.env['anytracker.method']
                 method = METHOD.browse(values['method_id'])
-
             values['stage_id'] = method.get_first_stage()
         STAGE = self.env['anytracker.stage']
         values['progress'] = (STAGE.browse(values['stage_id']).progress
@@ -293,7 +293,6 @@ class Ticket(models.Model):
         return True
 
     def _constant_one(self):
-        # TODO remove
         for ticket in self:
             ticket.constant_one = 1
 
@@ -310,7 +309,7 @@ class Ticket(models.Model):
         group_operator="avg")
     # this field can be used to count tickets if the only available operation
     # on them is to sum field values (shameless hack for charts)
-    # TODO: remove
+    # TODO: check if still needed
     constant_one = fields.Integer(compute='_constant_one',
                                   obj='anytracker.ticket',
                                   string='Constant one',

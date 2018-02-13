@@ -13,4 +13,3 @@ from . import notify
 from . import priority
 from . import bouquet
 from . import invoicing
-from . import link

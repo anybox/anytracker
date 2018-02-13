@@ -11,7 +11,6 @@ class Bouquet(models.Model):
     _name = 'anytracker.bouquet'
     _description = u"Ticket Bouquet"
     _order = 'create_date DESC'
-    _inherit = ['mail.thread']
 
     @api.depends('ticket_ids')
     def _get_rating(self):

@@ -62,18 +62,18 @@ class Link(models.Model):
 
     ticket_one = fields.Many2one(
         'anytracker.ticket',
-        _('Ticket one'),
+        'Ticket one',
         required=True,
         ondelete='cascade')
     ticket_two = fields.Many2one(
         'anytracker.ticket',
-        _('Ticket two'),
+        'Ticket two',
         required=True,
         ondelete='cascade')
 
     linktype_id = fields.Many2one(
         'anytracker.link.type',
-        _('Type Link'),
+        'Type Link',
         required=False,
         ondelete='cascade')
     name = fields.Char(compute='_data_tickets', string="")
@@ -98,7 +98,7 @@ class Link(models.Model):
         return {
             'type': 'ir.actions.client',
             'tag': 'reload',
-            'name': _('Ticket'),
+            'name': 'Ticket',
             'res_model': 'anytracker.ticket',
             'view_type': 'tree',
             'view_mode': 'tree',
@@ -171,7 +171,7 @@ class Ticket(models.Model):
     link_ids = fields.One2many(
         'anytracker.link',
         'ticket_one',
-        _('Links'),
+        'Links',
         copy=True,
         help="The tickets linked to this tickets")
     all_links = fields.One2many(

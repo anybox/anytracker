@@ -74,7 +74,7 @@ http://www.famfamfam.com/lab/icons/silk/
         # data:
         'method/data.xml',
         'complexity/data.xml',
-        'link/data.xml',
+        'data.xml',
         'stage/data.xml',
         'importance/data.xml',
         'notify/data.xml',
@@ -94,7 +94,6 @@ http://www.famfamfam.com/lab/icons/silk/
         'notify/view.xml',
         'priority/view.xml',
         'bouquet/view.xml',
-        'link/view.xml',
         'invoicing/view.xml',
         'report/ticket.xml',
         'report/bouquet.xml',
@@ -110,7 +109,6 @@ http://www.famfamfam.com/lab/icons/silk/
         'notify/ir.model.access.csv',
         'priority/ir.model.access.csv',
         'bouquet/ir.model.access.csv',
-        'link/ir.model.access.csv',
         # security rules:
         'bouquet/ir_rule.xml',
         'security/ir_rule.xml',
