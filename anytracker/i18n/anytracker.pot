@@ -1426,6 +1426,7 @@ msgid "Notify project members when a ticket enter this stage"
 msgstr "Informer les membres du projet lorsque le ticket entre dans cette étape"
 
 #. module: anytracker
+#: field:anytracker.link,number:0
 #: field:anytracker.ticket,number:0
 #: view:website:anytracker.report_anytracker_bouquet
 #: view:website:anytracker.report_anytracker_ticket
@@ -1571,6 +1572,7 @@ msgid "Product to invoice"
 msgstr "Article à facturer"
 
 #. module: anytracker
+#: field:anytracker.link,progress:0
 #: field:anytracker.quickrating,progress:0
 #: view:anytracker.stage:anytracker.view_stage_form
 #: field:anytracker.stage,progress:0
@@ -1824,6 +1826,7 @@ msgstr "Quelqu'un d'autre peut le faire"
 
 #. module: anytracker
 #: field:anytracker.assignment,stage_id:0
+#: field:anytracker.link,stage:0
 #: view:anytracker.ticket:anytracker.stage_ticket_view_search
 #: field:anytracker.ticket,stage_id:0
 #: view:website:anytracker.report_anytracker_bouquet
@@ -2505,3 +2508,45 @@ msgstr "ticket_id.breadcrumb"
 msgid "ticket_id.description"
 msgstr "ticket_id.description"
 
+#. module: anytracker
+#: model:ir.actions.act_window,name:anytracker.act_open_types_link_view
+#: model:ir.ui.menu,name:anytracker.menu_types_link
+msgid "Link types"
+msgstr "Types de lien"
+
+#. module: anytracker
+#: view:anytracker.ticket:anytracker.view_ticket_with_link
+msgid "Link-with"
+msgstr "liés avec"
+
+#. module: anytracker
+#: view:anytracker.ticket:anytracker.view_ticket_with_link
+#: field:anytracker.ticket,link_ids:0
+msgid "Links"
+msgstr "Liens"
+
+#. module: anytracker
+#: view:anytracker.ticket:anytracker.view_ticket_with_link
+msgid "link ticket"
+msgstr ""
+
+#. module: anytracker
+#: field:anytracker.link,linktype_id:0
+#: field:anytracker.link,linktype_id:0
+msgid "Type Link"
+msgstr "Type de lien"
+
+#. module: anytracker
+#: view:anytracker.ticket:anytracker.view_ticket_with_link
+msgid "Add link"
+msgstr ""
+
+#. module: anytracker
+#: field:anytracker.link,ticket_one:0
+msgid "Ticket one"
+msgstr "1er ticket"
+
+#. module: anytracker
+#: field:anytracker.link,ticket_two:0
+msgid "Ticket two"
+msgstr "2ème ticket"

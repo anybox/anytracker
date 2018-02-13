@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 8.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-19 14:33+0000\n"
-"PO-Revision-Date: 2016-12-22 12:58+0100\n"
+"POT-Creation-Date: 2018-02-13 18:18+0100\n"
+"PO-Revision-Date: 2018-02-13 18:18+0100\n"
 "Last-Translator: Christophe Combelles <ccomb@free.fr>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: \n"
-"X-Generator: Poedit 1.6.10\n"
+"X-Generator: Poedit 1.8.11\n"
 
 #. module: anytracker
 #: model:anytracker.importance,description:anytracker.importance_implementation_could
@@ -1614,6 +1614,7 @@ msgid "Product to invoice"
 msgstr "Article à facturer"
 
 #. module: anytracker
+#: field:anytracker.link,progress:0
 #: field:anytracker.quickrating,progress:0
 #: view:anytracker.stage:anytracker.view_stage_form
 #: field:anytracker.stage,progress:0
@@ -1870,6 +1871,7 @@ msgstr "Quelqu'un d'autre peut le faire"
 
 #. module: anytracker
 #: field:anytracker.assignment,stage_id:0
+#: field:anytracker.link,stage:0
 #: view:anytracker.ticket:anytracker.stage_ticket_view_search
 #: field:anytracker.ticket,stage_id:0
 #: view:website:anytracker.report_anytracker_bouquet
@@ -2604,6 +2606,48 @@ msgstr "ticket_id.breadcrumb"
 #: field:anytracker.quickrating,description:0
 msgid "ticket_id.description"
 msgstr "ticket_id.description"
+
+#. module: anytracker
+#: model:ir.actions.act_window,name:anytracker.act_open_types_link_view
+#: model:ir.ui.menu,name:anytracker.menu_types_link
+msgid "Link types"
+msgstr "Types de lien"
+
+#. module: anytracker
+#: view:anytracker.ticket:anytracker.view_ticket_with_link
+msgid "Link-with"
+msgstr "Lié à"
+
+#. module: anytracker
+#: view:anytracker.ticket:anytracker.view_ticket_with_link
+#: field:anytracker.ticket,link_ids:0
+msgid "Links"
+msgstr "Liens"
+
+#. module: anytracker
+#: view:anytracker.ticket:anytracker.view_ticket_with_link
+msgid "link ticket"
+msgstr "ticket lié"
+
+#. module: anytracker
+#: field:anytracker.link,linktype_id:0
+msgid "Type Link"
+msgstr "Type de lien"
+
+#. module: anytracker
+#: view:anytracker.ticket:anytracker.view_ticket_with_link
+msgid "Add link"
+msgstr "Ajouter un lien"
+
+#. module: anytracker
+#: field:anytracker.link,ticket_one:0
+msgid "Ticket one"
+msgstr "1er ticket"
+
+#. module: anytracker
+#: field:anytracker.link,ticket_two:0
+msgid "Ticket two"
+msgstr "2ème ticket"
 
 #~ msgid "# Meetings"
 #~ msgstr "Nb Reunions"
