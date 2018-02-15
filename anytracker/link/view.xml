@@ -1,7 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-     <!-- link type -->
+        <!-- link type -->
+        <record id="view_link_form" model="ir.ui.view">
+            <field name="name">anytracker.link.form</field>
+            <field name="model">anytracker.link</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Type">
+                    <sheet>
+                        <group>
+                            <field name="ticket_one"  readonly="1"/>
+                            <field name="ticket_two" />
+                            <field name="linktype_id" string="type"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- link type -->
         <record id="view_link_type_form" model="ir.ui.view">
             <field name="name">anytracker.link.type.form</field>
             <field name="model">anytracker.link.type</field>
@@ -10,49 +28,52 @@
             <field name="arch" type="xml">
                 <form string="Type">
                     <sheet>
-                        <group>
-                            <h1>
-                                <field name="name" select="1" placeholder="Ticket type"/>
-                            </h1>
-                        </group>
-                        <group>
-                            <field name="description"/>
-                            <field name="state"/>
+                        <group colspan="4">
+                            <group>
+                                <h1>
+                                    <field name="name" select="1" placeholder="Ticket type"/>
+                                </h1>
+                            </group>
+                            <group>
+                                <field name="description"/>
+                            </group>
                         </group>
                     </sheet>
                 </form>
             </field>
         </record>
 
-    <!-- Add a tab in the ticket form -->
+        <!-- Add a tab in the ticket form -->
         <record id="view_ticket_with_link" model="ir.ui.view">
             <field name="name">Ticket</field>
             <field name="model">anytracker.ticket</field>
             <field name="inherit_id" ref="anytracker.invoicing_ticket_view_form" />
             <field name="arch" type="xml">
-
-              <xpath expr="//notebook/page[@string='Sub-tickets']" position="after">
-                <page string="Link-with">
-                       <field name="all_links" context="{'active_id': active_id}" nolabel="1" >
-                             <tree string="Links" >
-                                        <field name="number"   />
-                                        <field name="name" string="link ticket"/>
-                                        <field name="stage" />
-                                        <field name="progress" widget="progressbar"  />
-                                        <field name="linktype_id"/>
-
-                                 <button name="action_delete_link" type="object" string="Delete link" icon="gtk-remove"/>
-                                 <button name="action_open_link" type="object" string="Open link" icon="gtk-edit"/>
+                <xpath expr="//notebook/page[@string='Sub-tickets']" position="after">
+                    <page string="Link-with">
+                        <field name="all_links" context="{'active_id': active_id}" nolabel="1" >
+                            <tree string="Links" >
+                                <field name="number"   />
+                                <field name="name" string="link ticket"/>
+                                <field name="stage" />
+                                <field name="progress" widget="progressbar"  />
+                                <field name="linktype_id"/>
+                                <button name="action_delete_link" type="object" 
+                                        string="Delete link" icon="gtk-remove"
+                                        groups="anytracker.group_member, anytracker.group_partner"/>
+                                <button name="action_open_link" type="object" 
+                                        string="Open link" icon="gtk-edit"
+                                        groups="anytracker.group_member, anytracker.group_partner"/>
                             </tree>
                         </field>
-                      <button name="action_add_link" string="Add link" icon="gtk-add" type="object" />
+                        <button name="action_add_link" string="Add link" 
+                                icon="gtk-add" type="object"
+                                groups="anytracker.group_member, anytracker.group_partner" />
 
-                </page>
-              </xpath>
+                    </page>
+                </xpath>
             </field>
         </record>
-
-
 
         <record model="ir.actions.act_window" id="act_open_types_link_view">
             <field name="name">Link types</field>
@@ -62,15 +83,11 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-
-
         <menuitem id="menu_types_link"
                   parent="menu_configuration"
                   sequence="20"
                   action="act_open_types_link_view"/>
 
-
-
-</data>
+    </data>
 </openerp>
 

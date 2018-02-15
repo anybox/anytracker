@@ -74,7 +74,8 @@
                     <field name="number"/>
                     <field name="breadcrumb"/>
                     <field name="parent_id" invisible="1"/>
-                    <field name="create_date" widget="date"/>
+                    <field name="create_date"/>
+                    <field name="write_date"/>
                 </tree>
             </field>
         </record>
@@ -94,7 +95,8 @@
                     <button name="leave_project" string="Click to leave the project" type="object" icon="STOCK_YES"
                             attrs="{'invisible': ['|', ('is_participant', '=', False), ('parent_id', '!=', False)]}"/>
                     <field name="parent_id" invisible="1"/>
-                    <field name="create_date" widget="date"/>
+                    <field name="create_date"/>
+                    <field name="write_date"/>
                 </tree>
             </field>
         </record>

@@ -76,7 +76,7 @@ class Ticket(models.Model):
                 return ""
             OBJ = self.env[model]
             nameget = OBJ.browse(val).name_get()
-            return _('Modify field %s with new value %s\n'
+            return _('Modify field %s with new valeur %s\n'
                      ) % (fieldname, nameget)
 
         for k, v in values.items():
@@ -90,8 +90,12 @@ class Ticket(models.Model):
                 vals += _many2one(k, 'res.users', v)
             elif k == 'child_ids':
                 vals += _all2many(k, 'anytracker.ticket', v)
+            elif k == 'duration':
+                col = dict(self._columns[k].selection)
+                vals += _('Modify field %s with new valeur %s\n'
+                          ) % (k, col.get(v))
             else:
-                vals += _('Modified field %s with new value %s\n') % (k, v)
+                vals += _('Modify field %s with new valeur %s\n') % (k, v)
 
         values['history_ids'] = [(0, 0, {'modification': vals})]
         return values
