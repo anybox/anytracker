@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 from openerp import models, fields, api, _
@@ -8,7 +7,7 @@ class LinkType(models.Model):
     """Type of a link.
     """
     _name = 'anytracker.link.type'
-    _description = ""  # TODO
+    _description = "Link type"
     _order = 'name'
 
     name = fields.Char(
@@ -22,24 +21,24 @@ class LinkType(models.Model):
 
 
 class Link(models.Model):
-    """Link.
+    """The link is used to link 2 tickets.
+    For example it is useful to link use case ticket with few technical ticket
+    A ticket can be present in several links.
     """
     _name = 'anytracker.link'
-    _description = "The link is used to link 2 tickets. " \
-                   "For example it is useful to link use case ticket with few technical ticket" \
-                   "A ticket can be present in several links." \
-                   ""
+    _description = "Link between two tickets"
 
     @api.one
     @api.depends('ticket_two', 'ticket_one')
     @api.onchange('ticket_two', 'ticket_one')
     def _data_tickets(self):
-        # This function is used for ticket view  to display the list of active ticket links
-        # In the link,  the active ticket can be ticket_one or ticket_two, the goal is to display the ticket is not
-        # active ticket
+        # This function is used for ticket view
+        # to display the list of active ticket links
+        # In the link,  the active ticket can be ticket_one or ticket_two,
+        # the goal is to display the ticket is not active ticket
 
         for link in self:
-            if 'active_id' in self.env.context and self.env.context['active_id']:
+            if self.env.context.get('active_id'):
                 active_id = self.env.context['active_id']
                 if link.ticket_one:
                     if link.ticket_one.id != active_id:
@@ -74,7 +73,7 @@ class Link(models.Model):
     linktype_id = fields.Many2one(
         'anytracker.link.type',
         'Type Link',
-        required=False,
+        required=True,
         ondelete='cascade')
     name = fields.Char(compute='_data_tickets', string="")
     number = fields.Char(compute='_data_tickets', string="")
@@ -109,9 +108,7 @@ class Link(models.Model):
     @api.multi
     def action_delete_link(self):
         # FIXME - Is there no verification to be done before deleting a link?
-
-        for link in self:
-            link.unlink()
+        self.unlink()
         return self.return_action_ticket()
 
     @api.multi
