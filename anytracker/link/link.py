@@ -74,7 +74,7 @@ class Link(models.Model):
     linktype_id = fields.Many2one(
         'anytracker.link.type',
         'Type Link',
-        required=False,
+        required=True,
         ondelete='cascade')
     name = fields.Char(compute='_data_tickets', string="")
     number = fields.Char(compute='_data_tickets', string="")

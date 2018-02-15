@@ -93,6 +93,10 @@ class TestLink(SharedSetupTransactionCase):
             'name': 'Test ultra tech 2',
             'parent_id': cls.projet_ultra_technical.id, })
 
+        cls.link_type1 = cls.TYPELINK.sudo().create({
+            'name': 'type1',
+            'description': 'type_description',
+        })
     """
      TEST FOR TYPE_LINK
     """
@@ -144,6 +148,7 @@ class TestLink(SharedSetupTransactionCase):
        link_1 = self.LINK.sudo(self.member_id).create({
            'ticket_one': self.ticket_us_1.id,
            'ticket_two': self.ticket_tech_2.id,
+           'linktype_id': self.link_type1.id,
        })
 
        # Search by link id
@@ -159,6 +164,7 @@ class TestLink(SharedSetupTransactionCase):
        link_1 = self.LINK.sudo(self.partner_id).create({
            'ticket_one': self.ticket_us_1.id,
            'ticket_two': self.ticket_tech_2.id,
+           'linktype_id': self.link_type1.id,
        })
 
        # Search by link id
@@ -175,6 +181,7 @@ class TestLink(SharedSetupTransactionCase):
            self.LINK.sudo(self.customer_id).create({
                'ticket_one': self.ticket_us_1.id,
                'ticket_two': self.ticket_us_2.id,
+               'linktype_id': self.link_type1.id,
            })
 
     def test_read_authorized_link_partner(self):
@@ -182,6 +189,7 @@ class TestLink(SharedSetupTransactionCase):
        link_1 = self.LINK.sudo().create({
            'ticket_one': self.ticket_us_1.id,
            'ticket_two': self.ticket_tech_2.id,
+           'linktype_id': self.link_type1.id,
        })
 
        # Search by link id
@@ -197,6 +205,7 @@ class TestLink(SharedSetupTransactionCase):
        link_1 = self.LINK.sudo().create({
            'ticket_one': self.ticket_us_1.id,
            'ticket_two': self.ticket_ultra_tech_2.id,
+           'linktype_id': self.link_type1.id,
        })
 
        # Search by link type name
@@ -214,6 +223,7 @@ class TestLink(SharedSetupTransactionCase):
        link_1 = self.LINK.sudo().create({
            'ticket_one': self.ticket_us_1.id,
            'ticket_two': self.ticket_us_2.id,
+           'linktype_id': self.link_type1.id,
        })
 
        # Search by link id
@@ -229,6 +239,7 @@ class TestLink(SharedSetupTransactionCase):
        link_1 = self.LINK.sudo().create({
            'ticket_one': self.ticket_us_1.id,
            'ticket_two': self.ticket_tech_2.id,
+           'linktype_id': self.link_type1.id,
        })
 
        # Search by link type name
@@ -245,6 +256,7 @@ class TestLink(SharedSetupTransactionCase):
         link_1 = self.LINK.sudo(self.member_id).create({
             'ticket_one': self.ticket_us_1.id,
             'ticket_two': self.ticket_tech_2.id,
+            'linktype_id': self.link_type1.id,
         })
 
         link_1.sudo(self.member_id).unlink()
@@ -260,6 +272,7 @@ class TestLink(SharedSetupTransactionCase):
          link_1 = self.LINK.sudo(self.member_id).create({
              'ticket_one': self.ticket_us_1.id,
              'ticket_two': self.ticket_tech_2.id,
+             'linktype_id': self.link_type1.id,
          })
 
          link_1.sudo(self.partner_id).unlink()
@@ -275,6 +288,7 @@ class TestLink(SharedSetupTransactionCase):
          link_1 = self.LINK.sudo(self.member_id).create({
              'ticket_one': self.ticket_us_1.id,
              'ticket_two': self.ticket_us_2.id,
+             'linktype_id': self.link_type1.id,
          })
 
          with self.assertRaises(AccessError):
