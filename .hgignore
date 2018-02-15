@@ -18,3 +18,10 @@ sandbox/
 bootstrap.py
 community-addons/
 upgrade.py
+.settings
+anybox.recipe.openerp
+venv
+.project
+.pydevproject
+upgrade.log
+.hgignore

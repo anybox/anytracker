@@ -82,6 +82,7 @@ Contributors
 - Georges Racinet
 - Colin Goutte
 - Clovis Nzouendjou Nana
+- Delphine Lemire
 
 Other contributions (with tests) are welcome from anyone through Bitbucket pull requests.
 

@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+"acc_anytracker_link_customer","Link access for customer","model_anytracker_link","group_customer",1,0,0,0
+"acc_anytracker_link_partner","Link access for partner","model_anytracker_link","group_partner",1,1,1,1
+"acc_anytracker_link_member","Link access for member","model_anytracker_link","group_member",1,1,1,1
+"acc_anytracker_link_manager","Link access for manager","model_anytracker_link","group_manager",1,1,1,1
+"acc_anytracker_linktype_customer","Link type access for customer","model_anytracker_link_type","group_customer",1,0,0,0
+"acc_anytracker_linktype_member","Link type access for member","model_anytracker_link_type","group_member",1,0,0,0
+"acc_anytracker_linktype_manager","Link type access for manager","model_anytracker_link_type","group_manager",1,1,1,1
