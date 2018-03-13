@@ -1,4 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-acc_anytracker_Bouquet_access_customer,Bouquet access for customers,model_anytracker_bouquet,group_customer,1,0,0,0
+acc_anytracker_Bouquet_access_customer,Bouquet access for customers,model_anytracker_bouquet,group_customer,1,1,1,1
 acc_anytracker_Bouquet_access_partner,Bouquet access for partners,model_anytracker_bouquet,group_partner,1,1,1,1
 acc_anytracker_Bouquet_access_member,Bouquet access for members,model_anytracker_bouquet,group_member,1,1,1,1
