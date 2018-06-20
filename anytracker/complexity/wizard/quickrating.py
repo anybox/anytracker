@@ -1,5 +1,5 @@
-from openerp import models, fields, api, _
-from openerp.exceptions import except_orm, Warning, RedirectWarning
+from openerp import models, fields, _
+from openerp.exceptions import except_orm
 
 
 class QuickRating(models.TransientModel):

@@ -8,7 +8,10 @@ from urllib import urlencode
 
 
 class UrlDirection(http.Controller):
-    @http.route('/anytracker/<string:db>/<string:meth>/<int:number>', type='http', auth='user', website=True)
+    @http.route(
+        '/anytracker/<string:db>/<string:meth>/<int:number>', type='http',
+        auth='user', website=True
+    )
     def dispatch_anytracker(self, db=None, meth=None, number=None, *args, **kw):
         # Sample : http://localhost:8069/anytracker/anytraker_002/ticket/24
         if db is None and meth is None and number is None:
@@ -43,7 +46,7 @@ class UrlDirection(http.Controller):
         }
         base_url = '/web/'
         url = urljoin(base_url, "?%s#%s" % (urlencode(query), urlencode(fragment)))
-        redirect = werkzeug.utils.redirect(url, 302)
+        werkzeug.utils.redirect(url, 302)
         # redirect.autocorrect_location_header = False
         print(url)
         return werkzeug.utils.redirect(url)

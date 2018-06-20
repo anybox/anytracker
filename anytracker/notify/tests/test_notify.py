@@ -1,5 +1,4 @@
 from anybox.testing.openerp import SharedSetupTransactionCase
-from openerp.exceptions import except_orm
 from os.path import join
 
 
@@ -111,11 +110,11 @@ class TestNotify(SharedSetupTransactionCase):
         self.assertEquals(len(project.message_follower_ids), 2)
 
         # the customer is not allowed to add participants
-        #self.assertRaises(
+        # self.assertRaises(
         #    except_orm,
         #    project.sudo(self.member_id).write,
         #    {'participant_ids': [(6, 0, [self.customer_id, self.member_id])]})
-        #self.assertEquals(len(project.message_follower_ids), 2)
+        # self.assertEquals(len(project.message_follower_ids), 2)
 
         # the member2 choose to join the project again, he's notified
         project.sudo(self.member2_id).join_project()

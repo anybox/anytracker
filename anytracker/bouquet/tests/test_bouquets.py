@@ -16,19 +16,19 @@ class TestBouquets(SharedSetupTransactionCase):
         cls.member_id = USER.create({
             'name': 'anytracker member',
             'login': 'at.user',
-             'email': 'member@localhost',
+            'email': 'member@localhost',
             'groups_id': [(6, 0, [cls.ref('anytracker.group_member')])],
         }).id
         cls.customer_id = USER.create({
             'name': "anytracker customer",
             'login': 'at.cust',
-             'email': 'customer@localhost',
+            'email': 'customer@localhost',
             'groups_id': [(6, 0, [cls.ref('anytracker.group_customer')])],
         }).id
         cls.partner_id = USER.create({
             'name': "anytracker partner",
             'login': 'at.part',
-             'email': 'partner@localhost',
+            'email': 'partner@localhost',
             'groups_id': [(6, 0, [cls.ref('anytracker.group_partner')])],
         }).id
         cls.project = cls.TICKET.create({
