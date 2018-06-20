@@ -336,7 +336,7 @@ class Ticket(models.Model):
             doc = etree.fromstring(fvg['arch'])
             try:
                 node = doc.xpath("//field[@name='parent_id']")[0]
-            except:
+            except Exception:
                 logger.error("It seems you're using a broken version of Odoo")
                 return fvg
             orm.transfer_modifiers_to_node({'required': not allow}, node)
