@@ -141,7 +141,9 @@ class TestAnytracker(SharedSetupTransactionCase):
         ticket = self.TICKET.sudo(self.customer_id).create(
             {'name': 'A ticket',
              'parent_id': project.id,
-             'my_rating': False})  # False should be ignored at creation
+             'my_rating': False}
+        )
+        # False should be ignored at creation
         attach1 = self.ATTACHMENT.sudo(self.customer_id).create({
             'name': 'testfile',
             'db_datas': base64.b64encode('0000'),
@@ -371,16 +373,17 @@ class TestAnytracker(SharedSetupTransactionCase):
         self.assertEquals(project1.progress, 1.0)
 
     def test_ticket_type(self):
-        """
-        Tickets have a type
-        """
+        """ Tickets have a type """
         # create a first project with 1 subnode and 2 tickets
         project = self.TICKET.sudo(self.manager_id).create(
-            {'name': 'Project1',
-             'participant_ids': [(6, 0, [
-                 self.customer_id, self.member_id, self.manager_id])],
-             'method_id': self.ref('anytracker.method_test')})
-
+            {
+                'name': 'Project1',
+                'participant_ids': [(6, 0, [
+                    self.customer_id, self.member_id, self.manager_id
+                ])],
+                'method_id': self.ref('anytracker.method_test')
+            }
+        )
         node = self.TICKET.sudo(self.customer_id).create(
             {'name': 'Node1', 'parent_id': project.id, })
         ticket1 = self.TICKET.sudo(self.customer_id).create(
