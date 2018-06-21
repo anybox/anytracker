@@ -107,6 +107,9 @@ class Ticket(models.Model):
         """
         breadcrumbs = self.get_breadcrumb()
         for ticket in self:
+            if ticket.id not in breadcrumbs:
+                logger.info(u"Ticket (%s) not in breadcrumbs" % (ticket.id))
+                continue
             ticket.breadcrumb = u' / '.join(
                 [b['name'] for b in breadcrumbs[ticket.id]])
 
