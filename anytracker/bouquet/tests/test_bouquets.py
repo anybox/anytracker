@@ -12,6 +12,10 @@ class TestBouquets(SharedSetupTransactionCase):
         cls.BOUQUET = cls.env['anytracker.bouquet']
         cls.ticket_obj = cls.registry['anytracker.ticket']
         cls.bouquet_obj = cls.registry['anytracker.bouquet']
+        # we delete this bouquet because it makes test fails (when using database backup)
+        bouquet_sprint_mlf = cls.BOUQUET.search([('name', '=', u'Sprint MLF: juillet')])
+        if bouquet_sprint_mlf:
+            bouquet_sprint_mlf.unlink()
         USER = cls.env['res.users']
 
         cls.member_id = USER.create({
@@ -76,7 +80,7 @@ class TestBouquets(SharedSetupTransactionCase):
             )
 
     def test_read_perm_non_participating(self):
-        # first add at least one ticket
+        # first add at least one ticket
         self.uid = self.member_id
         self.project.sudo(self.admin_id).write(
             {
