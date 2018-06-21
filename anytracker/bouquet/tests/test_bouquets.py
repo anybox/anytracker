@@ -1,3 +1,4 @@
+# coding: utf-8
 from anybox.testing.openerp import SharedSetupTransactionCase
 
 
@@ -52,11 +53,13 @@ class TestBouquets(SharedSetupTransactionCase):
         cls.admin_id = cls.uid
 
     def test_create_read(self):
-        self.assertRecord(self.bouquet_obj, self.bouquet.id,
-                          {'ticket_ids': set(self.tickets.ids),
-                           'nb_tickets': len(self.tickets.ids),
-                           'project_ids': set([self.project.id]),
-                           }, list_to_set=True)
+        self.assertRecord(
+            self.bouquet_obj, self.bouquet.id, {
+                'ticket_ids': set(self.tickets.ids),
+                'nb_tickets': len(self.tickets.ids),
+                'project_ids': set([self.project.id]),
+            }, list_to_set=True
+        )
 
     def test_create_read_perm(self):
         """Switch to non-privileged user to check access."""
@@ -64,20 +67,30 @@ class TestBouquets(SharedSetupTransactionCase):
             self.uid = uid
             # if this fails, fix the main part of Anytracker first
             # (no other unit tests at this time of writing):
-            self.assertUniqueWithValues(self.ticket_obj,
-                                        [('name', '=', "First ticket")],
-                                        {'parent_id': self.project.id})
-
+            self.assertUniqueWithValues(
+                self.ticket_obj, [('name', '=', "First ticket")], {'parent_id': self.project.id}
+            )
             # checking both search and read perms in one shot:
-            self.assertUniqueWithValues(self.bouquet_obj,
-                                        [], {'name': u"Un bouquet ?"})
+            self.assertUniqueWithValues(
+                self.bouquet_obj, [], {'name': u"Un bouquet ?"}
+            )
 
     def test_read_perm_non_participating(self):
-        # first, let's remove our 2 users from the related project
-        self.project.sudo(self.admin_id).write({
-            'participant_ids': [(6, 0, [])]})
-
+        # first add at least one ticket
         self.uid = self.member_id
+        self.project.sudo(self.admin_id).write(
+            {
+                'ticket_ids': [(4, [self.ticket1.id])],
+            }
+        )
+        res = self.BOUQUET.search([])
+        self.assertTrue(res)
+        # second, let's remove our 2 users from the related project
+        self.project.sudo(self.admin_id).write(
+            {
+                'participant_ids': [(6, 0, [])]
+            }
+        )
         self.assertNoRecord(self.bouquet_obj, [])
 
     def test_read_perm_participating_mixed(self):
