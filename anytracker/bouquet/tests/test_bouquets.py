@@ -158,4 +158,4 @@ class TestBouquets(SharedSetupTransactionCase):
             'name': 'member bouquet'})
         self.BOUQUET.sudo(self.member_id).create({
             'name': 'member bouquet',
-            'ticket_ids': [6, 0, self.tickets.ids]})
+            'ticket_ids': [(6, 0, self.tickets.ids)]})
