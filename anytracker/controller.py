@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
-
-import werkzeug.utils
-from openerp.addons.web import http
-from openerp import pooler, SUPERUSER_ID as uid
 from urlparse import urljoin
 from urllib import urlencode
+import werkzeug.utils
+
+from odoo.addons.web import http
+from odoo import pooler, SUPERUSER_ID as uid
 
 
 class UrlDirection(http.Controller):
@@ -21,7 +20,7 @@ class UrlDirection(http.Controller):
             return self._anytracker_error()
         try:
             pool = pooler.get_pool(db)
-        except Exception, e:
+        except Exception as e:
             return "%r" % (e,)
         cr = pooler.get_db(db).cursor()
         return meth(self, db, cr, pool, [number])
