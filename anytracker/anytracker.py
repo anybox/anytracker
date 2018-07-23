@@ -1,12 +1,12 @@
-# coding: utf-8
 import re
 import logging
 from lxml import html
-from openerp.osv import orm
-from openerp import models, fields, api, _
-from openerp.exceptions import except_orm
 from lxml import etree
 from collections import defaultdict
+
+from odoo.osv import orm
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError, ValidationError
 
 logger = logging.getLogger(__file__)
 
@@ -157,8 +157,7 @@ class Ticket(models.Model):
             values['project_id'] = root_id
             for ticket in self:
                 if ticket.id == values['parent_id']:
-                    raise except_orm(
-                        _('Error'),
+                    raise UserError(
                         _(u"Think of yourself. Can you be your own parent?"))
                 # if reparenting to False,
                 # propagate the current ticket as project for children
@@ -176,8 +175,7 @@ class Ticket(models.Model):
 
         if 'participant_ids' in values:
             if len(self) > 1:
-                raise except_orm(
-                    _('Error !'),
+                raise UserError(
                     _('You can modify participants for 1 ticket at a time'))
             participant_ids = set(self.participant_ids.ids)
         # replace ticket numbers with permalinks
@@ -388,9 +386,9 @@ class Ticket(models.Model):
             starts = STAGE.search([('method_id', '=', ticket.method_id.id),
                                    ('progress', '=', 0)])
             if len(starts) != 1:
-                raise except_orm(
-                    _('Configuration error !'),
-                    _('One and only one stage should have a 0% progress'))
+                raise ValidationError(
+                    _('Configuration error ! \n One and only one stage should'
+                      'have a 0% progress'))
             # write stage in a separate line to recompute progress & risk
             ticket.write({'stage_id': starts[0].id})
         self.recompute_parents()
