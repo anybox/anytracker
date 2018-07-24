@@ -454,8 +454,8 @@ class Ticket(models.Model):
         track_visibility='onchange',
         required=True)
     number = fields.Integer(
-        string='Number')
-        track_visibility='onchange',
+        string='Number',
+        track_visibility='onchange')
     type = fields.Many2one(
         'anytracker.ticket.type',
         string='Type',

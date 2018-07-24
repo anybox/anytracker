@@ -1,6 +1,8 @@
-from openerp import models, fields, api
 from datetime import datetime
 from itertools import groupby
+from functools import reduce
+
+from odoo import fields, api, models
 
 
 def risk_mean(risks):
