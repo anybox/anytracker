@@ -49,7 +49,7 @@
             <field name="model">anytracker.ticket</field>
             <field name="inherit_id" ref="anytracker.invoicing_ticket_view_form" />
             <field name="arch" type="xml">
-                <xpath expr="//notebook/page[@string='Sub-tickets']" position="after">
+                <xpath expr="//notebook/page[@id='sub_tickets_page']" position="after">
                     <page string="Link-with">
                         <field name="all_links" context="{'active_id': active_id}" nolabel="1" >
                             <tree string="Links" >
