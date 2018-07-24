@@ -3,7 +3,7 @@ from openerp import models, fields, _
 from openerp.exceptions import except_orm
 from xml import sax
 from datetime import datetime
-from cStringIO import StringIO
+from io import StringIO
 from base64 import b64decode
 import time
 
