@@ -31,9 +31,9 @@
         'web',
         'web_widget_color',
         'base',
-        'email_template',
+        # 'email_template',
         'analytic',
-        'hr_timesheet_invoice',
+        # 'hr_timesheet_invoice',
     ],
     'images': [
         'images/anytracker.png',
