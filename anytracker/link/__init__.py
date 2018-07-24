@@ -1,1 +1,1 @@
-import link  # noqa
+from . import link

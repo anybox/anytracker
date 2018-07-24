@@ -2,7 +2,7 @@ from openerp import models, fields
 from openerp.exceptions import except_orm
 from .mindmap_parse import FreemindWriterHandler
 from .mindmap_parse import FreemindParser
-from cStringIO import StringIO
+from io import StringIO
 from base64 import b64encode
 
 
