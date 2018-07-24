@@ -125,10 +125,28 @@
             <field name="arch" type="xml">
                 <form string="Ticket">
                     <header>
-                        <button name="trash" string="Trash" type="object" states="running"/>
-                        <button name="reactivate" string="Reactivate" type="object" states="trashed"/>
                     </header>
                     <sheet>
+                        <div class="oe_right oe_button_box" name="buttons">
+                            <button 
+                                class="oe_stat_button"
+                                id="trash_button"
+                                name="trash" 
+                                type="object" 
+                                icon="fa-trash"
+                                states="running">
+                                <div>Trash</div>
+                            </button>
+                            <button 
+                                class="oe_stat_button"
+                                id="reactivate_button"
+                                name="reactivate" 
+                                type="object" 
+                                icon="fa-undo"
+                                states="trashed">
+                                <div>Reactivate</div>
+                            </button>
+                        </div>
                         <group>
                             <group>
                                 <field name="parent_id" colspan="4" nolabel="1" placeholder="Project (or parent ticket)"
