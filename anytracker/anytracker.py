@@ -99,7 +99,7 @@ class Ticket(models.Model):
             raw[f[0]].append(f[1:])
         return {tid: [dict(zip(('id', 'parent_id', 'name'), line))
                       for line in reversed(t_lines)]
-                for tid, t_lines in raw.iteritems()}
+                for tid, t_lines in raw.items()}
 
     def _formatted_breadcrumb(self):
         """ format the breadcrumb
