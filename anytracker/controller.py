@@ -1,9 +1,12 @@
-from urlparse import urljoin
-from urllib import urlencode
+# TODO - FIXME TODO FIXME
+from urllib.parse import urljoin
+from urllib.parse import urlencode
 import werkzeug.utils
 
-from odoo.addons.web import http
-from odoo import pooler, SUPERUSER_ID as uid
+# from odoo.addons.web import http
+from odoo import http
+# from odoo import pooler, SUPERUSER_ID as uid
+from odoo import SUPERUSER_ID as uid
 
 
 class UrlDirection(http.Controller):
@@ -18,12 +21,12 @@ class UrlDirection(http.Controller):
         meth = self.dispatcher_methods.get(meth)
         if meth is None:
             return self._anytracker_error()
-        try:
-            pool = pooler.get_pool(db)
-        except Exception as e:
-            return "%r" % (e,)
-        cr = pooler.get_db(db).cursor()
-        return meth(self, db, cr, pool, [number])
+        # try:
+        #    pool = pooler.get_pool(db)
+        # except Exception as e:
+        #    return "%r" % (e,)
+        # cr = pooler.get_db(db).cursor()
+        # return meth(self, db, cr, pool, [number])
 
     def dispatch_ticket(self, db_name, cr, pool, segments):
         if len(segments) != 1:
