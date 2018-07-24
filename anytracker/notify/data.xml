@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data noupdate="1">
-        <!--Email template for ticket in initial stage -->
-        <record id="email_template_ticket_new" model="email.template">
+        <!-- Email template for ticket in initial stage -->
+        <record id="email_template_ticket_new" model="mail.template">
             <field name="name">Anytracker ticket new</field>
             <field name="email_from">${user.email}</field>
             <field name="subject">[${object.project_id.name}] ${user.name} created a ticket #${object.number}</field>
@@ -19,7 +19,7 @@ ${object.description or ''}
             ]]></field>
         </record>
         <!--Email template for ticket acknowledged-->
-        <record id="email_template_ticket_ack" model="email.template">
+        <record id="email_template_ticket_ack" model="mail.template">
             <field name="name">Anytracker ticket acknowledged</field>
             <field name="email_from">${user.email}</field>
             <field name="subject">Ticket #${object.number} has been acknowledged by ${user.name}</field>
@@ -49,4 +49,4 @@ ${object.description or ''}
         </record>
 
     </data>
-</openerp>
+</odoo>
