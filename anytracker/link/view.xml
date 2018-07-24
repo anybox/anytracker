@@ -66,8 +66,8 @@
                                         groups="anytracker.group_member, anytracker.group_partner"/>
                             </tree>
                         </field>
-                        <button name="action_add_link" string="Add link" 
-                                icon="gtk-add" type="object"
+                        <button name="action_add_link" string="Add link" id="add_link"
+                                icon="fa-plus" type="object"
                                 groups="anytracker.group_member, anytracker.group_partner" />
 
                     </page>
