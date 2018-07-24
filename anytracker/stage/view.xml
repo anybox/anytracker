@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
 <data>
 
 <!-- Stage form -->
@@ -25,7 +25,7 @@
             <page string="Description">
                 <field name="description"/>
             </page>
-            <page string="Forbidden complexities">
+            <page string="Forbidden complexities" id="forbidden_complexities_page">
                 <div style="margin: 1em">Ticket that have the following complexities can't be move to this stage</div>
                 <field name="forbidden_complexity_ids" domain="[('method_id', '=', method_id)]"/>
             </page>
@@ -63,7 +63,7 @@
       <xpath expr="/form/header" position='inside'>
         <field name="stage_id" widget="statusbar" clickable="True" attrs="{'invisible': [('child_ids', '!=', ())]}"/>
       </xpath>
-      <xpath expr="//notebook/page[@string='Participants']" position="after">
+      <xpath expr="//notebook/page[@id='participants_page']" position="after">
         <page string="Progress">
         <group col="9" colspan="2">
           <button name="stage_previous" string=""
@@ -156,5 +156,5 @@
 </record>
 
 </data>
-</openerp>
+</odoo>
 

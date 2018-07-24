@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
     <data>
         <template id="assets_backend" name="anytracker_assets" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
@@ -79,6 +79,7 @@
                 </tree>
             </field>
         </record>
+
         <!-- Projects or node list -->
         <record id="node_view_tree" model="ir.ui.view">
             <field name="name">Nodes</field>
@@ -154,7 +155,7 @@
                             <page string="Description">
                                 <field name="description" colspan="4" widget="html" nolabel="1"/>
                             </page>
-                            <page string="Sub-tickets">
+                            <page string="Sub-tickets" id="sub_tickets_page">
                                 <field name="child_ids" nolabel="1" context="{'default_parent_id': active_id}">
                                     <tree>
                                         <field name="number"/>
@@ -168,7 +169,7 @@
                                     </tree>
                                 </field>
                             </page>
-                            <page string="Participants" attrs="{'invisible': [('parent_id', '!=', False)]}"
+                            <page id="participants_page" string="Participants" attrs="{'invisible': [('parent_id', '!=', False)]}"
                                   groups="anytracker.group_member,anytracker.group_partner">
                                     <field name="is_participant" invisible="True"/>
                                     <button name="join_project" string="Join the project" type="object"
@@ -336,13 +337,16 @@
                 'search_default_unfinished': 1,
                 'group_by': 'stage_id'}
             </field>
+            <field name="binding_model_id" ref="anytracker.model_anytracker_ticket" />
         </record>
+        <!--
         <record id="ir_value_hierarchy_line_select" model="ir.values">
             <field name="key2">tree_but_open</field>
             <field name="model">anytracker.ticket</field>
             <field name="name">Open ticket</field>
             <field name="value" eval="'ir.actions.act_window,%d'%action_hierarchy_line_select"/>
         </record>
+        -->
 
         <!-- ACTIONS -->
         <record model="ir.actions.act_window" id="action_kanbans">
@@ -423,8 +427,10 @@
             <field name="model_id" ref="model_anytracker_ticket"/>
             <field name="state">code</field>
             <field name="code">action = obj.set_custom_method()</field>
+            <field name="binding_model_id" ref="anytracker.model_anytracker_ticket" />
         </record>
 
+        <!--
         <record model="ir.values" id="set_specific_method">
             <field name="model_id" ref="model_anytracker_ticket"/>
             <field name="name">Create specific method</field>
@@ -432,6 +438,7 @@
             <field name="value" eval="'ir.actions.server,%d'%action_set_specific_method"/>
             <field name="model">anytracker.ticket</field>
         </record>
+        -->
 
         <!-- MENUITEMS -->
         <menuitem id="tabmenu_anytracker"
@@ -472,5 +479,5 @@
                   action="act_open_types_view"/>
 
     </data>
-</openerp>
+</odoo>
 
