@@ -197,18 +197,6 @@
                                 <field name="participant_ids" colspan="4" widget="many2many_tags"/>
                             </page>
 
-                            <page string="History" groups="anytracker.group_member,anytracker.group_partner">
-                                <group groups="anytracker.group_member,anytracker.group_partner">
-                                    <field name="history_ids" nolabel="1" colspan="4" readonly="1"
-                                           groups="anytracker.group_member,anytracker.group_partner">
-                                        <tree string="History">
-                                            <field name="create_uid" groups="anytracker.group_member,anytracker.group_partner"/>
-                                            <field name="create_date" groups="anytracker.group_member,anytracker.group_partner"/>
-                                            <field name="modification" groups="anytracker.group_member,anytracker.group_partner"/>
-                                        </tree>
-                                    </field>
-                                </group>
-                            </page>
                         </notebook>
                     </sheet>
                     <div class="oe_chatter">

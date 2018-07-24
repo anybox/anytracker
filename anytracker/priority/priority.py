@@ -67,7 +67,8 @@ class Ticket(models.Model):
         'Deadline')
     priority_id = fields.Many2one(
         'anytracker.priority',
-        'Priority')
+        track_visibility='onchange',
+        string='Priority')
     priority = fields.Integer(
         compute='_priority',
         string='Priority',

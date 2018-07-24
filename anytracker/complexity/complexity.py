@@ -298,6 +298,7 @@ class Ticket(models.Model):
         string='Color')
     rating = fields.Float(
         'Rating',
+        track_visibility='onchange',
         group_operator="sum")
 
 

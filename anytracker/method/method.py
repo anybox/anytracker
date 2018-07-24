@@ -174,7 +174,8 @@ class Ticket(models.Model):
 
     method_id = fields.Many2one(
         'anytracker.method',
-        'Method',
+        string='Method',
+        track_visibility='onchange',
         help='Method of the project',
         ondelete="restrict")
     project_method_id = fields.Many2many(

@@ -298,13 +298,15 @@ class Ticket(models.Model):
 
     stage_id = fields.Many2one(
         'anytracker.stage',
-        'Stage',
+        string='Stage',
+        track_visibility='onchange',
         default=_default_stage,
         select=True,
         domain="[('method_id','=',method_id)]")
     progress = fields.Float(
-        'Progress',
+        string='Progress',
         default=0.0,
+        track_visibility='onchange',
         select=True,
         group_operator="avg")
     # this field can be used to count tickets if the only available operation
