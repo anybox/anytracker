@@ -1,5 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-"acc_email_template_customer","Email template access for customer","email_template.model_email_template","group_customer",1,0,0,0
-"acc_email_template_member","Email template access for member","email_template.model_email_template","group_member",1,0,0,0
-"acc_email_template_manager","Email template access for manager","email_template.model_email_template","group_manager",1,0,0,0
+"acc_email_template_customer","Email template access for customer","mail.model_mail_template","group_customer",1,0,0,0
+"acc_email_template_member","Email template access for member","mail.model_mail_template","group_member",1,0,0,0
+"acc_email_template_manager","Email template access for manager","mail.model_mail_template","group_manager",1,0,0,0
 
