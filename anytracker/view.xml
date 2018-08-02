@@ -359,7 +359,8 @@
         <record model="ir.actions.act_window" id="action_kanbans">
             <field name="name">Hierarchy</field>
             <field name="res_model">anytracker.ticket</field>
-            <field name="view_type">tree</field>
+            <field name="view_mode">tree</field>
+            <field name="view_type">form</field>
             <field name="view_id" ref="tickets_hierarchy"/>
             <field name="domain">[('parent_id', '=', False),'|', '|', ('project_id.participant_ids', 'in', uid), ('parent_id.participant_ids', 'in', uid), ('participant_ids', 'in', uid)]</field>
             <field name="binding_model_id" ref="anytracker.model_anytracker_ticket" />
