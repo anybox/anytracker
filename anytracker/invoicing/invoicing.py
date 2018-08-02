@@ -152,10 +152,10 @@ class account_analytic_line(models.Model):
     """
     _inherit = "account.analytic.line"
 
-    def search(self, cr, uid, args, offset=0, limit=None,
-               order=None, context=None, count=False):
+    @api.model
+    def search(self, args, offset=0, limit=None, order=None, count=False):
         if len(args) == 1 and len(args[0]) == 3 and args[0][0] == 'date':
             uid = SUPERUSER_ID
         return super(account_analytic_line, self).search(
-            cr, uid, args, offset=offset, limit=limit,
-            order=order, context=context, count=count)
+            args, offset=offset, limit=limit, order=order, count=count
+        )
