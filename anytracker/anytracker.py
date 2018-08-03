@@ -51,7 +51,7 @@ class Ticket(models.Model):
     _rec_name = 'breadcrumb'
     _order = 'priority DESC, importance DESC, sequence ASC, create_date DESC'
     _parent_store = True
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     def _has_attachment(self):
         """ check if tickets have attachment(s) or not"""
@@ -222,6 +222,7 @@ class Ticket(models.Model):
             base_uri = '/anytracker/%s/ticket/' % dbname
             ticket.permalink = base_uri + str(ticket.number)
 
+    @api.model
     def create(self, values):
         """write the project_id when creating
         """
