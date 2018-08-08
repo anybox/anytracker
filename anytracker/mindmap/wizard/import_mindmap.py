@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
-from openerp import models, fields, _
-from openerp.exceptions import except_orm
-from xml import sax
-from datetime import datetime
-from io import StringIO
-from base64 import b64decode
 import time
+from base64 import b64decode
+from datetime import datetime
+from io import BytesIO
+from xml import sax
+
+from odoo import api, fields, models,  _
+from odoo.exceptions import UserError, ValidationError
 
 
-class import_mindmap_wizard(models.TransientModel):
+class ImportMindmapWizard(models.TransientModel):
     _name = 'import.mindmap.wizard'
     _description = 'Import mindmap .mm file into anytracker tree'
 
@@ -43,12 +44,24 @@ class import_mindmap_wizard(models.TransientModel):
         'Project method',
         required=True)
 
-    def execute_import(self):
-        '''Launch import of nn file from mindmap'''
-        for wizard in self:
+    # @api.multi
+    # def execute_import(self, vals):
+    #    '''Launch import of nn file from mindmap'''
+    #    for wizard in vals:
+    #        handler = FreemindContentHandler(wizard)
+    #        error_handler = FreemindErrorHandler()
+    #        sax.parse(BytesIO(b64decode(wizard.mindmap_content)),
+    #                  handler, error_handler)
+    #    return {'type': 'ir.actions.act_window_close'}
+
+    @api.model
+    def create(self, vals):
+        """override save/create function"""
+        imported_mm = super(ImportMindmapWizard, self).create(vals)
+        for wizard in imported_mm:
             handler = FreemindContentHandler(wizard)
             error_handler = FreemindErrorHandler()
-            sax.parse(StringIO(b64decode(wizard.mindmap_content)),
+            sax.parse(BytesIO(b64decode(wizard.mindmap_content)),
                       handler, error_handler)
         return {'type': 'ir.actions.act_window_close'}
 
@@ -90,8 +103,7 @@ class FreemindContentHandler(sax.ContentHandler):
                     self.parent = self.ticket
                 elif self.wiz.import_method == 'update':
                     if not self.ticket:
-                        raise except_orm(
-                            _('Error'),
+                        raise UserError(
                             _("To be able to use update method, "
                               "you should set a parent ticket "
                               "on the export wizard"))
@@ -194,8 +206,8 @@ class FreemindContentHandler(sax.ContentHandler):
         if (self.ticket
                 and self.ticket.id != first_ticket_id
                 and self.wiz.import_method == 'update'):
-            raise except_orm(_('Error'),
-                             _('You try to update the wrong main ticket'))
+            raise UserError(
+                _('You try to update the wrong main ticket'))
         domain = [
             ('id', 'child_of', first_ticket_id),  # children of main ticket
             ('id', 'not in', self.updated_ticket_ids),  # ticket not updated
@@ -209,15 +221,12 @@ class FreemindErrorHandler(sax.ErrorHandler):
 
     def error(self, exception):
         "Handle a recoverable error."
-        raise except_orm(_('Error !'),
-                         exception.args[0])
+        raise ValidationError(exception.args[0])
 
     def fatalError(self, exception):
         "Handle a non-recoverable error."
-        raise except_orm(_('Error !'),
-                         exception.args[0])
+        raise ValidationError(exception.args[0])
 
     def warning(self, exception):
         "Handle a warning."
-        raise except_orm(_('Warning !'),
-                         exception.args[0])
+        raise ValidationError(exception.args[0])
