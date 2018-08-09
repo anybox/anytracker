@@ -67,9 +67,9 @@
         <page string="Progress">
         <group col="9" colspan="2">
           <button name="stage_previous" string=""
-                  type="object" icon="gtk-go-back" attrs="{'invisible': [('child_ids', '!=', [])]}" groups="anytracker.group_member,anytracker.group_partner"/>
+                  type="object" icon="fa-arrow-left" attrs="{'invisible': [('child_ids', '!=', [])]}" groups="anytracker.group_member,anytracker.group_partner"/>
           <button name="stage_next" string=""
-            type="object" icon="gtk-go-forward" attrs="{'invisible': [('child_ids', '!=', [])]}" groups="anytracker.group_member,anytracker.group_partner"/>
+            type="object" icon="fa-arrow-right" attrs="{'invisible': [('child_ids', '!=', [])]}" groups="anytracker.group_member,anytracker.group_partner"/>
           <field name="progress" string="Progress" widget="progressbar"/>
           <button name="recompute_progress" string="Recompute progress"
             type="object" icon="gtk-execute" attrs="{'invisible': [('child_ids', '=', [])]}" groups="anytracker.group_manager"/>
