@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
+<odoo>
 <data>
 
 <!-- Add a fieldset the stage form -->
@@ -34,5 +34,5 @@
 </record>
 
 </data>
-</openerp>
+</odoo>
 
