@@ -534,10 +534,12 @@ class Ticket(models.Model):
         string='Requester')
     parent_left = fields.Integer(
         select=True,
-        string='Parent Left', )
+        string='Parent Left',
+        index=True)
     parent_right = fields.Integer(
         select=True,
-        string='Parent Right', )
+        string='Parent Right',
+        index=True)
     sequence = fields.Integer(
         string='sequence')
     active = fields.Boolean(
