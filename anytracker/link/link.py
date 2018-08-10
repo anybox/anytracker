@@ -28,7 +28,6 @@ class Link(models.Model):
     _name = 'anytracker.link'
     _description = "Link between two tickets"
 
-    @api.one
     @api.depends('ticket_two', 'ticket_one')
     @api.onchange('ticket_two', 'ticket_one')
     def _data_tickets(self):
