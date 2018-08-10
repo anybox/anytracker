@@ -19,9 +19,16 @@ bootstrap.py
 community-addons/
 upgrade.py
 .settings
-anybox.recipe.openerp
+anybox.recipe.odoo
 venv
 .project
 .pydevproject
 upgrade.log
 .hgignore
+.idea/
+anybox.testing.openerp/
+backend_theme/
+buildout.dev.cfg
+docker-compose.yml
+eggs/
+nodesource.gpg.key*
