@@ -22,7 +22,7 @@
 
 {
     'name': 'Anytracker',
-    'version': '11.0.1.0.0',
+    'version': '9.0.1.0.0',
     'author': 'Anybox',
     'website': 'https://anybox.fr',
     'category': 'Project Management',
@@ -31,9 +31,7 @@
         'web',
         'web_widget_color',
         'base',
-        # 'email_template',
         'analytic',
-        # 'hr_timesheet_invoice',
     ],
     'images': [
         'images/anytracker.png',
