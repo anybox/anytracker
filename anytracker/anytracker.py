@@ -7,9 +7,9 @@ from lxml import html
 from lxml import etree
 from collections import defaultdict
 
-from odoo.osv import orm
-from odoo import api, fields, models, _
-from odoo.exceptions import UserError, ValidationError
+from openerp.osv import orm
+from openerp import api, fields, models, _
+from openerp.exceptions import UserError, ValidationError
 
 logger = logging.getLogger(__file__)
 

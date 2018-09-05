@@ -6,10 +6,10 @@ from urllib.parse import urljoin
 from urllib.parse import urlencode
 import werkzeug.utils
 
-# from odoo.addons.web import http
-from odoo import http
-# from odoo import pooler, SUPERUSER_ID as uid
-from odoo import SUPERUSER_ID as uid
+from openerp.addons.web import http
+# from odoo import http  # V11
+from openerp import pooler, SUPERUSER_ID as uid
+# from odoo import SUPERUSER_ID as uid # V11
 
 
 class UrlDirection(http.Controller):
