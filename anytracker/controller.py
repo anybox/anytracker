@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 # TODO - FIXME TODO FIXME
 from urllib.parse import urljoin
 from urllib.parse import urlencode
