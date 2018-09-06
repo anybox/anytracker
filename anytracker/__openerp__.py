@@ -32,7 +32,6 @@
         'web_widget_color',
         'base',
         'analytic',
-        'hr_timesheet_invoice',
     ],
     'images': [
         'images/anytracker.png',
