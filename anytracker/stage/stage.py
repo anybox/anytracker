@@ -301,13 +301,13 @@ class Ticket(models.Model):
         string='Stage',
         track_visibility='onchange',
         default=_default_stage,
-        select=True,
+        index=True,
         domain="[('method_id','=',method_id)]")
     progress = fields.Float(
         string='Progress',
         default=0.0,
         track_visibility='onchange',
-        select=True,
+        index=True,
         group_operator="avg")
     # this field can be used to count tickets if the only available operation
     # on them is to sum field values (shameless hack for charts)
