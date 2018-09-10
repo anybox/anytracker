@@ -54,7 +54,7 @@ class Ticket(models.Model):
     _rec_name = 'breadcrumb'
     _order = 'priority DESC, importance DESC, sequence ASC, create_date DESC'
     _parent_store = True
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _inherit = ['mail.thread']
 
     def _has_attachment(self):
         """ check if tickets have attachment(s) or not"""

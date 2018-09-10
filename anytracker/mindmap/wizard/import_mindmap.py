@@ -5,8 +5,8 @@ from datetime import datetime
 from io import BytesIO
 from xml import sax
 
-from odoo import api, fields, models,  _
-from odoo.exceptions import UserError, ValidationError
+from openerp import api, fields, models,  _
+from openerp.exceptions import UserError, ValidationError
 
 
 class ImportMindmapWizard(models.TransientModel):
