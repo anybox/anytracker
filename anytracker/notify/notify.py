@@ -12,7 +12,7 @@ class Stage(models.Model):
         u'Notify project members',
         help=u"Notify project members when a ticket enter this stage")
     notify_template_id = fields.Many2one(
-        'email.template',
+        'mail.template',
         u'Email template')
     notify_urgent = fields.Boolean(
         u'Urgent notification',
