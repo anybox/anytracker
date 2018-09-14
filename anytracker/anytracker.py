@@ -268,8 +268,11 @@ class Ticket(models.Model):
         # This allows to subscribe or unsubscribe to ticket subtrees
         if ticket.project_id.participant_ids:
             if ticket.parent_id:
+                #11375: FIX message_subscribe purpose is to add partners vs users
+                #ticket.message_subscribe(ticket.parent_id.message_follower_ids.ids)
                 ticket.message_subscribe(
-                    ticket.parent_id.message_follower_ids.ids)
+                    partner_ids=ticket.parent_id.message_follower_ids.mapped('partner_id').ids
+                )
             else:
                 ticket.message_subscribe_users(
                     ticket.participant_ids.ids)
