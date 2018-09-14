@@ -210,9 +210,12 @@ class Ticket(models.Model):
             removed_users = participant_ids - new_p_ids
             self.message_unsubscribe_users(removed_users)
             self.message_subscribe_users(added_users)
+
             # Needed for the ir_rule,
             # because it involves an sql request for _search_allowed_partners
-            self.env.invalidate_all()
+            # self.env.invalidate_all()  #11373 depreciated in v11 api
+            for env in self.env.__class__.envs:
+                env.clear()
 
         return res
 
