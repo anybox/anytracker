@@ -45,6 +45,12 @@ class Complexity(models.Model):
         'Risk', required=True,
         help="risk is a value between 0.0 (no risk) and 1.0 (full risk)")
 
+    @staticmethod
+    def risk2float(risk):
+        """convert risk to float. for complex we only need the real part #11374"""
+        return isinstance(risk, complex) and float(risk.real) \
+               or (isinstance(risk, float) and risk or float(risk))
+
 
 class Rating(models.Model):
     """Represents the rating of a ticket by one person at one time
@@ -161,8 +167,9 @@ class Ticket(models.Model):
                 [r for r in latest_person_risk.items()
                  if r[-1] not in (None, False)])
             # compute the mean of all latest ratings
-            res_risk[ticket.id] = (risk_mean(latest_person_risk.values())
-                                   if latest_person_risk else 0.5)
+            res_risk[ticket.id] = Complexity.risk2float(
+                (risk_mean(latest_person_risk.values())) if latest_person_risk else 0.5
+            )
             res_rating[ticket.id] = (sum(latest_person_rating.values()
                                          ) / len(latest_person_rating)
                                      if latest_person_rating else 0)
@@ -191,7 +198,7 @@ class Ticket(models.Model):
                                          ('type.has_children', '=', False),
                                          ('id', '!=', node.id)])
                     rating = sum(leaf.rating for leaf in leafs)
-                    risk = risk_mean(leaf.risk for leaf in leafs)
+                    risk = Complexity.risk2float(risk_mean(leaf.risk for leaf in leafs))
                     node.write({'risk': risk, 'rating': rating})
         return True
 
@@ -274,7 +281,7 @@ class Ticket(models.Model):
                                      ('id', '!=', parent.id)])
                 if leafs:
                     rating = sum(leaf.rating for leaf in leafs)
-                    risk = risk_mean(leaf.risk for leaf in leafs)
+                    risk = Complexity.risk2float(risk_mean(leaf.risk for leaf in leafs))
                     parent.write({'risk': risk, 'rating': rating})
                 parent = parent.parent_id
 
