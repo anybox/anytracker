@@ -133,7 +133,7 @@ class Ticket(models.Model):
                 # group by user
                 grouped = groupby(ratings, lambda x: x[0])
                 # keep the latest of each user
-                latests = [j[1].next() for j in grouped]
+                latests = [next(j[1]) for j in grouped]
                 # keep the highest
                 highests = list(reversed(sorted(latests, key=lambda x: x[1])))
                 if highests:
