@@ -33,6 +33,7 @@
         'base',
         # 'email_template',
         'analytic',
+        'product',  #11390
         # 'hr_timesheet_invoice',
     ],
     'images': [
