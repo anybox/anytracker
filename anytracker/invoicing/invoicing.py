@@ -46,12 +46,12 @@ class Ticket(models.Model):
                       "It cannot be invoiced") % t.number)
             # on OCB the general account is not mandatory,
             # but let's be compatible with openerp
-            gen_account = t.project_id.product_id.property_account_expense
+            gen_account = t.project_id.product_id.property_account_expense_id
             if not gen_account and t.project_id.product_id.categ_id:
                 gen_account = (t.project_id
                                .product_id
                                .categ_id
-                               .property_account_expense_categ)
+                               .property_account_expense_categ_id)
             if not gen_account:
                 raise except_orm(
                     'Error',
