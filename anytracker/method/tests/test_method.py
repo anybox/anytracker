@@ -51,8 +51,9 @@ class TestMethod(SharedSetupTransactionCase):
             {'name': 'Test',
              'participant_ids': [(6, 0, [
                  self.customer_id, self.member_id, self.manager_id])],
-             'analytic_journal_id':
-                 self.anajournals.sudo(self.manager_id).search([])[0].id,
+             # #11390: analytic journal depreciated on v11
+             #'analytic_journal_id':
+             #    self.anajournals.sudo(self.manager_id).search([])[0].id,
              'product_id': self.ref('product.product_product_consultant'),
              'method_id': self.ref('anytracker.method_test')})
         # we create a ticket

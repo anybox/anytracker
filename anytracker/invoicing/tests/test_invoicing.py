@@ -19,7 +19,8 @@ class TestInvoicing(SharedSetupTransactionCase):
         cls.BOUQUET = cls.env['anytracker.bouquet']
         cls.ANALINE = cls.env['account.analytic.line']
         cls.ANACCOUNT = cls.env['account.analytic.account']
-        cls.ANAJOURNAL = cls.env['account.analytic.journal']
+        # #11390: analytic journal depreciated on v11
+        #cls.ANAJOURNAL = cls.env['account.analytic.journal']
 
         USER = cls.env['res.users']
         cls.member_id = USER.create(
@@ -43,7 +44,8 @@ class TestInvoicing(SharedSetupTransactionCase):
         project = self.TICKET.create(
             {'name': 'Test',
              'participant_ids': [(6, 0, [self.customer_id, self.member_id])],
-             'analytic_journal_id': self.ANAJOURNAL.search([])[0].id,
+             # #11390: analytic journal depreciated on v11
+             #'analytic_journal_id': self.ANAJOURNAL.search([])[0].id,
              'product_id': self.ref('product.product_product_consultant'),
              'method_id': self.ref('anytracker.method_test')})
         # we create a few tickets
@@ -118,7 +120,8 @@ class TestInvoicing(SharedSetupTransactionCase):
         project = self.TICKET.create(
             {'name': 'Test',
              'participant_ids': [(6, 0, [self.customer_id, self.member_id])],
-             'analytic_journal_id': self.ANAJOURNAL.search([])[0].id,
+             # #11390: analytic journal depreciated on v11
+             #'analytic_journal_id': self.ANAJOURNAL.search([])[0].id,
              'product_id': self.ref('product.product_product_consultant'),
              'method_id': self.ref('anytracker.method_test')})
         account = self.ANACCOUNT.create({
@@ -224,7 +227,8 @@ class TestInvoicing(SharedSetupTransactionCase):
             'name': 'project',
             'type': 'contract'})
         project.write({
-            'analytic_journal_id': self.ANAJOURNAL.search([])[0].id,
+            # #11390: analytic journal depreciated on v11
+            #'analytic_journal_id': self.ANAJOURNAL.search([])[0].id,
             'product_id': self.ref('product.product_product_consultant'),
             'analytic_account_id': account.id})
         self.TICKET.cron()

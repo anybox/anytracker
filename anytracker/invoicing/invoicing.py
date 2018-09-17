@@ -71,7 +71,8 @@ class Ticket(models.Model):
                 'to_invoice': t.project_id.analytic_account_id.to_invoice.id,
                 'account_id': t.project_id.analytic_account_id.id,
                 'product_id': t.project_id.product_id.id,
-                'journal_id': t.project_id.analytic_journal_id.id,
+                # #11390 analytic journal depreciated in 11
+                #'journal_id': t.project_id.analytic_journal_id.id,
                 'general_account_id': gen_account.id,
                 'user_id': user_id,
             }
@@ -97,7 +98,8 @@ class Ticket(models.Model):
             ('rating', '!=', 0.0),
             ('active', '=', True),
             ('write_date', '<=', yesterday),
-            ('project_id.analytic_journal_id', '!=', False),
+            # #11390 analytic journal depreciated in 11
+            #('project_id.analytic_journal_id', '!=', False),
             ('project_id.product_id', '!=', False),
             ('project_id.analytic_account_id', '!=', False),
             ('type.has_children', '=', False),
@@ -117,6 +119,7 @@ class Ticket(models.Model):
         'product.product',
         'Product to invoice',
         help=(u"The product to invoice"))
+    # #11390 analytic journal depreciated in 11, left here for previous version migration
     analytic_journal_id = fields.Many2one(
         'account.analytic.journal',
         'Analytic journal',
