@@ -32,6 +32,7 @@
         'web_widget_color',
         'base',
         # 'email_template',
+        'account',  #11392
         'analytic',
         'product',  #11390
         # 'hr_timesheet_invoice',
