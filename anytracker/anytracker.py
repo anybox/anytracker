@@ -456,12 +456,35 @@ class Ticket(models.Model):
                 ('number', operator, value),
                 ]
 
+    @api.model
+    def get_hierarchical_domain(self, parent_id):
+        return [
+            ('parent_id', '=', parent_id),
+            '|', '|',
+            ('project_id.participant_ids', 'in', self.env.user.id),
+            ('parent_id.participant_ids', 'in', self.env.user.id),
+            ('participant_ids', 'in', self.env.user.id)
+        ]
+
     @api.multi
-    def dive_hierarchy(self):
+    def action_hierarchy_dive(self):
+        # #11382
+        if not self.child_ids:
+            return {}
         action = self.env.ref('anytracker.action_kanbans').read()[0]
         # context not correctly passed, forcing domain
         #action['context'] = dict(parent_id=self.id)
-        action['domain'] = [('parent_id', '=', self.id)]
+        action['domain'] = self.get_hierarchical_domain(self.id)
+        return action
+
+    @api.multi
+    def action_hierarchy_up(self):
+        # #11382
+        action = self.env.ref('anytracker.action_kanbans').read()[0]
+        if self.parent_id:
+            # context not correctly passed, forcing domain
+            # action['context'] = dict(parent_id=self.parent_id.parent_id)
+            action['domain'] = self.get_hierarchical_domain(self.parent_id.parent_id.id)
         return action
 
     name = fields.Char(
