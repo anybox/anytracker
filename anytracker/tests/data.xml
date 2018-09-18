@@ -153,6 +153,7 @@
         <field name="progress">100.0</field>
     </record>
     <!-- test priorities -->
+    <!-- #11394 v11 hr_timesheet_invoice to_invoice factor depreciated
     <record id="discount_urgent" model="hr_timesheet_invoice.factor">
         <field name="name">+180%</field>
         <field name="factor">-80</field>
@@ -161,24 +162,25 @@
         <field name="name">+140%</field>
         <field name="factor">-40</field>
     </record>
+    -->
     <record id="test_prio_urgent" model="anytracker.priority">
         <field name="method_id" ref="method_test"/>
         <field name="name">URGENT</field>
         <field name="seq">30</field>
-        <field name="discount_id" ref="discount_urgent"/>
+        <field name="discount">-80</field>
     </record>
     <record id="test_prio_prio" model="anytracker.priority">
         <field name="method_id" ref="method_test"/>
         <field name="name">PRIORITY</field>
         <field name="seq">20</field>
-        <field name="discount_id" ref="discount_prio"/>
+        <field name="discount">-40</field>
     </record>
     <record id="test_prio_normal" model="anytracker.priority">
         <field name="method_id" ref="method_test"/>
         <field name="name">NORMAL</field>
         <field name="seq">10</field>
         <field name="default">1</field>
-        <field name="discount_id" ref="hr_timesheet_invoice.timesheet_invoice_factor1"/>
+        <field name="discount">0</field>
     </record>
     <!-- test importances -->
     <record id="test_imp_musthave" model="anytracker.importance">

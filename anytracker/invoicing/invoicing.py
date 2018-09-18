@@ -67,8 +67,13 @@ class Ticket(models.Model):
                 'name': 'Ticket %s: %s' % (t.number, t.name),
                 'ref': 'Ticket %s' % t.number,
                 'amount': 1.0,
-                'unit_amount': t.rating,
-                'to_invoice': t.project_id.analytic_account_id.to_invoice.id,
+                # #11394 v11 hr_timesheet_invoice.factor depreciated
+                # use priority discount in unit_amount (as amount 1 unit)
+                # negative discount for malus: example +20% as -20 (1.+0.2)
+                'unit_amount': t.priority_id and t.priority_id.discount \
+                    and t.rating * (1. - (t.priority_id.discount / 100.)) or t.rating,
+                # #11394 v11 hr_timesheet_invoice to_invoice factor depreciated
+                #'to_invoice': t.project_id.analytic_account_id.to_invoice.id,
                 'account_id': t.project_id.analytic_account_id.id,
                 'product_id': t.project_id.product_id.id,
                 # #11390 analytic journal depreciated in 11
@@ -76,12 +81,16 @@ class Ticket(models.Model):
                 'general_account_id': gen_account.id,
                 'user_id': user_id,
             }
-            if t.priority_id and t.priority_id.discount_id:
-                line_data['to_invoice'] = t.priority_id.discount_id.id
             analine = ANALINE.create(line_data)
-            analine.write(analine.on_change_unit_amount(
-                line_data['product_id'], line_data['unit_amount'],
-                None, journal_id=line_data['journal_id'])[0]['value'])
+            analine.on_change_unit_amount()  # use product_id and unit_amount
+            # analine.write( # v8
+            #     analine.on_change_unit_amount(
+            #         line_data['product_id'], line_data['unit_amount'],
+            #         None,
+            #         # #11390 analytic journal depreciated in 11
+            #         #journal_id=line_data['journal_id'])[0]['value'],
+            #     )
+            # )
             t.write({'analytic_line_id': analine.id})
             result.append(analine.id)
         return result
@@ -144,9 +153,16 @@ class Priority(models.Model):
     """
     _inherit = 'anytracker.priority'
 
-    discount_id = fields.Many2one(
-        'hr_timesheet_invoice.factor', 'Invoicing ratio',
-        help=u'set the invoicing ratio for tickets with this priority')
+    # #11394 hr_timesheet_invoice is depreciated, set instead an invoicing factor field
+    # discount_id = fields.Many2one(
+    #     'hr_timesheet_invoice.factor', 'Invoicing ratio',
+    #     help=u'set the invoicing ratio for tickets with this priority')
+    discount = fields.Float(
+        'Invoicing discount (%)',
+        required=True,
+        help="Invoicing discount in percentage. (0% for full invoicing)",
+        default=0.,
+    )
 
 
 class account_analytic_line(models.Model):

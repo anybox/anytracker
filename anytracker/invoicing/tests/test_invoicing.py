@@ -127,8 +127,10 @@ class TestInvoicing(SharedSetupTransactionCase):
         account = self.ANACCOUNT.create({
             'name': 'project',
             'type': 'contract',
-            'to_invoice': self.ref(
-                'hr_timesheet_invoice.timesheet_invoice_factor1')})
+            # #11394 v11 hr_timesheet_invoice to_invoice factor depreciated
+            #'to_invoice': self.ref(
+            #    'hr_timesheet_invoice.timesheet_invoice_factor1'),
+        })
         project.write({'analytic_account_id': account.id})
         # we create 3 tickets
         ticket1 = self.TICKET.with_context({'active_id': project.id}).create(
@@ -165,10 +167,27 @@ class TestInvoicing(SharedSetupTransactionCase):
         bouquet.create_analytic_lines()
 
         # we check the ratio
-        self.assertEquals(0, ticket1.analytic_line_id.to_invoice.factor)
-        self.assertEquals(-40, ticket2.analytic_line_id.to_invoice.factor)
-        self.assertEquals(-80, ticket3.analytic_line_id.to_invoice.factor)
-        self.assertEquals(0, ticket4.analytic_line_id.to_invoice.factor)
+        # # #11394 v11 analytic line factor depreciated
+        # self.assertEquals(0, ticket1.analytic_line_id.to_invoice.factor)
+        # self.assertEquals(-40, ticket2.analytic_line_id.to_invoice.factor)
+        # self.assertEquals(-80, ticket3.analytic_line_id.to_invoice.factor)
+        # self.assertEquals(0, ticket4.analytic_line_id.to_invoice.factor)
+        # check unit amount instead
+        self.assertEquals(
+            ticket1.t.rating,
+        )
+        self.assertEquals(
+            ticket2.analytic_line_id.unit_amount,
+            ticket2.t.rating * (1. - (-40 / 100.)),
+        )
+        self.assertEquals(
+            ticket3.analytic_line_id.unit_amount,
+            ticket3.t.rating * (1. - (-80 / 100.)),
+        )
+        self.assertEquals(
+            ticket1.analytic_line_id.unit_amount,
+            ticket1.t.rating,
+        )
 
     def test_cron(self):
         """ check that finished tickets are moved to invoicing after +24h
