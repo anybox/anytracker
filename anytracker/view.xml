@@ -364,6 +364,20 @@
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
                 <tree string="Tickets hierarchy">
+                    <button
+                        name="%(anytracker.action_hierarchy_line_select)d"
+                        type="action"
+                        attrs="{'invisible': [('nb_children', '=', 0)]}"
+                        string="Kanban"
+                        icon="fa-book"
+                    />
+                    <button
+                        name="dive_hierarchy"
+                        type="object"
+                        attrs="{'invisible': [('nb_children', '=', 0)]}"
+                        string="Dive"
+                        icon="fa-arrow-circle-down"
+                    />
                     <field name="name"/>
                     <field name="nb_children"/>
                 </tree>
@@ -374,6 +388,8 @@
         <!-- Still impossible to open directly in the form view :'( -->
         <record id="action_hierarchy_line_select" model="ir.actions.act_window">
             <field name="name">Tickets</field>
+            <!-- do not forget "type" field to prevent js 'No type for action error' from button action ! -->
+            <field name="type">ir.actions.act_window</field>
             <field name="res_model">anytracker.ticket</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
@@ -419,7 +435,7 @@
             <field name="view_mode">tree</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="tickets_hierarchy"/>
-            <field name="domain">[('parent_id', '=', False),'|', '|', ('project_id.participant_ids', 'in', uid), ('parent_id.participant_ids', 'in', uid), ('participant_ids', 'in', uid)]</field>
+            <field name="domain">[('parent_id', '=', context.get('partner_id', False)),'|', '|', ('project_id.participant_ids', 'in', uid), ('parent_id.participant_ids', 'in', uid), ('participant_ids', 'in', uid)]</field>
             <field name="binding_model_id" ref="anytracker.model_anytracker_ticket" />
             <field name="help">To create a new ticket, open the tree below and click on the relevant node, then
                 click on "Create"

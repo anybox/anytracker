@@ -456,6 +456,14 @@ class Ticket(models.Model):
                 ('number', operator, value),
                 ]
 
+    @api.multi
+    def dive_hierarchy(self):
+        action = self.env.ref('anytracker.action_kanbans').read()[0]
+        # context not correctly passed, forcing domain
+        #action['context'] = dict(parent_id=self.id)
+        action['domain'] = [('parent_id', '=', self.id)]
+        return action
+
     name = fields.Char(
         string='Title',
         track_visibility='onchange',
