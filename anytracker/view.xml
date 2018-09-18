@@ -110,6 +110,22 @@
                 </tree>
             </field>
         </record>
+        <record id="project_view_tree" model="ir.ui.view">
+            <field name="name">Projects</field>
+            <field name="model">anytracker.ticket</field>
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+                <tree string="Projects">
+                    <field name="number"/>
+                    <field name="breadcrumb"/>
+                    <field name="method_id"/>
+                    <field name="is_participant" invisible="True"/>
+                    <field name="parent_id" invisible="1"/>
+                    <field name="create_date"/>
+                    <field name="write_date"/>
+                </tree>
+            </field>
+        </record>
 
         <!-- Short list view to ease parent selection (should be replaced by dynatree) -->
         <record id="just_names" model="ir.ui.view">
@@ -328,10 +344,23 @@
         </record>
 
         <!-- hierarchical view for the tickets -->
+        <!--
         <record id="tickets_hierarchy" model="ir.ui.view">
             <field name="name">anytracker.ticket.hierarchy</field>
             <field name="model">anytracker.ticket</field>
             <field name="field_parent">subnode_ids</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <tree string="Tickets hierarchy">
+                    <field name="name"/>
+                    <field name="nb_children"/>
+                </tree>
+            </field>
+        </record>
+        -->
+        <record id="tickets_hierarchy" model="ir.ui.view">
+            <field name="name">anytracker.ticket.hierarchy</field>
+            <field name="model">anytracker.ticket</field>
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
                 <tree string="Tickets hierarchy">
@@ -368,20 +397,33 @@
         -->
 
         <!-- ACTIONS -->
+        <!--
+        group by project, domain 1st project level childs (parent with no parent) ('parent_id.parent_id', '=', False)
         <record model="ir.actions.act_window" id="action_kanbans">
             <field name="name">Hierarchy</field>
             <field name="res_model">anytracker.ticket</field>
             <field name="view_mode">tree</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="tickets_hierarchy"/>
-            <!-- #11382 group by project, start with 1st project level childs (parent with no parent) ('parent_id.parent_id', '=', False)-->
             <field name="domain">[('parent_id.parent_id', '=', False),'|', '|', ('project_id.participant_ids', 'in', uid), ('parent_id.participant_ids', 'in', uid), ('participant_ids', 'in', uid)]</field>
             <field name="binding_model_id" ref="anytracker.model_anytracker_ticket" />
             <field name="help">To create a new ticket, open the tree below and click on the relevant node, then
                 click on "Create"
             </field>
-            <!-- #11382 group by project -->
             <field name="context">{'search_default_tickets_by_project': 1}</field>
+        </record>
+        -->
+        <record model="ir.actions.act_window" id="action_kanbans">
+            <field name="name">Hierarchy</field>
+            <field name="res_model">anytracker.ticket</field>
+            <field name="view_mode">tree</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="tickets_hierarchy"/>
+            <field name="domain">[('parent_id', '=', False),'|', '|', ('project_id.participant_ids', 'in', uid), ('parent_id.participant_ids', 'in', uid), ('participant_ids', 'in', uid)]</field>
+            <field name="binding_model_id" ref="anytracker.model_anytracker_ticket" />
+            <field name="help">To create a new ticket, open the tree below and click on the relevant node, then
+                click on "Create"
+            </field>
         </record>
 
         <record model="ir.actions.act_window" id="tickets_action_form">
@@ -397,9 +439,12 @@
             <field name="res_model">anytracker.ticket</field>
             <field name="view_mode">tree,form</field>
             <field name="view_type">form</field>
+            <!--
             <field name="view_id" ref="tickets_kanban2"/>
+            -->
+            <field name="view_id" ref="project_view_tree"/>
             <field name="context">{
-                'tree_view_ref': 'node_view_tree',
+                'tree_view_ref': 'project_view_tree',
                 'search_default_isparticipant': 1,
                 'search_default_filter_projects': 1,
                 'search_default_unfinished': 1}
