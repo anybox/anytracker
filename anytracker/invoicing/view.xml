@@ -75,7 +75,7 @@
     <field name="inherit_id" ref="anytracker.view_anytracker_priority_form"/>
     <field name="arch" type="xml">
         <field name="deadline" position="after">
-            <field name="discount_id"/>
+            <field name="discount"/>
         </field>
     </field>
 </record>
@@ -84,7 +84,7 @@
     <field name="inherit_id" ref="anytracker.method_view_form_with_priorities"/>
     <field name="arch" type="xml">
         <field name="deadline" position="after">
-            <field name="discount_id"/>
+            <field name="discount"/>
         </field>
     </field>
 </record>

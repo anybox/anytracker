@@ -154,9 +154,11 @@ class Priority(models.Model):
     _inherit = 'anytracker.priority'
 
     # #11394 hr_timesheet_invoice is depreciated, set instead an invoicing factor field
-    # discount_id = fields.Many2one(
-    #     'hr_timesheet_invoice.factor', 'Invoicing ratio',
-    #     help=u'set the invoicing ratio for tickets with this priority')
+    # field left here for from previous version upgrade
+    discount_id = fields.Many2one(
+        'hr_timesheet_invoice.factor', 'Invoicing ratio',
+        help=u'set the invoicing ratio for tickets with this priority',
+    )
     discount = fields.Float(
         'Invoicing discount (%)',
         required=True,
