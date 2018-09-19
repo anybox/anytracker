@@ -295,10 +295,10 @@
                                             <img src="/anytracker/static/src/img/paperclip.png"/>
                                           </div>
                                         </t>
+                                        <!--
                                         <div class="oe_dropdown_toggle oe_dropdown_kanban"
                                              groups="anytracker.group_customer">
                                             <span class="oe_e">í</span>
-                                            <!--
                                             <ul class="oe_dropdown_menu">
                                                 <t t-if="widget.view.is_action_enabled('edit')">
                                                     <li>
@@ -306,8 +306,8 @@
                                                     </li>
                                                 </t>
                                             </ul>
-                                            -->
                                         </div>
+                                        -->
                                     </div>
                                 </div>
                             </div>
