@@ -260,8 +260,7 @@
                         <t t-name="kanban-box">
                             <div
                                 t-attf-class="oe_kanban_card oe_kanban_project oe_kanban_global_click"
-                                t-attf-style="background: #{record.color.raw_value};"
-                                style="margin-bottom: 20px"
+                                t-attf-style="margin-bottom: 20px; background-color: #{record.color.raw_value};"
                             >
 
                                 <div class="oe_kanban_content">
