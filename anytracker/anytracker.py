@@ -308,6 +308,17 @@ class Ticket(models.Model):
                 ('parent_id', '=', ticket.id),
                 ('type.has_children', '=', True)])
 
+    def _has_subnode(self):
+        """Has children that are themselves nodes ?"""
+        for ticket in self:
+            ticket.has_subnode = self.search(
+                [
+                    ('parent_id', '=', ticket.id),
+                    ('type.has_children', '=', True),
+                ],
+                count=True
+            ) > 0
+
     def _nb_children(self):
         for ticket in self:
             nb_children = ticket.search([
@@ -460,6 +471,7 @@ class Ticket(models.Model):
     def get_hierarchical_domain(self, parent_id):
         return [
             ('parent_id', '=', parent_id),
+            ('type.has_children', '=', True),
             '|', '|',
             ('project_id.participant_ids', 'in', self.env.user.id),
             ('parent_id.participant_ids', 'in', self.env.user.id),
@@ -519,6 +531,9 @@ class Ticket(models.Model):
         readonly=True,
         string='Sub-nodes',
         compute=_subnode_ids)
+    has_subnode = fields.Boolean(
+        string='Has sub-nodes ?',
+        compute=_has_subnode)
     shortened_description = fields.Text(
         string='Description',
         compute=_shortened_description)

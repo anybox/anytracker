@@ -2861,3 +2861,23 @@ msgstr "2ème ticket"
 
 #~ msgid "export freemind .mm file for generate by anytracker tree"
 #~ msgstr "Export d'un fichier Freemind .mm pour un arbre Anytracker"
+
+#. module: anytracker
+#: field:anytracker.ticket,has_subnodes:0
+msgid "Has sub-nodes ?"
+msgstr "A des Sous-noeuds ?"
+
+#. module: anytracker
+#: view:anytracker.ticket:anytracker.tickets_hierarchy
+msgid "Kanban"
+msgstr "Kanban"
+
+#. module: anytracker
+#: view:anytracker.ticket:anytracker.tickets_hierarchy
+msgid "Up"
+msgstr "Remonter"
+
+#. module: anytracker
+#: view:anytracker.ticket:anytracker.tickets_hierarchy
+msgid "Dive"
+msgstr "Plonger"

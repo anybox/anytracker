@@ -2550,3 +2550,23 @@ msgstr "1er ticket"
 #: field:anytracker.link,ticket_two:0
 msgid "Ticket two"
 msgstr "2ème ticket"
+
+#. module: anytracker
+#: field:anytracker.ticket,has_subnodes:0
+msgid "Has sub-nodes ?"
+msgstr "A des Sous-noeuds ?"
+
+#. module: anytracker
+#: view:anytracker.ticket:anytracker.tickets_hierarchy
+msgid "Kanban"
+msgstr "Kanban"
+
+#. module: anytracker
+#: view:anytracker.ticket:anytracker.tickets_hierarchy
+msgid "Up"
+msgstr "Remonter"
+
+#. module: anytracker
+#: view:anytracker.ticket:anytracker.tickets_hierarchy
+msgid "Dive"
+msgstr "Plonger"
