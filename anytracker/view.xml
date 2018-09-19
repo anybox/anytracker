@@ -287,7 +287,7 @@
                                     <div class="oe_kanban_bottom_left">
                                         <t groups="anytracker.group_customer">
                                           <div>
-                                            <a string="Edit" icon="gtk-edit" type="edit"/>
+                                            <span class="fa fa-edit"></span><a type="edit"/>
                                           </div>
                                         </t>
                                         <t t-if="record.has_attachment.raw_value">
