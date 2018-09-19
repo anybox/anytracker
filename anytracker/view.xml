@@ -283,9 +283,11 @@
                                       </span>
                                     </h4>
 
+                                    <t t-if="record.shortened_description.raw_value">
                                     <div>
                                         <t t-raw="record.shortened_description.raw_value"/>
                                     </div>
+                                    </t>
 
                                     <div class="oe_kanban_bottom_left">
                                         <t groups="anytracker.group_customer">
