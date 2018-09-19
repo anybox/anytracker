@@ -77,7 +77,7 @@ class Ticket(models.Model):
                 'account_id': t.project_id.analytic_account_id.id,
                 'product_id': t.project_id.product_id.id,
                 # #11390 analytic journal depreciated in 11
-                #'journal_id': t.project_id.analytic_journal_id.id,
+                # 'journal_id': t.project_id.analytic_journal_id.id,
                 'general_account_id': gen_account.id,
                 'user_id': user_id,
             }
@@ -108,7 +108,7 @@ class Ticket(models.Model):
             ('active', '=', True),
             ('write_date', '<=', yesterday),
             # #11390 analytic journal depreciated in 11
-            #('project_id.analytic_journal_id', '!=', False),
+            # ('project_id.analytic_journal_id', '!=', False),
             ('project_id.product_id', '!=', False),
             ('project_id.analytic_account_id', '!=', False),
             ('type.has_children', '=', False),
@@ -129,10 +129,10 @@ class Ticket(models.Model):
         'Product to invoice',
         help=(u"The product to invoice"))
     # #11390 analytic journal depreciated in 11, left here for previous version migration
-    analytic_journal_id = fields.Many2one(
-        'account.analytic.journal',
-        'Analytic journal',
-        help=(u"Analytic journal to use when invoicing"))
+    # analytic_journal_id = fields.Many2one(
+    #    'account.analytic.journal',
+    #    'Analytic journal',
+    #    help=(u"Analytic journal to use when invoicing"))
 
 
 class Bouquet(models.Model):
@@ -155,10 +155,11 @@ class Priority(models.Model):
 
     # #11394 hr_timesheet_invoice is depreciated, set instead an invoicing factor field
     # field left here for from previous version upgrade
-    discount_id = fields.Many2one(
-        'hr_timesheet_invoice.factor', 'Invoicing ratio',
-        help=u'set the invoicing ratio for tickets with this priority',
-    )
+
+    # discount_id = fields.Many2one(
+    #    'hr_timesheet_invoice.factor', 'Invoicing ratio',
+    #    help=u'set the invoicing ratio for tickets with this priority',
+    # )
     discount = fields.Float(
         'Invoicing discount (%)',
         required=True,
