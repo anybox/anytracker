@@ -46,3 +46,7 @@
 .oe_kanban_bottom_left div:first-child {
     margin-right: 0 !important;
 }
+
+.oe_kanban_card oe_kanban_project {
+    margin-bottom: 0px;
+}
