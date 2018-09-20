@@ -1,9 +1,10 @@
-from openerp import models, fields
-from openerp.exceptions import except_orm
-from .mindmap_parse import FreemindWriterHandler
-from .mindmap_parse import FreemindParser
 from io import StringIO
 from base64 import b64encode
+
+from odoo import models, fields
+from odoo.exceptions import except_orm
+from .mindmap_parse import FreemindWriterHandler
+from .mindmap_parse import FreemindParser
 
 
 # TODO complexity icon, mindmapfile to binary?, richtext content generation

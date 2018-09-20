@@ -1,6 +1,6 @@
 # coding: utf-8
-from openerp import models, fields, _, api
-from openerp.exceptions import except_orm
+from odoo import models, fields, _, api
+from odoo.exceptions import except_orm
 
 
 class Stage(models.Model):

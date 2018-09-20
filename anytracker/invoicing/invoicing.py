@@ -1,9 +1,9 @@
 # coding: utf-8
-from openerp import models, fields, api, _
-from openerp.exceptions import except_orm
+from odoo import models, fields, api, _
+from odoo.exceptions import except_orm
 import logging
 from datetime import datetime, timedelta
-from openerp import SUPERUSER_ID
+from odoo import SUPERUSER_ID
 
 logger = logging.getLogger(__file__)
 

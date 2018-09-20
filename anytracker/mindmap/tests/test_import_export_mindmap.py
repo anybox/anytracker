@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-from anybox.testing.openerp import SharedSetupTransactionCase
-from openerp import modules
-from openerp.exceptions import except_orm
 import base64
+
+from anybox.testing.openerp import SharedSetupTransactionCase
+from odoo import modules
+from odoo.exceptions import except_orm
 
 
 def get_mindmap_binary():

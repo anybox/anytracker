@@ -1,6 +1,7 @@
-from anybox.testing.openerp import SharedSetupTransactionCase
 from os.path import join
-from openerp.osv import orm
+
+from anybox.testing.openerp import SharedSetupTransactionCase
+from odoo.osv import orm
 
 
 class TestImportance(SharedSetupTransactionCase):

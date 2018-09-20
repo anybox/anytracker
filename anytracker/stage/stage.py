@@ -1,7 +1,7 @@
 # coding: utf-8
-from openerp import models, fields, api, _
-from openerp.exceptions import except_orm
-from openerp import SUPERUSER_ID
+from odoo import models, fields, api, _
+from odoo.exceptions import except_orm
+from odoo import SUPERUSER_ID
 
 
 class Stage(models.Model):

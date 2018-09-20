@@ -1,5 +1,5 @@
 from anybox.testing.openerp import SharedSetupTransactionCase
-from openerp.osv import orm
+from odoo.osv import orm
 from os.path import join
 import anybox.testing.datetime  # noqa
 from datetime import datetime, timedelta

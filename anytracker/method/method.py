@@ -1,5 +1,5 @@
-from openerp import models, fields
-from openerp.exceptions import except_orm
+from odoo import models, fields
+from odoo.exceptions import except_orm
 
 
 class Method(models.Model):

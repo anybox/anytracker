@@ -1,5 +1,5 @@
 from anybox.testing.openerp import SharedSetupTransactionCase
-from openerp.exceptions import except_orm
+from odoo.exceptions import except_orm
 import base64
 
 

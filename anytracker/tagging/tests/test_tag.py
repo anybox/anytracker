@@ -2,7 +2,7 @@
 from os.path import join
 from psycopg2 import IntegrityError
 from anybox.testing.openerp import SharedSetupTransactionCase
-from openerp.exceptions import AccessError
+from odoo.exceptions import AccessError
 
 
 class TestTag(SharedSetupTransactionCase):

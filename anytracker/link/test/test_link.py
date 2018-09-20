@@ -1,6 +1,6 @@
 # coding: utf-8
 from anybox.testing.openerp import SharedSetupTransactionCase
-from openerp.exceptions import AccessError
+from odoo.exceptions import AccessError
 from os.path import join
 
 

@@ -1,6 +1,6 @@
 # coding: utf-8
 from anybox.testing.openerp import SharedSetupTransactionCase
-from openerp.osv import orm
+from odoo.osv import orm
 from os.path import join
 
 

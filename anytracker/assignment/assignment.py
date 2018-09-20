@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-from openerp import models, fields, api
 import time
+
+from odoo import models, fields, api
 
 
 class Assignment(models.Model):
