@@ -66,28 +66,12 @@ class Ticket(models.Model):
         # #11381 group_expand: >= 10.0 new way to regroup by stage ids for kanban
         # allows display of empty columns (without any ticket) !
         # https://stackoverflow.com/questions/40751733/empty-groups-in-kanban-view-of-odoo10
-        def filter_stage(stage):
-            res = True
-            if stage.groups_allowed:  # no restriction if nothing in groups_allowed
-                res = bool(not groups.intersection(set(stage.groups_allowed.ids)))
-            # if res:
-            #     res = ticket_module.search(
-            #         [
-            #             ('stage_id', '=', stage.id),
-            #             ('id', 'child_of', ticket.id),
-            #         ], count=True) == 0
-            return res
-
-        ticket_module = self.env['anytracker.ticket']
-        ticket = ticket_module.browse(self.env.context.get('active_id'))
-        if not ticket.project_id:
-            return []
-        if not ticket.project_id.method_id:
-            return []
-        groups = set(self.user_base_groups())
-        return self.env['anytracker.stage'].search(
-            [('method_id', '=', ticket.project_id.method_id.id)],
-            order='sequence asc').filtered(filter_stage)
+        ticket = self.env['anytracker.ticket'].browse(self.env.context.get('active_id'))
+        return ticket.project_id and ticket.project_id.method_id \
+            and self.env['anytracker.stage'].search(
+                    [('method_id', '=', ticket.project_id.method_id.id)],
+                    order='sequence asc'
+            ) or []
 
     @api.multi
     def stage_previous(self):
