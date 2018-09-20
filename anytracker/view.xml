@@ -240,7 +240,8 @@
             <field name="name">Anytracker - tickets</field>
             <field name="model">anytracker.ticket</field>
             <field name="arch" type="xml">
-                <kanban create="0" group_create="0" class="oe_background_grey o_kanban_dashboard o_account_kanban">
+                <kanban create="0" group_create="0"
+                        class="oe_background_grey o_kanban_dashboard o_account_kanban">
                     <field name="color"/>
                     <field name="number"/>
                     <field name="permalink"/>
@@ -414,7 +415,8 @@
                 'search_default_filter_tasks': 1,
                 'search_default_isparticipant': 1,
                 'search_default_unfinished': 1,
-                'group_by': 'stage_id'}
+                'group_by': 'stage_id'
+                }
             </field>
             <field name="binding_model_id" ref="anytracker.model_anytracker_ticket" />
         </record>

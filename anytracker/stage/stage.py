@@ -61,34 +61,33 @@ class Ticket(models.Model):
 
     _inherit = 'anytracker.ticket'
 
-    @api.multi
-    def _read_group_stage_ids(self, domain, read_group_order=None,
-                              access_rights_uid=None, context=None):
-        """return all stage names for the group_by directive, so that the kanban
-        has all columns even if there is no ticket in a stage.
-        """
-        access_rights_uid = access_rights_uid or self.env.uid
-        # XXX improve the filter to handle categories
-        STAGE = self.env['anytracker.stage']
-        TICKET = self.env['anytracker.ticket']
-        ticket = TICKET.browse(self.env.context.get('active_id'))
+    @api.model
+    def _read_group_stages(self, stages, domain, order):
+        # #11381 group_expand: >= 10.0 new way to regroup by stage ids for kanban
+        # allows display of empty columns (without any ticket) !
+        # https://stackoverflow.com/questions/40751733/empty-groups-in-kanban-view-of-odoo10
+        def filter_stage(stage):
+            res = True
+            if stage.groups_allowed:  # no restriction if nothing in groups_allowed
+                res = bool(not groups.intersection(set(stage.groups_allowed.ids)))
+            # if res:
+            #     res = ticket_module.search(
+            #         [
+            #             ('stage_id', '=', stage.id),
+            #             ('id', 'child_of', ticket.id),
+            #         ], count=True) == 0
+            return res
+
+        ticket_module = self.env['anytracker.ticket']
+        ticket = ticket_module.browse(self.env.context.get('active_id'))
         if not ticket.project_id:
-            return [], {}
-        method = ticket.project_id.method_id
-        if not method:
-            return [], {}
-        stages = STAGE.search([('method_id', '=', method.id)])
+            return []
+        if not ticket.project_id.method_id:
+            return []
         groups = set(self.user_base_groups())
-        # we only fold empty and forbidden columns
-        # (TODO: replace progress with state)
-        folds = {
-            s.id:
-                bool(s.groups_allowed
-                     and not groups.intersection(set(s.groups_allowed.ids))
-                     and not TICKET.search([('stage_id', '=', s.id),
-                                            ('id', 'child_of', ticket.id)]))
-            for s in stages}
-        return [(s.id, s.name) for s in stages], folds
+        return self.env['anytracker.stage'].search(
+            [('method_id', '=', ticket.project_id.method_id.id)],
+            order='sequence asc').filtered(filter_stage)
 
     @api.multi
     def stage_previous(self):
@@ -302,7 +301,12 @@ class Ticket(models.Model):
         track_visibility='onchange',
         default=_default_stage,
         index=True,
-        domain="[('method_id','=',method_id)]")
+        domain="[('method_id','=',method_id)]",
+        # #11381 group_expand: >= 10.0 new way to regroup by stage ids for kanban
+        # allows display of empty columns (without any ticket) !
+        # https://stackoverflow.com/questions/40751733/empty-groups-in-kanban-view-of-odoo10
+        group_expand = '_read_group_stages',
+    )
     progress = fields.Float(
         string='Progress',
         default=0.0,
@@ -317,10 +321,6 @@ class Ticket(models.Model):
                                   string='Constant one',
                                   store=True,
                                   invisible=True)
-
-    _group_by_full = {
-        'stage_id': _read_group_stage_ids,
-    }
 
 
 class Method(models.Model):
