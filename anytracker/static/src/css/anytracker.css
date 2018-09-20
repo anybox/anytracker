@@ -4,6 +4,7 @@
 .openerp .oe_form_sheet_width {
     max-width: 960px;
 }
+
 /* force hscroll of kanban dashboard: flex-flow row wrap off */
 .o_kanban_view.o_kanban_dashboard {
     -ms-flex-flow: row nowrap;
@@ -11,8 +12,20 @@
     -webkit-flex-flow: row nowrap;
     flex-flow: row nowrap;
 }
+
 .oe_kanban_project {
     min-height: 0px !important;
+}
+
+/* kanban column */
+.o_kanban_group {
+    -ms-flex: 0 0 auto;
+    -moz-flex: 0 0 auto;
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 auto;
+    flex: 0 0 auto;
+    padding: 0 32px 16px 16px;
+    border-right: 1px solid #DDDDDD;
 }
 
 .oe_kanban_gravatar {
