@@ -2264,12 +2264,12 @@ msgstr "Total des évaluations"
 #: model:ir.actions.act_window,name:anytracker.act_trash
 #: model:ir.ui.menu,name:anytracker.menu_trash
 msgid "Trash"
-msgstr "Poubelle"
+msgstr "Archive"
 
 #. module: anytracker
 #: selection:anytracker.ticket,state:0
 msgid "Trashed"
-msgstr "À la poubelle"
+msgstr "Archivé"
 
 #. module: anytracker
 #: model:anytracker.complexity,name:anytracker.complexity_maintenance_trivial
