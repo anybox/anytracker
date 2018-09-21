@@ -371,7 +371,7 @@
         <record id="tickets_hierarchy" model="ir.ui.view">
             <field name="name">anytracker.ticket.hierarchy</field>
             <field name="model">anytracker.ticket</field>
-            <field name="priority" eval="8"/>
+            <field name="priority" eval="9999"/>
             <field name="arch" type="xml">
                 <tree string="Tickets hierarchy">
                     <field name="has_subnode" invisible="1"/>
