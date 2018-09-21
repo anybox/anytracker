@@ -32,8 +32,8 @@
               <field name="name"/>
               <field name="importance_id"/>
               <field name="stage_id"/>
-              <button name="stage_previous" string="" type="object" icon="gtk-go-back" />
-              <button name="stage_next" string="" type="object" icon="gtk-go-forward" />
+              <button name="stage_previous" string="" type="object" icon="fa-arrow-left" />
+              <button name="stage_next" string="" type="object" icon="fa-arrow-right" />
               <field name="progress" widget="progressbar"/>
               <field name="priority_id"/>
             </tree>

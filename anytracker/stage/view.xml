@@ -108,9 +108,9 @@
         <xpath expr="/tree/field[@name='breadcrumb']" position="after">
             <field name="stage_id"/>
               <button name="stage_previous" string=""
-                      type="object" icon="gtk-go-back" />
+                      type="object" icon="fa-arrow-left" />
               <button name="stage_next" string=""
-                type="object" icon="gtk-go-forward" />
+                type="object" icon="fa-arrow-right" />
             <field name="progress" string="Progress" widget="progressbar"/>
         </xpath>
     </field>

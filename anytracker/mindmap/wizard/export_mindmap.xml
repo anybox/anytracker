@@ -20,7 +20,7 @@
                     <group colspan="4" col="6">
                         <label string ="" colspan="2"/>
                         <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                        <button icon="terp-gtk-go-back-rtl" string="export file" name="execute_export" type="object"/>
+                        <button icon="fa-cog" string="export file" name="execute_export" type="object"/>
                     </group>
                 </form>
             </field>
