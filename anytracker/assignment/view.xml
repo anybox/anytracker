@@ -36,7 +36,7 @@
 <record id="assignment_ticket_tree" model="ir.ui.view">
     <field name="name">Tickets</field>
     <field name="model">anytracker.ticket</field>
-    <field name="priority" eval="16"/>
+    <field name="priority" eval="99"/>
     <field name="inherit_id" ref="anytracker.ticket_tree"/>
     <field name="arch" type="xml">
         <xpath expr="//field[@name='breadcrumb']" position="after">
