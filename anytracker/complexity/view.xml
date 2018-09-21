@@ -33,10 +33,10 @@
             <page string="Ratings" groups="anytracker.group_member,anytracker.group_partner">
             <group col="6" colspan="4">
                 <field name="my_rating" attrs="{'invisible': [('child_ids', '!=', [])]}" groups="anytracker.group_member,anytracker.group_partner" options='{"quick_create": false}' domain="[('method_id','=',method_id)]"/>
-                <button string="Rate subtickets..." icon="gtk-execute" type="action" name="%(action_quickrating)d" attrs="{'invisible': [('child_ids', '=', [])]}" groups="anytracker.group_member,anytracker.group_partner"/>
+                <button string="Rate subtickets..." icon="fa-cog" type="action" name="%(action_quickrating)d" attrs="{'invisible': [('child_ids', '=', [])]}" groups="anytracker.group_member,anytracker.group_partner"/>
                 <field name="risk" string="Risk level" readonly="1"/>
                 <button name="recompute_subtickets" string="Recompute risk and rating"
-                        type="object" icon="gtk-execute" attrs="{'invisible': [('child_ids', '=', [])]}" groups="anytracker.group_manager"/>
+                        type="object" icon="fa-cog" attrs="{'invisible': [('child_ids', '=', [])]}" groups="anytracker.group_manager"/>
 
             </group>
             <group col="6" colspan="4" attrs="{'invisible': [('child_ids', '!=', [])]}">
@@ -93,7 +93,7 @@
     <field name="arch" type="xml">
         <xpath expr="/tree/field[@name='breadcrumb']" position="after">
             <field name="rating"/>
-            <button string="Rate subtickets" icon="gtk-execute" type="action" name="%(action_quickrating)d"/>
+            <button string="Rate subtickets" icon="fa-cog" type="action" name="%(action_quickrating)d"/>
             <field name="risk" string="Risk level" />
         </xpath>
     </field>

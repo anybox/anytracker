@@ -72,7 +72,7 @@
             type="object" icon="fa-arrow-right" attrs="{'invisible': [('child_ids', '!=', [])]}" groups="anytracker.group_member,anytracker.group_partner"/>
           <field name="progress" string="Progress" widget="progressbar"/>
           <button name="recompute_progress" string="Recompute progress"
-            type="object" icon="gtk-execute" attrs="{'invisible': [('child_ids', '=', [])]}" groups="anytracker.group_manager"/>
+            type="object" icon="fa-cog" attrs="{'invisible': [('child_ids', '=', [])]}" groups="anytracker.group_manager"/>
         </group>
         </page>
       </xpath>
