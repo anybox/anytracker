@@ -1,6 +1,7 @@
 from anybox.testing.openerp import SharedSetupTransactionCase
 from openerp.exceptions import except_orm
 import base64
+from openerp.addons.anytracker.utils import fake_mail_message_creation
 
 
 class TestAnytracker(SharedSetupTransactionCase):
@@ -20,7 +21,7 @@ class TestAnytracker(SharedSetupTransactionCase):
         cls.member_id = cls.USER.create(
             {'name': 'Member',
              'login': 'member',
-             'email': 'member@localhost',
+             'email': 'member@example.com',
              'groups_id': [(6, 0,
                            [cls.ref('anytracker.group_member'),
                             cls.ref('base.group_user')])]}
@@ -28,7 +29,7 @@ class TestAnytracker(SharedSetupTransactionCase):
         cls.manager_id = cls.USER.create(
             {'name': 'Manager',
              'login': 'manager',
-             'email': 'manager@localhost',
+             'email': 'manager@example.com',
              'groups_id': [(6, 0,
                            [cls.ref('base.group_user'),
                             cls.ref('anytracker.group_manager')])]}
@@ -36,7 +37,7 @@ class TestAnytracker(SharedSetupTransactionCase):
         cls.customer_id = cls.USER.create(
             {'name': 'Customer',
              'login': 'customer',
-             'email': 'customer@localhost',
+             'email': 'customer@example.com',
              'groups_id': [(6, 0,
                            [cls.ref('anytracker.group_customer')])]}
         ).id
@@ -199,7 +200,7 @@ class TestAnytracker(SharedSetupTransactionCase):
         # The customer can access the member user
         member = self.USER.browse(self.member_id)
         mb_partner = member.sudo(self.customer_id).partner_id
-        self.assertEquals(mb_partner.email, 'member@localhost')
+        self.assertEquals(mb_partner.email, 'member@example.com')
         # But not if the member is no more in the project
         project.write({'participant_ids': [(3, self.member_id)]})
         # (cache should be cleared)
@@ -372,6 +373,7 @@ class TestAnytracker(SharedSetupTransactionCase):
         self.assertEquals(project1.rating, 0.0)
         self.assertEquals(project1.progress, 1.0)
 
+    @fake_mail_message_creation
     def test_ticket_type(self):
         """ Tickets have a type """
         # create a first project with 1 subnode and 2 tickets

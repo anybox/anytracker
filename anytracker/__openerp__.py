@@ -102,7 +102,6 @@ http://www.famfamfam.com/lab/icons/silk/
         # model access:
         'security/ir.model.access.csv',
         'method/ir.model.access.csv',
-        'history/ir.model.access.csv',
         'stage/ir.model.access.csv',
         'tagging/ir.model.access.csv',
         'complexity/ir.model.access.csv',

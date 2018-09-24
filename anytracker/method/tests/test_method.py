@@ -22,7 +22,7 @@ class TestMethod(SharedSetupTransactionCase):
         cls.member_id = USER.create(
             {'name': 'Member',
              'login': 'member',
-             'email': 'member@localhost',
+             'email': 'member@example.com',
              'groups_id': [(6, 0,
                            [cls.ref('anytracker.group_member'),
                             cls.ref('base.group_user')])]}
@@ -30,14 +30,14 @@ class TestMethod(SharedSetupTransactionCase):
         cls.customer_id = USER.create(
             {'name': 'Customer',
              'login': 'customer',
-             'email': 'customer@localhost',
+             'email': 'customer@example.com',
              'groups_id': [(6, 0,
                            [cls.ref('anytracker.group_customer')])]}
         ).id
         cls.manager_id = USER.create(
             {'name': 'Manager',
              'login': 'manager',
-             'email': 'manager@localhost',
+             'email': 'manager@example.com',
              'groups_id': [(6, 0,
                            [cls.ref('anytracker.group_manager'),
                             cls.ref('account.group_account_user')])]}

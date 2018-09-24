@@ -124,10 +124,28 @@
             <field name="arch" type="xml">
                 <form string="Ticket">
                     <header>
-                        <button name="trash" string="Trash" type="object" states="running"/>
-                        <button name="reactivate" string="Reactivate" type="object" states="trashed"/>
                     </header>
                     <sheet>
+                        <div class="oe_right oe_button_box" name="buttons"> 
+                            <button 
+                                class="oe_stat_button"
+                                id="trash_button"
+                                name="trash" 
+                                type="object" 
+                                icon="fa-trash"
+                                states="running">
+                                <div>Trash</div>
+                            </button>
+                            <button 
+                                class="oe_stat_button"
+                                id="reactivate_button"
+                                name="reactivate" 
+                                type="object" 
+                                icon="fa-undo"
+                                states="trashed">
+                                <div>Reactivate</div>
+                            </button>
+                        </div>
                         <group>
                             <group>
                                 <field name="parent_id" colspan="4" nolabel="1" placeholder="Project (or parent ticket)"
@@ -178,18 +196,6 @@
                                 <field name="participant_ids" colspan="4" widget="many2many_tags"/>
                             </page>
 
-                            <page string="History" groups="anytracker.group_member,anytracker.group_partner">
-                                <group groups="anytracker.group_member,anytracker.group_partner">
-                                    <field name="history_ids" nolabel="1" colspan="4" readonly="1"
-                                           groups="anytracker.group_member,anytracker.group_partner">
-                                        <tree string="History">
-                                            <field name="create_uid" groups="anytracker.group_member,anytracker.group_partner"/>
-                                            <field name="create_date" groups="anytracker.group_member,anytracker.group_partner"/>
-                                            <field name="modification" groups="anytracker.group_member,anytracker.group_partner"/>
-                                        </tree>
-                                    </field>
-                                </group>
-                            </page>
                         </notebook>
                     </sheet>
                     <div class="oe_chatter">
@@ -314,7 +320,7 @@
             <field name="model">anytracker.ticket</field>
             <field name="field_parent">subnode_ids</field>
             <field name="arch" type="xml">
-                <tree string="Tickets hierarchy">
+                <tree string="Tickets hierarchy" default_order="char name desc">
                     <field name="name"/>
                     <field name="nb_children"/>
                 </tree>

@@ -5,6 +5,7 @@ from itertools import groupby
 
 def risk_mean(risks):
     risks = [(1 - r) for r in risks if r is not None]
+
     if len(risks) == 0:
         return 0.5
     return 1 - reduce(lambda x, y: x * y, risks) ** (1. / len(risks))
@@ -298,6 +299,7 @@ class Ticket(models.Model):
         string='Color')
     rating = fields.Float(
         'Rating',
+        track_visibility='onchange',
         group_operator="sum")
 
 

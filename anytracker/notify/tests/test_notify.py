@@ -20,7 +20,7 @@ class TestNotify(SharedSetupTransactionCase):
         cls.member_id = cls.USER.create(
             {'name': 'Member',
              'login': 'member',
-             'email': 'member@localhost',
+             'email': 'member@example.com',
              'groups_id':
                 [(6, 0, [cls.ref('anytracker.group_member'),
                          cls.ref('base.group_user')])]}
@@ -28,7 +28,7 @@ class TestNotify(SharedSetupTransactionCase):
         cls.member2_id = cls.USER.create(
             {'name': 'Member2',
              'login': 'member2',
-             'email': 'member2@localhost',
+             'email': 'member2@example.com',
              'groups_id': [(6, 0,
                            [cls.ref('anytracker.group_member'),
                             cls.ref('base.group_user')])]}
@@ -36,7 +36,7 @@ class TestNotify(SharedSetupTransactionCase):
         cls.customer_id = cls.USER.create(
             {'name': 'Customer',
              'login': 'customer',
-             'email': 'customer@localhost',
+             'email': 'customer@example.com',
              'groups_id': [(6, 0, [cls.ref('anytracker.group_customer')])]}
         ).id
 
@@ -54,29 +54,29 @@ class TestNotify(SharedSetupTransactionCase):
             'notify_multiple': True,
             'notify_template_id': self.ref('anytracker.email_template_test')})
         # we check the number of mails in the queue
-        nb_mails = self.MAIL.search([], count=True)
+        nb_mails = self.MAIL.search([('state', '=', 'outgoing')], count=True)
         # create a ticket
         ticket = self.TICKET.with_context({'active_id': project.id}).create({
             'name': 'notifying ticket',
             'parent_id': project.id, })
         # we should now have one more message
-        self.assertEquals(self.MAIL.search([], count=True) - nb_mails, 1)
+        self.assertEquals(self.MAIL.search([('state', '=', 'outgoing')], count=True) - nb_mails, 1)
 
         # now we move the ticket to another column which should notify as well
         ticket.write({'stage_id': self.ref('anytracker.stage_test_todo')})
-        self.assertEquals(self.MAIL.search([], count=True) - nb_mails, 2)
+        self.assertEquals(self.MAIL.search([('state', '=', 'outgoing')], count=True) - nb_mails, 2)
 
         # If we move the column to the initial column it won't notify again
         ticket.write({'stage_id': self.ref('anytracker.stage_test_draft')})
-        self.assertEquals(self.MAIL.search([], count=True) - nb_mails, 2)
+        self.assertEquals(self.MAIL.search([('state', '=', 'outgoing')], count=True) - nb_mails, 2)
 
         # if we move ticket to the ever-notifying column, it will notify again
         ticket.write({'stage_id': self.ref('anytracker.stage_test_todo')})
-        self.assertEquals(self.MAIL.search([], count=True) - nb_mails, 3)
+        self.assertEquals(self.MAIL.search([('state', '=', 'outgoing')], count=True) - nb_mails, 3)
 
         # if we move the ticket to a non-notifying column, it won't notify
         ticket.write({'stage_id': self.ref('anytracker.stage_test_done')})
-        self.assertEquals(self.MAIL.search([], count=True) - nb_mails, 3)
+        self.assertEquals(self.MAIL.search([('state', '=', 'outgoing')], count=True) - nb_mails, 3)
 
         # we set the 1st column as urgent & set an email so that email is sent
         self.STAGE.browse(self.ref('anytracker.stage_test_draft')).write({
@@ -87,13 +87,13 @@ class TestNotify(SharedSetupTransactionCase):
         urgent = self.TICKET.with_context({'active_id': project.id}).create({
             'name': 'urgent notifying ticket',
             'parent_id': project.id, })
-        self.assertEquals(self.MAIL.search([], count=True) - nb_mails, 3)
+        self.assertEquals(self.MAIL.search([('state', '=', 'outgoing')], count=True) - nb_mails, 3)
         self.assertEquals(len(urgent.notified_stage_ids), 1)
 
         # we move forth and back the ticket, we shouldn't have more notif
         ticket.write({'stage_id': self.ref('anytracker.stage_test_done')})
         ticket.write({'stage_id': self.ref('anytracker.stage_test_draft')})
-        self.assertEquals(self.MAIL.search([], count=True) - nb_mails, 3)
+        self.assertEquals(self.MAIL.search([('state', '=', 'outgoing')], count=True) - nb_mails, 3)
         self.assertEquals(len(urgent.notified_stage_ids), 1)
 
     def test_participants(self):

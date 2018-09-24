@@ -21,7 +21,7 @@ class TestTag(SharedSetupTransactionCase):
         cls.member = USER.create({
             'name': 'test member',
             'login': 'test',
-            'email': 'member@localhost',
+            'email': 'member@example.com',
             'groups_id': [(6, 0,
                            [cls.ref('anytracker.group_member')])]}
         )

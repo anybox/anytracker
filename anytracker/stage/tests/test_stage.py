@@ -2,6 +2,7 @@
 from anybox.testing.openerp import SharedSetupTransactionCase
 from openerp.osv import orm
 from os.path import join
+from openerp.addons.anytracker.utils import fake_mail_message_creation
 
 
 class TestStage(SharedSetupTransactionCase):
@@ -19,7 +20,7 @@ class TestStage(SharedSetupTransactionCase):
         cls.member_id = USER.create({
             'name': 'test member',
             'login': 'test',
-            'email': 'member@localhost',
+            'email': 'member@example.com',
             'groups_id': [(6, 0,
                            [cls.ref('anytracker.group_member')])]}
         ).id
@@ -29,6 +30,7 @@ class TestStage(SharedSetupTransactionCase):
              'groups_id': [(6, 0, [cls.ref('anytracker.group_customer')])]}
         ).id
 
+    @fake_mail_message_creation
     def test_move_ticket(self):
         """ Move ticket to a particular stage with different kind of user """
         project = self.TICKET.create({

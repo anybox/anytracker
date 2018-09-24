@@ -453,12 +453,15 @@ class Ticket(models.Model):
 
     name = fields.Char(
         string='Title',
+        track_visibility='onchange',
         required=True)
     number = fields.Integer(
+        track_visibility='onchange',
         string='Number')
     type = fields.Many2one(
         'anytracker.ticket.type',
         string='Type',
+        track_visibility='onchange',
         default=_default_type,
         required=True)
     permalink = fields.Char(
@@ -494,6 +497,7 @@ class Ticket(models.Model):
          (None, 'Will be computed'),
          (1, 'Half a day')],
         default=0,
+        track_visibility='onchange',
         string='duration')
     child_ids = fields.One2many(
         'anytracker.ticket',
@@ -516,15 +520,18 @@ class Ticket(models.Model):
         'anytracker.ticket',
         string='Parent',
         default=_default_parent_id,
+        track_visibility='onchange',
         ondelete='cascade')
     project_id = fields.Many2one(
         'anytracker.ticket',
         string='Project',
         ondelete='cascade',
         domain=[('parent_id', '=', False)],
+        track_visibility='onchange',
         readonly=True)
     requester_id = fields.Many2one(
         'res.users',
+        track_visibility='onchange',
         string='Requester')
     parent_left = fields.Integer(
         select=True,

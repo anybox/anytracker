@@ -58,7 +58,8 @@ class Ticket(models.Model):
 
     importance_id = fields.Many2one(
         'anytracker.importance',
-        'Importance')
+        'Importance',
+        track_visibility='onchange')
     importance = fields.Integer(
         compute='_importance',
         string='Importance',

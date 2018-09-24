@@ -21,19 +21,19 @@ class TestBouquets(SharedSetupTransactionCase):
         cls.member_id = USER.create({
             'name': 'anytracker member',
             'login': 'at.user',
-            'email': 'member@localhost',
+            'email': 'member@example.com',
             'groups_id': [(6, 0, [cls.ref('anytracker.group_member')])],
         }).id
         cls.customer_id = USER.create({
             'name': "anytracker customer",
             'login': 'at.cust',
-            'email': 'customer@localhost',
+            'email': 'customer@example.com',
             'groups_id': [(6, 0, [cls.ref('anytracker.group_customer')])],
         }).id
         cls.partner_id = USER.create({
             'name': "anytracker partner",
             'login': 'at.part',
-            'email': 'partner@localhost',
+            'email': 'partner@example.com',
             'groups_id': [(6, 0, [cls.ref('anytracker.group_partner')])],
         }).id
         cls.project = cls.TICKET.create({
@@ -76,7 +76,7 @@ class TestBouquets(SharedSetupTransactionCase):
             )
             # checking both search and read perms in one shot:
             self.assertUniqueWithValues(
-                self.bouquet_obj, [], {'name': u"Un bouquet ?"}
+                self.bouquet_obj, [('name', '=', u"Un bouquet ?")], {'name': u"Un bouquet ?"}
             )
 
     def test_read_perm_non_participating(self):
@@ -95,7 +95,7 @@ class TestBouquets(SharedSetupTransactionCase):
                 'participant_ids': [(6, 0, [])]
             }
         )
-        self.assertNoRecord(self.bouquet_obj, [])
+        self.assertNoRecord(self.bouquet_obj, [('name', '=', u'Un bouquet ?')])
 
     def test_read_perm_participating_mixed(self):
         """A user participating in any project related to the bouquet
@@ -117,7 +117,7 @@ class TestBouquets(SharedSetupTransactionCase):
         # although one of its tickets is not
         self.uid = self.member_id
         self.assertEqual(
-            self.searchUnique(self.bouquet_obj, []),
+            self.searchUnique(self.bouquet_obj, [('name', '=', u'Un bouquet ?')]),
             self.bouquet.id)
         self.assertEqual(
             1, len(self.TICKET.search([('id', '=', self.ticket1.id)])))
@@ -125,7 +125,7 @@ class TestBouquets(SharedSetupTransactionCase):
         # although one of its tickets is not
         self.uid = self.customer_id
         self.assertEqual(
-            self.searchUnique(self.bouquet_obj, []),
+            self.searchUnique(self.bouquet_obj, [('name', '=', u'Un bouquet ?')]),
             self.bouquet.id)
         self.assertNoRecord(
             self.ticket_obj,
@@ -133,7 +133,7 @@ class TestBouquets(SharedSetupTransactionCase):
         # same for partner
         self.uid = self.partner_id
         self.assertEqual(
-            self.searchUnique(self.bouquet_obj, []),
+            self.searchUnique(self.bouquet_obj, [('name', '=', u'Un bouquet ?')]),
             self.bouquet.id)
         self.assertNoRecord(
             self.ticket_obj,

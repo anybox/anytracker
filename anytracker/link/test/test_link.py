@@ -25,7 +25,7 @@ class TestLink(SharedSetupTransactionCase):
         cls.member_id = USER.create({
             'name': 'test member',
             'login': 'test',
-            'email': 'member@localhost',
+            'email': 'member@example.com',
             'groups_id': [(6, 0,
                            [cls.ref('anytracker.group_member')])]}
         ).id

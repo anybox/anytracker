@@ -1,6 +1,7 @@
 from anybox.testing.openerp import SharedSetupTransactionCase
 from os.path import join
 from openerp.osv import orm
+from openerp.addons.anytracker.utils import fake_mail_message_creation
 
 
 class TestPriority(SharedSetupTransactionCase):
@@ -26,6 +27,7 @@ class TestPriority(SharedSetupTransactionCase):
                            [cls.ref('anytracker.group_customer')])]}
         ).id
 
+    @fake_mail_message_creation
     def test_priority(self):
         # create a project and a ticket
         project = self.TICKET.create({

@@ -1,6 +1,7 @@
 from anybox.testing.openerp import SharedSetupTransactionCase
 from openerp.exceptions import except_orm
 from os.path import join
+from openerp.addons.anytracker.utils import fake_mail_message_creation
 
 
 class TestComplexity(SharedSetupTransactionCase):
@@ -46,6 +47,7 @@ class TestComplexity(SharedSetupTransactionCase):
                            [cls.ref('anytracker.group_customer')])]}
         ).id
 
+    @fake_mail_message_creation
     def test_rating(self):
         """ Simple rating scenario: a manager or member or partner can rate,
         not a customer.
@@ -72,6 +74,7 @@ class TestComplexity(SharedSetupTransactionCase):
             ticket.sudo(self.customer_id).write,
             {'my_rating': self.complexity2})
 
+    @fake_mail_message_creation
     def test_none_rating(self):
         """ Removing ratings linked to a ticket
         and ensure that this ticket has 0.0 value
@@ -92,6 +95,7 @@ class TestComplexity(SharedSetupTransactionCase):
         ticket1.sudo(self.member_id).write({'my_rating': self.complexity2})
         self.assertEquals(ticket1.rating, 2)
 
+    @fake_mail_message_creation
     def test_compute_rating(self):
         """ Create several tickets for one project. Rate tickets, remove one and
         finally rate ticket with different user.
@@ -143,6 +147,7 @@ class TestComplexity(SharedSetupTransactionCase):
         ticket1.sudo(self.member_id).write({
             'my_rating': self.ref('anytracker.complexity7')})
 
+    @fake_mail_message_creation
     def test_get_complexity_color(self):
         """ test the color of tickets
         """
