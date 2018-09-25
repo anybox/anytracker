@@ -62,9 +62,10 @@ You can run the tests from a buildout with:
 
   $ ./bin/openerp_command run-tests -d dbname -m anytracker
 
-Or better, if you installed nose in your buildout
+Or better, if you installed nose in your buildout.
+Add nose-exclude egg in your buildout. (exclude plugin for nose --exclude-dir)
 
-  $ ./bin/nosetests -d dbname -- addons-anytracker/anytracker/
+  $ ./bin/nosetests -d dbname -- addons-anytracker/anytracker/ --exclude-dir=anytracker/anytracker/history
 
 Author
 ======
@@ -83,6 +84,7 @@ Contributors
 - Colin Goutte
 - Clovis Nzouendjou Nana
 - Delphine Lemire
+- Vincent Greiner
 
 Other contributions (with tests) are welcome from anyone through Bitbucket pull requests.
 
