@@ -51,11 +51,11 @@ class FreemindWriterHandler(XMLGenerator):
         startElement = '''<map version="0.9.0">
 <!-- To view this file, download FreeMind from http://freemind.sourceforge.net -->
 '''
-        self._write(startElement.decode())
+        self._write(startElement)
 
     def endDocument(self):
         stopElement = '</' + 'map' + '>' + '\n'
-        self._write(stopElement.decode())
+        self._write(stopElement)
 
     def startElement(self, tag, attrs={}):
         attrs_write = {
