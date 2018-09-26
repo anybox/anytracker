@@ -10,8 +10,10 @@ class TestBouquets(SharedSetupTransactionCase):
         cls.ref = classmethod(lambda cls, xid: cls.env.ref(xid).id)
         cls.TICKET = cls.env['anytracker.ticket']
         cls.BOUQUET = cls.env['anytracker.bouquet']
-        cls.ticket_obj = cls.registry['anytracker.ticket']
-        cls.bouquet_obj = cls.registry['anytracker.bouquet']
+        #cls.ticket_obj = cls.registry['anytracker.ticket']
+        cls.ticket_obj = cls.TICKET
+        # cls.bouquet_obj = cls.registry['anytracker.bouquet']
+        cls.bouquet_obj = cls.BOUQUET
         # we delete this bouquet because it makes test fails (when using database backup)
         bouquet_sprint_mlf = cls.BOUQUET.search([('name', '=', u'Sprint MLF: juillet')])
         if bouquet_sprint_mlf:
