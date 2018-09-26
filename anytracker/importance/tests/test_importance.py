@@ -14,13 +14,16 @@ class TestImportance(SharedSetupTransactionCase):
         super(TestImportance, cls).initTestData()
         cls.ref = classmethod(lambda cls, xid: cls.env.ref(xid).id)
         cls.TICKET = cls.env['anytracker.ticket']
-        USER = cls.env['res.users']
         cls.IMPORTANCE = cls.env['anytracker.importance']
 
         cls.importance_must = cls.ref('anytracker.test_imp_musthave')
         cls.importance_should = cls.ref('anytracker.test_imp_shouldhave')
         cls.importance_nice = cls.ref('anytracker.test_imp_nicetohave')
-        cls.customer_id = USER.create(
+
+        USER = cls.env['res.users']
+
+        recset = USER.search([('login', '=', 'customer')])
+        cls.customer_id = recset and recset[0].id or USER.create(
             {'name': 'Customer',
              'login': 'customer',
              'groups_id': [(6, 0,

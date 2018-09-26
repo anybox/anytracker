@@ -23,14 +23,18 @@ class TestInvoicing(SharedSetupTransactionCase):
         #cls.ANAJOURNAL = cls.env['account.analytic.journal']
 
         USER = cls.env['res.users']
-        cls.member_id = USER.create(
+
+        recset = USER.search([('login', '=', 'member')])
+        cls.member_id = recset and recset[0].id or USER.create(
             {'name': 'Member',
              'login': 'member',
              'groups_id': [(6, 0,
                            [cls.ref('anytracker.group_member'),
                             cls.ref('base.group_user')])]}
         ).id
-        cls.customer_id = USER.create(
+
+        recset = USER.search([('login', '=', 'customer')])
+        cls.customer_id = recset and recset[0].id or USER.create(
             {'name': 'Customer',
              'login': 'customer',
              'groups_id': [(6, 0,

@@ -13,13 +13,15 @@ class TestPriority(SharedSetupTransactionCase):
         super(TestPriority, cls).initTestData()
         cls.ref = classmethod(lambda cls, xid: cls.env.ref(xid).id)
         cls.TICKET = cls.env['anytracker.ticket']
-        USER = cls.env['res.users']
+        cls.USER = cls.env['res.users']
         cls.PRIORITY = cls.env['anytracker.priority']
 
         cls.prio_urgent = cls.ref('anytracker.test_prio_urgent')
         cls.prio_prio = cls.ref('anytracker.test_prio_prio')
         cls.prio_normal = cls.ref('anytracker.test_prio_normal')
-        cls.customer_id = USER.create(
+
+        recset = cls.USER.search([('login', '=', 'customer')])
+        cls.customer_id = recset and recset[0].id or USER.create(
             {'name': 'Customer',
              'login': 'customer',
              'groups_id': [(6, 0,

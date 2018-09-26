@@ -16,26 +16,33 @@ class TestBouquets(SharedSetupTransactionCase):
         bouquet_sprint_mlf = cls.BOUQUET.search([('name', '=', u'Sprint MLF: juillet')])
         if bouquet_sprint_mlf:
             bouquet_sprint_mlf.unlink()
+
         USER = cls.env['res.users']
 
-        cls.member_id = USER.create({
+        recset = USER.search([('login', '=', 'at.user')])
+        cls.member_id = recset and recset[0].id or USER.create({
             'name': 'anytracker member',
             'login': 'at.user',
             'email': 'member@localhost',
             'groups_id': [(6, 0, [cls.ref('anytracker.group_member')])],
         }).id
-        cls.customer_id = USER.create({
+
+        recset = USER.search([('login', '=', 'at.cust')])
+        cls.customer_id = recset and recset[0].id or USER.create({
             'name': "anytracker customer",
             'login': 'at.cust',
             'email': 'customer@localhost',
             'groups_id': [(6, 0, [cls.ref('anytracker.group_customer')])],
         }).id
-        cls.partner_id = USER.create({
+
+        recset = USER.search([('login', '=', 'at.part')])
+        cls.partner_id = recset and recset[0].id or USER.create({
             'name': "anytracker partner",
             'login': 'at.part',
             'email': 'partner@localhost',
             'groups_id': [(6, 0, [cls.ref('anytracker.group_partner')])],
         }).id
+
         cls.project = cls.TICKET.create({
             'name': "Main test project",
             'method_id': cls.ref('anytracker.method_scrum'),

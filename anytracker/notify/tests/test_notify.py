@@ -17,7 +17,8 @@ class TestNotify(SharedSetupTransactionCase):
         cls.STAGE = cls.env['anytracker.stage']
         cls.MAIL = cls.env['mail.mail']
 
-        cls.member_id = cls.USER.create(
+        recset = cls.USER.search([('login', '=', 'member')])
+        cls.member_id = recset and recset[0].id or cls.USER.create(
             {'name': 'Member',
              'login': 'member',
              'email': 'member@localhost',
@@ -25,7 +26,9 @@ class TestNotify(SharedSetupTransactionCase):
                 [(6, 0, [cls.ref('anytracker.group_member'),
                          cls.ref('base.group_user')])]}
         ).id
-        cls.member2_id = cls.USER.create(
+
+        recset = cls.USER.search([('login', '=', 'member2')])
+        cls.member2_id = recset and recset[0].id or cls.USER.create(
             {'name': 'Member2',
              'login': 'member2',
              'email': 'member2@localhost',
@@ -33,7 +36,9 @@ class TestNotify(SharedSetupTransactionCase):
                            [cls.ref('anytracker.group_member'),
                             cls.ref('base.group_user')])]}
         ).id
-        cls.customer_id = cls.USER.create(
+
+        recset = cls.USER.search([('login', '=', 'customer')])
+        cls.customer_id = recset and recset[0].id or cls.USER.create(
             {'name': 'Customer',
              'login': 'customer',
              'email': 'customer@localhost',

@@ -17,7 +17,8 @@ class TestAnytracker(SharedSetupTransactionCase):
         cls.USER = cls.env['res.users']
         cls.PARTNER = cls.env['res.partner']
 
-        cls.member_id = cls.USER.create(
+        recset = cls.USER.search([('login', '=', 'member')])
+        cls.member_id = recset and recset[0].id or cls.USER.create(
             {'name': 'Member',
              'login': 'member',
              'email': 'member@localhost',
@@ -25,7 +26,9 @@ class TestAnytracker(SharedSetupTransactionCase):
                            [cls.ref('anytracker.group_member'),
                             cls.ref('base.group_user')])]}
         ).id
-        cls.manager_id = cls.USER.create(
+
+        recset = cls.USER.search([('login', '=', 'manager')])
+        cls.manager_id = recset and recset[0].id or cls.USER.create(
             {'name': 'Manager',
              'login': 'manager',
              'email': 'manager@localhost',
@@ -33,7 +36,9 @@ class TestAnytracker(SharedSetupTransactionCase):
                            [cls.ref('base.group_user'),
                             cls.ref('anytracker.group_manager')])]}
         ).id
-        cls.customer_id = cls.USER.create(
+
+        recset = cls.USER.search([('login', '=', 'customer')])
+        cls.customer_id = recset and recset[0].id or cls.USER.create(
             {'name': 'Customer',
              'login': 'customer',
              'email': 'customer@localhost',

@@ -13,33 +13,42 @@ class TestComplexity(SharedSetupTransactionCase):
         super(TestComplexity, cls).initTestData()
         cls.ref = classmethod(lambda cls, xid: cls.env.ref(xid).id)
         cls.TICKET = cls.env['anytracker.ticket']
-        USER = cls.env['res.users']
         cls.RATING = cls.env['anytracker.rating']
 
         cls.complexity2 = cls.ref('anytracker.complexity2')
         cls.complexity3 = cls.ref('anytracker.complexity3')
         cls.complexity4 = cls.ref('anytracker.complexity4')
-        cls.member_id = USER.create(
+
+        USER = cls.env['res.users']
+
+        recset = USER.search([('login', '=', 'member')])
+        cls.member_id = recset and recset[0].id or USER.create(
             {'name': 'Member',
              'login': 'member',
              'groups_id': [(6, 0,
                            [cls.ref('anytracker.group_member'),
                             cls.ref('base.group_user')])]}
         ).id
-        cls.manager_id = USER.create(
+
+        recset = USER.search([('login', '=', 'manager')])
+        cls.manager_id = recset and recset[0].id or USER.create(
             {'name': 'Manager',
              'login': 'manager',
              'groups_id': [(6, 0,
                            [cls.ref('base.group_user'),
                             cls.ref('anytracker.group_manager')])]}
         ).id
-        cls.partner_id = USER.create(
+
+        recset = USER.search([('login', '=', 'partner')])
+        cls.partner_id = recset and recset[0].id or USER.create(
             {'name': 'Partner',
              'login': 'partner',
              'groups_id': [(6, 0,
                            [cls.ref('anytracker.group_partner')])]}
         ).id
-        cls.customer_id = USER.create(
+
+        recset = USER.search([('login', '=', 'customer')])
+        cls.customer_id = recset and recset[0].id or USER.create(
             {'name': 'Customer',
              'login': 'customer',
              'groups_id': [(6, 0,
