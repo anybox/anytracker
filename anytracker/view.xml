@@ -9,37 +9,6 @@
             </xpath>
         </template>
 
-        <!--
-        allow to click in the hierarchical view
-        should be declared before any "%(anytracker.action_hierarchy_line_select)d" action button declaration
-        -->
-        <record id="action_hierarchy_line_select" model="ir.actions.act_window">
-            <field name="name">Tickets</field>
-            <!-- do not forget "type" field to prevent js 'No type for action error' from button action ! -->
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">anytracker.ticket</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">kanban,tree,form</field>
-            <field name="view_id" ref="tickets_kanban2"/>
-            <field name="domain">[('id', 'child_of', active_id), ('id', '!=', active_id)]</field>
-            <field name="context">{
-                'search_default_filter_tasks': 1,
-                'search_default_isparticipant': 1,
-                'search_default_unfinished': 1,
-                'group_by': 'stage_id'
-                }
-            </field>
-            <field name="binding_model_id" ref="anytracker.model_anytracker_ticket" />
-        </record>
-        <!--
-        <record id="ir_value_hierarchy_line_select" model="ir.values">
-            <field name="key2">tree_but_open</field>
-            <field name="model">anytracker.ticket</field>
-            <field name="name">Open ticket</field>
-            <field name="value" eval="'ir.actions.act_window,%d'%action_hierarchy_line_select"/>
-        </record>
-        -->
-
         <!-- Search tickets -->
         <record id="ticket_view_search" model="ir.ui.view">
             <field name="name">Search tickets</field>
@@ -470,6 +439,38 @@
         </record>
 
         <!-- ACTIONS -->
+
+        <!--
+        allow to click in the hierarchical view
+        should be declared before any "%(anytracker.action_hierarchy_line_select)d" action button declaration
+        -->
+        <record id="action_hierarchy_line_select" model="ir.actions.act_window">
+            <field name="name">Tickets</field>
+            <!-- do not forget "type" field to prevent js 'No type for action error' from button action ! -->
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">anytracker.ticket</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_id" ref="tickets_kanban2"/>
+            <field name="domain">[('id', 'child_of', active_id), ('id', '!=', active_id)]</field>
+            <field name="context">{
+                'search_default_filter_tasks': 1,
+                'search_default_isparticipant': 1,
+                'search_default_unfinished': 1,
+                'group_by': 'stage_id'
+                }
+            </field>
+            <field name="binding_model_id" ref="anytracker.model_anytracker_ticket" />
+        </record>
+        <!--
+        <record id="ir_value_hierarchy_line_select" model="ir.values">
+            <field name="key2">tree_but_open</field>
+            <field name="model">anytracker.ticket</field>
+            <field name="name">Open ticket</field>
+            <field name="value" eval="'ir.actions.act_window,%d'%action_hierarchy_line_select"/>
+        </record>
+        -->
+
         <!--
         group by project, domain 1st project level childs (parent with no parent) ('parent_id.parent_id', '=', False)
         <record model="ir.actions.act_window" id="action_kanbans">
