@@ -39,7 +39,7 @@
       <field name="value" eval="7.0"/>
     </record>
     <!-- test template -->
-    <record id="email_template_test" model="email.template">
+    <record id="email_template_test" model="mail.template">
         <field name="name">Anytracker test new</field>
         <field name="email_from">${user.email}</field>
         <field name="subject">[${object.project_id.name}] ${user.name} created a ticket #${object.number}</field>

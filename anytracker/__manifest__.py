@@ -31,7 +31,7 @@
         'web',
         'web_widget_color',
         'base',
-        # 'email_template',
+        'mail',
         'account',  #11392
         'analytic',
         'product',  #11390
