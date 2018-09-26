@@ -21,7 +21,7 @@ class TestPriority(SharedSetupTransactionCase):
         cls.prio_normal = cls.ref('anytracker.test_prio_normal')
 
         recset = cls.USER.search([('login', '=', 'customer')])
-        cls.customer_id = recset and recset[0].id or USER.create(
+        cls.customer_id = recset and recset[0].id or cls.USER.create(
             {'name': 'Customer',
              'login': 'customer',
              'groups_id': [(6, 0,
