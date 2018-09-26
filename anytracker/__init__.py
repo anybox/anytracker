@@ -11,5 +11,5 @@ from . import assignment
 from . import notify
 from . import priority
 from . import bouquet
-from . import invoicing
+#from . import invoicing  # invoicing feature desactivated since v11, support stopped
 from . import link

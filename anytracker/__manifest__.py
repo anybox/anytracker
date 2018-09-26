@@ -35,7 +35,6 @@
         'account',  #11392
         'analytic',
         'product',  #11390
-        # 'hr_timesheet_invoice',
     ],
     'images': [
         'images/anytracker.png',
@@ -56,7 +55,6 @@
 - Assignment
 - Kanban view at any level with breadcrumb
 - Modifications history tracking
-- Ticket invoicing through an analytic account
 
 You can launch tests from a buildout with:
 
@@ -97,7 +95,7 @@ http://www.famfamfam.com/lab/icons/silk/
         'notify/view.xml',
         'priority/view.xml',
         'bouquet/view.xml',
-        'invoicing/view.xml',
+        #'invoicing/view.xml',  # invoicing feature desactivated since v11, support stopped
         'link/view.xml',
         'report/ticket.xml',
         'report/bouquet.xml',
@@ -127,5 +125,4 @@ http://www.famfamfam.com/lab/icons/silk/
     'installable': True,
     'application': True,
     'web_preload': True,
-
 }
