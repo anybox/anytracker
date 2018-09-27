@@ -24,9 +24,10 @@ def migrate(cr, version):
         res_ids = [str(r[0]) for r in cr.fetchall()]
         print(res_ids)
 
-        print('')
-        print('desactivate views')
-        sql = "update ir_ui_view set active=False where id in ({})".format(','.join(res_ids))
-        execute(sql)
+        if res_ids:
+            print('')
+            print('desactivate views')
+            sql = "update ir_ui_view set active=False where id in ({})".format(','.join(res_ids))
+            execute(sql)
 
     unactivate_depreciated_views()
