@@ -640,7 +640,9 @@
         <menuitem id="tabmenu_anytracker"
                   name="Anytracker"
                   sequence="30"
-                  web_icon="anytracker,images/icon.png"/>
+                  web_icon="anytracker,images/icon.png"
+                  groups="group_manager,group_member,group_customer,group_partner"
+        />
         <menuitem id="menu_configuration"
                   name="Configuration"
                   sequence="200"
