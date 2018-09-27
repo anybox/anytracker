@@ -47,7 +47,7 @@
         <record id="view_ticket_with_link" model="ir.ui.view">
             <field name="name">Ticket</field>
             <field name="model">anytracker.ticket</field>
-            <field name="inherit_id" ref="anytracker.invoicing_ticket_view_form" />
+            <field name="inherit_id" ref="anytracker.ticket_view_form" />
             <field name="arch" type="xml">
                 <xpath expr="//notebook/page[@id='sub_tickets_page']" position="after">
                     <page string="Link-with">
