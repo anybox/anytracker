@@ -17,7 +17,6 @@ class TestMethod(SharedSetupTransactionCase):
         cls.STAGE = cls.env['anytracker.stage']
         cls.COMPLEXITY = cls.env['anytracker.complexity']
         USER = cls.env['res.users']
-        cls.anajournals = cls.env['account.analytic.journal']
 
         cls.member_id = USER.create(
             {'name': 'Member',
