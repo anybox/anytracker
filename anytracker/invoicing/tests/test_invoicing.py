@@ -28,6 +28,7 @@ class TestInvoicing(SharedSetupTransactionCase):
         cls.member_id = recset and recset[0].id or USER.create(
             {'name': 'Member',
              'login': 'member',
+             'email': 'member@localhost',
              'groups_id': [(6, 0,
                            [cls.ref('anytracker.group_member'),
                             cls.ref('base.group_user')])]}
@@ -37,6 +38,7 @@ class TestInvoicing(SharedSetupTransactionCase):
         cls.customer_id = recset and recset[0].id or USER.create(
             {'name': 'Customer',
              'login': 'customer',
+             'email': 'customer@localhost',
              'groups_id': [(6, 0,
                            [cls.ref('anytracker.group_customer')])]}
         ).id

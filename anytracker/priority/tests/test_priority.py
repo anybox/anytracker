@@ -24,6 +24,7 @@ class TestPriority(SharedSetupTransactionCase):
         cls.customer_id = recset and recset[0].id or cls.USER.create(
             {'name': 'Customer',
              'login': 'customer',
+             'email': 'customer@localhost',
              'groups_id': [(6, 0,
                            [cls.ref('anytracker.group_customer')])]}
         ).id

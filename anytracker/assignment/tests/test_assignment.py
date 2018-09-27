@@ -17,6 +17,7 @@ class TestStage(SharedSetupTransactionCase):
         cls.member_id = cls.users.create(
             {'name': 'test member',
              'login': 'test',
+             'email': 'test@localhost',
              'groups_id': [(6, 0,
                            [cls.ref('anytracker.group_member')])]}).id
 

@@ -25,18 +25,20 @@ class TestLink(SharedSetupTransactionCase):
         cls.member_id = USER.create({
             'name': 'test member',
             'login': 'test',
-            'email': 'member@localhost',
+            'email': 'test@localhost',
             'groups_id': [(6, 0,
                            [cls.ref('anytracker.group_member')])]}
         ).id
         cls.customer_id = USER.create(
             {'name': 'test customer stage',
              'login': 'test_customer_stage',
+             'email': 'test_customer@localhost',
              'groups_id': [(6, 0, [cls.ref('anytracker.group_customer')])]}
         ).id
         cls.partner_id = USER.create(
             {'name': 'test partner stage',
              'login': 'test_partner_stage',
+             'email': 'test_partner@localhost',
              'groups_id': [(6, 0, [cls.ref('anytracker.group_partner')])]}
         ).id
         """

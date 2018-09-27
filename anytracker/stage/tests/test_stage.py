@@ -19,13 +19,14 @@ class TestStage(SharedSetupTransactionCase):
         cls.member_id = USER.create({
             'name': 'test member',
             'login': 'test',
-            'email': 'member@localhost',
+            'email': 'test@localhost',
             'groups_id': [(6, 0,
                            [cls.ref('anytracker.group_member')])]}
         ).id
         cls.customer_id = USER.create(
             {'name': 'test customer stage',
              'login': 'test_customer_stage',
+             'email': 'test_customer@localhost',
              'groups_id': [(6, 0, [cls.ref('anytracker.group_customer')])]}
         ).id
 
