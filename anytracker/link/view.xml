@@ -67,17 +67,33 @@
                     <page string="Link-with">
                         <field name="all_links" context="{'active_id': active_id}" nolabel="1" >
                             <tree string="Links" >
+                                <button
+                                    name="action_open_linked_ticket"
+                                    type="object"
+                                    string="Open linked ticket"
+                                    icon="fa-arrow-right"
+                                    groups="anytracker.group_member, anytracker.group_partner"
+                                    context="{'active_id': id}"
+                                />
                                 <field name="number"   />
                                 <field name="name" string="link ticket"/>
                                 <field name="stage" />
                                 <field name="progress" widget="progressbar"  />
                                 <field name="linktype_id"/>
-                                <button name="action_delete_link" type="object" 
-                                        string="Delete link" icon="fa-unlink"
-                                        groups="anytracker.group_member, anytracker.group_partner"/>
-                                <button name="action_open_link" type="object" 
-                                        string="Open link" icon="fa-edit"
-                                        groups="anytracker.group_member, anytracker.group_partner"/>
+                                <button
+                                    name="action_delete_link"
+                                    type="object"
+                                    string="Delete link"
+                                    icon="fa-unlink"
+                                    groups="anytracker.group_member, anytracker.group_partner"
+                                />
+                                <button
+                                    name="action_open_link"
+                                    type="object"
+                                    string="Open link"
+                                    icon="fa-edit"
+                                    groups="anytracker.group_member, anytracker.group_partner"
+                                />
                             </tree>
                         </field>
                         <button name="action_add_link" string="Add link" id="add_link"

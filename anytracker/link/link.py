@@ -114,8 +114,6 @@ class Link(models.Model):
 
     @api.multi
     def action_open_link(self):
-
-        # This will make sure we have on record, not multiple records.
         self.ensure_one()
 
         return {
@@ -129,6 +127,29 @@ class Link(models.Model):
             'target': 'new',
             #'flags': {'form': {'action_buttons': True}}  #11387 replaced by custom buttons
         }
+
+    @api.multi
+    def action_open_linked_ticket(self):
+        self.ensure_one()
+
+        if self.env.context.get('active_id'):
+            active_id = self.env.context['active_id']
+            source_ticket = self.browse(active_id)
+            co_ticket = source_ticket.ticket_one == active_id \
+                and source_ticket.ticket_one or source_ticket.ticket_two
+
+            return {
+                'name': co_ticket.name,
+                'res_model': 'anytracker.ticket',
+                'res_id': co_ticket.id,
+                'type': 'ir.actions.act_window',
+                'context': {},
+                'view_mode': 'form',
+                'view_type': 'form',
+                'target': 'new',
+            }
+
+        return {}
 
     @api.multi
     def dummy(self):
