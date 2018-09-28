@@ -1,12 +1,32 @@
-# TODO - FIXME TODO FIXME
 from urllib.parse import urljoin
 from urllib.parse import urlencode
 import werkzeug.utils
 
-# from odoo.addons.web import http
 from odoo import http
-# from odoo import pooler, SUPERUSER_ID as uid
 from odoo import SUPERUSER_ID as uid
+
+from odoo.addons.web.controllers.main import Home
+from odoo.addons.web.controllers.main import request
+
+
+class LoginHome(Home):
+    def _login_redirect(self, uid, redirect=None):
+        """
+        #11435 patch login redirection
+
+        Since v11, for portal user or user not tied to a legacy sel_groups category like
+        Employee, Accounting invoicing, etc, user is auto redirected to portal: /my route.
+
+        For a user of anytracker 'customer' group, redirect to '/web' to access backlog
+        and AnyTracker menus.
+        """
+        if request.env and request.env.user and len(request.env.user.groups_id) > 0:
+            anytracker_customer_group = request.env.ref('anytracker.group_customer')
+            if anytracker_customer_group \
+                and anytracker_customer_group.id in request.env.user.groups_id.ids:
+                    redirect = '/web'
+
+        return super(LoginHome, self)._login_redirect(uid, redirect=redirect)
 
 
 class UrlDirection(http.Controller):
