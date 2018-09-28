@@ -368,19 +368,20 @@ class Ticket(models.Model):
             Overwrite the name_search function to search a ticket
             with their name or thier number
         """
-        args = args or []
-        if name and operator in ('=', 'ilike', '=ilike', 'like', '=like'):
-            tickets = []
-            if name.isdigit():
-                number = int(name)
-                tickets = self.search([('number', '=', number)] + args,
-                                      limit=limit)
-            else:
-                tickets = self.search([('name', operator, name)] + args,
-                                      limit=limit)
-            if len(tickets) > 0:
-                return tickets.name_get()
-        return super(Ticket, self.browse()).name_search()
+        if not self.env.context.get('legacy_name_search', False):
+            args = args or []
+            if name and operator in ('=', 'ilike', '=ilike', 'like', '=like'):
+                if name.isdigit():
+                    number = int(name)
+                    tickets = self.search([('number', '=', number)] + args,
+                                          limit=limit)
+                else:
+                    tickets = self.search([('name', operator, name)] + args,
+                                          limit=limit)
+                if len(tickets) > 0:
+                    return tickets.name_get()
+
+        return super(Ticket, self).name_search(name, args=args, operator=operator, limit=limit)
 
     @api.multi
     def trash(self):

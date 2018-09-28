@@ -14,7 +14,7 @@
                             <field
                                 name="ticket_two"
                                 domain="[('linkables', '=', True)]"
-                                context="{'active_id': context.get('active_id')}"
+                                context="{'legacy_name_search': True, 'active_id': context.get('active_id')}"
                             />
                             <field name="linktype_id" string="type"/>
                         </group>
