@@ -15,6 +15,16 @@
                             <field name="linktype_id" string="type"/>
                         </group>
                     </sheet>
+                    <footer>
+                        <button
+                            class="oe_highlight"
+                            name="dummy"
+                            string="Save"
+                            type="object"
+                            groups="anytracker.group_member, anytracker.group_partner"
+                        />
+                        <button special="cancel" string="Cancel"/>
+                    </footer>
                 </form>
             </field>
         </record>

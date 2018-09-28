@@ -125,9 +125,16 @@ class Link(models.Model):
             'view_mode': 'form',
             'view_type': 'form',
             'target': 'new',
-            'flags': {'form': {'action_buttons': True}}
-
+            #'flags': {'form': {'action_buttons': True}}  #11387 replaced by custom buttons
         }
+
+    @api.multi
+    def dummy(self):
+        """
+        #11387 dummy save button refresh action (replaces legacy save button)
+        will refresh links o2m of active ticket
+        """
+        return {}
 
 
 class Ticket(models.Model):
