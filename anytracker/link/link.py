@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+from odoo.exceptions import Warning
 from odoo import models, fields, api, _
 
 
@@ -67,13 +67,15 @@ class Link(models.Model):
         'anytracker.ticket',
         'Ticket two',
         required=True,
-        ondelete='cascade')
+        ondelete='cascade',
+    )
 
     linktype_id = fields.Many2one(
         'anytracker.link.type',
         'Type Link',
         required=True,
         ondelete='cascade')
+
     name = fields.Char(compute='_data_tickets', string="")
     number = fields.Char(compute='_data_tickets', string="")
     progress = fields.Float(compute='_data_tickets', string="")
@@ -181,3 +183,41 @@ class Ticket(models.Model):
         'anytracker.link',
         string="links",
         compute='_getAllLink')
+
+    def _compute_linkables(self):
+        for rec in self:
+            rec.linkables = True
+
+    def _compute_search_linkables(self, operator, value):
+        if operator != '=' and not isinstance(value, bool):
+            Warning(_('search_to_link field: not valid operator/value'))
+
+        if self.env.context.get('active_id'):
+            # active ticket
+            active_id = self.env.context.get('active_id')
+
+            # exclude active ticket itself
+            ids = [active_id]
+
+            # linked tickets
+            links_recset = self.env['anytracker.link'].search([
+                '|',
+                ('ticket_two', '=', active_id),
+                ('ticket_one', '=', active_id)
+            ])
+            linked_tickets_ids = []
+            for link in links_recset:
+                linked_tickets_ids.append(link.ticket_one.id)
+                linked_tickets_ids.append(link.ticket_two.id)
+            if linked_tickets_ids:
+                ids += linked_tickets_ids
+            ids = list(set(linked_tickets_ids))  # remove duplicates active_id included
+
+            return [('id', value and 'not in' or 'in', ids)]
+        return []
+
+    # get tickets that are not already linked to current active ticket
+    linkables = fields.Boolean(
+        compute='_compute_linkables',
+        search='_compute_search_linkables'
+    )

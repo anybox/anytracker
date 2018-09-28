@@ -10,8 +10,12 @@
                 <form string="Type">
                     <sheet>
                         <group>
-                            <field name="ticket_one"  readonly="1"/>
-                            <field name="ticket_two" />
+                            <field name="ticket_one" readonly="1"/>
+                            <field
+                                name="ticket_two"
+                                domain="[('linkables', '=', True)]"
+                                context="{'active_id': context.get('active_id')}"
+                            />
                             <field name="linktype_id" string="type"/>
                         </group>
                     </sheet>
