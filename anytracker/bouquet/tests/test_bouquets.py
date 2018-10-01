@@ -26,7 +26,7 @@ class TestBouquets(SharedSetupTransactionCase):
             'name': 'anytracker member',
             'login': 'at.user',
             'email': 'member@localhost',
-            'groups_id': [(6, 0, [cls.ref('anytracker.group_member')])],
+            'groups_id': [(6, 0, [cls.ref('base.group_user'), cls.ref('anytracker.group_member')])],
         }).id
 
         recset = USER.search([('login', '=', 'at.cust')])
@@ -34,7 +34,13 @@ class TestBouquets(SharedSetupTransactionCase):
             'name': "anytracker customer",
             'login': 'at.cust',
             'email': 'customer@localhost',
-            'groups_id': [(6, 0, [cls.ref('anytracker.group_customer')])],
+            'groups_id': [(6, 0, [
+                # FIXME: base.group_user actually needed exclusively during u test
+                # for 'mail.activity.mixin' fields with groups='base.group_user'
+                # during ticket write
+                # (in real case ticket is writable without base.group_user)
+                cls.ref('base.group_user'),
+                cls.ref('anytracker.group_customer')])],
         }).id
 
         recset = USER.search([('login', '=', 'at.part')])
@@ -42,7 +48,8 @@ class TestBouquets(SharedSetupTransactionCase):
             'name': "anytracker partner",
             'login': 'at.part',
             'email': 'partner@localhost',
-            'groups_id': [(6, 0, [cls.ref('anytracker.group_partner')])],
+            'groups_id': [(6, 0, [
+                cls.ref('anytracker.group_partner')])],
         }).id
 
         cls.project = cls.TICKET.create({
