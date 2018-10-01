@@ -158,7 +158,7 @@ class TestAnytracker(SharedSetupTransactionCase):
         # False should be ignored at creation
         attach1 = self.ATTACHMENT.sudo(self.customer_id).create({
             'name': 'testfile',
-            'db_datas': base64.b64encode('0000'),
+            'db_datas': base64.b64encode(b'0000'),
             'datas_fname': 'testfile',
             'res_model': 'anytracker.ticket',
             'res_id': ticket.id,
