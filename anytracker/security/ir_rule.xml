@@ -9,12 +9,14 @@
             </field>
             <field name="groups" eval="[(4, ref('anytracker.group_customer')),(4, ref('anytracker.group_partner'))]"/>
         </record>
+
         <record id="anytracker_rule_tickets_manager" model="ir.rule">
             <field name="name">Anytracker manager</field>
             <field name="model_id" ref="model_anytracker_ticket"/>
             <field name="domain_force">[(1,'=',1)]</field>
             <field name="groups" eval="[(4, ref('anytracker.group_manager')),(4, ref('anytracker.group_member'))]"/>
         </record>
+
         <record id="anytracker_rule_partners_customer" model="ir.rule">
             <field name="name">Partner filter for customers</field>
             <field name="model_id" ref="model_res_partner"/>
@@ -27,6 +29,7 @@
             <field name="perm_read" eval="True"/>
             <field name="perm_unlink" eval="False"/>
         </record>
+
         <record id="anytracker_rule_partners" model="ir.rule">
             <field name="name">Partner filter for members and managers</field>
             <field name="model_id" ref="model_res_partner"/>
@@ -36,6 +39,15 @@
             <field name="perm_write" eval="False"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <!-- add security rule to add read permission for customer/partner on clone tickets -->
+        <record id="anytracker_rule_tickets_links" model="ir.rule">
+            <field name="name">Anytracker links</field>
+            <field name="model_id" ref="model_anytracker_ticket"/>
+            <field name="domain_force">['&amp;', ('link_ids.linktype_id', '=', 'Clone'), ('link_ids.ticket_two.project_id.participant_ids', 'in', user.id)]</field>
+            <field name="groups" eval="[(4, ref('anytracker.group_customer')),(4, ref('anytracker.group_partner'))]"/>
+            <field name="perm_read" eval="True"/>
         </record>
 
     </data>
