@@ -63,7 +63,8 @@ class ImportMindmapWizard(models.TransientModel):
             error_handler = FreemindErrorHandler()
             sax.parse(BytesIO(b64decode(wizard.mindmap_content)),
                       handler, error_handler)
-        return {'type': 'ir.actions.act_window_close'}
+        return imported_mm
+        #return {'type': 'ir.actions.act_window_close'}
 
 
 class FreemindContentHandler(sax.ContentHandler):
