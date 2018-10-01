@@ -44,7 +44,8 @@ class TestMethod(SharedSetupTransactionCase):
              'login': 'manager',
              'email': 'manager@localhost',
              'groups_id': [(6, 0,
-                           [cls.ref('anytracker.group_manager'),
+                           [cls.ref('base.group_user'),
+                            cls.ref('anytracker.group_manager'),
                             cls.ref('account.group_account_user')])]}
         ).id
 
@@ -59,7 +60,8 @@ class TestMethod(SharedSetupTransactionCase):
              # #11390: analytic journal depreciated on v11
              #'analytic_journal_id':
              #    self.anajournals.sudo(self.manager_id).search([])[0].id,
-             'product_id': self.ref('product.product_product_consultant'),
+             # invoicing desactived since anytracker v11
+             #'product_id': self.ref('product.product_product_consultant'),
              'method_id': self.ref('anytracker.method_test')})
         # we create a ticket
         ticket = self.TICKET.sudo(self.customer_id).create(

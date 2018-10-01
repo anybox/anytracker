@@ -56,7 +56,7 @@ class export_mindmap_wizard(models.TransientModel):
             fp = StringIO()
             FreemindParser(FreemindWriterHandler(fp), wizard).parse()
             download_wiz = DOWNLOADWIZ.create({
-                'mindmap_binary': b64encode(fp.getvalue()),
+                'mindmap_binary': b64encode(bytes(fp.getvalue(), 'utf-8')),
                 'mindmap_filename': wizard.mindmap_file})
             fp.close()
 
