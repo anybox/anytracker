@@ -99,13 +99,13 @@ class TestNotify(SharedSetupTransactionCase):
         urgent = self.TICKET.with_context({'active_id': project.id}).create({
             'name': 'urgent notifying ticket',
             'parent_id': project.id, })
-        self.assertEquals(self.MAIL.search([], count=True) - nb_mails, 3)
+        self.assertEquals(self.MAIL.search([], count=True) - nb_mails, 4)  # since initial queue L.69 more 4 mails
         self.assertEquals(len(urgent.notified_stage_ids), 1)
 
         # we move forth and back the ticket, we shouldn't have more notif
         ticket.write({'stage_id': self.ref('anytracker.stage_test_done')})
         ticket.write({'stage_id': self.ref('anytracker.stage_test_draft')})
-        self.assertEquals(self.MAIL.search([], count=True) - nb_mails, 3)
+        self.assertEquals(self.MAIL.search([], count=True) - nb_mails, 4)
         self.assertEquals(len(urgent.notified_stage_ids), 1)
 
     def test_participants(self):
