@@ -26,7 +26,6 @@ class LoginHome(Home):
 
 
 class UrlDirection(http.Controller):
-    # TODO append anytracker menu_id= in url
     method_model_map = dict(
         ticket='anytracker.ticket',
         bouquet='anytracker.bouquet'
@@ -49,10 +48,12 @@ class UrlDirection(http.Controller):
 
     def dispatch(self, db, model, id):
         same_db = True
-
         if db != request.session.db:
             request.session.db = db
             same_db = False
+
+        menu = request.env.ref('anytracker.tabmenu_anytracker')
+        menu_id = menu and menu.id or False
 
         if model == 'anytracker.ticket':
             # ticket identified by number versus id
@@ -65,6 +66,8 @@ class UrlDirection(http.Controller):
             id=id,
             model=model,
         )
+        if menu_id:
+            url += '&menu_id={menu_id}'.format(menu_id=menu_id)
 
         if same_db:
             return werkzeug.utils.redirect(url)
