@@ -134,7 +134,7 @@ class TestBouquets(SharedSetupTransactionCase):
         # although one of its tickets is not
         self.uid = self.member_id
         self.assertEqual(
-            self.searchUnique(self.bouquet_obj, self.bouquet_domain),
+            self.searchUnique(self.bouquet_obj, self.bouquet_domain).id,
             self.bouquet.id)
         self.assertEqual(
             1, len(self.TICKET.search([('id', '=', self.ticket1.id)])))
@@ -142,7 +142,7 @@ class TestBouquets(SharedSetupTransactionCase):
         # although one of its tickets is not
         self.uid = self.customer_id
         self.assertEqual(
-            self.searchUnique(self.bouquet_obj, self.bouquet_domain),
+            self.searchUnique(self.bouquet_obj, self.bouquet_domain).id,
             self.bouquet.id)
         self.assertNoRecord(
             self.ticket_obj,
@@ -150,7 +150,7 @@ class TestBouquets(SharedSetupTransactionCase):
         # same for partner
         self.uid = self.partner_id
         self.assertEqual(
-            self.searchUnique(self.bouquet_obj, self.bouquet_domain),
+            self.searchUnique(self.bouquet_obj, self.bouquet_domain).id,
             self.bouquet.id)
         self.assertNoRecord(
             self.ticket_obj,
