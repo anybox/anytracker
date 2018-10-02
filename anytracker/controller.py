@@ -1,12 +1,8 @@
-from urllib.parse import urljoin
-from urllib.parse import urlencode
 import werkzeug.utils
 
 from odoo import http
-from odoo import SUPERUSER_ID as uid
 
-from odoo.addons.web.controllers.main import Home
-from odoo.addons.web.controllers.main import request
+from odoo.addons.web.controllers.main import request, abort_and_redirect, Home
 
 
 class LoginHome(Home):
@@ -30,74 +26,51 @@ class LoginHome(Home):
 
 
 class UrlDirection(http.Controller):
-    @http.route(
-        '/anytracker/<string:db>/<string:meth>/<int:number>', type='http',
-        auth='user', website=True
+    # TODO append anytracker menu_id= in url
+    method_model_map = dict(
+        ticket='anytracker.ticket',
+        bouquet='anytracker.bouquet'
     )
-    def dispatch_anytracker(self, db=None, meth=None, number=None, *args, **kw):
-        # Sample : http://localhost:8069/anytracker/anytraker_002/ticket/24
-        if db is None and meth is None and number is None:
+
+    @http.route(
+        '/anytracker/<string:db>/<string:meth>/<int:id>',
+        type='http',
+        auth='user',
+        website=True
+    )
+    def dispatch_anytracker(self, meth=None, db=None, id=None, *args, **kw):
+        # Example: http://localhost:8069/anytracker/ticket/24
+        if db is None or meth is None or id is None:
             return self._anytracker_error()
-        meth = self.dispatcher_methods.get(meth)
-        if meth is None:
+        model = self.__class__.method_model_map.get(meth)
+        if model is None:
             return self._anytracker_error()
-        # try:
-        #    pool = pooler.get_pool(db)
-        # except Exception as e:
-        #    return "%r" % (e,)
-        # cr = pooler.get_db(db).cursor()
-        # return meth(self, db, cr, pool, [number])
+        return self.dispatch(db, model, id)
 
-    def dispatch_ticket(self, db_name, cr, pool, segments):
-        if len(segments) != 1:
-            return "Error: there should be exactly one param for 'ticket': the number"
+    def dispatch(self, db, model, id):
+        same_db = True
 
-        # retrieve the ticket
-        number = segments[0]
-        ticket_obj = pool.get('anytracker.ticket')
-        ticket_ids = ticket_obj.search(cr, uid, [('number', '=', int(number))])
-        if not ticket_ids:
-            return "Bad ticket number %r" % number
-        ticket_id = ticket_ids[0]
+        if db != request.session.db:
+            request.session.db = db
+            same_db = False
 
-        # contruct the new URL
-        query = {'db': db_name}
-        fragment = {
-            'model': 'anytracker.ticket',
-            'id': str(ticket_id),
-        }
-        base_url = '/web/'
-        url = urljoin(base_url, "?%s#%s" % (urlencode(query), urlencode(fragment)))
-        werkzeug.utils.redirect(url, 302)
-        # redirect.autocorrect_location_header = False
-        print(url)
-        return werkzeug.utils.redirect(url)
+        if model == 'anytracker.ticket':
+            # ticket identified by number versus id
+            ticket_recset = request.env[model].search([('number', '=', int(id))])
+            if not ticket_recset:
+                return "Bad ticket number %r" % id
+            id = ticket_recset[0].id
 
-    def dispatch_bouquet(self, db_name, cr, pool, segments):
-        if len(segments) != 1:
-            return "Error: there should be exactly one param for 'bouquet': its id"
+        url = '/web#id={id}&view_type=form&model={model}'.format(
+            id=id,
+            model=model,
+        )
 
-        # contruct the new URL
-        query = {'db': db_name}
-        fragment = {
-            'model': 'anytracker.bouquet',
-            'id': segments[0],
-        }
-        base_url = '/web/'
-        url = urljoin(base_url, "?%s#%s" % (urlencode(query), urlencode(fragment)))
-        redirect = werkzeug.utils.redirect(url, 302)
-        redirect.autocorrect_location_header = False
-        return redirect
-
-    def __getattr__(self, func_name):
-        #     TODO GR: I'm sure there's better than this manual dispatching (no time to check
-        #     this works well enough for now)
-        return self.dispatcher_methods
-
-    dispatcher_methods = dict(ticket=dispatch_ticket,
-                              bouquet=dispatch_bouquet)
+        if same_db:
+            return werkzeug.utils.redirect(url)
+        abort_and_redirect(url)  # other db
 
     def _anytracker_error(self):
         # TODO GR: issue a proper code 400
-        return ("Bad query\nUse : /anytracker/`db`/submethod/methparams\n"
-                "    with submethod one of: " + ', '.join(self.dispatcher_methods.keys()))
+        return ("Bad query\nUse : /anytracker/method/methparams\n"
+                "with method one of: " + ', '.join(self.__class__.method_model_map.keys()))
