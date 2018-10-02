@@ -69,6 +69,7 @@ class TestBouquets(SharedSetupTransactionCase):
         cls.bouquet = cls.BOUQUET.create({
             'name': u"Un bouquet ?",
             'ticket_ids': [(6, 0, cls.tickets.ids)]})
+        cls.bouquet_domain = [('name', '=', u"Un bouquet ?")]
 
         cls.admin_id = cls.uid
 
@@ -92,7 +93,7 @@ class TestBouquets(SharedSetupTransactionCase):
             )
             # checking both search and read perms in one shot:
             self.assertUniqueWithValues(
-                self.bouquet_obj, [], {'name': u"Un bouquet ?"}
+                self.bouquet_obj, self.bouquet_domain, {'name': u"Un bouquet ?"}
             )
 
     def test_read_perm_non_participating(self):
@@ -111,7 +112,7 @@ class TestBouquets(SharedSetupTransactionCase):
                 'participant_ids': [(6, 0, [])]
             }
         )
-        self.assertNoRecord(self.bouquet_obj, [])
+        self.assertNoRecord(self.bouquet_obj, self.bouquet_domain)
 
     def test_read_perm_participating_mixed(self):
         """A user participating in any project related to the bouquet
@@ -133,7 +134,7 @@ class TestBouquets(SharedSetupTransactionCase):
         # although one of its tickets is not
         self.uid = self.member_id
         self.assertEqual(
-            self.searchUnique(self.bouquet_obj, []),
+            self.searchUnique(self.bouquet_obj, self.bouquet_domain),
             self.bouquet.id)
         self.assertEqual(
             1, len(self.TICKET.search([('id', '=', self.ticket1.id)])))
@@ -141,7 +142,7 @@ class TestBouquets(SharedSetupTransactionCase):
         # although one of its tickets is not
         self.uid = self.customer_id
         self.assertEqual(
-            self.searchUnique(self.bouquet_obj, []),
+            self.searchUnique(self.bouquet_obj, self.bouquet_domain),
             self.bouquet.id)
         self.assertNoRecord(
             self.ticket_obj,
@@ -149,7 +150,7 @@ class TestBouquets(SharedSetupTransactionCase):
         # same for partner
         self.uid = self.partner_id
         self.assertEqual(
-            self.searchUnique(self.bouquet_obj, []),
+            self.searchUnique(self.bouquet_obj, self.bouquet_domain),
             self.bouquet.id)
         self.assertNoRecord(
             self.ticket_obj,
