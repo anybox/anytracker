@@ -174,8 +174,8 @@
                     <header>
                     </header>
                     <sheet>
-                        <field name="has_subnode" invisible="0"/>
-                        <field name="nb_children" invisible="0"/>
+                        <field name="has_subnode" invisible="1"/>
+                        <field name="nb_children" invisible="1"/>
 
                         <div class="oe_right oe_button_box" name="buttons">
                             <button
