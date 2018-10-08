@@ -104,7 +104,7 @@ class TestBouquets(SharedSetupTransactionCase):
         })
         res = self.BOUQUET.search(self.bouquet_domain)
         self.assertTrue(res)
-        self.assertEquals(res[0].ticket_ids.ids, self.tickets.ids)
+        self.assertEquals(sorted(res[0].ticket_ids.ids), sorted(self.tickets.ids))
         # second, let's remove our 2 users from the related project
         self.project.sudo(self.admin_id).write({
             'participant_ids': [(6, 0, [])]
@@ -144,17 +144,15 @@ class TestBouquets(SharedSetupTransactionCase):
         self.assertEqual(
             self.searchUnique(self.bouquet_obj, self.bouquet_domain).id,
             self.bouquet.id)
-        self.assertNoRecord(
-            self.ticket_obj,
-            [('id', '=', self.ticket1.id)])
+        self.assertFalse(self.ticket_obj.sudo(self.customer_id).search(
+            [('id', '=', self.ticket1.id)], count=True))
         # same for partner
         self.uid = self.partner_id
         self.assertEqual(
             self.searchUnique(self.bouquet_obj, self.bouquet_domain).id,
             self.bouquet.id)
-        self.assertNoRecord(
-            self.ticket_obj,
-            [('id', '=', self.ticket1.id)])
+        self.assertFalse(self.ticket_obj.sudo(self.partner_id).search(
+            [('id', '=', self.ticket1.id)], count=True))
 
     def test_participant_ids(self):
         # just a very simple case, but better than nothing
