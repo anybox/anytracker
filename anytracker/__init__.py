@@ -6,7 +6,7 @@ from . import stage
 from . import tagging
 from . import complexity
 from . import importance
-from . import mindmap
+#from . import mindmap  # mindmap feature desactivated since v11, support stopped
 from . import assignment
 from . import notify
 from . import priority

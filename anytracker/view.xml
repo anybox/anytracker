@@ -684,6 +684,15 @@
                   sequence="20"
                   action="act_open_types_view"/>
 
+        <!-- since v11 mindmap feature desactivated -->
+        <menuitem id="menu_freemind"
+          name="Freemind"
+          sequence="200"
+          groups="group_member,group_partner"
+          parent="tabmenu_anytracker"
+          active="0"
+        />
+
     </data>
 </odoo>
 
