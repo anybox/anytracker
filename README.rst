@@ -64,8 +64,12 @@ You can run the tests from a buildout with:
 
 Or better, if you installed nose in your buildout.
 Add nose-exclude egg in your buildout. (exclude plugin for nose --exclude-dir)
+::
 
-  $ ./bin/nosetests -d dbname -- addons-anytracker/anytracker/ --exclude-dir=anytracker/anytracker/history --exclude-dir=anytracker/anytracker/invoicing --exclude-dir=anytracker/anytracker/mindmap
+./bin/nosetests -d anytracker_test -- anytracker/anytracker/ \
+  --exclude-dir=anytracker/anytracker/history \
+  --exclude-dir=anytracker/anytracker/invoicing \
+  --exclude-dir=anytracker/anytracker/mindmap
 
 Author
 ======

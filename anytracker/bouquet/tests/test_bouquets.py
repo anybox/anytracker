@@ -99,20 +99,20 @@ class TestBouquets(SharedSetupTransactionCase):
     def test_read_perm_non_participating(self):
         # first add at least one ticket
         self.uid = self.member_id
-        self.project.sudo(self.admin_id).write(
-            {
-                'ticket_ids': [(4, [self.ticket1.id])],
-            }
-        )
-        res = self.BOUQUET.search([])
+        self.project.sudo(self.admin_id).write({
+            'ticket_ids': [(4, [self.ticket1.id])],
+        })
+        res = self.BOUQUET.search(self.bouquet_domain)
         self.assertTrue(res)
+        self.assertEquals(res[0].ticket_ids.ids, self.tickets.ids)
         # second, let's remove our 2 users from the related project
-        self.project.sudo(self.admin_id).write(
-            {
-                'participant_ids': [(6, 0, [])]
-            }
-        )
-        self.assertNoRecord(self.bouquet_obj, self.bouquet_domain)
+        self.project.sudo(self.admin_id).write({
+            'participant_ids': [(6, 0, [])]
+        })
+        # related project bouquet tickets should not be visible
+        res = self.BOUQUET.search(self.bouquet_domain)
+        self.assertTrue(res)
+        self.assertTrue(len(res[0].ticket_ids), 0)
 
     def test_read_perm_participating_mixed(self):
         """A user participating in any project related to the bouquet
