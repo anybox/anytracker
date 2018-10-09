@@ -198,6 +198,10 @@ class TestAnytracker(SharedSetupTransactionCase):
             'name': 'test partner', 'email': 'test@example.com'})
         # customer cannot search or access partners,
         # except anytracker user and partner linked to its company
+        user = self.USER.search([('login', '=', 'customer')])
+        user.write({
+            'groups_id': [(6, 0, [self.env.ref('anytracker.group_customer').id])],
+        })
         partner_ids = self.PARTNER.sudo(self.customer_id).search([])
         self.assertEquals(len(partner_ids), 4)
         self.assertRaises(except_orm,
@@ -222,6 +226,12 @@ class TestAnytracker(SharedSetupTransactionCase):
         self.assertEquals('@' in customer.company_id.partner_id.email, True)
         self.assertRaises(except_orm, customer.company_id.partner_id.write,
                           {'email': 'test@test.fr'})
+
+        user.write({
+            'groups_id': [(6, 0, [
+                self.env.ref('anytracker.group_customer').id,
+                self.env.ref('base.group_user').id])],
+        })
 
     def test_move_tickets(self):
         """ Check that we can move a ticket to another node or project
