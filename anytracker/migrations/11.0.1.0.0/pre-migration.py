@@ -1,5 +1,5 @@
 def migrate(cr, version):
-    title = 'anytracker migration script {}'.format(version)
+    title = 'anytracker migration script {} to 11.0.1.0.0'.format(version)
     separator = '_' * 60
 
     print(separator)

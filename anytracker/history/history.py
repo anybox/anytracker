@@ -90,10 +90,10 @@ class Ticket(models.Model):
                 vals += _many2one(k, 'res.users', v)
             elif k == 'child_ids':
                 vals += _all2many(k, 'anytracker.ticket', v)
-            elif k == 'duration':
-                col = dict(self._columns[k].selection)
-                vals += _('Modify field %s with new valeur %s\n'
-                          ) % (k, col.get(v))
+            # elif k == 'duration':
+            #     col = dict(self._columns[k].selection)
+            #     vals += _('Modify field %s with new valeur %s\n'
+            #               ) % (k, col.get(v))
             else:
                 vals += _('Modify field %s with new valeur %s\n') % (k, v)
 
