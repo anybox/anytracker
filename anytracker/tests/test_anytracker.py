@@ -1,5 +1,6 @@
+from nose.tools import assert_raises
 from anybox.testing.openerp import SharedSetupTransactionCase
-from odoo.exceptions import except_orm
+from odoo.exceptions import except_orm, AccessError
 import base64
 
 
@@ -163,8 +164,21 @@ class TestAnytracker(SharedSetupTransactionCase):
             'res_model': 'anytracker.ticket',
             'res_id': ticket.id,
         })
+
         # don't let the customer delete his attachment
-        self.assertRaises(except_orm, attach1.sudo(self.customer_id).unlink)
+        user = self.USER.search([('login', '=', 'customer')])
+        user.write({
+            'groups_id': [(6, 0, [self.env.ref('anytracker.group_customer').id])],
+        })
+        with assert_raises(AccessError):
+            attach1.sudo(self.customer_id).unlink()
+        user.write({
+           'groups_id': [(6, 0, [
+               self.env.ref('anytracker.group_customer').id,
+               # FIXME: base.group_user actually needed exclusively during u test
+               self.env.ref('base.group_user').id])],
+        })
+
         # check the customer cannot access an attachment of another project
         project = self.TICKET.create(
             {'name': 'Attachment test2',
@@ -174,7 +188,7 @@ class TestAnytracker(SharedSetupTransactionCase):
             {'name': 'A ticket2', 'parent_id': project.id, })
         attach2 = self.ATTACHMENT.sudo(self.member_id).create({
             'name': 'testfile2',
-            'db_datas': base64.b64encode('1111'),
+            'db_datas': base64.b64encode(b'1111'),
             'datas_fname': 'testfile2',
             'res_model': 'anytracker.ticket',
             'res_id': ticket.id,
@@ -230,6 +244,7 @@ class TestAnytracker(SharedSetupTransactionCase):
         user.write({
             'groups_id': [(6, 0, [
                 self.env.ref('anytracker.group_customer').id,
+                # FIXME: base.group_user actually needed exclusively during u test
                 self.env.ref('base.group_user').id])],
         })
 
