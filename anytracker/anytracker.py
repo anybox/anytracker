@@ -322,7 +322,7 @@ class Ticket(models.Model):
     def _nb_children(self):
         for ticket in self:
             nb_children = ticket.search([
-                ('id', 'child_of', ticket.id)], count=True)
+                ('parent_id', '=', ticket.id)], count=True)
             ticket.nb_children = nb_children
 
     def _search_breadcrumb(self, operator, value):

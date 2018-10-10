@@ -183,7 +183,7 @@
                                 id="kanban_button"
                                 name="%(anytracker.action_hierarchy_line_select)d"
                                 type="action"
-                                attrs="{'invisible': [('state', '=', 'running'), '|', ('has_subnode', '=', False), ('nb_children', '=', 0)]}"
+                                attrs="{'invisible': ['|', ('state', '=', 'trashed'), ('nb_children', '=', 0)]}"
                                 icon="fa-book">
                                 <div>Kanban</div>
                             </button>
