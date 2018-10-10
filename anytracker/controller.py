@@ -37,13 +37,16 @@ class LoginHome(SetUrlMixin, Home):
         Since v11, for portal user or user not tied to a legacy sel_groups category like
         Employee, Accounting invoicing, etc, user is auto redirected to portal: /my route.
 
-        For a user of anytracker 'customer' group, redirect to '/web' to access backlog
-        and AnyTracker menus.
+        For a user of EXACTLY anytracker 'customer' and portal group,
+        redirect to '/web' to access backlog and AnyTracker menus.
         """
         if request.env and request.env.user and len(request.env.user.groups_id) > 0:
+            group_portal = request.env.ref('base.group_portal')
             anytracker_customer_group = request.env.ref('anytracker.group_customer')
-            if anytracker_customer_group \
-                and anytracker_customer_group.id in request.env.user.groups_id.ids:
+            if group_portal and anytracker_customer_group \
+                and sorted(request.env.user.groups_id.ids) \
+                    == sorted([group_portal.id, anytracker_customer_group.id]):
+                # user EXACTLY in portal and anytracker customer groups
                 redirect = self.set_url('/web', 'list', 'anytracker.ticket')
 
         return super(LoginHome, self)._login_redirect(uid, redirect=redirect)
