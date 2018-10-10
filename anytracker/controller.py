@@ -5,7 +5,31 @@ from odoo import http
 from odoo.addons.web.controllers.main import request, abort_and_redirect, Home
 
 
-class LoginHome(Home):
+class SetUrlMixin(object):
+    def set_url(
+            self,
+            path,
+            view_type,
+            model,
+            id=False,
+            action_xml_id='anytracker.act_all_tasks'
+        ):
+        assert action_xml_id  # if no action un url param odoo will redirect again to other url!
+        action = request.env.ref(action_xml_id)
+        action_id = action and action.id or False
+
+        url = '{path}#{id}view_type={view_type}&model={model}'.format(
+            path=path,
+            id=id and 'id={id}&'.format(id=id) or '',
+            view_type=view_type,
+            model=model
+        )
+        if action_id:
+            url += '&action={action_id}'.format(action_id=action_id)
+        return url
+
+
+class LoginHome(SetUrlMixin, Home):
     def _login_redirect(self, uid, redirect=None):
         """
         #11435 patch login redirection
@@ -20,12 +44,12 @@ class LoginHome(Home):
             anytracker_customer_group = request.env.ref('anytracker.group_customer')
             if anytracker_customer_group \
                 and anytracker_customer_group.id in request.env.user.groups_id.ids:
-                    redirect = '/web'
+                redirect = self.set_url('/web', 'list', 'anytracker.ticket')
 
         return super(LoginHome, self)._login_redirect(uid, redirect=redirect)
 
 
-class UrlDirection(http.Controller):
+class UrlDirection(SetUrlMixin, http.Controller):
     method_model_map = dict(
         ticket='anytracker.ticket',
         bouquet='anytracker.bouquet'
@@ -52,12 +76,6 @@ class UrlDirection(http.Controller):
             request.session.db = db
             same_db = False
 
-        menu = request.env.ref('anytracker.tabmenu_anytracker')
-        menu_id = menu and menu.id or False
-
-        action = request.env.ref('anytracker.act_all_tasks')
-        action_id = action and action.id or False
-
         if model == 'anytracker.ticket':
             # ticket identified by number versus id
             ticket_recset = request.env[model].search([('number', '=', int(id))])
@@ -65,14 +83,7 @@ class UrlDirection(http.Controller):
                 return "Bad ticket number %r" % id
             id = ticket_recset[0].id
 
-        url = '/web#id={id}&view_type=form&model={model}'.format(
-            id=id,
-            model=model,
-        )
-        if menu_id:
-            url += '&menu_id={menu_id}'.format(menu_id=menu_id)
-        if action_id:
-            url += '&action={action_id}'.format(action_id=action_id)
+        url = self.set_url('/web', 'form', model, id=id)
 
         if same_db:
             return werkzeug.utils.redirect(url)
