@@ -38,15 +38,15 @@ class UrlDirection(http.Controller):
         website=True
     )
     def dispatch_anytracker(self, meth=None, db=None, id=None, *args, **kw):
-        # Example: http://localhost:8069/anytracker/ticket/24
+        # Example: http://localhost:8069/anytracker/anytracker11/ticket/7
         if db is None or meth is None or id is None:
             return self._anytracker_error()
         model = self.__class__.method_model_map.get(meth)
         if model is None:
             return self._anytracker_error()
-        return self.dispatch(db, model, id)
+        return self._dispatch_anytracker(db, model, id)
 
-    def dispatch(self, db, model, id):
+    def _dispatch_anytracker(self, db, model, id):
         same_db = True
         if db != request.session.db:
             request.session.db = db
@@ -54,6 +54,9 @@ class UrlDirection(http.Controller):
 
         menu = request.env.ref('anytracker.tabmenu_anytracker')
         menu_id = menu and menu.id or False
+
+        action = request.env.ref('anytracker.act_all_tasks')
+        action_id = action and action.id or False
 
         if model == 'anytracker.ticket':
             # ticket identified by number versus id
@@ -68,6 +71,8 @@ class UrlDirection(http.Controller):
         )
         if menu_id:
             url += '&menu_id={menu_id}'.format(menu_id=menu_id)
+        if action_id:
+            url += '&action={action_id}'.format(action_id=action_id)
 
         if same_db:
             return werkzeug.utils.redirect(url)
