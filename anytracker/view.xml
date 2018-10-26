@@ -73,6 +73,118 @@
             </field>
         </record>
 
+        <!-- Ticket Kanban View  -->
+        <record model="ir.ui.view" id="tickets_kanban2">
+            <field name="name">Anytracker - tickets</field>
+            <field name="model">anytracker.ticket</field>
+            <field name="arch" type="xml">
+                <kanban
+                    create="1"
+                    group_create="0"
+                    class="oe_background_grey o_kanban_dashboard o_account_kanban">
+
+                    <field name="color"/>
+                    <field name="number"/>
+                    <field name="permalink"/>
+                    <field name="name"/>
+                    <field name="icon"/>
+                    <field name="sequence"/>
+                    <field name="relative_parent_breadcrumbs"/>
+                    <field name="description"/>
+                    <field name="shortened_description"/>
+                    <field name="has_attachment"/>
+
+                    <templates>
+                        <t t-name="ticket_details">
+                            <div>
+                                <t t-raw="record.description.raw_value"/>
+                            </div>
+                        </t>
+                        <t t-name="kanban-box">
+                            <div
+                                t-attf-class="oe_kanban_card oe_kanban_project oe_kanban_global_click"
+                                t-attf-style="margin-bottom: 20px; background-color: #{record.color.raw_value};"
+                            >
+
+                                <div class="oe_kanban_content">
+                                    <small class="at_kanban_breadcrumbs">
+                                        <t t-if="record.relative_parent_breadcrumbs.raw_value">
+                                            <field name="relative_parent_breadcrumbs"/>
+                                        </t>
+                                    </small>
+                                    <h4>
+                                        <t t-if="record.icon.raw_value">
+                                            <img t-attf-src="#{'data:image;base64,' + record.icon.raw_value}"/>
+                                        </t>
+                                        <a t-attf-href="#{record.permalink.value}"
+                                           onclick="event.preventDefault()" class="at_kanban_ticket_number">
+                                            <field name="number"/>
+                                        </a>
+                                      <span class="at_kanban_ticket_title"
+                                            tooltip="ticket_details">
+                                            <field name="name"/>
+                                      </span>
+                                    </h4>
+
+                                    <t t-if="record.shortened_description.raw_value">
+                                    <div>
+                                        <t t-raw="record.shortened_description.raw_value"/>
+                                    </div>
+                                    </t>
+
+                                    <div class="oe_kanban_bottom_left">
+                                        <t groups="anytracker.group_customer">
+                                          <div>
+                                            <span class="fa fa-edit"></span><a type="edit"/>
+                                          </div>
+                                        </t>
+                                        <t t-if="record.has_attachment.raw_value">
+                                          <div>
+                                            <img src="/anytracker/static/src/img/paperclip.png"/>
+                                          </div>
+                                        </t>
+                                        <!--
+                                        <div class="oe_dropdown_toggle oe_dropdown_kanban"
+                                             groups="anytracker.group_customer">
+                                            <span class="oe_e">í</span>
+                                            <ul class="oe_dropdown_menu">
+                                                <t t-if="widget.view.is_action_enabled('edit')">
+                                                    <li>
+                                                        <a type="edit">Edit ticket</a>
+                                                    </li>
+                                                </t>
+                                            </ul>
+                                        </div>
+                                        -->
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- hierarchical view action: allow to click in the hierarchical view -->
+        <record id="action_hierarchy_line_select" model="ir.actions.act_window">
+            <field name="name">Tickets</field>
+            <!-- do not forget "type" field to prevent js 'No type for action error' from button action ! -->
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">anytracker.ticket</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_id" ref="tickets_kanban2"/>
+            <field name="domain">[('id', 'child_of', active_id), ('id', '!=', active_id)]</field>
+            <field name="context">{
+                'search_default_filter_tasks': 1,
+                'search_default_isparticipant': 1,
+                'search_default_unfinished': 1,
+                'group_by': 'stage_id'
+                }
+            </field>
+            <field name="binding_model_id" ref="anytracker.model_anytracker_ticket" />
+        </record>
+
         <!-- Ticket list -->
         <record id="ticket_tree" model="ir.ui.view">
             <field name="name">Tickets</field>
@@ -100,7 +212,7 @@
 
                     <field name="number"/>
                     <button
-                        name="%(anytracker.action_hierarchy_line_select)d"
+                        name="%(action_hierarchy_line_select)d"
                         type="action"
                         attrs="{'invisible': [('nb_children', '=', 0)]}"
                         string="Kanban"
@@ -270,98 +382,6 @@
             </field>
         </record>
 
-        <!-- Ticket Kanban View  -->
-        <record model="ir.ui.view" id="tickets_kanban2">
-            <field name="name">Anytracker - tickets</field>
-            <field name="model">anytracker.ticket</field>
-            <field name="arch" type="xml">
-                <kanban
-                    create="1"
-                    group_create="0"
-                    class="oe_background_grey o_kanban_dashboard o_account_kanban">
-
-                    <field name="color"/>
-                    <field name="number"/>
-                    <field name="permalink"/>
-                    <field name="name"/>
-                    <field name="icon"/>
-                    <field name="sequence"/>
-                    <field name="relative_parent_breadcrumbs"/>
-                    <field name="description"/>
-                    <field name="shortened_description"/>
-                    <field name="has_attachment"/>
-
-                    <templates>
-                        <t t-name="ticket_details">
-                            <div>
-                                <t t-raw="record.description.raw_value"/>
-                            </div>
-                        </t>
-                        <t t-name="kanban-box">
-                            <div
-                                t-attf-class="oe_kanban_card oe_kanban_project oe_kanban_global_click"
-                                t-attf-style="margin-bottom: 20px; background-color: #{record.color.raw_value};"
-                            >
-
-                                <div class="oe_kanban_content">
-                                    <small class="at_kanban_breadcrumbs">
-                                        <t t-if="record.relative_parent_breadcrumbs.raw_value">
-                                            <field name="relative_parent_breadcrumbs"/>
-                                        </t>
-                                    </small>
-                                    <h4>
-                                        <t t-if="record.icon.raw_value">
-                                            <img t-attf-src="#{'data:image;base64,' + record.icon.raw_value}"/>
-                                        </t>
-                                        <a t-attf-href="#{record.permalink.value}"
-                                           onclick="event.preventDefault()" class="at_kanban_ticket_number">
-                                            <field name="number"/>
-                                        </a>
-                                      <span class="at_kanban_ticket_title"
-                                            tooltip="ticket_details">
-                                            <field name="name"/>
-                                      </span>
-                                    </h4>
-
-                                    <t t-if="record.shortened_description.raw_value">
-                                    <div>
-                                        <t t-raw="record.shortened_description.raw_value"/>
-                                    </div>
-                                    </t>
-
-                                    <div class="oe_kanban_bottom_left">
-                                        <t groups="anytracker.group_customer">
-                                          <div>
-                                            <span class="fa fa-edit"></span><a type="edit"/>
-                                          </div>
-                                        </t>
-                                        <t t-if="record.has_attachment.raw_value">
-                                          <div>
-                                            <img src="/anytracker/static/src/img/paperclip.png"/>
-                                          </div>
-                                        </t>
-                                        <!--
-                                        <div class="oe_dropdown_toggle oe_dropdown_kanban"
-                                             groups="anytracker.group_customer">
-                                            <span class="oe_e">í</span>
-                                            <ul class="oe_dropdown_menu">
-                                                <t t-if="widget.view.is_action_enabled('edit')">
-                                                    <li>
-                                                        <a type="edit">Edit ticket</a>
-                                                    </li>
-                                                </t>
-                                            </ul>
-                                        </div>
-                                        -->
-                                    </div>
-                                </div>
-                            </div>
-                        </t>
-                    </templates>
-                </kanban>
-            </field>
-        </record>
-
         <!-- Ticket type -->
         <record id="view_type_form" model="ir.ui.view">
             <field name="name">anytracker.ticket.type.form</field>
@@ -441,28 +461,6 @@
 
         <!-- ACTIONS -->
 
-        <!--
-        allow to click in the hierarchical view
-        should be declared before any "%(anytracker.action_hierarchy_line_select)d" action button declaration
-        -->
-        <record id="action_hierarchy_line_select" model="ir.actions.act_window">
-            <field name="name">Tickets</field>
-            <!-- do not forget "type" field to prevent js 'No type for action error' from button action ! -->
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">anytracker.ticket</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">kanban,tree,form</field>
-            <field name="view_id" ref="tickets_kanban2"/>
-            <field name="domain">[('id', 'child_of', active_id), ('id', '!=', active_id)]</field>
-            <field name="context">{
-                'search_default_filter_tasks': 1,
-                'search_default_isparticipant': 1,
-                'search_default_unfinished': 1,
-                'group_by': 'stage_id'
-                }
-            </field>
-            <field name="binding_model_id" ref="anytracker.model_anytracker_ticket" />
-        </record>
         <!--
         <record id="ir_value_hierarchy_line_select" model="ir.values">
             <field name="key2">tree_but_open</field>
