@@ -96,7 +96,7 @@ http://www.famfamfam.com/lab/icons/silk/
         'notify/view.xml',
         'priority/view.xml',
         'bouquet/view.xml',
-        #'invoicing/view.xml',  # invoicing feature desactivated since v11, support stopped
+        'invoicing/view.xml',  # invoicing feature desactivated since v11, support stopped
         'link/view.xml',
         'report/ticket.xml',
         'report/bouquet.xml',
