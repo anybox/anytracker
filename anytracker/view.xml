@@ -212,7 +212,7 @@
 
                     <field name="number"/>
                     <button
-                        name="%(action_hierarchy_line_select)d"
+                        name="%(anytracker.action_hierarchy_line_select)d"
                         type="action"
                         attrs="{'invisible': [('nb_children', '=', 0)]}"
                         string="Kanban"
