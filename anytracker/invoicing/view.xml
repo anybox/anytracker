@@ -5,6 +5,7 @@
 <!-- Add a tab in the ticket form -->
 <record id="invoicing_ticket_view_form" model="ir.ui.view">
     <field name="model">anytracker.ticket</field>
+    <field name="name">anytracker.invoincing.ticket.view.form</field>
     <field name="inherit_id" ref="anytracker.ticket_view_form"/>
     <field name="arch" type="xml">
         <xpath expr="//notebook//page[last()]" position="after">
@@ -41,6 +42,7 @@
 <!-- Add a tab in the bouquet form -->
 <record id="invoicing_bouquet_form" model="ir.ui.view">
     <field name="model">anytracker.bouquet</field>
+    <field name="name">anytracker.invoicing.bouquet.form</field>
     <field name="inherit_id" ref="anytracker.bouquet_form"/>
     <field name="arch" type="xml">
         <xpath expr="//field[@name='ticket_ids']" position="after">
@@ -58,6 +60,7 @@
 <!-- Modify the unfinished filter to display uninvoiced tickets -->
 <record id="invoicing_ticket_view_search" model="ir.ui.view">
     <field name="model">anytracker.ticket</field>
+    <field name="name">anytracker.invoicing.ticket.search.view</field>
     <field name="inherit_id" ref="anytracker.ticket_view_search"/>
     <field name="arch" type="xml">
         <xpath expr="//filter[@name='unfinished']" position="attributes">
@@ -72,6 +75,7 @@
 <!-- add invoicing ratio to priorities -->
 <record id="priority_form_with_invoicing" model="ir.ui.view">
     <field name="model">anytracker.priority</field>
+    <field name="name">anytracker.invoicing.priority.form.view</field>
     <field name="inherit_id" ref="anytracker.view_anytracker_priority_form"/>
     <field name="arch" type="xml">
         <field name="deadline" position="after">
@@ -81,6 +85,7 @@
 </record>
 <record id="priority_tree_with_invoicing" model="ir.ui.view">
     <field name="model">anytracker.method</field>
+    <field name="name">anytracker.invoicing.method.priority.form.view</field>
     <field name="inherit_id" ref="anytracker.method_view_form_with_priorities"/>
     <field name="arch" type="xml">
         <field name="deadline" position="after">
