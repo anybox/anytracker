@@ -20,7 +20,7 @@ class TestInvoicing(SharedSetupTransactionCase):
         cls.ANALINE = cls.env['account.analytic.line']
         cls.ANACCOUNT = cls.env['account.analytic.account']
         # #11390: analytic journal depreciated on v11
-        #cls.ANAJOURNAL = cls.env['account.analytic.journal']
+        # cls.ANAJOURNAL = cls.env['account.analytic.journal']
 
         USER = cls.env['res.users']
 
@@ -40,13 +40,12 @@ class TestInvoicing(SharedSetupTransactionCase):
              'login': 'customer',
              'email': 'customer@localhost',
              'groups_id': [(6, 0, [
-                 # FIXME: base.group_user actually needed exclusively during u test
-                 # for 'mail.activity.mixin' fields with groups='base.group_user'
-                 # during ticket write
+                 # FIXME: base.group_user actually needed exclusively during u
+                 # test for 'mail.activity.mixin' fields with
+                 # groups='base.group_user' during ticket write
                  # (in real case ticket is writable without base.group_user)
                  cls.ref('base.group_user'),
-                 cls.ref('anytracker.group_customer')])]
-            }
+                 cls.ref('anytracker.group_customer')])]}
         ).id
 
     def test_invoicing(self):
@@ -57,7 +56,7 @@ class TestInvoicing(SharedSetupTransactionCase):
             {'name': 'Test',
              'participant_ids': [(6, 0, [self.customer_id, self.member_id])],
              # #11390: analytic journal depreciated on v11
-             #'analytic_journal_id': self.ANAJOURNAL.search([])[0].id,
+             # 'analytic_journal_id': self.ANAJOURNAL.search([])[0].id,
              'product_id': self.ref('product.product_product_consultant'),
              'method_id': self.ref('anytracker.method_test')})
         # we create a few tickets
@@ -133,14 +132,14 @@ class TestInvoicing(SharedSetupTransactionCase):
             {'name': 'Test',
              'participant_ids': [(6, 0, [self.customer_id, self.member_id])],
              # #11390: analytic journal depreciated on v11
-             #'analytic_journal_id': self.ANAJOURNAL.search([])[0].id,
+             # 'analytic_journal_id': self.ANAJOURNAL.search([])[0].id,
              'product_id': self.ref('product.product_product_consultant'),
              'method_id': self.ref('anytracker.method_test')})
         account = self.ANACCOUNT.create({
             'name': 'project',
             'type': 'contract',
             # #11394 v11 hr_timesheet_invoice to_invoice factor depreciated
-            #'to_invoice': self.ref(
+            # 'to_invoice': self.ref(
             #    'hr_timesheet_invoice.timesheet_invoice_factor1'),
         })
         project.write({'analytic_account_id': account.id})
@@ -259,7 +258,7 @@ class TestInvoicing(SharedSetupTransactionCase):
             'type': 'contract'})
         project.write({
             # #11390: analytic journal depreciated on v11
-            #'analytic_journal_id': self.ANAJOURNAL.search([])[0].id,
+            # 'analytic_journal_id': self.ANAJOURNAL.search([])[0].id,
             'product_id': self.ref('product.product_product_consultant'),
             'analytic_account_id': account.id})
         self.TICKET.cron()

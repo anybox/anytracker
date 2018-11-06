@@ -3,7 +3,7 @@ from odoo import models, fields, api, _
 from odoo.exceptions import except_orm
 import logging
 from datetime import datetime, timedelta
-from odoo import SUPERUSER_ID
+# from odoo import SUPERUSER_ID
 
 logger = logging.getLogger(__file__)
 
@@ -71,9 +71,10 @@ class Ticket(models.Model):
                 # use priority discount in unit_amount (as amount 1 unit)
                 # negative discount for malus: example +20% as -20 (1.+0.2)
                 'unit_amount': t.priority_id and t.priority_id.discount \
-                    and t.rating * (1. - (t.priority_id.discount / 100.)) or t.rating,
+                        and t.rating * (1. - (t.priority_id.discount / 100.)) \
+                        or t.rating,
                 # #11394 v11 hr_timesheet_invoice to_invoice factor depreciated
-                #'to_invoice': t.project_id.analytic_account_id.to_invoice.id,
+                # 'to_invoice': t.project_id.analytic_account_id.to_invoice.id,
                 'account_id': t.project_id.analytic_account_id.id,
                 'product_id': t.project_id.product_id.id,
                 # #11390 analytic journal depreciated in 11
@@ -128,7 +129,8 @@ class Ticket(models.Model):
         'product.product',
         'Product to invoice',
         help=(u"The product to invoice"))
-    # #11390 analytic journal depreciated in 11, left here for previous version migration
+    # #11390 analytic journal depreciated in 11, left here for
+    # previous version migration
     # analytic_journal_id = fields.Many2one(
     #    'account.analytic.journal',
     #    'Analytic journal',
@@ -153,7 +155,8 @@ class Priority(models.Model):
     """
     _inherit = 'anytracker.priority'
 
-    # #11394 hr_timesheet_invoice is depreciated, set instead an invoicing factor field
+    # #11394 hr_timesheet_invoice is depreciated,
+    # set instead an invoicing factor field
     # field left here for from previous version upgrade
 
     # discount_id = fields.Many2one(
@@ -176,8 +179,8 @@ class account_analytic_line(models.Model):
 
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):
-        if len(args) == 1 and len(args[0]) == 3 and args[0][0] == 'date':
-            uid = SUPERUSER_ID
+        # if len(args) == 1 and len(args[0]) == 3 and args[0][0] == 'date':
+        #    uid = SUPERUSER_ID
         return super(account_analytic_line, self).search(
             args, offset=offset, limit=limit, order=order, count=count
         )

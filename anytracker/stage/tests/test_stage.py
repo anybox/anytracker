@@ -20,21 +20,21 @@ class TestStage(SharedSetupTransactionCase):
             'name': 'test member',
             'login': 'test',
             'email': 'test@localhost',
-            'groups_id': [(6, 0,
-                           [cls.ref('base.group_user'), cls.ref('anytracker.group_member')])]}
+            'groups_id': [(6, 0, [
+                cls.ref('base.group_user'),
+                cls.ref('anytracker.group_member')])]}
         ).id
         cls.customer_id = USER.create(
             {'name': 'test customer stage',
              'login': 'test_customer_stage',
              'email': 'test_customer@localhost',
              'groups_id': [(6, 0, [
-                 # FIXME: base.group_user actually needed exclusively during u test
-                 # for 'mail.activity.mixin' fields with groups='base.group_user'
-                 # during ticket write
+                 # FIXME: base.group_user actually needed exclusively during u
+                 # test for 'mail.activity.mixin' fields with
+                 # groups='base.group_user' during ticket write
                  # (in real case ticket is writable without base.group_user)
                  cls.ref('base.group_user'),
-                 cls.ref('anytracker.group_customer')])]
-            }
+                 cls.ref('anytracker.group_customer')])]}
         ).id
 
     def test_move_ticket(self):

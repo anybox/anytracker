@@ -63,10 +63,11 @@ class Ticket(models.Model):
 
     @api.model
     def _read_group_stages(self, stages, domain, order):
-        # #11381 group_expand: >= 10.0 new way to regroup by stage ids for kanban
-        # allows display of empty columns (without any ticket) !
+        # #11381 group_expand: >= 10.0 new way to regroup by stage ids
+        # for kanban allows display of empty columns (without any ticket) !
         # https://stackoverflow.com/questions/40751733/empty-groups-in-kanban-view-of-odoo10
-        ticket = self.env['anytracker.ticket'].browse(self.env.context.get('active_id'))
+        ticket = self.env['anytracker.ticket'].browse(
+            self.env.context.get('active_id'))
         return ticket.project_id and ticket.project_id.method_id \
             and self.env['anytracker.stage'].search(
                     [('method_id', '=', ticket.project_id.method_id.id)],
@@ -286,10 +287,10 @@ class Ticket(models.Model):
         default=_default_stage,
         index=True,
         domain="[('method_id','=',method_id)]",
-        # #11381 group_expand: >= 10.0 new way to regroup by stage ids for kanban
-        # allows display of empty columns (without any ticket) !
+        # #11381 group_expand: >= 10.0 new way to regroup by stage ids
+        # for kanban allows display of empty columns (without any ticket) !
         # https://stackoverflow.com/questions/40751733/empty-groups-in-kanban-view-of-odoo10
-        group_expand = '_read_group_stages',
+        group_expand='_read_group_stages',
     )
     progress = fields.Float(
         string='Progress',
