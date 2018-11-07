@@ -48,8 +48,7 @@ class TestNotify(SharedSetupTransactionCase):
                  # during ticket write
                  # (in real case ticket is writable without base.group_user)
                  cls.ref('base.group_user'),
-                 cls.ref('anytracker.group_customer')])]
-            }
+                 cls.ref('anytracker.group_customer')])]}
         ).id
 
     def test_notify(self):
@@ -99,7 +98,8 @@ class TestNotify(SharedSetupTransactionCase):
         urgent = self.TICKET.with_context({'active_id': project.id}).create({
             'name': 'urgent notifying ticket',
             'parent_id': project.id, })
-        self.assertEquals(self.MAIL.search([], count=True) - nb_mails, 4)  # since initial queue L.69 more 4 mails
+        # since initial queue L.69 more 4 mails
+        self.assertEquals(self.MAIL.search([], count=True) - nb_mails, 4)
         self.assertEquals(len(urgent.notified_stage_ids), 1)
 
         # we move forth and back the ticket, we shouldn't have more notif

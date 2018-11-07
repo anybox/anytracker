@@ -50,8 +50,7 @@ class TestAnytracker(SharedSetupTransactionCase):
                    # (in real case ticket is writable without base.group_user)
                    cls.ref('base.group_user'),
                    cls.ref('anytracker.group_customer')])
-                ]
-            }
+                ]}
         ).id
 
     def test_name_search_and_autosubscribe(self):

@@ -33,8 +33,7 @@ class TestImportance(SharedSetupTransactionCase):
                  # during ticket write
                  # (in real case ticket is writable without base.group_user)
                  cls.ref('base.group_user'),
-                 cls.ref('anytracker.group_customer')])]
-            }
+                 cls.ref('anytracker.group_customer')])]}
         ).id
 
     def test_importance(self):

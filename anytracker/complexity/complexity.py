@@ -49,7 +49,7 @@ class Complexity(models.Model):
     def risk2float(risk):
         """convert risk to float. for complex we only need the real part #11374"""
         return isinstance(risk, complex) and float(risk.real) \
-               or (isinstance(risk, float) and risk or float(risk))
+            or (isinstance(risk, float) and risk or float(risk))
 
 
 class Rating(models.Model):

@@ -36,8 +36,7 @@ class TestMethod(SharedSetupTransactionCase):
                  # during ticket write
                  # (in real case ticket is writable without base.group_user)
                  cls.ref('base.group_user'),
-                 cls.ref('anytracker.group_customer')])]
-            }
+                 cls.ref('anytracker.group_customer')])]}
         ).id
         cls.manager_id = USER.create(
             {'name': 'Manager',
@@ -58,10 +57,10 @@ class TestMethod(SharedSetupTransactionCase):
              'participant_ids': [(6, 0, [
                  self.customer_id, self.member_id, self.manager_id])],
              # #11390: analytic journal depreciated on v11
-             #'analytic_journal_id':
+             # 'analytic_journal_id':
              #    self.anajournals.sudo(self.manager_id).search([])[0].id,
              # invoicing desactived since anytracker v11
-             #'product_id': self.ref('product.product_product_consultant'),
+             # 'product_id': self.ref('product.product_product_consultant'),
              'method_id': self.ref('anytracker.method_test')})
         # we create a ticket
         ticket = self.TICKET.sudo(self.customer_id).create(

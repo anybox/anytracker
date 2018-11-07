@@ -12,8 +12,7 @@ class SetUrlMixin(object):
             view_type,
             model,
             id=False,
-            action_xml_id='anytracker.act_all_tasks'
-        ):
+            action_xml_id='anytracker.act_all_tasks'):
         assert action_xml_id  # if no action un url param odoo will redirect again to other url!
         action = request.env.ref(action_xml_id)
         action_id = action and action.id or False

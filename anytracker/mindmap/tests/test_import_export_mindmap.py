@@ -56,11 +56,11 @@ class TestImportExportMindmap(SharedSetupTransactionCase):
         self.create_wizard_export().execute_export()
 
     def test_wizard_import_mindmap(self):
-        #self.create_wizard_import().execute_import()
+        # self.create_wizard_import().execute_import()
         self.create_wizard_import()
 
     def test_import_mindmap(self):
-        #self.create_wizard_import().execute_import()
+        # self.create_wizard_import().execute_import()
         self.create_wizard_import()
         ticket = self.TICKET.search([
             ('name', '=', u"Droit d'accés application mlf (test)"),
@@ -70,7 +70,7 @@ class TestImportExportMindmap(SharedSetupTransactionCase):
 
     def test_bug_with_update_import_method_and_no_ticket_id(self):
         try:
-            #self.create_wizard_import(import_method='update').execute_import()
+            # self.create_wizard_import(import_method='update').execute_import()
             self.create_wizard_import(import_method='update')
             self.fail()
         except except_orm:

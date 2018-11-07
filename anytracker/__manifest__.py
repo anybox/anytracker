@@ -32,9 +32,9 @@
         'web_widget_color',
         'base',
         'mail',
-        'account',  #11392
+        'account',  # 11392
         'analytic',
-        'product',  #11390
+        'product',  # 11390
     ],
     'images': [
         'images/anytracker.png',
@@ -83,9 +83,9 @@ http://www.famfamfam.com/lab/icons/silk/
         # views
         'view.xml',
         # mindmap feature desactivated since v11, support stopped
-        #'mindmap/wizard/import_mindmap.xml',
-        #'mindmap/wizard/export_mindmap.xml',
-        #'mindmap/wizard/serve_mindmap.xml',
+        # 'mindmap/wizard/import_mindmap.xml',
+        # 'mindmap/wizard/export_mindmap.xml',
+        # 'mindmap/wizard/serve_mindmap.xml',
         'method/view.xml',
         'stage/view.xml',
         'tagging/view.xml',

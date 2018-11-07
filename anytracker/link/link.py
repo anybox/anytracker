@@ -125,7 +125,7 @@ class Link(models.Model):
             'view_mode': 'form',
             'view_type': 'form',
             'target': 'new',
-            #'flags': {'form': {'action_buttons': True}}  #11387 replaced by custom buttons
+            # 'flags': {'form': {'action_buttons': True}}  #11387 replaced by custom buttons
         }
 
     @api.multi

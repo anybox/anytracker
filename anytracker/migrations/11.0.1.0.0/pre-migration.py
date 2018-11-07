@@ -21,15 +21,13 @@ def migrate(cr, version):
             'priority_tree_with_invoicing',
         ]
 
-        sql_pattern_get_res_id = "select res_id from ir_model_data where module='anytracker'" \
-        "and model='ir.ui.view' and name in ({xmlids})"
+        sql_pattern_get_res_id = """
+select res_id from ir_model_data
+where module='anytracker'" and model='ir.ui.view' and name in ({xmlids})"""
 
         sql_pattern_unactive = "update ir_ui_view set active=False where id in ({ids})"
 
-
-        print()
         print('desactivate depreciated invoicing views')
-        print('')
 
         # ir_model_data: get view ids from xmlids
         print('ir_model_data: get view ids from xmlids (res_ids)')

@@ -10,7 +10,7 @@ from odoo.exceptions import UserError, ValidationError
 
 logger = logging.getLogger(__file__)
 
-ticket_regex = re.compile('([Tt]icket ?#?)([\d]+)')
+ticket_regex = re.compile(r'([Tt]icket ?#?)([\d]+)')
 
 
 def add_permalinks(dbname, string):
@@ -268,8 +268,8 @@ class Ticket(models.Model):
         # This allows to subscribe or unsubscribe to ticket subtrees
         if ticket.project_id.participant_ids:
             if ticket.parent_id:
-                #11375: FIX message_subscribe purpose is to add partners vs users
-                #ticket.message_subscribe(ticket.parent_id.message_follower_ids.ids)
+                # 11375: FIX message_subscribe purpose is to add partners vs users
+                # ticket.message_subscribe(ticket.parent_id.message_follower_ids.ids)
                 ticket.message_subscribe(
                     partner_ids=ticket.parent_id.message_follower_ids.mapped('partner_id').ids
                 )
@@ -486,7 +486,7 @@ class Ticket(models.Model):
             return {}
         action = self.env.ref('anytracker.action_kanbans').read()[0]
         # context not correctly passed, forcing domain
-        #action['context'] = dict(parent_id=self.id)
+        # action['context'] = dict(parent_id=self.id)
         action['domain'] = self.get_hierarchical_domain(self.id)
         return action
 
