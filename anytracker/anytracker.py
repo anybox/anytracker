@@ -10,7 +10,7 @@ from collections import defaultdict
 
 logger = logging.getLogger(__file__)
 
-ticket_regex = re.compile('([Tt]icket ?#?)([\d]+)')
+ticket_regex = re.compile(r'([Tt]icket ?#?)([\d]+)')
 
 
 def add_permalinks(dbname, string):
