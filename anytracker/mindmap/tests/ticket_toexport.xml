@@ -11,8 +11,6 @@
       <field name="my_rating" eval="False"/>
       <field name="name">Droit d'acc&#233;s application mlf</field>
       <field name="parent_id" eval="False"/>
-      <field name="parent_left" eval="1"/>
-      <field name="parent_right" eval="12"/>
       <field name="stage_id" ref="anytracker.stage_maintenance_new"/>
     </record>
     <record model="anytracker.ticket" id="anytracker_ticket-worflows_general_des_budgets">
@@ -26,8 +24,6 @@
       <field name="my_rating" eval="False"/>
       <field name="name">Worflows g&#233;n&#233;ral des budgets</field>
       <field name="parent_id" ref="anytracker.anytracker_ticket-droit_dacces_application_mlf"/>
-      <field name="parent_left" eval="2"/>
-      <field name="parent_right" eval="5"/>
       <field name="stage_id" ref="anytracker.stage_maintenance_new"/>
     </record>
     <record model="anytracker.ticket" id="anytracker_ticket-worlflow_sur_analytic_budget">
@@ -42,8 +38,6 @@ BrouillonVerrouill&#233; : le passage est effectu&#233; par le personnel de l'et
       <field name="my_rating" eval="False"/>
       <field name="name">Worlflow sur 'analytic.budget'</field>
       <field name="parent_id" ref="anytracker.anytracker_ticket-worflows_general_des_budgets"/>
-      <field name="parent_left" eval="3"/>
-      <field name="parent_right" eval="4"/>
       <field name="stage_id" ref="anytracker.stage_maintenance_new"/>
     </record>
     <record model="anytracker.ticket" id="anytracker_ticket-profils_utilisateurs_ets_et/ou_siege_(atelier)">
@@ -66,8 +60,6 @@ Si&#232;ge:
       <field name="my_rating" eval="False"/>
       <field name="name">profils utilisateurs ETS et/ou si&#232;ge (atelier)</field>
       <field name="parent_id" ref="anytracker.anytracker_ticket-droit_dacces_application_mlf"/>
-      <field name="parent_left" eval="6"/>
-      <field name="parent_right" eval="11"/>
       <field name="stage_id" ref="anytracker.stage_maintenance_new"/>
     </record>
     <record model="anytracker.ticket" id="anytracker_ticket-condition_de_passage_de_workflow">
@@ -82,8 +74,6 @@ Si&#232;ge:
       <field name="my_rating" eval="False"/>
       <field name="name">condition de passage de workflow</field>
       <field name="parent_id" ref="anytracker.anytracker_ticket-profils_utilisateurs_ets_et/ou_siege_(atelier)"/>
-      <field name="parent_left" eval="7"/>
-      <field name="parent_right" eval="8"/>
       <field name="stage_id" ref="anytracker.stage_maintenance_new"/>
     </record>
     <record model="anytracker.ticket" id="anytracker_ticket-creer_un_abstract_model_de_protection_de_model">
@@ -98,8 +88,6 @@ Si&#232;ge:
       <field name="my_rating" eval="False"/>
       <field name="name">Cr&#233;er un abstract model de protection de model</field>
       <field name="parent_id" ref="anytracker.anytracker_ticket-profils_utilisateurs_ets_et/ou_siege_(atelier)"/>
-      <field name="parent_left" eval="9"/>
-      <field name="parent_right" eval="10"/>
       <field name="stage_id" ref="anytracker.stage_maintenance_new"/>
     </record>
   </data>

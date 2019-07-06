@@ -585,12 +585,6 @@ class Ticket(models.Model):
         'res.users',
         track_visibility='onchange',
         string='Requester')
-    parent_left = fields.Integer(
-        string='Parent Left',
-        index=True)
-    parent_right = fields.Integer(
-        string='Parent Right',
-        index=True)
     parent_path = fields.Char(
         index=True)
     sequence = fields.Integer(
