@@ -655,10 +655,11 @@ class ResUsers(models.Model):
     _inherit = 'res.users'
 
     def __init_groups_for_customers(self, values):
-        """if the 'customer' group is selected, we """
+        """if the 'customer' or 'partner' group is selected, we
+        unset all groups except portal and the one selected
+        """
         group_customer = self.env.ref('anytracker.group_customer').id
         group_partner = self.env.ref('anytracker.group_partner').id
-        group_portal = self.env.ref('base.group_portal').id
         sel_groups = [v for v in values.items()
                       if v[0].startswith('sel_groups_')]
         for group_id in (group_customer, group_partner):
@@ -668,7 +669,7 @@ class ResUsers(models.Model):
                 values = {k: v for k, v in values.items()
                           if not k.startswith('sel_groups_')
                           and not k.startswith('_in_group')}
-                values['groups_id'] = [(6, 0, [group_id, group_portal])]
+                values['groups_id'] = [(6, 0, [group_id])]
         return values
 
     @api.model

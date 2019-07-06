@@ -9,7 +9,6 @@
 <record id="group_customer" model="res.groups">
     <field name="name">Customer</field>
     <field name="category_id" ref="module_category_anytracker"/>
-    <field name="implied_ids" eval="[(4, ref('base.group_portal'))]"/>
 </record>
 
 <!-- partner -->
@@ -33,5 +32,8 @@
     <field name="implied_ids" eval="[(4, ref('group_member'))]"/>
 </record>
 
+<record model="res.users" id="base.user_root">
+    <field eval="[(4,ref('anytracker.group_manager'))]" name="groups_id"/>
+</record>
 
 </data></openerp>
