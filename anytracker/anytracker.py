@@ -591,6 +591,8 @@ class Ticket(models.Model):
     parent_right = fields.Integer(
         string='Parent Right',
         index=True)
+    parent_path = fields.Char(
+        index=True)
     sequence = fields.Integer(
         string='sequence')
     active = fields.Boolean(
