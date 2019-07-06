@@ -93,7 +93,7 @@
         <field name="importance_color"/>
         <field name="importance_id"/>
       </xpath>
-      <xpath expr="//div[@class='oe_kanban_bottom_left']" position="inside">
+      <xpath expr="//div[hasclass('oe_kanban_bottom_left')]" position="inside">
           <t t-if="record.importance_color.raw_value"><div t-attf-style="border-radius: 8px; background-color: #{record.importance_color.raw_value}; background-image: url('/anytracker/static/src/img/exclamation.png')" t-attf-title="#{record.importance_id.value}"></div></t>
       </xpath>
     </field>

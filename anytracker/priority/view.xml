@@ -97,7 +97,7 @@
         <field name="priority_color"/>
         <field name="priority_id"/>
       </xpath>
-      <xpath expr="//div[@class='oe_kanban_bottom_left']" position="inside">
+      <xpath expr="//div[hasclass('oe_kanban_bottom_left')]" position="inside">
           <t t-if="record.priority_color.raw_value"><div t-attf-style="border-radius: 8px; background-color: #{record.priority_color.raw_value}; background-image: url('/anytracker/static/src/img/clock.png')" t-attf-title="#{record.priority_id.value}"></div></t>
       </xpath>
     </field>

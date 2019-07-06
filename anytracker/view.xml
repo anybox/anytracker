@@ -114,7 +114,7 @@
                                     </small>
                                     <h4>
                                         <t t-if="record.icon.raw_value">
-                                            <img t-attf-src="#{'data:image;base64,' + record.icon.raw_value}"/>
+                                            <img alt="icon" t-attf-src="#{'data:image;base64,' + record.icon.raw_value}"/>
                                         </t>
                                         <a t-attf-href="#{record.permalink.value}"
                                            onclick="event.preventDefault()" class="at_kanban_ticket_number">
@@ -140,7 +140,7 @@
                                         </t>
                                         <t t-if="record.has_attachment.raw_value">
                                           <div>
-                                            <img src="/anytracker/static/src/img/paperclip.png"/>
+                                            <img alt="paperclip" src="/anytracker/static/src/img/paperclip.png"/>
                                           </div>
                                         </t>
                                         <!--

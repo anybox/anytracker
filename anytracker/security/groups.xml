@@ -33,8 +33,5 @@
     <field name="implied_ids" eval="[(4, ref('group_member'))]"/>
 </record>
 
-<record model="res.users" id="base.user_root">
-    <field eval="[(4,ref('anytracker.group_manager'))]" name="groups_id"/>
-</record>
 
 </data></openerp>
