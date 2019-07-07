@@ -205,11 +205,12 @@ class Ticket(models.Model):
 
         if 'participant_ids' in values:
             # subscribe new participants, unsubscribe old ones
-            new_p_ids = set(self.participant_ids.ids)
-            added_users = new_p_ids - participant_ids
-            removed_users = participant_ids - new_p_ids
-            self.message_unsubscribe_users(removed_users)
-            self.message_subscribe_users(added_users)
+            PARTNER = self.env['res.partner']
+            newpids = set(self.participant_ids.ids)
+            added = PARTNER.browse(newpids - participant_ids).partner_id.ids
+            removed = PARTNER.browse(participant_ids - newpids).partner_id.ids
+            self.message_unsubscribe(removed)
+            self.message_subscribe(added)
 
             # Needed for the ir_rule,
             # because it involves an sql request for _search_allowed_partners
@@ -274,8 +275,8 @@ class Ticket(models.Model):
                     partner_ids=ticket.parent_id.message_follower_ids.mapped('partner_id').ids
                 )
             else:
-                ticket.message_subscribe_users(
-                    ticket.participant_ids.ids)
+                ticket.message_subscribe(
+                    ticket.participant_ids.mapped('partner_id').ids)
 
         return ticket
 
@@ -419,14 +420,18 @@ class Ticket(models.Model):
         return
 
     @api.multi
-    def message_subscribe_users(self, user_ids=None, subtype_ids=None):
+    def message_subscribe(self, partner_ids=None, channel_ids=None,
+                          subtype_ids=None):
+        """ Subscribe to all subtickets when subscribing to a ticket
+        """
         if self._name == 'anytracker.ticket':
             for ticket in self:
                 children = self.search([('id', 'child_of', ticket.id)])
-                super(Ticket, children).message_subscribe_users(
-                    user_ids, subtype_ids)
+                super(Ticket, children).message_subscribe(
+                    partner_ids, channel_ids, subtype_ids)
         else:
-            super(Ticket, self).message_subscribe_users(user_ids, subtype_ids)
+            super(Ticket, self).message_subscribe(
+                partner_ids, channel_ids, subtype_ids)
 
     @api.multi
     def message_unsubscribe_users(self, user_ids=None):
