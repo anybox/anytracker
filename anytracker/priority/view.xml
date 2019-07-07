@@ -33,7 +33,7 @@
         <xpath expr="//search/group[1]" position="inside">
             <filter name="tickets_by_priority"
                     string="Priority"
-                    context="{'group_by': ['priority_id']}"
+                    context="{'group_by': 'priority_id'}"
                     help="Group tickets by priority"/>
         </xpath>
 

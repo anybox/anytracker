@@ -48,7 +48,7 @@
         <xpath expr="//search/group[1]" position="inside">
                 <filter name="tickets_by_stage"
                         string="Stage"
-                        context="{'group_by': ['stage_id']}"
+                        context="{'group_by': 'stage_id'}"
                         help="Group tickets by stage"/>
         </xpath>
     </field>
