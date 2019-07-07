@@ -205,10 +205,10 @@ class Ticket(models.Model):
 
         if 'participant_ids' in values:
             # subscribe new participants, unsubscribe old ones
-            PARTNER = self.env['res.partner']
+            USER = self.env['res.users']
             newpids = set(self.participant_ids.ids)
-            added = PARTNER.browse(newpids - participant_ids).partner_id.ids
-            removed = PARTNER.browse(participant_ids - newpids).partner_id.ids
+            added = USER.browse(newpids - participant_ids).partner_id.ids
+            removed = USER.browse(participant_ids - newpids).partner_id.ids
             self.message_unsubscribe(removed)
             self.message_subscribe(added)
 
