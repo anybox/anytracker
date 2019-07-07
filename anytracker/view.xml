@@ -636,27 +636,19 @@
         </record>
 
         <!-- MENUITEMS -->
-        <menuitem id="tabmenu_anytracker"
-                  name="Anytracker"
-                  sequence="30"
-                  web_icon="anytracker,images/icon.png"
-                  groups="group_manager,group_member,group_customer,group_partner"
-        />
         <menuitem id="menu_configuration"
                   name="Configuration"
                   sequence="200"
-                  groups="group_manager"
-                  parent="tabmenu_anytracker"/>
-
+                  parent="menu_anytracker"
+                  groups="group_manager"/>
         <menuitem id="menu_dashboard"
                   name="Dashboard"
                   action="open_anytracker_dashboard_kanban"
-                  parent="tabmenu_anytracker"
+                  parent="menu_anytracker"
                   sequence="1"/>
 
         <menuitem id="menu_anytracker"
                   name="Anytracker"
-                  parent="tabmenu_anytracker"
                   sequence="5"/>
         <menuitem id="menu_hierarchy"
                   parent="menu_anytracker"
@@ -688,7 +680,6 @@
           name="Freemind"
           sequence="200"
           groups="group_member,group_partner"
-          parent="tabmenu_anytracker"
           active="0"
         />
 
