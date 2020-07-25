@@ -108,7 +108,7 @@ class Ticket(models.Model):
         breadcrumbs = self.get_breadcrumb()
         for ticket in self:
             ticket.breadcrumb = u' / '.join(
-                [b['name'] for b in breadcrumbs[ticket.id]])
+                [b['name'] for b in breadcrumbs.get(ticket.id, [])])
 
     def _formatted_rparent_breadcrumb(self):
         """A formatted breadcrumbs of parent, relative to context:active_id
